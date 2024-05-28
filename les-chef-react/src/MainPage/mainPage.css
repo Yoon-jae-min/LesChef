@@ -8,14 +8,22 @@ body{
 
 .mainSection{
     width: 100vw;
-    height: 100vh;
+    height: calc(100vh);
     overflow: hidden;
+    position: relative;
+}
+
+.divider {
+    width: 100%;
+    height: 5px;
+    background-color: gray;
 }
 
 #mainVideo{
-    width: 1920px;
-    height: 1080px;
-    padding-bottom: 100px;
+    width: 1500px;
+    height: 791px;
+    object-fit: scale-down;
+    object-position: center center;
 }
 
 
