@@ -1,14 +1,18 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import MainFirst from './mainPageFirst';
 import MainSecond from './mainPageSecond';
 import MainThird from './mainPageThird';
 import MainFourth from './mainPageFourth';
 import MainFifth from './mainPageFifth';
+import MainLeft from './MainElement/mainLeftBox';
+import MainTop from './MainElement/mainTopBox';
+import MainBottom from './MainElement/mainBottomBox';
 
 const MainPage = () => {
-
     const outerDivRef = useRef();
     let scrollEventFlag = false;
+    const [ textContent, setTextContent ] = useState("firstText");
+    const [slideIndex, setSlideIndex] = useState(0);
 
     useEffect(() => {
         const wheelHandler = (e) => {
@@ -39,6 +43,9 @@ const MainPage = () => {
                 left: 0,
                 behavior: "smooth",
             });
+
+            setSlideIndex(currentPage);
+
             setTimeout(() => {
                 scrollEventFlag = false;
             }, 500);
@@ -58,7 +65,15 @@ const MainPage = () => {
             <MainThird/>
             <MainFourth/>
             <MainFifth/>
+            {slideIndex < 4 && <MainLeft/>}
+            {slideIndex < 4 && <MainTop/>}
+            {slideIndex < 4 && <MainBottom/>}
         </div>);
+
 }
 
+
+
 export default MainPage;
+
+
