@@ -3,7 +3,7 @@ body::-webkit-scrollbar{
 }
 body{
     -ms-overflow-style: none;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 .mainSection{

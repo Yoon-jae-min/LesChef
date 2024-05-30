@@ -11,11 +11,9 @@ import MainBottom from './MainElement/mainBottomBox';
 const MainPage = () => {
     const outerDivRef = useRef();
     let scrollEventFlag = false;
-    const [ textContent, setTextContent ] = useState("firstText");
-    const [slideIndex, setSlideIndex] = useState(0);
-
+    const [slideCheck, setSlideCheck] = useState(true);
     useEffect(() => {
-        const wheelHandler = (e) => {
+        const scrollHandler = (e) => {
 
             if(scrollEventFlag){
                 return;
@@ -23,28 +21,32 @@ const MainPage = () => {
 
             scrollEventFlag = true;
             
-            const { deltaY } = e;
-            let scrollTop = window.scrollY; 
+            // const { deltaY } = e;
+            const scrollTop = window.scrollY
             const pageHeight = window.innerHeight;
-            let currentPage = Math.round(scrollTop / pageHeight);
+            const currentPage = Math.round(scrollTop / pageHeight);
         
-            if (deltaY > 0) {
-                if(currentPage < 4){
-                    currentPage += 1;
-                }
-            } else {
-                if(currentPage > 0){
-                    currentPage -= 1;
-                }
-            }
-            
+            // if (deltaY > 0) {
+            //     if(currentPage < 4){
+            //         currentPage += 1;
+            //     }
+            // } else {
+            //     if(currentPage > 0){
+            //         currentPage -= 1;
+            //     }
+            // }
             window.scrollTo({
                 top: currentPage * pageHeight,
                 left: 0,
                 behavior: "smooth",
             });
 
-            setSlideIndex(currentPage);
+            // if(window.scrollY >= 3 * pageHeight){
+            //     setSlideCheck(false);
+            // }else{
+            //     setSlideCheck(true);
+            // }
+            
 
             setTimeout(() => {
                 scrollEventFlag = false;
@@ -52,9 +54,9 @@ const MainPage = () => {
             
         };
 
-        window.addEventListener("wheel", wheelHandler);
+        window.addEventListener("scroll", scrollHandler);
         return () => {
-            window.removeEventListener("wheel", wheelHandler);
+            window.removeEventListener("scroll", scrollHandler);
         };
         }, []);
     
@@ -65,9 +67,9 @@ const MainPage = () => {
             <MainThird/>
             <MainFourth/>
             <MainFifth/>
-            {slideIndex < 4 && <MainLeft/>}
-            {slideIndex < 4 && <MainTop/>}
-            {slideIndex < 4 && <MainBottom/>}
+            {slideCheck  && <MainLeft/>}
+            {slideCheck  && <MainTop/>}
+            {slideCheck  && <MainBottom/>}
         </div>);
 
 }
