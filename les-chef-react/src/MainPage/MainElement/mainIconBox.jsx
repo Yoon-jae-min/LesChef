@@ -5,11 +5,11 @@ import ProfileImage from '../../Image/MainImage/profileWhite.png'
 const MainIcon = () => {
     return (
         <div className='mainIconBox'>
-            <a href='#'><div className='mainMenuButton'>
+            <div className='mainMenuButton'>
                 <hr></hr>
                 <hr></hr>
                 <hr></hr>
-            </div></a>
+            </div>
             <a href='#'><img className='mainLoginButton' src={LoginImage}/></a>
             <a href='#'><img className='mainProfileButton' src={ProfileImage}/></a>
         </div>

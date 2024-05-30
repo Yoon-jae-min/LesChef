@@ -10,55 +10,50 @@ import MainBottom from './MainElement/mainBottomBox';
 
 const MainPage = () => {
     const outerDivRef = useRef();
-    let scrollEventFlag = false;
+    const [currentPage, setCurrentPage] = useState(0);
     const [slideCheck, setSlideCheck] = useState(true);
-    useEffect(() => {
-        const scrollHandler = (e) => {
+    const scrollEventFlag = useRef(false);
+    const pageHeight = window.innerHeight;
 
-            if(scrollEventFlag){
-                return;
-            }
+    const scrollHandler = (e) => {
+        e.preventDefault();
 
-            scrollEventFlag = true;
-            
-            // const { deltaY } = e;
-            const scrollTop = window.scrollY
-            const pageHeight = window.innerHeight;
-            const currentPage = Math.round(scrollTop / pageHeight);
+        if(scrollEventFlag.current){
+            return;
+        }
+
+        scrollEventFlag.current = true;
         
-            // if (deltaY > 0) {
-            //     if(currentPage < 4){
-            //         currentPage += 1;
-            //     }
-            // } else {
-            //     if(currentPage > 0){
-            //         currentPage -= 1;
-            //     }
-            // }
-            window.scrollTo({
-                top: currentPage * pageHeight,
-                left: 0,
-                behavior: "smooth",
-            });
+        const { deltaY } = e;
 
-            // if(window.scrollY >= 3 * pageHeight){
-            //     setSlideCheck(false);
-            // }else{
-            //     setSlideCheck(true);
-            // }
-            
+        if (deltaY > 0) {
+            setCurrentPage((prevPage) => (prevPage < 4 ? prevPage + 1 : prevPage));
+        } else {
+            setCurrentPage((prevPage) => (prevPage > 0 ? prevPage - 1 : prevPage));
+        }  
 
-            setTimeout(() => {
-                scrollEventFlag = false;
-            }, 500);
-            
-        };
+        setTimeout(() => {
+            scrollEventFlag.current = false;
+        }, 500);
+    };
 
-        window.addEventListener("scroll", scrollHandler);
+    useEffect(() => {
+
+        window.addEventListener("wheel", scrollHandler, {passive: false});
         return () => {
-            window.removeEventListener("scroll", scrollHandler);
+            window.removeEventListener("wheel", scrollHandler);
         };
-        }, []);
+    }, []);
+
+    useEffect(() => {
+        window.scrollTo({
+            top: currentPage * pageHeight,
+            left: 0,
+            behavior: "smooth",
+        });
+        setSlideCheck(currentPage < 4);
+    }, [currentPage]);
+
     
     return (
         <div ref={outerDivRef}>
