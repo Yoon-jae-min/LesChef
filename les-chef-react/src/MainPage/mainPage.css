@@ -150,6 +150,35 @@ body{
     height: 90vh;
     width: 25vw;
     z-index: 200;
-    background-color: rgba(0, 51, 0, 0.788);
+    background-color: rgb(0, 51, 0);
     border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.LoginLogo{
+    position: absolute;
+    top: 30px;
+    width: 180px;
+}
+
+.LoginInput{
+    position: absolute;
+    top: 180px;
+    width: 70%;
+}
+
+.eachLabel{
+    display: block;
+    color: white;
+    font-weight: bold;
+}
+
+.eachInput{
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: 1px solid white;
+    height: 30px;
+    margin-bottom: 5px;
 }

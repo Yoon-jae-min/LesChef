@@ -1,6 +1,6 @@
 import React from 'react';
 import FifthBg from '../Image/Background/mainFifthBg.png'
-import JoinBox from './MainElement/mainJoinBox';
+import JoinBox from './LoginElement/mainJoinBox';
 
 const MainFifth = () => {
     return (
