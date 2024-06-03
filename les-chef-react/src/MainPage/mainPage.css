@@ -13,6 +13,10 @@ body{
     position: relative;
 }
 
+.lastSection{
+    z-index: 151;
+}
+
 #mainVideo{
     width: 100vw;
     height: 100vh;
@@ -137,4 +141,15 @@ body{
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.563);
     z-index: 110;
+}
+
+.joinBox{
+    position: absolute;
+    top: 5vh;
+    right: 5vw;
+    height: 90vh;
+    width: 25vw;
+    z-index: 200;
+    background-color: rgba(0, 51, 0, 0.788);
+    border-radius: 20px;
 }
