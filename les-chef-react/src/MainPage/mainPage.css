@@ -1,3 +1,9 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 body::-webkit-scrollbar{
     display: none;
 }
@@ -30,8 +36,7 @@ body{
     left: 0;
     width: 17vw;
     height: 100vh;
-    z-index: 100;
-    border-right: 1px solid rgba(255, 255, 255, 0.432);
+    z-index: 140;
 }
 
 .mainTop{
@@ -42,6 +47,7 @@ body{
     height: 65vh;
     z-index: 100;
     border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+    border-left: 1px solid rgba(255, 255, 255, 0.432);
 }
 
 .mainBottom{
@@ -51,6 +57,7 @@ body{
     width: 83vw;
     height: 35vh;
     z-index: 100;
+    border-left: 1px solid rgba(255, 255, 255, 0.432);
 }
 
 .mainLogo{
@@ -67,9 +74,9 @@ body{
     left: 3vw;
     width: 11vw;
     height: auto;
-    z-index: 101;
+    /* z-index: 101; */
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
 }
 
 .mainIconBox a{
@@ -82,7 +89,7 @@ body{
     flex-direction: column;
     justify-content: space-around;
     padding-top: calc(1vh - 6px);
-    z-index: 150;
+    /* z-index: 150; */
 }
 
 .mainMenuButton hr:nth-of-type(1){
@@ -111,6 +118,14 @@ body{
     cursor: pointer;
 }
 
+.mainLoginButton, .mainProfileButton{
+    display: inline-block;
+}
+
+.mainLoginButton.hidden, .mainProfileButton.hidden{
+    display: none;
+}
+
 .topText, .bottomText{
     color: white;
     font-size: 70px;
@@ -137,9 +152,12 @@ body{
 }
 
 #mainMenuModal{
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.563);
+    background-color: rgba(0, 0, 0, 0.99);
     z-index: 110;
 }
 
@@ -148,7 +166,7 @@ body{
     top: 5vh;
     right: 5vw;
     height: 90vh;
-    width: 25vw;
+    width: 380px;
     z-index: 200;
     background-color: rgb(0, 51, 0);
     border-radius: 20px;
@@ -181,4 +199,69 @@ body{
     border-bottom: 1px solid white;
     height: 30px;
     margin-bottom: 5px;
+}
+
+.joinButton{
+    position: absolute;
+    bottom: 9vh;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.textLoginBox{
+    position: absolute;
+    bottom: 5vh;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.joinBox span{
+    color: white;
+    font-size: 15px;
+}
+
+.goToLoginText{
+    cursor: pointer;
+}
+
+.goToLoginText:hover{
+    text-decoration: underline;
+}
+
+.mainCategoryText{
+    z-index: 140;
+    position: absolute;
+    top: 20vh;
+    left: 39vw;
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+    transition: 1s all;
+}
+
+.mainCategoryText div{
+    height: 70px;
+    overflow: hidden;
+}
+
+.menuText{
+    cursor: pointer;
+    margin: 5px 0;
+    padding-top: 0px;
+    transition: all 1s;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.menuText.noneShow{
+    padding-top: 20px;
+    pointer-events: none;
+    opacity: 0;
 }

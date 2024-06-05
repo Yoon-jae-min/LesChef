@@ -1,11 +1,29 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import LoginImage from '../../Image/MainImage/loginWhite.png'
 import ProfileImage from '../../Image/MainImage/profileWhite.png'
 
-const MainIcon = () => {
+const MainIcon = (props) => {
+    const {toggleMenuModal, menuModal} = props
+
+    const handlerModal = () => {
+        toggleMenuModal();
+    };
+
+    useEffect(() => {
+        if(menuModal){
+            document.querySelector('.mainLoginButton').classList.add('hidden');
+            document.querySelector('.mainProfileButton').classList.add('hidden');
+        }
+        else{
+            document.querySelector('.mainLoginButton').classList.remove('hidden');
+            document.querySelector('.mainProfileButton').classList.remove('hidden');
+        }
+
+    }, [menuModal]);
+
     return (
         <div className='mainIconBox'>
-            <div className='mainMenuButton'>
+            <div onClick={handlerModal} className='mainMenuButton'>
                 <hr></hr>
                 <hr></hr>
                 <hr></hr>
