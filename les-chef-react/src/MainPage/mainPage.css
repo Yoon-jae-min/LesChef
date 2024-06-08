@@ -79,10 +79,6 @@ body{
     justify-content: space-between;
 }
 
-.mainIconBox a{
-    height: 50px;
-}
-
 .mainMenuButton{
     display: flex;
     height: 50px;
@@ -122,7 +118,7 @@ body{
     display: inline-block;
 }
 
-.mainLoginButton.hidden, .mainProfileButton.hidden{
+.mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden{
     display: none;
 }
 
@@ -159,6 +155,16 @@ body{
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.99);
     z-index: 110;
+    transition: all 0.5s;
+}
+
+#mainLoginModal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .joinBox{
@@ -180,7 +186,7 @@ body{
     width: 180px;
 }
 
-.LoginInput{
+.JoinInput{
     position: absolute;
     top: 180px;
     width: 70%;
@@ -199,6 +205,8 @@ body{
     border-bottom: 1px solid white;
     height: 30px;
     margin-bottom: 5px;
+    color: white;
+    outline: none;
 }
 
 .joinButton{
@@ -212,6 +220,7 @@ body{
     font-weight: bold;
     font-size: 15px;
     cursor: pointer;
+    border: none;
 }
 
 .textLoginBox{
@@ -227,11 +236,12 @@ body{
     font-size: 15px;
 }
 
-.goToLoginText{
+.goToLoginText, .goToJoinText{
     cursor: pointer;
+    font-weight: bold;
 }
 
-.goToLoginText:hover{
+.goToLoginText:hover, .goToJoinText:hover{
     text-decoration: underline;
 }
 
@@ -243,7 +253,7 @@ body{
     color: white;
     font-size: 50px;
     font-weight: bold;
-    transition: 1s all;
+    transition: all 0.5s;
 }
 
 .mainCategoryText div{
@@ -264,4 +274,158 @@ body{
     padding-top: 20px;
     pointer-events: none;
     opacity: 0;
+}
+
+.loginBox{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 8vh;
+    left: 39vw;
+    height: 86vh;
+    width: 380px;
+    z-index: 160;
+    background-color: rgb(11, 86, 11);
+    border-radius: 20px;
+    transition: all 0.5s;
+}
+
+.loginInput{
+    position: absolute;
+    top: 190px;
+    width: 70%;
+}
+
+.loginButton{
+    position: absolute;
+    top: 350px;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#findUser{
+    position: absolute;
+    top: 300px;
+    right: 15%;
+    color: rgb(157, 157, 196);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#findUser:hover{
+    text-decoration: underline;
+}
+
+#hrAndOr{
+    position: absolute;
+    top: 405px;
+    width: 80%;
+    display: flex;
+    color: white;
+}
+
+#hrAndOr p{
+    margin: 0;
+}
+
+#hrAndOr hr{
+    width: 35%;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+#SNSLogin{
+    position: absolute;
+    top: 450px;
+    display: flex;
+    justify-content: space-between;
+    width: 74%;
+}
+
+#naverButtonContainer{
+    background-color: white;
+    height: 45px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#naverButtonContainer, #kakaoButtonContainer, #googleButtonContainer{
+    cursor: pointer;
+}
+
+.naverIcon{
+    width: 31px;
+    height: 31px;
+    border-radius: 5px;
+    margin-left: 3px;
+}
+
+.textJoinBox{
+    position: absolute;
+    top: 510px;
+    width: 68%;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+}
+
+.idPwButton{
+    position: absolute;
+    top: 190px;
+    width: 200px;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+    font-weight: bold;
+}
+
+.idButton, .pwButton{
+    width: 80px;
+    height: 40px;
+    border: 1px solid black;
+    background-color: rgb(0, 44, 0);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.idButton.click, .pwButton.click{
+    background-color: rgb(84, 150, 84);
+}
+
+.idSwitchContainer, .pwSwitchContainer{
+    position: absolute;
+    top: 270px;
+    width: 70%;
+}
+
+.searchButton{
+    position: absolute;
+    top: 140px;
+    width: 100%;
+    height: 6vh;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(90, 166, 123);
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+}
+
+.pwSearch{
+    top: 200px;
 }

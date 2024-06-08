@@ -3,11 +3,15 @@ import LoginImage from '../../Image/MainImage/loginWhite.png'
 import ProfileImage from '../../Image/MainImage/profileWhite.png'
 
 const MainIcon = (props) => {
-    const {toggleMenuModal, menuModal} = props
+    const {toggleLoginModal, toggleMenuModal, menuModal} = props
 
-    const handlerModal = () => {
+    const handlerMenuModal = () => {
         toggleMenuModal();
     };
+
+    const handlerLoginModal = () => {
+        toggleLoginModal();
+    }
 
     useEffect(() => {
         if(menuModal){
@@ -23,12 +27,12 @@ const MainIcon = (props) => {
 
     return (
         <div className='mainIconBox'>
-            <div onClick={handlerModal} className='mainMenuButton'>
+            <div onClick={handlerMenuModal} className='mainMenuButton'>
                 <hr></hr>
                 <hr></hr>
                 <hr></hr>
             </div>
-            <a href='#'><img className='mainLoginButton' src={LoginImage}/></a>
+            <div onClick={toggleLoginModal}><img className='mainLoginButton' src={LoginImage}/></div>
             <a href='#'><img className='mainProfileButton' src={ProfileImage}/></a>
         </div>
     )

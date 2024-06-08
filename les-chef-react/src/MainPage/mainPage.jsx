@@ -1,3 +1,4 @@
+import "./mainPage.css";
 import React, {useEffect, useRef, useState} from 'react';
 import MainFirst from './mainPageFirst';
 import MainSecond from './mainPageSecond';
@@ -15,13 +16,24 @@ const MainPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [slideCheck, setSlideCheck] = useState(true);
     const [menuModal, setMenuModal] = useState(false);
+    const [loginModal, setLoginModal] = useState(false);
+    const [loginToFind, setLoginToFind] = useState(false);
+    const [idPwBox, setIdPwBox] = useState(false);
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
     useEffect(() => {
+        if(loginModal){
+            setIdPwBox(false);
+        }
+    }, [loginModal])
+
+    useEffect(() => {
         const scrollHandler = (e) => {
-            if (!menuModal) {
+            if (!menuModal && !loginModal) {
                 e.preventDefault();
+
+                console.log('막음');
     
                 if(scrollEventFlag.current){
                     return;
@@ -48,7 +60,7 @@ const MainPage = () => {
         return () => {
             window.removeEventListener("wheel", scrollHandler);
         };
-    }, [menuModal]);
+    }, [menuModal, loginModal]);
 
     useEffect(() => {
         window.scrollTo({
@@ -60,16 +72,36 @@ const MainPage = () => {
     }, [currentPage]);
 
     useEffect(() => {
-        if (menuModal) {
+        if (menuModal || loginModal) {
             document.body.style.overflowY = 'hidden';
         } else {
             document.body.style.overflowY = 'auto';
         }
-    }, [menuModal]);
+    }, [menuModal, loginModal]);
 
     const toggleMenuModal = () => {
         setMenuModal((prev) => !prev);
     };
+
+    const toggleLoginModal = () => {
+        setLoginModal((prev) => !prev);
+    }
+
+    const goToJoinBox = () => {
+        setLoginModal((prev) => !prev);
+        setCurrentPage(4);
+    }
+
+    const toggleFindBox = () => {
+        setLoginToFind((prev) => !prev);
+        if(loginModal){
+            setLoginModal(false);
+        }
+    }
+
+    const toggleFindIdPw = () => {
+        setIdPwBox((prev) => !prev);
+    }
     
     return (
         <div ref={outerDivRef}>
@@ -77,9 +109,10 @@ const MainPage = () => {
             <MainSecond/>
             <MainThird/>
             <MainFourth/>
-            <MainFifth/>
+            <MainFifth toggleLoginModal={toggleLoginModal}/>
+            <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
             <MenuModal menuModal={menuModal}/>
-            {slideCheck  && <MainLeft toggleMenuModal={toggleMenuModal} menuModal={menuModal}/>}
+            {slideCheck  && <MainLeft toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}
             {slideCheck  && <MainTop/>}
             {slideCheck  && <MainBottom/>}
         </div>);

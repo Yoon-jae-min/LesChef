@@ -2,11 +2,13 @@ import React from 'react';
 import FifthBg from '../Image/Background/mainFifthBg.png'
 import JoinBox from './LoginElement/mainJoinBox';
 
-const MainFifth = () => {
+const MainFifth = (props) => {
+    const {toggleLoginModal} = props;
+
     return (
         <section className='mainSection lastSection'>
             <img src={FifthBg}/>
-            <JoinBox/>
+            <JoinBox toggleLoginModal={toggleLoginModal}/>
         </section>
     )
 }

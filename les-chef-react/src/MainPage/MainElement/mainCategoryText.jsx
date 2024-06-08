@@ -6,15 +6,11 @@ const CategoryText = (props) => {
     useEffect(() => {
         const textPs = document.querySelectorAll('.menuText');
 
-        console.log(menuModal);
-
         if(!menuModal){
-            console.log("noneShow");
             textPs.forEach((textP) => {
                 textP.classList.add('noneShow');
             })
         }else{
-            console.log("show");
             textPs.forEach((textP) => {
                 textP.classList.remove('noneShow');
             })
