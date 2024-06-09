@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const CategoryText = (props) => {
     const {menuModal} = props;
@@ -19,12 +20,12 @@ const CategoryText = (props) => {
 
     return(
         <div className="mainCategoryText">
-                <div><p className="menuText">Korean</p></div>
-                <div><p className="menuText">Western</p></div>
-                <div><p className="menuText">Japanese</p></div>
-                <div><p className="menuText">Chinese</p></div>
-                <div><p className="menuText">Share Recipe</p></div>
-                <div><p className="menuText">Community</p></div>
+                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Korean</p></div></Link>
+                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Western</p></div></Link>
+                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Japanese</p></div></Link>
+                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Chinese</p></div></Link>
+                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Share Recipe</p></div></Link>
+                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Community</p></div></Link>
         </div>
     )
 }

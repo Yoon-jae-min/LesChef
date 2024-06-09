@@ -429,3 +429,12 @@ body{
 .pwSearch{
     top: 200px;
 }
+
+.goToRecipePage{
+    text-decoration: none;
+    color: white;
+}
+
+.goToRecipePage:hover{
+    text-decoration: underline;
+}
