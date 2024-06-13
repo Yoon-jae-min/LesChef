@@ -1,6 +1,6 @@
 import React from "react";
-import ListContainerHeader from "./ListContainer/recipeListHeader";
-import ListContainerBody from "./ListContainer/recipeListBody";
+import ListContainerHeader from "../ListContainer/recipeListHeader";
+import ListContainerBody from "../ListContainer/recipeListBody";
 
 const ListContainer = () => {
     return(

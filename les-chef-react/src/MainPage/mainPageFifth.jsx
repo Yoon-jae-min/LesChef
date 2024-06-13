@@ -1,5 +1,5 @@
 import React from 'react';
-import FifthBg from '../Image/Background/mainFifthBg.png'
+import FifthBg from '../Image/MainImage/Background/mainFifthBg.png'
 import JoinBox from './LoginElement/mainJoinBox';
 
 const MainFifth = (props) => {
@@ -7,7 +7,7 @@ const MainFifth = (props) => {
 
     return (
         <section className='mainSection lastSection'>
-            <img src={FifthBg}/>
+            <img src={FifthBg} className='mainBgImg'/>
             <JoinBox toggleLoginModal={toggleLoginModal}/>
         </section>
     )

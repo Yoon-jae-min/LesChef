@@ -19,6 +19,10 @@ body{
     position: relative;
 }
 
+.mainBgImg{
+    width: 100vw;
+}
+
 .lastSection{
     z-index: 151;
 }
