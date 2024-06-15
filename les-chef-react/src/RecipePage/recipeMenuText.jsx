@@ -1,14 +1,16 @@
 import React from "react";
 import MenuTxtUnit from "./menuTxtUnit";
 
-const RecipeMenuText = () => {
+const RecipeMenuText = (props) => {
+    const {setCategory} = props;
+
     return(
         <div className="recipeMenuText">
-            <MenuTxtUnit koreanTxt="한식레시피" englishTxt="korean"/>
-            <MenuTxtUnit koreanTxt="일식레시피" englishTxt="japanese"/>
-            <MenuTxtUnit koreanTxt="중식레시피" englishTxt="chinese"/>
-            <MenuTxtUnit koreanTxt="양식레시피" englishTxt="western"/>
-            <MenuTxtUnit koreanTxt="공유레시피" englishTxt="share"/>
+            <MenuTxtUnit koreanTxt="한식레시피" englishTxt="korean" setCategory={setCategory}/>
+            <MenuTxtUnit koreanTxt="일식레시피" englishTxt="japanese" setCategory={setCategory}/>
+            <MenuTxtUnit koreanTxt="중식레시피" englishTxt="chinese" setCategory={setCategory}/>
+            <MenuTxtUnit koreanTxt="양식레시피" englishTxt="western" setCategory={setCategory}/>
+            <MenuTxtUnit koreanTxt="공유레시피" englishTxt="share" setCategory={setCategory}/>
         </div>
     )
 }

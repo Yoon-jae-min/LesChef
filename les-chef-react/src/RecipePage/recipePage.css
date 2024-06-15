@@ -46,7 +46,6 @@
 
 .menuTxtUnit{
     margin-bottom: 20px;
-    cursor: pointer;
 }
 
 .koreanText, .englishText{
@@ -60,8 +59,46 @@
 .koreanText{
     font-size: 6vh;
     margin-right: 5px;
+    cursor: pointer;
+}
+
+.koreanText:hover{
+    color: burlywood;
 }
 
 .englishText{
     font-size: 4vh;
+}
+
+.recipeShowHead{
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 100%;
+    height:15%;
+}
+
+.recipeHeadImg{
+    border-radius: 20px 20px 0 0;
+    width: calc(100% + 1px);
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.5;
+}
+
+.recipeHeadText{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-weight: bold;
+    font-size: 5vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0 0 10px black;
 }

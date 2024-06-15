@@ -20,12 +20,12 @@ const CategoryText = (props) => {
 
     return(
         <div className="mainCategoryText">
-                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Korean</p></div></Link>
-                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Western</p></div></Link>
-                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Japanese</p></div></Link>
-                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Chinese</p></div></Link>
-                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Share Recipe</p></div></Link>
-                <Link to="/recipeMain" className="goToRecipePage"><div><p className="menuText">Community</p></div></Link>
+                <Link to="/recipeMain" state={{category: "korean"}} className="goToRecipePage"><div><p className="menuText">Korean</p></div></Link>
+                <Link to="/recipeMain" state={{category: "western"}} className="goToRecipePage"><div><p className="menuText">Western</p></div></Link>
+                <Link to="/recipeMain" state={{category: "japanese"}} className="goToRecipePage"><div><p className="menuText">Japanese</p></div></Link>
+                <Link to="/recipeMain" state={{category: "chinese"}} className="goToRecipePage"><div><p className="menuText">Chinese</p></div></Link>
+                <Link to="/recipeMain" state={{category: "share"}} className="goToRecipePage"><div><p className="menuText">Share Recipe</p></div></Link>
+                <Link className="goToRecipePage"><div><p className="menuText">Community</p></div></Link>
         </div>
     )
 }

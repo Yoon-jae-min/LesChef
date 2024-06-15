@@ -1,11 +1,15 @@
 import React from "react";
 
 const MenuTxtUnit = (props) => {
-    const {koreanTxt, englishTxt} = props;
+    const {koreanTxt, englishTxt, setCategory} = props;
+
+    const HandlerClick = () => {
+        setCategory(englishTxt);
+    }
 
     return(
         <div className="menuTxtUnit">
-            <span className="koreanText">{koreanTxt}</span>
+            <span className="koreanText" onClick={HandlerClick}>{koreanTxt}</span>
             <span className="englishText">{englishTxt}</span>
         </div>
     )
