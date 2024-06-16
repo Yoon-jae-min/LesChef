@@ -1,15 +1,15 @@
 import "./mainPage.css";
 import React, {useEffect, useRef, useState} from 'react';
-import MainFirst from './mainPageFirst';
-import MainSecond from './mainPageSecond';
-import MainThird from './mainPageThird';
-import MainFourth from './mainPageFourth';
-import MainFifth from './mainPageFifth';
-import MainLeft from './MainElement/mainLeftBox';
-import MainTop from './MainElement/mainTopBox';
-import MainBottom from './MainElement/mainBottomBox';
-import MenuModal from './mainMenuModal';
-import LoginModal from './mainLoginModal';
+import MainFirst from './MainSlideComponent/mainPageFirst';
+import MainSecond from './MainSlideComponent/mainPageSecond';
+import MainThird from './MainSlideComponent/mainPageThird';
+import MainFourth from './MainSlideComponent/mainPageFourth';
+import MainFifth from './MainSlideComponent/mainPageFifth';
+import MainLeft from './MainCommonElement/mainLeftBox';
+import MainTop from './MainCommonElement/mainTopBox';
+import MainBottom from './MainCommonElement/mainBottomBox';
+import MenuModal from './ModalComponent/mainMenuModal';
+import LoginModal from './ModalComponent/mainLoginModal';
 
 const MainPage = () => {
     const outerDivRef = useRef();

@@ -1,5 +1,5 @@
 import React from 'react';
-import FirstVideo from '../../src/Video/mainFirstVideo.mp4'
+import FirstVideo from '../../../src/Video/mainFirstVideo.mp4'
 
 const MainFirst = (props) => {
 

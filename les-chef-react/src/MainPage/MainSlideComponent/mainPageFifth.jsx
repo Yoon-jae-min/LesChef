@@ -1,6 +1,6 @@
 import React from 'react';
-import FifthBg from '../Image/MainImage/Background/mainFifthBg.png'
-import JoinBox from './LoginElement/mainJoinBox';
+import FifthBg from '../../Image/MainImage/Background/mainFifthBg.png'
+import JoinBox from '../LoginElement/mainJoinBox';
 
 const MainFifth = (props) => {
     const {toggleLoginModal} = props;

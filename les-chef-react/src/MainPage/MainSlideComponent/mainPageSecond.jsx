@@ -1,5 +1,5 @@
 import React from 'react';
-import SecondBg from '../Image/MainImage/Background/mainSecondBg.png'
+import SecondBg from '../../Image/MainImage/Background/mainSecondBg.png'
 
 const MainSecond = () => {
     return (

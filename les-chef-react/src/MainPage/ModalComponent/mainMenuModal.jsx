@@ -1,5 +1,5 @@
 import React, {useEffect} from "react";
-import CategoryText from "./MainElement/mainCategoryText";
+import CategoryText from "../MainCommonElement/mainCategoryText";
 
 const MenuModal = (props) => {
     const {menuModal} = props;

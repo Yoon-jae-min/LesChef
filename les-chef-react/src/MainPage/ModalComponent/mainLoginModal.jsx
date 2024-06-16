@@ -1,6 +1,6 @@
 import React from "react";
-import LoginBox from "./LoginElement/mainLoginBox";
-import FindBox from "./LoginElement/mainFindBox";
+import LoginBox from "../LoginElement/mainLoginBox";
+import FindBox from "../LoginElement/mainFindBox";
 
 const LoginModal = (props) => {
     const {toggleFindIdPw, idPwBox, toggleFindBox, toggleLoginModal, loginModal, goToJoinBox, loginToFind} = props;

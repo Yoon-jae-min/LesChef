@@ -1,0 +1,140 @@
+.showGpBox{
+    position: absolute;
+    top: 15%;
+    left: 0;
+    height: 10%;
+    width: 100%;
+}
+
+.showGpBoxLeft{
+    position: absolute;
+    bottom: 10%;
+    left: 5%;
+}
+
+.showGpBoxLeft span{
+    margin-right: 20px;
+    font-size: 22px;
+    font-family: "Jua", sans-serif;
+    color: gray;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.showGpBoxLeft span.active{
+    color: black;
+}
+
+.recipeShowBox hr{
+    position: absolute;
+    top: 25%;
+    width: 92%;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    margin: 0 4%;
+}
+
+.recipeShowBox hr:nth-of-type(1){
+    top: 25%;
+}
+
+.recipeShowBox hr:nth-of-type(2){
+    top: calc(97% + 2px);
+}
+
+.showGpBoxRight{
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    display: flex;
+}
+
+.orderButton{
+    background-color: rgba(93, 12, 12, 0.715);
+    border-radius: 10px;
+    margin-left: 20px;
+    padding: 5px 20px;
+    color: white;
+    font-family: "Jua", sans-serif;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.orderButton:hover{
+    background-color: rgb(72, 12, 12);
+}
+
+.elementContainer{
+    position: absolute;
+    top: 25%;
+    height: 70%;
+    width: 90%;
+    margin: 0 5%;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-top: 15px;
+    max-width: 900px;
+}
+
+.elementContainer::-webkit-scrollbar{
+    display: none;
+}
+
+.recipeElement{
+    border-radius: 10px;
+    box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.7);
+    height: 280px;
+    width: 31%;
+    margin: 0 calc(7% / 6) 20px;
+    min-width: 250px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.recipeElement:hover{
+    scale: 1.03;
+}
+
+.elementImg{
+    width: calc(90% - 2px);
+    height: 70%;
+    object-fit: cover;
+    overflow: hidden;
+    margin: 10px 5% 0;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.7);
+}
+
+.elementInfoBox{
+    position: relative;
+    width: 100%;
+    height: calc(30% - 15px);
+    border: 1px solid black;
+}
+
+.elementInfoBox p{
+    margin: 5px 0;
+    width: 100%;
+    font-size: 22px;
+    font-family: "Jua", sans-serif;
+    text-align: center;
+}
+
+.starBox{
+    position: absolute;
+    bottom: 5px;
+    left: 10px;
+    width: 100px;
+    height: 20px;
+    border: 1px solid black;
+}
+
+.showCountBox{
+    position: absolute;
+    bottom: 5px;
+    right: 10px;
+    width: 70px;
+    height: 20px;
+    border: 1px solid black;
+}

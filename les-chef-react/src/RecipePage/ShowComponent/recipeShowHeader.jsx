@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import KoreanHeadImg from "../Image/RecipeImage/listHeaderKorean.png";
-import JapaneseHeadImg from "../Image/RecipeImage/listHeaderJapanese.png";
-import ChineseHeadImg from "../Image/RecipeImage/listHeaderChinese.png";
-import WesternHeadImg from "../Image/RecipeImage/listHeaderWestern.png";
-import ShareHeadImg from "../Image/RecipeImage/listHeaderShare.png";
+import KoreanHeadImg from "../../Image/RecipeImage/listHeaderKorean.png";
+import JapaneseHeadImg from "../../Image/RecipeImage/listHeaderJapanese.png";
+import ChineseHeadImg from "../../Image/RecipeImage/listHeaderChinese.png";
+import WesternHeadImg from "../../Image/RecipeImage/listHeaderWestern.png";
+import ShareHeadImg from "../../Image/RecipeImage/listHeaderShare.png";
 
 const RecipeShowHead = (props) => {
     const {category} = props;

@@ -1,5 +1,5 @@
 import React from 'react';
-import ThirdBg from '../Image/MainImage/Background/mainThirdBg.png'
+import ThirdBg from '../../Image/MainImage/Background/mainThirdBg.png'
 
 const MainThird = () => {
     return (
