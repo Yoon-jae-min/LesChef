@@ -3,12 +3,12 @@ import ShowGpBoxLeft from "./showGpBoxLeft";
 import ShowGpBoxRight from "./showGpBoxRight";
 
 const RecipeShowGpBox = (props) => {
-    const {category} = props;
+    const {category, infoGoto} = props;
 
     return(
         <div className="showGpBox">
-            { (category !== "share") && <ShowGpBoxLeft category={category}/>}
-            <ShowGpBoxRight/>
+            { (category !== "share") && <ShowGpBoxLeft category={category} infoGoto={infoGoto}/>}
+            <ShowGpBoxRight infoGoto={infoGoto}/>
         </div>
     )
 }

@@ -8,6 +8,7 @@ import RecipeMenuBox from "./MenuComponent/recipeMenuBox";
 const RecipePage = () => {
     const location = useLocation();
     const [category, setCategory] = useState('korean');
+    const [infoGoto, setInfoGoto] = useState(false);
 
     useEffect(() => {
         setCategory(location.state.category);
@@ -16,8 +17,8 @@ const RecipePage = () => {
     return(
         <div className="recipeBody">
             <img src={RecipeBgImg} className="recipeBgImg"/>
-            <RecipeMenuBox setCategory={setCategory}/>
-            <RecipeShowBox category={category}/>
+            <RecipeMenuBox setCategory={setCategory} setInfoGoto={setInfoGoto}/>
+            <RecipeShowBox category={category} infoGoto={infoGoto} setInfoGoto={setInfoGoto}/>
         </div>
     )
 }

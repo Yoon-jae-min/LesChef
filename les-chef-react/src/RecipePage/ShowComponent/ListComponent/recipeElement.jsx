@@ -1,9 +1,15 @@
 import React from "react";
 import elementImg from "../../../Image/RecipeImage/elementImg/참치김치찌개.jpg";
 
-const RecipeElement = () => {
+const RecipeElement = (props) => {
+    const {setInfoGoto} = props;
+
+    const handleClick = () => {
+        setInfoGoto(true);
+    }
+
     return(
-        <div className="recipeElement">
+        <div className="recipeElement" onClick={handleClick}>
             <img className="elementImg" src={elementImg}/>
             <div className="elementInfoBox">
                 <p className="listRecipeTitle">참치김치찌개</p>

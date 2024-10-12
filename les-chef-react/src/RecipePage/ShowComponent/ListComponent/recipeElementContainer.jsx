@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import RecipeElement from "./recipeElement";
 
-const ElementContainer = () => {
+const ElementContainer = (props) => {
+    const {setInfoGoto} = props;
     const [elementCount, setElementCount] = useState(4);
 
     return(
         <div className="elementContainer">
             {Array.from({length: elementCount}).map(() => {
-                return <RecipeElement/>
+                return <RecipeElement setInfoGoto={setInfoGoto}/>
             })}
         </div>
     )

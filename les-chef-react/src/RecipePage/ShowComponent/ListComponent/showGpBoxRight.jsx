@@ -1,10 +1,16 @@
 import React from "react";
+import recommendBtn from "../../../Image/RecipeImage/noLike.png";
 
-const ShowGpBoxRight = () => {
+const ShowGpBoxRight = (props) => {
+    const {infoGoto} = props;
+
     return(
         <div className="showGpBoxRight">
+            {infoGoto && <div className="recommendBtn"><img src={recommendBtn}/></div>}
+            {!infoGoto && <>
             <div className="orderButton">최신순</div>
-            <div className="orderButton">추천순</div>
+            <div className="orderButton">추천순</div></>
+            }
         </div>
     )
 }

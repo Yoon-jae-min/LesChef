@@ -32,8 +32,6 @@ const MainPage = () => {
         const scrollHandler = (e) => {
             if (!menuModal && !loginModal) {
                 e.preventDefault();
-
-                console.log('막음');
     
                 if(scrollEventFlag.current){
                     return;

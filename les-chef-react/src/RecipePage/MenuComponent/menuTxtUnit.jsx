@@ -1,10 +1,11 @@
 import React from "react";
 
 const MenuTxtUnit = (props) => {
-    const {koreanTxt, englishTxt, setCategory} = props;
+    const {koreanTxt, englishTxt, setCategory, setInfoGoto} = props;
 
     const HandlerClick = () => {
         setCategory(englishTxt);
+        setInfoGoto(false);
     }
 
     return(

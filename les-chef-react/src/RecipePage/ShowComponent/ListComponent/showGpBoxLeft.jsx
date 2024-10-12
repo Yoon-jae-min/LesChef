@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 const ShowGpBoxLeft = (props) => {
-    const {category} = props;
+    const {category, infoGoto} = props;
     const [firstText, setFirstText] = useState("국, 찌개");
     const [secondText, setSecondText] = useState("밥, 면");
     const [thirdText, setThirdText] = useState("반찬");
@@ -35,11 +35,14 @@ const ShowGpBoxLeft = (props) => {
 
     return(
         <div className="showGpBoxLeft">
+            {infoGoto && <div class="recipeInfoName">참치김치찌개</div>}
+            {!infoGoto && <>
             <span onClick={() => clickGroup(0)} className={activeIndex === 0 ? "active" : ""}>전체</span>
             <span onClick={() => clickGroup(1)} className={activeIndex === 1 ? "active" : ""}>{firstText}</span>
             <span onClick={() => clickGroup(2)} className={activeIndex === 2 ? "active" : ""}>{secondText}</span>
             <span onClick={() => clickGroup(3)} className={activeIndex === 3 ? "active" : ""}>{thirdText}</span>
-            <span onClick={() => clickGroup(4)} className={activeIndex === 4 ? "active" : ""}>기타</span>
+            <span onClick={() => clickGroup(4)} className={activeIndex === 4 ? "active" : ""}>기타</span></>
+            }
         </div>
     )
 }
