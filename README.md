@@ -11,3 +11,6 @@
 2024.06.05 ~ 2024.06.28
 
 ### ⚙️개발환경
+- ![Static Badge](https://img.shields.io/badge/Language-black?style=for-the-badge)![Static Badge](https://img.shields.io/badge/JavaScript-orange?style=for-the-badge)![Static Badge](https://img.shields.io/badge/CSS-blue?style=for-the-badge)
+- ![Static Badge](https://img.shields.io/badge/Library-black?style=for-the-badge)![Static Badge](https://img.shields.io/badge/React-blue?style=for-the-badge)
+- ![Static Badge](https://img.shields.io/badge/IDE-black?style=for-the-badge)![Static Badge](https://img.shields.io/badge/Visual_Studio_Code-blue?style=for-the-badge)
