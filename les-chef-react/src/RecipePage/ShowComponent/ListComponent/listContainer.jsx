@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RecipeElement from "./recipeElement";
+import ListElement from "./listElement";
 
 const ElementContainer = (props) => {
     const {setInfoGoto} = props;
@@ -8,7 +8,7 @@ const ElementContainer = (props) => {
     return(
         <div className="elementContainer">
             {Array.from({length: elementCount}).map(() => {
-                return <RecipeElement setInfoGoto={setInfoGoto}/>
+                return <ListElement setInfoGoto={setInfoGoto}/>
             })}
         </div>
     )

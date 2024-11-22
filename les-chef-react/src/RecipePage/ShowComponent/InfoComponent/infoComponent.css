@@ -1,12 +1,39 @@
-.recipeInfoName{
-    margin-right: 20px;
-    font-size: 28px;
-    font-family: "Jua", sans-serif;
-    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
-    color: black;
+.infoContainer{
+    height: calc(72% - 13px);
+    width: 90%;
+    position: absolute;
+    top: 25%;
+    margin: 0 5%;
+    padding-top: 15px;
+    overflow: scroll;
 }
 
-.recommendBtn img{
-    width: 2.5vw;
-    cursor: pointer;
+.infoMainImg{
+    width: calc((63vw / 10 * 9) / 10 * 5);
+    margin-left: 2%;
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: 10px;
+}
+
+.ingredientBox{
+    border: 1px solid black;
+
+    width: 40%;
+    position: absolute;
+    left: 57%;
+    display: inline-block;
+    overflow: scroll;
+    aspect-ratio: 1 / 1;
+}
+
+.iconBox{
+    border: 1px solid black;
+
+    position: absolute;
+    left: 57%;
+    top: calc(((63vw / 10 * 9) / 10 * 4) + 15px);
+    width: 40%;
+    height: calc(((63vw / 10 * 9) / 10 * 5) - ((63vw / 10 * 9) / 10 * 4) - 4px);
+    display: inline-block;
 }

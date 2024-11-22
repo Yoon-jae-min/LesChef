@@ -176,7 +176,7 @@ body{
 .joinBox{
     position: absolute;
     top: 5vh;
-    right: 5vw;
+    right: 2vw;
     height: 90vh;
     width: 380px;
     z-index: 200;
@@ -442,5 +442,5 @@ body{
 }
 
 .goToRecipePage:hover{
-    text-decoration: underline;
+    color: rgb(217, 169, 169);
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import recommendBtn from "../../../Image/RecipeImage/noLike.png";
+import recommendBtn from "../../../Image/RecipeImage/InfoImg/noLike.png";
 
 const ShowGpBoxRight = (props) => {
     const {infoGoto} = props;
