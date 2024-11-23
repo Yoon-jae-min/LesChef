@@ -25,7 +25,7 @@ const CategoryText = (props) => {
                 <Link to="/recipeMain" state={{category: "japanese"}} className="goToRecipePage"><div><p className="menuText">Japanese</p></div></Link>
                 <Link to="/recipeMain" state={{category: "chinese"}} className="goToRecipePage"><div><p className="menuText">Chinese</p></div></Link>
                 <Link to="/recipeMain" state={{category: "share"}} className="goToRecipePage"><div><p className="menuText">Share Recipe</p></div></Link>
-                <Link className="goToRecipePage"><div><p className="menuText">Community</p></div></Link>
+                <Link to="/customerMain" className="goToRecipePage"><div><p className="menuText">Community</p></div></Link>
         </div>
     )
 }

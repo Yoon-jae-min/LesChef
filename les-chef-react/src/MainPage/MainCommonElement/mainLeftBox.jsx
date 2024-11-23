@@ -1,5 +1,5 @@
 import React from "react";
-import MainLogo from "../../Image/MainImage/LogoWhite.png"
+import MainLogo from "../../Image/CommonImage/LogoWhite.png"
 import MainIcon from './mainIconBox';
 import { Link } from "react-router-dom";
 

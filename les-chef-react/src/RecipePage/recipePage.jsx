@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import "./recipePage.css";
 import RecipeBgImg from "../Image/RecipeImage/Background/recipeBackground.jpg";
 import RecipeShowBox from "./ShowComponent/showBox";
-import RecipeMenuBox from "./MenuComponent/recipeMenuBox";
+import RecipeMenuBox from "./MenuComponent/menuBox";
 
 const RecipePage = () => {
     const location = useLocation();

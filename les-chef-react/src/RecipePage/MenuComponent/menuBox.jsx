@@ -1,6 +1,6 @@
 import React from "react";
-import RecipeLogo from "../../Image/RecipeImage/Background/LogoWhite.png"
-import RecipeMenuText from "./recipeMenuText";
+import RecipeLogo from "../../Image/CommonImage/LogoWhite.png"
+import RecipeMenuText from "./menuText";
 import { Link } from "react-router-dom";
 
 const RecipeMenuBox = (props) => {

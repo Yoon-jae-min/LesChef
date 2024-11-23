@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginLogo from "../../Image/MainImage/LogoWhite.png"
+import LoginLogo from "../../Image/CommonImage/LogoWhite.png"
 import JoinInput from './joinInputBox';
 
 const JoinBox = (props) => {

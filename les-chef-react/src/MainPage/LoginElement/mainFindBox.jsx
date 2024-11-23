@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import LoginLogo from "../../Image/MainImage/LogoWhite.png"
+import LoginLogo from "../../Image/CommonImage/LogoWhite.png"
 import FindId from "./mainFindId";
 import FindPw from "./mainFindPw";
 

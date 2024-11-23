@@ -1,5 +1,5 @@
 import React from "react";
-import LoginLogo from "../../Image/MainImage/LogoWhite.png"
+import LoginLogo from "../../Image/CommonImage/LogoWhite.png"
 import LoginInput from "./loginInputBox.jsx";
 import KakaoLoginButton from "../../Image/MainImage/kakaoLoginButton.png"
 import NaverIcon from "../../Image/MainImage/naverIcon.png"
