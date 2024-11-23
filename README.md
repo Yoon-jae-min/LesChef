@@ -8,7 +8,7 @@
 현재 가진 재료들을 이용해 만들수 있는 레시피의 정보를 선별해서 제공해줄 수 있습니다. 
 
 ### 🕖개발기간
-2024.06.05 ~ 2024.06.28
+2024.06.05 ~ 2024.06.28 / 2024.11.20 ~
 
 ### ⚙️개발환경
 - ![Static Badge](https://img.shields.io/badge/Language-black?style=for-the-badge)![Static Badge](https://img.shields.io/badge/JavaScript-orange?style=for-the-badge)![Static Badge](https://img.shields.io/badge/CSS-blue?style=for-the-badge)
