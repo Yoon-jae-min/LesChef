@@ -2,12 +2,13 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
-    opacity: 0.85;
+    
 }
 
 .recipeBgImg{
     width: 100vw;
     min-height: 100vh;
+    opacity: 0.85;
 }
 
 .recipeShowBox{
@@ -24,10 +25,10 @@
 
 .recipeMenuBox{
     position: fixed;
-    top: 5vh;
+    top: 15vh;
     left: 3vw;
     width: 24vw;
-    height: 90vh;
+    height: 80vh;
 }
 
 .recipeLogo{
@@ -39,10 +40,9 @@
 
 .recipeMenuText{
     position: absolute;
-    top: 10vh;
+    top: 0;
     left: 1vw;
     width: 22vw;
-    /* border: 1px solid white; */
 }
 
 .menuTxtUnit{
@@ -115,4 +115,17 @@
 .recommendBtn img{
     width: 2.5vw;
     cursor: pointer;
+}
+
+.recipeIconBox{
+    position: absolute;
+    top: 5vh;
+    left: 3vw;
+    width: 24vw;
+    height: 10vh;
+}
+
+.recipeLeftIcon{
+    margin: 0 0.5vw;
+    width: 3.5vw;
 }

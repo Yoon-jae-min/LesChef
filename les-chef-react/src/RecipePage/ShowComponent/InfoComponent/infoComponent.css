@@ -53,3 +53,11 @@
     height: 25%;
     display: inline-block;
 }
+
+.infoStepBox{
+    width: 90%;
+    height: 100px;
+    margin: 0 5%;
+
+    border: 1px solid black;
+}

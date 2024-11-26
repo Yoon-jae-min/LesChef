@@ -90,6 +90,10 @@ const MainPage = () => {
         setCurrentPage(4);
     }
 
+    const goToTopSlide = () => {
+        setCurrentPage(0)
+    }
+
     const toggleFindBox = () => {
         setLoginToFind((prev) => !prev);
         if(loginModal){
@@ -107,7 +111,7 @@ const MainPage = () => {
             <MainSecond/>
             <MainThird/>
             <MainFourth/>
-            <MainFifth toggleLoginModal={toggleLoginModal}/>
+            <MainFifth toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide}/>
             <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
             <MenuModal menuModal={menuModal}/>
             {slideCheck  && <MainLeft toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}

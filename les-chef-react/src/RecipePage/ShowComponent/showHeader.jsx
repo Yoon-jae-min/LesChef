@@ -5,6 +5,7 @@ import ChineseHeadImg from "../../Image/RecipeImage/Background/listHeaderChinese
 import WesternHeadImg from "../../Image/RecipeImage/Background/listHeaderWestern.png";
 import ShareHeadImg from "../../Image/RecipeImage/Background/listHeaderShare.png";
 
+
 const RecipeShowHead = (props) => {
     const {category} = props;
     const [headImgUrl, setHeadImgUrl] = useState(KoreanHeadImg);

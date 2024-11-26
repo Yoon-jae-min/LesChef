@@ -90,11 +90,10 @@ body{
 
 .mainMenuButton{
     display: flex;
-    height: 50px;
+    height: 3.5vw;
     flex-direction: column;
     justify-content: space-around;
     padding-top: calc(1vh - 6px);
-    /* z-index: 150; */
 }
 
 .mainMenuButton hr:nth-of-type(1){
@@ -125,6 +124,11 @@ body{
 
 .mainLoginButton, .mainProfileButton{
     display: inline-block;
+    
+}
+
+.mainProfileButton{
+    margin-top: 4px;
 }
 
 .mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden{
@@ -193,6 +197,7 @@ body{
     position: absolute;
     top: 30px;
     width: 180px;
+    cursor: pointer;
 }
 
 .JoinInput{

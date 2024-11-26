@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import LoginImage from '../../Image/MainImage/loginWhite.png'
-import ProfileImage from '../../Image/MainImage/profileWhite.png'
+import ProfileImage from '../../Image/CommonImage/profileIcon.png'
+import { Link } from 'react-router-dom';
 
 const MainIcon = (props) => {
     const {toggleLoginModal, toggleMenuModal, menuModal} = props
@@ -32,8 +33,8 @@ const MainIcon = (props) => {
                 <hr></hr>
                 <hr></hr>
             </div>
-            <div onClick={toggleLoginModal}><img className='mainLoginButton' src={LoginImage}/></div>
-            <a href='#'><img className='mainProfileButton' src={ProfileImage}/></a>
+            <div onClick={handlerLoginModal}><img className='mainLoginButton' src={LoginImage}/></div>
+            <Link to='/customerMain'><img className='mainProfileButton' src={ProfileImage}/></Link>
         </div>
     )
 }

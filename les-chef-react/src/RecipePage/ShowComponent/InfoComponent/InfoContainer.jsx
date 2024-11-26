@@ -1,19 +1,23 @@
 import React from "react";
 import elementImg from "../../../Image/RecipeImage/ListImg/참치김치찌개.jpg";
-import InfoStepEven from "./infoStepEven";
-import InfoStepOdd from "./infoStepOdd";
+import InfoIngredientSection from "./ingredientBox/infoIngredientSection";
+import InfoIcon from "./iconBox/infoIcon";
+import InfoStepBox from "./stepBox/infoStepBox";
 
 const InfoElement = () => {
     return(
         <div className="infoContainer">
             <div className="infoLeft">
                 <img className="infoMainImg" src={elementImg}/>
-                <InfoStepOdd/>
-                <InfoStepEven/>
+                <InfoStepBox/>
             </div>
             <div className="infoRight">
-                <div className="ingredientBox"></div>
-                <div className="iconBox"></div>
+                <div className="ingredientBox">
+                    <InfoIngredientSection/>
+                </div>
+                <div className="iconBox">
+                    <InfoIcon/>
+                </div>
             </div>
         </div>
     )
