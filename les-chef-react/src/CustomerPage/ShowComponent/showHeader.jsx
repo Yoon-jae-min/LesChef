@@ -1,26 +1,22 @@
 import React, { useEffect, useState } from "react";
-import MyInfoHeadImg from "../../Image/CustomerImage/Background/myInfoHeader.jpg";
-import MyRecipeHeadImg from "../../Image/CustomerImage/Background/myRecipeHeader.png";
-import MyFoodsHeadImg from "../../Image/CustomerImage/Background/myFoodsHeader.jpg";
-import WishListHeadImg from "../../Image/CustomerImage/Background/wishListHeader.jpg";
 
 const CustomerShowHead = (props) => {
     const {category} = props;
-    const [headImgUrl, setHeadImgUrl] = useState(MyInfoHeadImg);
+    const [headImgUrl, setHeadImgUrl] = useState("/Image/CustomerImage/Background/myInfoHeader.jpg");
     const [headText, setHeadText] = useState("My Info");
 
     useEffect(() => {
         if(category === "My Info"){
-            setHeadImgUrl(MyInfoHeadImg);
+            setHeadImgUrl("/Image/CustomerImage/Background/myInfoHeader.jpg");
             setHeadText("My Info");
         }else if(category === "My Recipe"){
-            setHeadImgUrl(MyRecipeHeadImg);
+            setHeadImgUrl("/Image/CustomerImage/Background/myRecipeHeader.png");
             setHeadText("My Recipe");
         }else if(category === "My Foods"){
-            setHeadImgUrl(MyFoodsHeadImg);
+            setHeadImgUrl("/Image/CustomerImage/Background/myFoodsHeader.jpg");
             setHeadText("My Foods");
         }else if(category === "Wish List"){
-            setHeadImgUrl(WishListHeadImg);
+            setHeadImgUrl("/Image/CustomerImage/Background/wishListHeader.jpg");
             setHeadText("Wish List");
         }
     }, [category]);

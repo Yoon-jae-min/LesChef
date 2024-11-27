@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import "./recipePage.css";
-import RecipeBgImg from "../Image/RecipeImage/Background/recipeBackground.jpg";
 import RecipeShowBox from "./ShowComponent/showBox";
 import RecipeMenuBox from "./MenuComponent/menuBox";
 import IconBox from "./iconBox";
@@ -17,7 +16,7 @@ const RecipePage = () => {
 
     return(
         <div className="recipeBody">
-            <img src={RecipeBgImg} className="recipeBgImg"/>
+            <img src="/Image/RecipeImage/Background/recipeBackground.jpg" className="recipeBgImg"/>
             <IconBox/>
             <RecipeMenuBox setCategory={setCategory} setInfoGoto={setInfoGoto}/>
             <RecipeShowBox category={category} infoGoto={infoGoto} setInfoGoto={setInfoGoto}/>

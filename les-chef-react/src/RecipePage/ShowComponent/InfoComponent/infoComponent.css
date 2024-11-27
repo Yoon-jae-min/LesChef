@@ -37,13 +37,18 @@
 }
 
 .ingredientBox{
-    border: 1px solid black;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 7px;
 
     width: 80%;
     height: 70%;
     display: inline-block;
     overflow: scroll;
-    aspect-ratio: 1 / 1;
+}
+
+.ingredientBox::-webkit-scrollbar{
+    display: none;
 }
 
 .iconBox{
@@ -56,8 +61,85 @@
 
 .infoStepBox{
     width: 90%;
-    height: 100px;
-    margin: 0 5%;
+    margin: 5% 5% 0 5%;
+    padding-top: 5px;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 20px;
+}
 
-    border: 1px solid black;
+.infoStepEach{
+    margin: 2% 4%;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.532);
+    display: flex;
+    width: 92%;
+    height: 20vh;
+}
+
+.infoStepImg{
+    margin-bottom: 2%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 7px;
+}
+
+.stepTextBox{
+    width: 69%;
+    height: 94%;
+}
+
+.stepNum{
+    margin: 0 3%;
+    font-size: 3vh;
+    font-weight: bold;
+    height: 21%;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.459);
+}
+
+.stepText{
+    margin: 5px 0 0 4%;
+    max-height: calc(76% - 5px);
+    overflow: scroll;
+}
+
+.infoIngredientSection{
+    width: 95%;
+    height: 100px;
+    margin: 5px auto 0;
+
+
+}
+
+.sectionText{
+    margin: 0;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 2.7vh;
+
+    border-bottom: 1px solid rgb(163, 163, 163);
+}
+
+.infoIngredientEach{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingredientName, .ingredientCount, .ingredientUnit{
+    margin: 2px 0 0 0;
+}
+
+.ingredientName{
+    max-width: 65%;
+    overflow: scroll;
+    height: 20px;
+    margin-left: 4%;
+}
+
+.ingredientName::-webkit-scrollbar{
+    display: none;
+}
+
+.ingredientAmount{
+    display: flex;
 }

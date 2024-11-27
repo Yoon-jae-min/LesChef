@@ -114,7 +114,7 @@ const MainPage = () => {
             <MainFifth toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide}/>
             <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
             <MenuModal menuModal={menuModal}/>
-            {slideCheck  && <MainLeft toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}
+            {slideCheck  && <MainLeft  goToTopSlide={goToTopSlide} toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}
             {slideCheck  && <MainTop/>}
             {slideCheck  && <MainBottom/>}
         </div>);

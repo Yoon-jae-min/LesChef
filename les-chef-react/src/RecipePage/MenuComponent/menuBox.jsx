@@ -1,5 +1,4 @@
 import React from "react";
-import RecipeLogo from "../../Image/CommonImage/LogoWhite.png"
 import RecipeMenuText from "./menuText";
 import { Link } from "react-router-dom";
 
@@ -9,7 +8,7 @@ const RecipeMenuBox = (props) => {
     return(
         <div className="recipeMenuBox">
             <RecipeMenuText setCategory={setCategory} setInfoGoto={setInfoGoto}/>
-            <Link to="/"><img className="recipeLogo" src={RecipeLogo}/></Link>
+            <Link to="/"><img className="recipeLogo" src="/Image/CommonImage/LogoWhite.png"/></Link>
         </div>
     )
 }

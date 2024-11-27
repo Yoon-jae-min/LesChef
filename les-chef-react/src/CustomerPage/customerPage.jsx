@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import CustomerBgImg from "../Image/CustomerImage/Background/CustomerBackground.jpg"
 import "./customerPage.css";
 import CustomerShowBox from "./ShowComponent/showBox";
 import CustomerMenuBox from "./MenuComponent/menuBox";
@@ -10,7 +9,7 @@ const CustomerPage = () => {
 
     return (
         <div className="customerPgBox">
-            <img className="customerBgImg" src={CustomerBgImg}/>
+            <img className="customerBgImg" src="/Image/CustomerImage/Background/CustomerBackground.jpg"/>
             <IconBox/>
             <CustomerShowBox category={category}/>
             <CustomerMenuBox setCategory={setCategory}/>

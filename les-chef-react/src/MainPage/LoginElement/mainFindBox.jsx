@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import LoginLogo from "../../Image/CommonImage/LogoWhite.png"
 import FindId from "./mainFindId";
 import FindPw from "./mainFindPw";
 
@@ -31,7 +30,7 @@ const FindBox = (props) => {
 
     return(
         <div className="loginBox" style={{opacity: loginToFind ? '1' : '0'}}>
-            <img className='LoginLogo' src={LoginLogo}/>
+            <img className='LoginLogo' src="/Image/CommonImage/LogoWhite.png"/>
             <div className="idPwButton">
                 <div className="idButton click" onClick={HandlerSwitch}>로그인</div>
                 <div className="pwButton" onClick={HandlerSwitch}>비밀번호</div>

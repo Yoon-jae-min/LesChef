@@ -1,5 +1,4 @@
 import React from "react";
-import MenuLogo from "../../Image/CommonImage/LogoWhite.png"
 import { Link } from "react-router-dom";
 import MainMenuText from "./menuText";
 
@@ -8,7 +7,7 @@ const CustomerMenuBox = (props) => {
 
     return(
         <div className="customerMenuBox">
-            <Link to="/"><img className="menuLogo" src={MenuLogo}/></Link>
+            <Link to="/"><img className="menuLogo" src="/Image/CommonImage/LogoWhite.png"/></Link>
             <MainMenuText setCategory={setCategory}/>
         </div>
     )

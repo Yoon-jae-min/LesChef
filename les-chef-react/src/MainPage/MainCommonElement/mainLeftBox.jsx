@@ -1,14 +1,12 @@
 import React from "react";
-import MainLogo from "../../Image/CommonImage/LogoWhite.png"
 import MainIcon from './mainIconBox';
-import { Link } from "react-router-dom";
 
 const MainLeft = (props) => {
-    const {toggleLoginModal, toggleMenuModal, menuModal} = props;
+    const {goToTopSlide, toggleLoginModal, toggleMenuModal, menuModal} = props;
 
     return (
         <div className='mainLeft'>
-            <img className='mainLogo' src={MainLogo}/>
+            <img onClick={goToTopSlide} className='mainLogo' src="/Image/CommonImage/LogoWhite.png"/>
             <MainIcon toggleLoginModal={toggleLoginModal} toggleMenuModal={toggleMenuModal} menuModal={menuModal}/>
         </div>
     )
