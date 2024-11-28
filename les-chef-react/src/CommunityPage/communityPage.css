@@ -1,8 +1,7 @@
-.communityBody{
-    overflow: hidden;
+.communityMain{
+    overflow-y: hidden;
     width: 100vw;
     height: 100vh;
-    
 }
 
 .communityBgImg{
@@ -69,4 +68,84 @@
     left: 0;
     width: 7vw;
     height: 90vh;
+}
+
+.communityBody{
+    position: absolute;
+    top: 20%;
+    left: 0;
+    width: 90%;
+    margin: 0 5%;
+    height: 65%;
+
+    border: 1px solid black;
+}
+
+.communityListBox{
+    width: 100%;
+    height: 100%;
+
+    border: 1px solid black;
+}
+
+.communityListHead, .communityListLine{
+    width: 100%;
+    height: 9%;
+    display: flex;
+}
+
+.communityListLine{
+    border-bottom: 1px solid rgba(120, 120, 120, 0.423);
+}
+
+.communityListHead{
+    background-color: rgba(159, 135, 135, 0.422);
+
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.communityListBody{
+    width: 100%;
+    height: 90%;
+    overflow: scroll;
+
+    border: 1px solid black;
+}
+
+.communityListBody::-webkit-scrollbar{
+    display: none;
+}
+
+.listTitleUnit{
+    width: 73%;
+}
+
+.listNameUnit, .listDateUnit{
+    width: 10%;
+}
+
+.listWatchUnit{
+    width: 7%;
+}
+
+.listHeadUnit, .listLineUnit{
+    align-content: center;
+}
+
+.listHeadUnit, .lineCenter{
+    text-align: center;
+}
+
+.listHeadUnit{
+    font-weight: 600;
+}
+
+.listLineUnit{
+    font-weight: 100;
+}
+
+.listTitleUnit.listLineUnit{
+    width: 71%;
+    padding-left: 2%;
 }

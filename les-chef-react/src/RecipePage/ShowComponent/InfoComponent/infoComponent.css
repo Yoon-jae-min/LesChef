@@ -52,11 +52,9 @@
 }
 
 .iconBox{
-    border: 1px solid black;
-
     width: 80%;
     height: 25%;
-    display: inline-block;
+    display: flex;
 }
 
 .infoStepBox{
@@ -142,4 +140,19 @@
 
 .ingredientAmount{
     display: flex;
+}
+
+.infoIconBoxEach{
+    width: calc(100% / 3);
+}
+
+.infoIconImg{
+    width: 70%;
+    margin: 20% 15% 0;
+}
+
+.infoIconText{
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
 }

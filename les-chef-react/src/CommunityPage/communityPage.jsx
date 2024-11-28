@@ -5,7 +5,7 @@ import IconBox from "./iconBox";
 
 const CommunityPage = () => {
     return(
-        <div className="communityBody">
+        <div className="communityMain">
             <img src="/Image/CommunityImage/Background/communityBackground.jpg" className="communityBgImg"/>
             <IconBox/>
             <CommunityBox/>
