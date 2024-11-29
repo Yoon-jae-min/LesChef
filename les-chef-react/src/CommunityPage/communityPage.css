@@ -131,6 +131,7 @@
 
 .listHeadUnit, .listLineUnit{
     align-content: center;
+    font-size: 1rem;
 }
 
 .listHeadUnit, .lineCenter{
@@ -149,3 +150,135 @@
     width: 71%;
     padding-left: 2%;
 }
+
+.communityFooterBox{
+    position: absolute;
+    top: 87%;
+    width: 90%;
+    height: 6%;
+    margin: 0 5%;
+    display: flex;
+}
+
+.searchBox, .selectBoxContent{
+    border-radius: 5px;
+    background-color: rgb(194, 183, 168);
+    border: 2px solid rgb(109, 75, 75);
+}
+
+.selectBox{
+    width: 10%;
+}
+
+.searchBox{
+    width: 70%;
+    height: 74%;
+    margin: 0.3% 0;
+    display: flex;
+}
+
+.footerButtonBox{
+    width: 20%;
+}
+
+.selectBoxContent{
+    width: 90%;
+    height: 80%;
+    margin: 3.5% 0;
+}
+
+.searchButtonImg, .resetButtonImg{
+    height: 50%;
+    margin: 1% 1%;
+    cursor: pointer;
+}
+
+.searchInput{
+    width: 91%;
+    background-color: rgb(194, 183, 168);
+    border: none;
+}
+
+.searchInput:focus{
+    outline: none;
+}
+
+.writeBoxVisible{
+    height: 100%;
+    float: right;
+    cursor: pointer;
+}
+
+.communityWriteBox{
+    position: absolute;
+    top: 20%;
+    left: 0;
+    width: 80%;
+    margin: 0 10%;
+    height: 65%;
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.writeLabel{
+    margin: 0;
+    width: 7%;
+    padding: 0 1%;
+    height: 70%;
+    align-content: center;
+    text-align: center;
+    font-weight: bold;
+    border-right: 1px solid rgb(87, 87, 87);
+}
+
+.titleBox, .nickNameBox, .writeContent{
+    width: 80%;
+    height: 10%;
+    margin: 1% auto 0;
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.564);
+    background-color: rgb(213, 213, 213);
+
+    border: 1px solid black;
+}
+
+.writeContent{
+    height: 69%;
+    justify-content: center;
+}
+
+.writeContent textarea{
+    width: 97%;
+    height: 95%;
+    background-color: rgb(213, 213, 213);
+    border: none;
+    resize: none;
+}
+
+.writeContent textarea:focus{
+    outline-style: none;
+}
+
+.titleUnit, .nickNameUnit{
+    margin-left: 1%;
+    width: 40%;
+}
+
+.nickNameUnit{
+    margin-top: 0;
+    margin-bottom: 0;
+    align-content: center;
+}
+
+.titleUnit{
+    background-color: rgb(213, 213, 213);
+    border: none;
+    border-bottom: 1px solid rgb(61, 29, 29);
+}
+
