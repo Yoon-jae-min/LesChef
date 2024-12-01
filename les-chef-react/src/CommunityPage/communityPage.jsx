@@ -1,6 +1,6 @@
 import React from "react";
 import "./communityPage.css"
-import CommunityBox from "./Container/communityBox";
+import CommunityBox from "./CommonElement/communityBox";
 import IconBox from "./iconBox";
 
 const CommunityPage = () => {

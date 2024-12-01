@@ -1,10 +1,12 @@
 import React from "react";
 import CommunityList from "./communityList";
 
-const CommunityBody = () => {
+const CommunityBody = (props) => {
+    const { goToWatch } = props;
+
     return(
         <div className="communityBody">
-            <CommunityList/>
+            <CommunityList goToWatch={goToWatch}/>
         </div>
     )
 }

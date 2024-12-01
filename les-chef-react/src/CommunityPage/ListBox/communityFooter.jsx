@@ -1,7 +1,7 @@
 import React from "react";
 
 const CommunityFooter = (props) => {
-    const { communityBodyTrans } = props;
+    const { goToWrite } = props;
 
     return(
         <div className="communityFooterBox">
@@ -19,7 +19,7 @@ const CommunityFooter = (props) => {
                 <img className="resetButtonImg" src="/Image/CommonImage/cancel.png"/>
             </div>
             <div className="footerButtonBox">
-                <img onClick={communityBodyTrans} className="writeBoxVisible" src="/Image/CommunityImage/write.png"/>
+                <img onClick={goToWrite} className="writeBoxVisible" src="/Image/CommunityImage/write.png"/>
             </div>
         </div>
     )
