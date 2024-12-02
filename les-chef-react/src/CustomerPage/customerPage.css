@@ -1,3 +1,4 @@
+/*page Common*/
 .customerPgBox{
     overflow: hidden;
     width: 100vw;
@@ -13,18 +14,21 @@
     opacity: 0.85;
 }
 
-.customerShowBox{
-    position: fixed;
+/*iconBox*/
+.customerIconBox{
+    position: absolute;
     top: 5vh;
-    right: 7vw;
-    width: 63vw;
-    height: 90vh;
-    background-color: rgb(182, 182, 182);
-    z-index: 10;
-    border-radius: 20px;
-    box-shadow: 0px 0px 7px 1px black;
+    left: 3vw;
+    width: 24vw;
+    height: 10vh;
 }
 
+.customerLeftIcon{
+    margin: 0 0.5vw;
+    width: 3.5vw;
+}
+
+/*menuBox*/
 .customerMenuBox{
     position: fixed;
     top: 15vh;
@@ -73,6 +77,20 @@
     font-size: 4vh;
 }
 
+
+/*showBox*/
+.customerShowBox{
+    position: fixed;
+    top: 5vh;
+    right: 7vw;
+    width: 63vw;
+    height: 90vh;
+    background-color: rgb(182, 182, 182);
+    z-index: 10;
+    border-radius: 20px;
+    box-shadow: 0px 0px 7px 1px black;
+}
+
 .customerShowHead{
     position: absolute;
     top: 0;
@@ -106,15 +124,129 @@
     text-shadow: 0 0 10px black;
 }
 
-.customerIconBox{
+.customerShowBody{
     position: absolute;
-    top: 5vh;
-    left: 3vw;
-    width: 24vw;
-    height: 10vh;
+    top: 15%;
+    width: 100%;
+    height: 85%;
 }
 
-.customerLeftIcon{
-    margin: 0 0.5vw;
-    width: 3.5vw;
+
+/*infoBox*/
+.customerInfoBox, .customerRecipeBox, .customerFoodsBox, .customerWishListBox{
+    width: 90%;
+    height: 93%;
+    margin: 2% 5% 0;
+
+    border-top: 1px solid rgba(128, 128, 128, 0.3);
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.customerInfoBoxInner{
+    width: 70%;
+    height: 70%;
+    margin: 2% 15% 0 15%;
+}
+
+.infoBoxInnerMain{
+    width: 100%;
+    height: 70%;
+    display: flex;
+    flex-direction: row;
+}
+
+.profileImg{
+    display: inline-block;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px gray;
+    aspect-ratio: 1 / 1;
+
+    transform: scale(0.9);
+}
+
+.customerInfoUnits{
+    width: 100%;
+}
+
+.customerInfoUnit{
+    height: 17%;
+    margin-top: 2%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.infoUnitLabel{
+    width: 25%;
+    height: 70%;
+    margin: 0;
+    text-align: center;
+    align-content: center;
+
+    border-right: 1px solid rgb(87, 87, 87);
+}
+
+.infoUnitText{
+    width: 70%;
+    height: 70%;
+    margin: 0 0 0 5%;
+    align-content: center;
+}
+
+.passwordChangeBox{
+    height: 30%;
+    align-content: center;
+    border: 1px solid black;
+}
+
+.passwordCheckBox{
+    width: 70%;
+    height: 30%;
+    margin: 0 15%;
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.passwordCheckLabel{
+    width: 19%;
+    border-right: 1px solid rgb(87, 87, 87);
+}
+
+.passwordCheckInput{
+    height: 70%;
+    border: none;
+    margin-left: 3%;
+    background-color: rgb(182, 182, 182);
+    border-bottom: 1px solid black;
+}
+
+.passwordCheckInput:focus{
+    outline: none;
+}
+
+.passwordCheckBtn{
+    margin-left: 7%;
+    width: 15%;
+    background-color: rgb(136, 77, 77);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    border: none;
+    border-radius: 5px;
+}
+
+.passwordUpdateInner{
+    border: 1px solid black;
+}
+
+.customerInfoBtnBox{
+    width: 70%;
+    height: 13%;
+    margin: 0 15% 0 15%;
+
+    border: 1px solid black;
 }

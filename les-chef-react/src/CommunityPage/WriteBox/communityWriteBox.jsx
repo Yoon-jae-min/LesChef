@@ -12,7 +12,7 @@ const WriteBox = (props) => {
                 </div>
                 <div className="nickNameBox">
                     <p className="writeLabel nickNameText">작성자</p>
-                    <p class="nickNameUnit">사용자</p>
+                    <p class="nickNameUnit">testUser</p>
                 </div>
                 <div className="writeContent">
                     <textarea className="writeTextarea"></textarea>

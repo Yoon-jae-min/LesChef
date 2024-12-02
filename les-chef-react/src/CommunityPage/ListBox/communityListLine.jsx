@@ -11,7 +11,7 @@ const CommunityListLine = (props) => {
             userName: "선택한 사용자 이름",
             writeDate: "2024-11-30",
             watchNum: "123",
-            content: "선택한 게시글의 내용입니다.",
+            content: "선택한 게시글의 내용입니다.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
         });
 
         goToWatch();
