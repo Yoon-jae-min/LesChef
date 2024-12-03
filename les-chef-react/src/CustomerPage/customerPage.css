@@ -196,7 +196,6 @@
 .passwordChangeBox{
     height: 30%;
     align-content: center;
-    border: 1px solid black;
 }
 
 .passwordCheckBox{
@@ -239,14 +238,87 @@
     border-radius: 5px;
 }
 
+.passwordUpdateBox{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 .passwordUpdateInner{
-    border: 1px solid black;
+    width: 80%;
+    height: 40%;
+    display: flex;
+    justify-content: center;
+}
+
+.passwordUpdateLabel{
+    border-right: 1px solid rgb(87, 87, 87);
+    padding-right: 3%;
+    margin: 1% 0 1% 0;
+}
+
+.passwordNewLabel{
+    padding-right: 11%;
+}
+
+.passwordUpdateInput{
+    margin-left: 3%;
+
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+.passwordUpdateInput:focus{
+    outline: none;
+}
+
+.passwordUpdateBtn{
+    width: 15%;
+    background-color: rgb(136, 77, 77);
+    margin-top: 1%;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+
+    border: none;
+    border-radius: 5px;
 }
 
 .customerInfoBtnBox{
     width: 70%;
     height: 13%;
     margin: 0 15% 0 15%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
 
-    border: 1px solid black;
+.customerInfoChangeBtn, .customerpwdChangeBtn{
+    border-radius: 20%;
+    width: 20%;
+    height: 70%;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 2%;
+    cursor: pointer;
+    background-color: rgb(213, 213, 213);
+    border: none;
+
+    box-shadow: 0 0 10px 3px gray;
+}
+
+.customerInfoCgBtnCancel, .customerpwdCgBtnCancel{
+    border-radius: 20%;
+    width: 20%;
+    height: 70%;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 2%;
+    cursor: pointer;
+    background-color: rgb(213, 213, 213);
+    border: none;
+
+    box-shadow: 0 0 10px 3px gray;
 }
