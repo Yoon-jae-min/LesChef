@@ -1,0 +1,455 @@
+html, body{
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+body::-webkit-scrollbar{
+    display: none;
+}
+body{
+    -ms-overflow-style: none;
+    overflow-x: hidden;
+}
+
+.mainSection{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    opacity: 0.7;
+}
+
+.mainBgImg{
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center center;
+}
+
+.lastSection{
+    z-index: 151;
+    opacity: 1;
+}
+
+#mainVideo{
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center center;
+}
+
+.mainLeft{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 17vw;
+    height: 100vh;
+    z-index: 140;
+}
+
+.mainTop{
+    position: fixed;
+    top: 0;
+    left: 17vw;
+    width: 83vw;
+    height: 65vh;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+    border-left: 1px solid rgba(255, 255, 255, 0.432);
+}
+
+.mainBottom{
+    position: fixed;
+    top: 65vh;
+    left: 17vw;
+    width: 83vw;
+    height: 35vh;
+    z-index: 100;
+    border-left: 1px solid rgba(255, 255, 255, 0.432);
+}
+
+.mainLogo{
+    position: absolute;
+    top: 5vh;
+    left: 3vw;
+    z-index: 150;
+    width: 12vw;
+    cursor: pointer;
+}
+
+.mainIconBox{
+    position: absolute;
+    top: 89vh;
+    left: 3vw;
+    width: 11vw;
+    height: auto;
+    /* z-index: 101; */
+    display: flex;
+    justify-content: space-between;
+}
+
+.mainMenuButton{
+    display: flex;
+    height: 3.5vw;
+    flex-direction: column;
+    justify-content: space-around;
+    padding-top: calc(1vh - 6px);
+}
+
+.mainMenuButton hr:nth-of-type(1){
+    width: 3vw;
+}
+
+.mainMenuButton hr:nth-of-type(2){
+    width: calc(3vw - 10px);
+}
+
+.mainMenuButton hr:nth-of-type(3){
+    width: calc(3vw - 5px);
+}
+
+.mainMenuButton hr{
+    display: inline-block;
+    background-color: white;
+    height: calc(1vh - 4px);
+    
+    margin: 0;
+    border: 0;
+}
+
+.mainMenuButton, .mainLoginButton, .mainProfileButton{
+    width: 3vw;
+    cursor: pointer;
+}
+
+.mainLoginButton, .mainProfileButton{
+    display: inline-block;
+    
+}
+
+.mainProfileButton{
+    margin-top: 4px;
+}
+
+.mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden{
+    display: none;
+}
+
+.topText, .bottomText{
+    color: white;
+    font-size: 70px;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    font-style: normal;
+    font-variation-settings:"slnt" 0;
+    margin: 0;
+    text-shadow: 2px 2px 10px black;
+}
+
+.topText{
+    position: absolute;
+    top: 3vh;
+    left: 20vw;
+}
+
+.bottomText{
+    position: absolute;
+    top: 68vh;
+    right: 3vw;
+    text-align: end;
+}
+
+#mainMenuModal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.99);
+    z-index: 110;
+    transition: all 0.5s;
+}
+
+#mainLoginModal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.joinBox{
+    position: absolute;
+    top: 5vh;
+    right: 2vw;
+    height: 90vh;
+    width: 380px;
+    z-index: 200;
+    background-color: rgb(0, 51, 0);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.LoginLogo{
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    cursor: pointer;
+}
+
+.JoinInput{
+    position: absolute;
+    top: 180px;
+    width: 70%;
+}
+
+.eachLabel{
+    display: block;
+    color: white;
+    font-weight: bold;
+}
+
+.eachInput{
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: 1px solid white;
+    height: 30px;
+    margin-bottom: 5px;
+    color: white;
+    outline: none;
+}
+
+.joinButton{
+    position: absolute;
+    bottom: 9vh;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+}
+
+.textLoginBox{
+    position: absolute;
+    bottom: 5vh;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.joinBox span{
+    color: white;
+    font-size: 15px;
+}
+
+.goToLoginText, .goToJoinText{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.goToLoginText:hover, .goToJoinText:hover{
+    text-decoration: underline;
+}
+
+.mainCategoryText{
+    z-index: 140;
+    position: absolute;
+    top: 20vh;
+    left: 39vw;
+    color: white;
+    font-size: 50px;
+    font-weight: bold;
+    transition: all 0.5s;
+}
+
+.mainCategoryText div{
+    height: 70px;
+    overflow: hidden;
+}
+
+.menuText{
+    cursor: pointer;
+    margin: 5px 0;
+    padding-top: 0px;
+    transition: all 1s;
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.menuText.noneShow{
+    padding-top: 20px;
+    pointer-events: none;
+    opacity: 0;
+}
+
+.loginBox{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 8vh;
+    left: 39vw;
+    height: 86vh;
+    width: 380px;
+    z-index: 160;
+    background-color: rgb(11, 86, 11);
+    border-radius: 20px;
+    transition: all 0.5s;
+}
+
+.loginInput{
+    position: absolute;
+    top: 190px;
+    width: 70%;
+}
+
+.loginButton{
+    position: absolute;
+    top: 350px;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+#findUser{
+    position: absolute;
+    top: 300px;
+    right: 15%;
+    color: rgb(157, 157, 196);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#findUser:hover{
+    text-decoration: underline;
+}
+
+#hrAndOr{
+    position: absolute;
+    top: 405px;
+    width: 80%;
+    display: flex;
+    color: white;
+}
+
+#hrAndOr p{
+    margin: 0;
+}
+
+#hrAndOr hr{
+    width: 35%;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+#SNSLogin{
+    position: absolute;
+    top: 450px;
+    display: flex;
+    justify-content: space-between;
+    width: 74%;
+}
+
+#naverButtonContainer{
+    background-color: white;
+    height: 45px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+#naverButtonContainer, #kakaoButtonContainer, #googleButtonContainer{
+    cursor: pointer;
+}
+
+.naverIcon{
+    width: 31px;
+    height: 31px;
+    border-radius: 5px;
+    margin-left: 3px;
+}
+
+.textJoinBox{
+    position: absolute;
+    top: 510px;
+    width: 68%;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+}
+
+.idPwButton{
+    position: absolute;
+    top: 190px;
+    width: 200px;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+    font-weight: bold;
+}
+
+.idButton, .pwButton{
+    width: 80px;
+    height: 40px;
+    border: 1px solid black;
+    background-color: rgb(0, 44, 0);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.idButton.click, .pwButton.click{
+    background-color: rgb(84, 150, 84);
+}
+
+.idSwitchContainer, .pwSwitchContainer{
+    position: absolute;
+    top: 270px;
+    width: 70%;
+}
+
+.searchButton{
+    position: absolute;
+    top: 140px;
+    width: 100%;
+    height: 6vh;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(90, 166, 123);
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+}
+
+.pwSearch{
+    top: 200px;
+}
+
+.goToRecipePage{
+    text-decoration: none;
+    color: white;
+}
+
+.goToRecipePage:hover{
+    color: rgb(217, 169, 169);
+}
