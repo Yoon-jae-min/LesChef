@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import ListElement from "./listElement";
+import ListElement from "./listInner";
 
 const ElementContainer = (props) => {
     const {setInfoGoto} = props;

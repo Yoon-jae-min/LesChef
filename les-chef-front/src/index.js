@@ -7,17 +7,20 @@ import RecipePage from './RecipePage/recipePage';
 import CustomerPage from './CustomerPage/customerPage';
 import CommunityPage from './CommunityPage/communityPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { ConfigProvider } from './Context/configContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path='/' element={<MainPage/>}/>
-      <Route path='/recipeMain' element={<RecipePage/>}/>
-      <Route path='/customerMain' element={<CustomerPage/>}/>
-      <Route path='/communityMain' element={<CommunityPage/>}/>
-    </Routes>
-  </BrowserRouter>
+  <ConfigProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/' element={<MainPage/>}/>
+        <Route path='/recipeMain' element={<RecipePage/>}/>
+        <Route path='/customerMain' element={<CustomerPage/>}/>
+        <Route path='/communityMain' element={<CommunityPage/>}/>
+      </Routes>
+    </BrowserRouter>
+  </ConfigProvider>
 );
 
 reportWebVitals();

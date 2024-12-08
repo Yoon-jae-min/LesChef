@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import "./recipePage.css";
-import RecipeShowBox from "./ShowComponent/showBox";
-import RecipeMenuBox from "./MenuComponent/menuBox";
+import RecipeShowBox from "./ShowComponent/box";
+import RecipeMenuBox from "./MenuComponent/box";
 import IconBox from "./iconBox";
 
 const RecipePage = () => {

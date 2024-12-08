@@ -1,7 +1,7 @@
 import React from "react";
-import InfoIngredientSection from "./ingredientBox/infoIngredientSection";
-import InfoIconBoxEach from "./iconBox/infoIconBoxEach";
-import InfoStepBox from "./stepBox/infoStepBox";
+import InfoIngredientSection from "./ingredientBox/ingredientSection";
+import InfoIconBoxEach from "./iconBox/iconBoxEach";
+import InfoStepBox from "./stepBox/stepBox";
 
 const InfoElement = () => {
     return(

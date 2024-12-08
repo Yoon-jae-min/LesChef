@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./customerPage.css";
-import CustomerShowBox from "./ShowComponent/showBox";
-import CustomerMenuBox from "./MenuComponent/menuBox";
+import CustomerShowBox from "./ShowComponent/container";
+import CustomerMenuBox from "./MenuComponent/box";
 import IconBox from "./iconBox";
 
 const CustomerPage = () => {
