@@ -5,10 +5,10 @@ const MainFifth = (props) => {
     const {toggleLoginModal, goToTopSlide} = props;
 
     return (
-        <section className='mainSection lastSection'>
-            <img src="/Image/MainImage/Background/mainFifthBg.png" className='mainBgImg'/>
-            <JoinBox toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide}/>
-        </section>
+            <section className='mainSection lastSection'>
+                <img src="/Image/MainImage/Background/mainFifthBg.png" className='mainBgImg'/>
+                <JoinBox toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide}/>
+            </section>
     )
 }
 

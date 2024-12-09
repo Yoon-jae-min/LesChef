@@ -5,6 +5,10 @@ router
     .post("/login", (req, res) => {
         console.log(req.body);
         res.send('ok');
+    })
+    .post("/join", (req, res) => {
+        console.log(req.body);
+        res.send('ok');
     });
 
 module.exports = router;

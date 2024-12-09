@@ -10,7 +10,6 @@ const LoginBox = (props) => {
     const { serverUrl } = useConfig();
 
     const clickLogin = () => {
-        console.log(serverUrl);
         fetch(`${serverUrl}/customer/login`, {
             method: "POST",
             headers: { "Content-type": "application/json" },

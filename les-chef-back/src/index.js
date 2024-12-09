@@ -2,7 +2,10 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 const customer = require("../src/routers/customer");
+const dbConnect = require("./config/dbConnect");
 // const recipe = require("../src/routers/recipe");
+
+dbConnect();
 
 app.use(cors());
 app.use(express.json());
