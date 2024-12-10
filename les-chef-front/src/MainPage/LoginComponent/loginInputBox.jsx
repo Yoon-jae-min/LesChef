@@ -6,8 +6,8 @@ const LoginInput = (props) => {
 
     return (
         <div className="loginInput">
-            <LabelInput labelText = "이메일(아이디)" inputValue={inputId} basicValue={idValue}/>
-            <LabelInput labelText = "비밀번호" inputValue={inputPwd} basicValue={pwdValue}/>
+            <LabelInput boxType = "login" labelText = "이메일(아이디)" inputValue={inputId} basicValue={idValue}/>
+            <LabelInput boxType = "login" labelText = "비밀번호" inputValue={inputPwd} basicValue={pwdValue}/>
         </div>
     )
 }

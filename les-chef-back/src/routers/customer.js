@@ -1,14 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const postLogin = require("../controllers/loginController");
+const postJoin = require("../controllers/joinController");
 
 router
-    .post("/login", (req, res) => {
-        console.log(req.body);
-        res.send('ok');
-    })
-    .post("/join", (req, res) => {
-        console.log(req.body);
-        res.send('ok');
-    });
+    .post("/login", postLogin)
+    .post("/join", postJoin);
 
 module.exports = router;
