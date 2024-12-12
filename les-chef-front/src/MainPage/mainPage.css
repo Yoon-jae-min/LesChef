@@ -208,9 +208,16 @@ body{
 }
 
 .eachLabel{
-    display: block;
+    display: flex;
+    align-items: center;
     color: white;
     font-weight: bold;
+}
+
+.diffCheck{
+    color: red;
+    margin: 0 0 0 10px;
+    font-size: 13px;
 }
 
 .eachInput{

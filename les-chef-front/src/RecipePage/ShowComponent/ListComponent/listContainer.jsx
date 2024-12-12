@@ -7,8 +7,8 @@ const ElementContainer = (props) => {
 
     return(
         <div className="elementContainer">
-            {Array.from({length: elementCount}).map(() => {
-                return <ListElement setInfoGoto={setInfoGoto}/>
+            {Array.from({ length: elementCount }).map((_, index) => {
+                return <ListElement key={index} setInfoGoto={setInfoGoto} />;
             })}
         </div>
     )

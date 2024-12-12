@@ -295,8 +295,8 @@
     align-items: center;
 }
 
-.customerInfoChangeBtn, .customerpwdChangeBtn{
-    border-radius: 20%;
+.infoUnderBtn{
+    border-radius: 10%;
     width: 20%;
     height: 70%;
     font-size: 1rem;
@@ -308,21 +308,6 @@
 
     box-shadow: 0 0 10px 3px gray;
 }
-
-.customerInfoCgBtnCancel, .customerpwdCgBtnCancel{
-    border-radius: 20%;
-    width: 20%;
-    height: 70%;
-    font-size: 1rem;
-    font-weight: bold;
-    margin: 0 2%;
-    cursor: pointer;
-    background-color: rgb(213, 213, 213);
-    border: none;
-
-    box-shadow: 0 0 10px 3px gray;
-}
-
 
 /*recipeBox*/
 .customerRecipeBox{
@@ -335,7 +320,7 @@
     position: relative;
     width: 95%;
     height: 10%;
-    border-bottom: 1px solid gray;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
 }
 
 .customerRecipeSolt{
@@ -365,8 +350,6 @@
     flex-wrap: wrap;
     justify-content: flex-start;
     padding-top: 15px;
-
-    border: 1px solid black;
 }
 
 .customerRecipeBody::-webkit-scrollbar{
@@ -379,7 +362,7 @@
     height: 280px;
     width: 29%;
     margin: 0 calc(7% / 6) 20px;
-    min-width: 247px;
+    min-width: 246px;
     cursor: pointer;
     transition: all 0.5s;
 

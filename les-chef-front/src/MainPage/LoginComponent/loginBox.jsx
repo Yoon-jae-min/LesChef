@@ -10,20 +10,28 @@ const LoginBox = (props) => {
     const { serverUrl } = useConfig();
 
     const clickLogin = () => {
-        fetch(`${serverUrl}/customer/login`, {
-            method: "POST",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify({
-                customerId : customerId,
-                customerPwd : customerPwd
-            })
-        }).then((response) => {
-            window.location.reload(true);
-        });
+        if(customerId === ""){
+            alert("아이디를 입력해주세요");
+        }else if(customerPwd === ""){
+            alert("패스워드를 입력해주세요");
+        }else{
+            fetch(`${serverUrl}/customer/login`, {
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify({
+                    customerId : customerId,
+                    customerPwd : customerPwd
+                })
+            }).then((response) => {
+                return response.text();
+            }).then((text) => {
+                alert(text);
+                window.location.reload(true);
+            });
+        }
     }
 
     const inputId = (value) => {
-        console.log(value);
         setCustomerId(value);
     }
 

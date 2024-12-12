@@ -10,6 +10,7 @@ import MainTop from './CommonComponent/Box/topBox';
 import MainBottom from './CommonComponent/Box/bottomBox';
 import MenuModal from './ModalComponent/menuModal';
 import LoginModal from './ModalComponent/loginModal';
+import { useUserContext } from "../Context/userContext";
 
 const MainPage = () => {
     const outerDivRef = useRef();
@@ -19,6 +20,9 @@ const MainPage = () => {
     const [loginModal, setLoginModal] = useState(false);
     const [loginToFind, setLoginToFind] = useState(false);
     const [idPwBox, setIdPwBox] = useState(false);
+    const [ checkPwd, setCheckPwd ] = useState("");
+    const [ diffCheck, setDiffCheck ] = useState(false);
+    const { setUserInfo } = useUserContext();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
@@ -67,6 +71,15 @@ const MainPage = () => {
             behavior: "smooth",
         });
         setSlideCheck(currentPage < 4);
+        setUserInfo({
+            id: "",
+            name: "",
+            pwd: "",
+            nickName: "",
+            tel: ""
+        });
+        setCheckPwd("");
+        setDiffCheck(false);
     }, [currentPage]);
 
     useEffect(() => {
@@ -111,7 +124,7 @@ const MainPage = () => {
             <MainSecond/>
             <MainThird/>
             <MainFourth/>
-            <MainFifth toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide}/>
+            <MainFifth toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide} checkPwd={checkPwd} setCheckPwd={setCheckPwd} diffCheck={diffCheck} setDiffCheck={setDiffCheck}/>
             <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
             <MenuModal menuModal={menuModal}/>
             {slideCheck  && <MainLeft  goToTopSlide={goToTopSlide} toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}

@@ -9,7 +9,7 @@ const RecipeElement = (props) => {
 
     return(
         <div className="recipeElement" onClick={handleClick}>
-            <img className="elementImg" src="/Image/RecipeImage/ListImg/참치김치찌개.jpg"/>
+            <img className="elementImg" src="/Image/RecipeImage/ListImg/tuna_kimchi_soup.jpg"/>
             <div className="elementInfoBox">
                 <p className="listRecipeTitle">참치김치찌개</p>
                 <div className="starBox"></div>

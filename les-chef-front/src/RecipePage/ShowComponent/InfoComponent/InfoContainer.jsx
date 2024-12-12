@@ -7,7 +7,7 @@ const InfoElement = () => {
     return(
         <div className="infoContainer">
             <div className="infoLeft">
-                <img className="infoMainImg" src="/Image/RecipeImage/ListImg/참치김치찌개.jpg"/>
+                <img className="infoMainImg" src="/Image/RecipeImage/ListImg/tuna_kimchi_soup.jpg"/>
                 <InfoStepBox/>
             </div>
             <div className="infoRight">

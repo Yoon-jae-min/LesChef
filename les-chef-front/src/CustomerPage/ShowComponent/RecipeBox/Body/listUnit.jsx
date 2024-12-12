@@ -3,7 +3,7 @@ import React from "react";
 const RecipeListUnit = () => {
     return(
         <div className="recipeListUnit">
-            <img className="customerListImg" src="/Image/CustomerImage/Recipe/ListImg/새우 오일 파스타.jpg"/>
+            <img className="customerListImg" src="/Image/CustomerImage/Recipe/ListImg/shrimp_oil_pasta.jpg"/>
             <div className="customerListInfo">
                 <p className="customerListText">새우 오일 파스타</p>
                 <div className="customerListStars"></div>
