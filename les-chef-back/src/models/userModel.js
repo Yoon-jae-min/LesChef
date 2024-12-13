@@ -19,9 +19,15 @@ const userSchema = new mongoose.Schema({
     },
     tel:{
         type: String
+    },
+    createdAt:{ 
+        type: Date,
+        default: () => new Date().setMilliseconds(0)
+    },
+    updatedAt:{
+        type: Date,
+        default: () => new Date().setMilliseconds(0)
     }
-},{
-    timestamps: true
 });
 
 
