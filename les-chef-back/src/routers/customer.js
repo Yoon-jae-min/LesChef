@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const postLogin = require("../controllers/loginController");
+const {postLogin, getLogout, getAuth} = require("../controllers/loginController");
 const postJoin = require("../controllers/joinController");
 
 router
     .post("/login", postLogin)
-    .post("/join", postJoin);
+    .post("/join", postJoin)
+    .get("/logout", getLogout)
+    .get("/auth", getAuth);
 
 module.exports = router;

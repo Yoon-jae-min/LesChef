@@ -1,5 +1,6 @@
 import "./mainPage.css";
 import React, {useEffect, useRef, useState} from 'react';
+import { useLocation, useNavigate } from "react-router-dom";
 import MainFirst from './SlideComponent/pageFirst';
 import MainSecond from './SlideComponent/pageSecond';
 import MainThird from './SlideComponent/pageThird';
@@ -11,9 +12,13 @@ import MainBottom from './CommonComponent/Box/bottomBox';
 import MenuModal from './ModalComponent/menuModal';
 import LoginModal from './ModalComponent/loginModal';
 import { useUserContext } from "../Context/userContext";
+import { useConfig } from "../Context/configContext";
+import { useAuthContext } from "../Context/authContext";
 
 const MainPage = () => {
     const outerDivRef = useRef();
+    const location = useLocation();
+    const navigate = useNavigate();
     const [currentPage, setCurrentPage] = useState(0);
     const [slideCheck, setSlideCheck] = useState(true);
     const [menuModal, setMenuModal] = useState(false);
@@ -23,8 +28,30 @@ const MainPage = () => {
     const [ checkPwd, setCheckPwd ] = useState("");
     const [ diffCheck, setDiffCheck ] = useState(false);
     const { setUserInfo } = useUserContext();
+    const { serverUrl } = useConfig();
+    const { setIsLogin, setUser } = useAuthContext();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
+
+    useEffect(() => {
+        fetch(`${serverUrl}/customer/auth`,{
+            method: "GET",
+            headers: { "Content-type": "application/json" },
+            credentials: 'include'
+        }).then((response) => {
+            return response.json();
+        }).then((data) => {
+            if(data.loggedIn){
+                setIsLogin(true);
+                setUser(data.user);
+            }else{
+                setIsLogin(false);
+                setUser(null);
+            }
+        }).catch((err) => {
+            console.log(err);
+        })
+    },[])
 
     useEffect(() => {
         if(loginModal){
@@ -81,6 +108,15 @@ const MainPage = () => {
         setCheckPwd("");
         setDiffCheck(false);
     }, [currentPage]);
+
+    useEffect(() => {
+        if (location.state?.currentPage !== undefined) {
+            setCurrentPage(location.state.currentPage);
+
+            // state 초기화
+            navigate(location.pathname, { replace: true });
+        }
+    }, [location.state]);
 
     useEffect(() => {
         if (menuModal || loginModal) {

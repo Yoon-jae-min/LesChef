@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import LoginInput from "./loginInputBox.jsx";
 import { useConfig } from '../../Context/configContext.jsx';
+import { useAuthContext } from "../../Context/authContext.jsx";
 import '../googleButton.css'
 
 const LoginBox = (props) => {
@@ -8,6 +9,7 @@ const LoginBox = (props) => {
     const [ customerId, setCustomerId ] = useState("");
     const [ customerPwd, setCustomerPwd ] = useState("");
     const { serverUrl } = useConfig();
+    const { setUser, setIsLogin } = useAuthContext();
 
     const clickLogin = () => {
         if(customerId === ""){
@@ -21,12 +23,31 @@ const LoginBox = (props) => {
                 body: JSON.stringify({
                     customerId : customerId,
                     customerPwd : customerPwd
-                })
+                }),
+                credentials: 'include'
             }).then((response) => {
                 return response.text();
             }).then((text) => {
-                alert(text);
-                window.location.reload(true);
+                if(text === "login Success"){
+                    fetch(`${serverUrl}/customer/auth`, {
+                        method: "GET",
+                        headers: { "Content-type": "application/json" },
+                        credentials: 'include'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.loggedIn) {
+                            setUser(data.user); 
+                            setIsLogin(true); 
+                            toggleLoginModal();
+                            alert("로그인 하셨습니다.");
+                        }
+                    });
+                }else{
+                    alert(text);
+                }
+            }).catch((err) => {
+                console.log(err);
             });
         }
     }

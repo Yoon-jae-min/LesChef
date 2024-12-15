@@ -19,4 +19,8 @@ const BoardCommentSchema = mongoose.Schema({
         type: Date,
         default: () => new Date().setMilliseconds(0)
     }
-})
+});
+
+const BoardComment = mongoose.model("BoardComment", BoardCommentSchema);
+
+module.exports = BoardComment;

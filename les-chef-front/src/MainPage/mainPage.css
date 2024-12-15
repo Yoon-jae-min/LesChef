@@ -118,18 +118,32 @@ body{
     border: 0;
 }
 
-.mainMenuButton, .mainLoginButton, .mainProfileButton{
+.mainMenuButton, .mainLoginButton, .mainProfileButton, .mainLogoutButton{
     width: 3vw;
     cursor: pointer;
 }
 
 .mainLoginButton, .mainProfileButton{
     display: inline-block;
-    
+}
+
+.mainLoginButton, .mainLogoutButton{
+    height: 100%;
+}
+
+.mainLogoutButton{
+    width: 3.3vw;
+    margin-left: 0.5vw;
+}
+
+.profileButtonBox{
+    display: flex;
+    align-items: center;
 }
 
 .mainProfileButton{
-    margin-top: 4px;
+    height: 6.8vh;
+    margin-left: 0.3vw;
 }
 
 .mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden{
