@@ -35,7 +35,7 @@ const ShowGpBoxLeft = (props) => {
 
     return(
         <div className="showGpBoxLeft">
-            {infoGoto && <div class="recipeInfoName">참치김치찌개</div>}
+            {infoGoto && <div className="recipeInfoName">참치김치찌개</div>}
             {(!infoGoto && category != 'share') &&  <>
             <span onClick={() => clickGroup(0)} className={activeIndex === 0 ? "active" : ""}>전체</span>
             <span onClick={() => clickGroup(1)} className={activeIndex === 1 ? "active" : ""}>{firstText}</span>

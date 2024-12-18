@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import RecipeListUnit from "./listUnit";
+import ListBox from "./listBox";
+import InfoBox from "./infoBox";
 
 
-const RecipeBody = () => {
-    const [elementCount, setElementCount] = useState(4);
+const RecipeBody = (props) => {
+    const { listPage, setListPage, infoPage, setInfoPage } = props;
 
     return(
         <div className="customerRecipeBody">
-            {Array.from({length: elementCount}).map(() => {
-                return <RecipeListUnit/>
-            })}
+            { listPage && <ListBox setInfoPage={setInfoPage} setListPage={setListPage}/> }
+            { infoPage && <InfoBox/> }
         </div>
     )
 }

@@ -1,10 +1,9 @@
-// const express = require("express");
-// const router = express.Router();
+const express = require("express");
+const router = express.Router();
+const { adminWrite, commonWrite } = require("../controllers/recipeWriteController");
 
-// router
-//     .get("/")
-//     .post()
-//     .put()
-//     .delete();
+router
+    .post("/adminWrite", adminWrite)
+    .post("/commonWrite", commonWrite);
 
-// module.exports = router;
+module.exports = router;

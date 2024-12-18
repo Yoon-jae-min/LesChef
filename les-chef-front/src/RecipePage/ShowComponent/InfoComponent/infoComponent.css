@@ -101,6 +101,10 @@
     overflow: scroll;
 }
 
+.stepText::-webkit-scrollbar{
+    display: none;
+}
+
 .infoIngredientSection{
     width: 95%;
     height: 100px;
@@ -129,7 +133,6 @@
 
 .ingredientName{
     max-width: 65%;
-    overflow: scroll;
     height: 20px;
     margin-left: 4%;
 }

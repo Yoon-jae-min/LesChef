@@ -5,6 +5,7 @@ const fs = require('fs');
 const MongoStore = require('connect-mongo'); 
 const cors = require("cors");
 const customer = require("../src/routers/customer");
+const recipe = require("../src/routers/recipe");
 const dbConnect = require("./config/dbConnect");
 require("dotenv").config();
 
@@ -49,17 +50,12 @@ app.use(express.json());
 
 // 라우터 설정
 app.use("/customer", customer);
+app.use("/recipe", recipe);
 
 // 404 핸들러
 app.use((req, res, next) => {
     res.status(404).send('Not Found');
 });
-
-// 서버 시작
-// app.listen(5000, () => {
-//     console.log('Server running on port 5000');
-// });
-
 
 https.createServer(options, app).listen(5000, () => {
     console.log('HTTPS 서버가 실행 중입니다. https://localhost:5000');

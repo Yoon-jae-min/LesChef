@@ -11,7 +11,7 @@ const recipeStepSchema = mongoose.Schema({
     stepWay:{
         type: String
     },
-    stepTip:{
+    stepTips:{
         type: [String]
     },
     stepImg:{

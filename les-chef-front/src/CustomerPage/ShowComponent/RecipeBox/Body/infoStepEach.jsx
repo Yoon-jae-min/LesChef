@@ -4,7 +4,7 @@ const InfoStepEach = (props) => {
     const { imageSrc, stepNum, stepText, stepTip } = props;
 
     return(
-        <div className="infoStepEach">
+        <div className="customerRecipeStepEach">
             <img className="infoStepImg" src={imageSrc}/>
             <div className="stepTextBox">
                 <p className="stepNum">Step {stepNum}.</p>
@@ -14,7 +14,7 @@ const InfoStepEach = (props) => {
                 </p>
             </div>
         </div>
-    )
+    );
 }
 
 export default InfoStepEach;

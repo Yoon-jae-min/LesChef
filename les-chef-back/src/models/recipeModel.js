@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const recipeSchema = new mongoose.Schema({
-    name:{
+    recipeName:{
         type: String
     },
     cookTime:{
@@ -29,7 +29,8 @@ const recipeSchema = new mongoose.Schema({
         type: String
     },
     viewCount:{
-        type: Number
+        type: Number,
+        default: 0
     },
     isShare:{
         type: Boolean

@@ -14,7 +14,11 @@ const RecipePage = () => {
 
     useEffect(() => {
         setCategory(location.state.category);
-    }, []);
+    },[]);
+
+    // useEffect(() => {
+    //     fetch()
+    // },[]);
 
     //로그인 관련
     const [idPwBox, setIdPwBox] = useState(false);

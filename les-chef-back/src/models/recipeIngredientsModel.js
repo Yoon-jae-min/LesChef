@@ -8,15 +8,19 @@ const RecipeIngredientSchema = mongoose.Schema({
     sortType:{
         type: String
     },
-    ingredientName:{
-        type: String
-    },
-    volume:{
-        type: Number
-    },
-    unit:{
-        type: String
-    },
+    ingredientUnit: [
+        {
+            ingredientName:{
+                type: String
+            },
+            volume:{
+                type: String
+            },
+            unit:{
+                type: String
+            }
+        }
+    ],
     createdAt:{ 
         type: Date,
         default: () => new Date().setMilliseconds(0)

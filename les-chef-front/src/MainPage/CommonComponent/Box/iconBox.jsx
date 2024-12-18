@@ -46,7 +46,7 @@ const MainIcon = (props) => {
             return response.json();
         }).then((data) => {
             if(data.loggedIn){
-                navigate('/customer');
+                navigate('/customerMain');
             }else{
                 alert("로그인을 해주세요");
                 toggleLoginModal();
