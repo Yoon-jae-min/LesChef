@@ -1,6 +1,8 @@
 import React, { useState } from "react";
+import { useUserContext } from "../../../Context/userContext";
 
 const CustomerInfoBox = () => {
+    const { userData } = useUserContext();
     const [ changeInfo, setChangeInfo ] = useState(false);
     const [ pwdChange, setPwdChange] = useState(false);
     const [ checkedPwd, setCheckPwd ] = useState(false);
@@ -60,19 +62,19 @@ const CustomerInfoBox = () => {
                     <div className="customerInfoUnits">
                         <div className="userIdBox customerInfoUnit">
                             <p className="infoUnitLabel">아이디</p>
-                            <p className="infoUnitText">woasl0708</p>
+                            <p className="infoUnitText">{userData.id}</p>
+                        </div>
+                        <div className="nameBox customerInfoUnit">
+                            <p className="infoUnitLabel">이름</p>
+                            <p className="infoUnitText">{userData.name}</p>
                         </div>
                         <div className="infoNickNameBox customerInfoUnit">
                             <p className="infoUnitLabel">닉네임</p>
-                            <p className="infoUnitText">잼인</p>
-                        </div>
-                        <div className="emailBox customerInfoUnit">
-                            <p className="infoUnitLabel">이메일</p>
-                            <p className="infoUnitText">jmyoon1994@naver.com</p>
+                            <p className="infoUnitText">{userData.nickName}</p>
                         </div>
                         <div className="telNumBox customerInfoUnit">
                             <p className="infoUnitLabel">전화번호</p>
-                            <p className="infoUnitText">010-1111-1111</p>
+                            <p className="infoUnitText">{userData.tel}</p>
                         </div>
                     </div>
                 </div>

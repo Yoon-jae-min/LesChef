@@ -11,8 +11,15 @@ export const UserProvider = ({ children }) => {
         tel: ""
     });
 
+    const [ userData, setUserData ] = useState({
+        id: "",
+        name: "",
+        nickName: "",
+        tel: ""
+    });
+
     return(
-        <UserContext.Provider value={ { userInfo, setUserInfo } }>
+        <UserContext.Provider value={ { userInfo, setUserInfo, userData, setUserData } }>
             {children}
         </UserContext.Provider>
     );

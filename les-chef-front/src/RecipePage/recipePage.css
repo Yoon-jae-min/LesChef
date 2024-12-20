@@ -121,15 +121,13 @@
     position: absolute;
     top: 5vh;
     left: 3vw;
+    display: flex;
     width: 24vw;
     height: 10vh;
 }
 
 .recipeLeftIcon{
-    margin: 0 0.5vw;
-    width: 3.5vw;
-}
-
-.goToCustomerIcon{
+    margin: 2vh 0.5vw;
+    width: 3vw;
     cursor: pointer;
 }

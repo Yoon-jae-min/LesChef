@@ -1,7 +1,7 @@
 import React from "react";
 
 const RecipeHeadSolt = (props) => {
-    const { infoPage, listPage } = props;
+    const { infoPage, listPage, writePage } = props;
 
     return(
         <div className="customerRecipeSolt">
@@ -13,6 +13,7 @@ const RecipeHeadSolt = (props) => {
                 <span className="headSoltUnit">양식</span>
             </> }
             { infoPage && <span className="recipeInfoTitle">새우 오일 파스타</span> }
+            { writePage && <input type="text" className="cusWrRecipeName" placeholder="레시피 이름"/>}
         </div>
     )
 }

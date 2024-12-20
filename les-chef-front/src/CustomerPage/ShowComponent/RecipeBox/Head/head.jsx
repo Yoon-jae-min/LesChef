@@ -18,7 +18,7 @@ const RecipeHead = (props) => {
 
     return(
         <div className="customerRecipeHead">
-            <RecipeHeadSolt listPage={listPage} infoPage={infoPage}/>
+            <RecipeHeadSolt listPage={listPage} infoPage={infoPage} writePage={writePage}/>
             { listPage && <img onClick={AddRecipe} className="addRecipeBtn" src="/Image/CommonImage/add.png"/>}
             { (!listPage && (writePage || infoPage)) && <img onClick={clickGoList} className="goToRecipeList" src="/Image/CommonImage/goToBack.png"/> }
         </div>

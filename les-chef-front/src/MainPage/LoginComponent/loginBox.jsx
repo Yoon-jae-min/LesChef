@@ -37,7 +37,7 @@ const LoginBox = (props) => {
                     .then(response => response.json())
                     .then(data => {
                         if (data.loggedIn) {
-                            setUser(data.user); 
+                            // setUser(data.user); 
                             setIsLogin(true); 
                             toggleLoginModal();
                             alert("로그인 하셨습니다.");

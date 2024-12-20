@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     tel:{
         type: String
     },
+    checkAdmin:{
+        type: Boolean,
+        default: false
+    },
     createdAt:{ 
         type: Date,
         default: () => new Date().setMilliseconds(0)

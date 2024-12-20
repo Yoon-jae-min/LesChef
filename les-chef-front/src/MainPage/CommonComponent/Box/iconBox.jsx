@@ -2,12 +2,14 @@ import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../../Context/authContext';
 import { useConfig } from '../../../Context/configContext';
+import { useUserContext } from '../../../Context/userContext';
 
 const MainIcon = (props) => {
     const navigate = useNavigate();
     const {toggleLoginModal, toggleMenuModal, menuModal} = props
     const { isLogin, setUser, setIsLogin } = useAuthContext();
     const { serverUrl } = useConfig();
+    const { setUserData } = useUserContext();
 
     const confirmAction = (message) => {
         return window.confirm(message); // window.confirm을 사용
@@ -28,7 +30,7 @@ const MainIcon = (props) => {
             }).then(
                 (response) => {
                     if(response){
-                        setUser(null);
+                        // setUser(null);
                         setIsLogin(false);
                         alert("로그아웃 되셨습니다.");
                     }
@@ -46,7 +48,17 @@ const MainIcon = (props) => {
             return response.json();
         }).then((data) => {
             if(data.loggedIn){
-                navigate('/customerMain');
+                fetch(`${serverUrl}/customer/info`,{
+                    credentials: "include"
+                }).then(response => response.json()).then((data) => {
+                    setUserData({
+                        id: data.id,
+                        nickName: data.nickName,
+                        name: data.name,
+                        tel: data.tel
+                    });
+                    navigate('/customerMain');
+                }).catch(err => console.log(err));
             }else{
                 alert("로그인을 해주세요");
                 toggleLoginModal();

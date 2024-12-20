@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./customerPage.css";
 import CustomerShowBox from "./ShowComponent/container";
@@ -10,6 +10,14 @@ const CustomerPage = () => {
     const [category, setCategory] = useState('My Info');
     const { serverUrl } = useConfig();
     const navigate = useNavigate();
+
+    // useEffect(() => {
+    //     fetch(`${serverUrl}/customer/info`, {
+    //         credentials: "include"
+    //     }).then(response => response.json()).then((data) => 
+    //         setUserData(data)
+    //     ).catch(err => console.log(err));
+    // },[]);
 
     const checkUser = () => {
         fetch(`${serverUrl}/customer/auth`,{

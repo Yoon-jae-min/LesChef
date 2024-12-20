@@ -487,3 +487,92 @@
     height: 25%;
     display: flex;
 }
+
+.cusRecipeWriteLeft{
+    overflow: scroll;
+    width: 60%;
+    height: 100%;
+}
+
+.cusRecipeWriteRight{
+    overflow: scroll;
+    width: 40%;
+    height: 100%;
+}
+
+.cusRecipeWriteLeft::-webkit-scrollbar, .cusRecipeWriteRight::-webkit-scrollbar{
+    display: none;
+}
+
+.reciMainImgBox{
+    border: 1px solid gray;
+
+    width: 70%;
+    margin: 2% calc((30% - 2px)/2);
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+.cusWrRecipeName{
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    width: 100%;
+    font-size: 2.5vh;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.cusRecipeWrStepBox{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    
+
+    width: 90%;
+    margin: 2% 5%;
+    border-radius: 10px;
+    padding: 2% 0;
+}
+
+.cusRecipeStepPlus{
+    border: 1px solid black;
+
+    width: 95%;
+    margin: 0 calc((5% - 2px)/2);
+    height: 17vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cusReciWrStepUnit{
+    border: 1px solid black;
+
+    width: 95%;
+    margin: 0 calc((5% - 2px)/2);
+    height: 25vh;
+}
+
+.cusStepUnitContent{
+    width: 100%;
+    height: 20vh;
+    border-bottom: 1px solid black;
+}
+
+.cusStepUnitDelete{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cusStepPlusBtn{
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+.cusStepPlusBtn:hover{
+    scale: 1.2;
+}

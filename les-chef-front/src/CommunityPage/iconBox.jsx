@@ -1,11 +1,13 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useConfig } from "../Context/configContext";
+import { useAuthContext } from "../Context/authContext";
 
 const IconBox = (props) => {
     const { toggleLoginModal } = props;
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
+    const { isLogin, setIsLogin } = useAuthContext();
 
     const clickProfile = () => {
         fetch(`${serverUrl}/customer/auth`, {
@@ -24,11 +26,42 @@ const IconBox = (props) => {
         });
     }
 
+    const clickLogin = () => {
+        toggleLoginModal();
+    }
+
+
+    const confirmAction = (message) => {
+        return window.confirm(message); // window.confirm을 사용
+    };
+
+    const clickLogout = () => {
+        if(confirmAction("로그아웃 하시겠습니까?")){
+            fetch(`${serverUrl}/customer/logout`,{
+                credentials: 'include'
+            }).then(
+                (response) => {
+                    if(response){
+                        // setUser(null);
+                        setIsLogin(false);
+                        alert("로그아웃 되셨습니다.");
+                    }
+                }
+            ).catch((err) => {
+                console.log(err);
+            });
+        }
+    }
+
     return(
         <div className="communityIconBox">
             <Link to="/"><img className="goToHomeIcon communityLeftIcon" src="/Image/CommonImage/homeIcon.png"/></Link>
             <img onClick={clickProfile} className="goToCustomerIcon communityLeftIcon" src="/Image/CommonImage/profileIcon.png"/>
             <Link to="/recipeMain" state={{category: "korean"}}><img className="goToRecipeIcon communityLeftIcon" src="/Image/CommonImage/recipeIcon.png"/></Link>
+            <div className="communityLoginBtn">
+                { !isLogin && <img onClick={clickLogin} className='mainLoginButton' src="/Image/MainImage/loginWhite.png"/>}
+                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src="/Image/MainImage/logoutWhite.png"/>}
+            </div>
         </div>
     )
 }

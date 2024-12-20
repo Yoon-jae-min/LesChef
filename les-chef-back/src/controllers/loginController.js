@@ -47,7 +47,7 @@ const getAuth = (req, res) => {
     if (req.session.user) {
         res.json({
             loggedIn: true,
-            user: req.session.user
+            // user: req.session.user
         });
     } else {
         res.json({
@@ -56,4 +56,23 @@ const getAuth = (req, res) => {
     }
 }
 
-module.exports = {postLogin, getLogout, getAuth};
+//유저 정보 조회
+const getInfo = asyncHandler(async(req, res) => {
+    if(req.session.user){
+        const userData = await User.findOne({id: req.session.user.id});
+
+        res.json({
+            id: userData.id,
+            nickName: userData.nickName,
+            name: userData.name,
+            tel: userData.tel,
+            checkAdmin: userData.checkAdmin
+        });
+    }else{
+        res.json({
+            text: "로그인 해주세요"
+        });
+    }
+});
+
+module.exports = {postLogin, getLogout, getAuth, getInfo};

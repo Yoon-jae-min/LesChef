@@ -43,10 +43,10 @@ const MainPage = () => {
         }).then((data) => {
             if(data.loggedIn){
                 setIsLogin(true);
-                setUser(data.user);
+                // setUser(data.user);
             }else{
                 setIsLogin(false);
-                setUser(null);
+                // setUser(null);
             }
         }).catch((err) => {
             console.log(err);

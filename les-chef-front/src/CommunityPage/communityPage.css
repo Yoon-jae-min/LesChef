@@ -71,6 +71,13 @@
     height: 90vh;
 }
 
+.communityLoginBtn{
+    display: flex;
+    justify-content: center;
+    height: 7vh;
+    margin-top: 1vh;
+}
+
 .communityBody{
     position: absolute;
     top: 20%;
