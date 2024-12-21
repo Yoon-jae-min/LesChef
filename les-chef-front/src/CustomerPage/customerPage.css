@@ -387,11 +387,11 @@
     position: relative;
     width: 100%;
     height: calc(30% - 15px);
-    border: 1px solid black;
+
 }
 
 .customerListText{
-    margin: 5px 0;
+    margin: 0;
     width: 100%;
     font-size: 22px;
     font-family: "Jua", sans-serif;
@@ -552,20 +552,63 @@
     border: 1px solid black;
 
     width: 95%;
-    margin: 0 calc((5% - 2px)/2);
+    margin: 0 calc((5% - 2px)/2) 5px;
     height: 25vh;
 }
 
 .cusStepUnitContent{
     width: 100%;
-    height: 20vh;
+    height: 25vh;
     border-bottom: 1px solid black;
+
+    display: flex;
+}
+
+.cusStUniContLeft{
+    width: 30%;
+    border-right: 1px solid black;
+}
+
+.cusStUniContInput{
+    width: 100%;
+}
+
+.cusStUniContImg{
+    border: 1px solid gray;
+    width: 90%;
+    aspect-ratio: 1/1;
+    margin: 0 calc((10% - 2px)/2);
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+.cusStUniContRight{
+    width: 70%;
+}
+
+.cusStepUniOrder{
+    width: 100%;
+    height: 15%;
+    font-weight: bold;
+    padding-left: 5px;
+
+    border-bottom: 1px solid black;
+}
+
+.cusStepUniDes{
+    border: none;
+    width: 95%;
+    height: 78%;
+    margin: 1% 2%;
+    background-color: rgb(182, 182, 182);
+    resize: none;
 }
 
 .cusStepUnitDelete{
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 .cusStepPlusBtn{

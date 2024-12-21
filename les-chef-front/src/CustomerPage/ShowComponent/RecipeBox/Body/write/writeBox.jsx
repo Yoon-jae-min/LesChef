@@ -24,23 +24,25 @@ const WriteBox = () => {
     const stepAdd = () => {
         setSteps((prevSteps) => [
             ...prevSteps,
-            { id: prevSteps.length + 1 }, // 고유 ID와 내용
+            { id: prevSteps.length + 1, stepImgFile: "", content: ""},
         ]);
     }
 
-    // const updateStep = (id, updatedData) => {
-    //     setSteps((prevSteps) =>
-    //         prevSteps.map((step) =>
-    //             step.id === id ? { ...step, ...updatedData } : step
-    //         )
-    //     );
-    // };
+    const updateStep = (id, updatedData) => {
+        setSteps((prevSteps) =>
+            prevSteps.map((step) =>
+                step.id === id ? { ...step, ...updatedData } : step
+            )
+        );
+    };
 
     const stepDelete = (id) => {
         setSteps((prevSteps) =>
             prevSteps.filter((step) => step.id !== id).map((step, index) => ({
                 ...step,
-                id: index + 1, // 삭제 후 ID 재정렬
+                id: index + 1,
+                stepImgFile: step.stepImgFile,
+                content: step.content
             }))
         );
     }
@@ -55,7 +57,10 @@ const WriteBox = () => {
                         <StepBoxUnit
                             key={step.id}
                             index={step.id}
-                            stepDelete={() => stepDelete(step.id)} // 고유 ID로 삭제
+                            saveStepImgFile={step.stepImgFile}
+                            saveStepContent={step.content}
+                            stepDelete={stepDelete}
+                            updateStep={updateStep}
                         />
                     ))}
                     <div className="cusRecipeStepPlus">

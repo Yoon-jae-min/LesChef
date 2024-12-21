@@ -1,14 +1,39 @@
-import React from "react";
+import React, {useState, useRef, useEffect} from "react";
 
 const StepBoxUnit = (props) => {
-    const { index, stepDelete } = props;
+    const { index, stepDelete, updateStep, saveStepImgFile, saveStepContent } = props;
+
+    const preStepImgFile = (e) => {
+        const file = e.target.files[0];
+        if (!file) {
+            updateStep(index, {stepImgFile: ""});
+        }else{
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                const result = reader.result;
+                updateStep(index, {stepImgFile: result});
+            };
+        }
+    };
+
 
     return(
         <div className={`cusReciWrStepUnit-${index} cusReciWrStepUnit`}>
-            <div className="cusStepUnitContent"></div>
-            <div className="cusStepUnitDelete">
-                <img src="/Image/CommonImage/delete.png" onClick={stepDelete}/>
+            <div className="cusStepUnitContent">
+                <div className="cusStUniContLeft">
+                    <input className="cusStUniContInput" type="file" onChange={(e) => preStepImgFile(e)}/>
+                    <img className="cusStUniContImg" src={saveStepImgFile || "/Image/CommonImage/preImg.png"}/>
+                    <div className="cusStepUnitDelete">
+                        <img src="/Image/CommonImage/delete.png" onClick={() => stepDelete(index)}/>
+                    </div>
+                </div>
+                <div className="cusStUniContRight">
+                    <div className="cusStepUniOrder">{`Step.${index}`}</div>
+                    <textarea className="cusStepUniDes" value={saveStepContent || ""} onChange={(e) => updateStep(index, {content: e.target.value})}></textarea>
+                </div>
             </div>
+            
         </div>
     )
 }

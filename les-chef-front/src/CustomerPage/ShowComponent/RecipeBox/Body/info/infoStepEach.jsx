@@ -1,7 +1,7 @@
 import React from "react";
 
 const InfoStepEach = (props) => {
-    const { imageSrc, stepNum, stepText, stepTip } = props;
+    const { imageSrc, stepNum, stepText } = props;
 
     return(
         <div className="customerRecipeStepEach">
@@ -10,7 +10,6 @@ const InfoStepEach = (props) => {
                 <p className="stepNum">Step {stepNum}.</p>
                 <p className="stepText">
                     {stepText}
-                    { (stepTip !== "") && <p className="stepTip">{stepTip}</p> }
                 </p>
             </div>
         </div>
