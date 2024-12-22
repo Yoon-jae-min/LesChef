@@ -1,9 +1,12 @@
 import React, { useRef, useState } from "react";
 import StepBoxUnit from "./stepBoxUnit";
+import IngredientSection from "./ingredientSection";
 
 const WriteBox = () => {
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
+    const [ingreSections, setIngreSections] = useState([]);
+    const [ingreEachs, setIngreEachs] = useState([]);
     const imgRef = useRef();
 
     const preImgFile = () => {
@@ -21,6 +24,7 @@ const WriteBox = () => {
         };
     };
 
+    //step 메소드
     const stepAdd = () => {
         setSteps((prevSteps) => [
             ...prevSteps,
@@ -47,6 +51,26 @@ const WriteBox = () => {
         );
     }
 
+    //ingredientSection 메소드
+    const ingreSectionAdd = () => {
+        setIngreSections((preSections) => [
+            ...preSections, {id: preSections.length + 1, ingreEachs: ""}
+        ]);
+    }
+
+    //ingredientEach 메소드
+    const ingreEachAdd = (sectionId) => {
+        setIngreEachs((preEachs) => [
+            ...preEachs, {id: preEachs.length + 1, ingreName: "", ingreVolume: "", ingreUnit: "", sectionId: sectionId} 
+        ]);
+
+        setIngreSections((preSections) => 
+            preSections.map((section) => 
+                section.id === sectionId ? [...section, { ingreEachs: ingreEachs }] : section
+            )
+        )
+    }
+
     return(
         <>
             <div className="cusRecipeWriteLeft">
@@ -68,7 +92,18 @@ const WriteBox = () => {
                     </div>
                 </div>
             </div>
-            <div className="cusRecipeWriteRight"></div>
+            <div className="cusRecipeWriteRight">
+                    {ingreSections.map((ingreSection) => (
+                        <IngredientSection
+                            key={ingreSection.id}
+                            index={ingreSection.id}
+                            ingreEachs={ingreEachs}
+                        />
+                    ))}
+                    <div className="cusWrIngrePlus">
+                        <img onClick={ingreSectionAdd} className="cusWrIngreBtn" src="/Image/CommonImage/add.png"/>
+                    </div>
+            </div>
         </>
     )
 }

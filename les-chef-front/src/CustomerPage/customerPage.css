@@ -488,6 +488,10 @@
     display: flex;
 }
 
+/*-------------------------------------------------------------------------------------------------------------------------*/
+
+/*레시피 작성 페이지*/
+
 .cusRecipeWriteLeft{
     overflow: scroll;
     width: 60%;
@@ -497,21 +501,15 @@
 .cusRecipeWriteRight{
     overflow: scroll;
     width: 40%;
-    height: 100%;
+    height: 95%;
+
+    border-radius: 5px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
 }
 
 .cusRecipeWriteLeft::-webkit-scrollbar, .cusRecipeWriteRight::-webkit-scrollbar{
     display: none;
-}
-
-.reciMainImgBox{
-    border: 1px solid gray;
-
-    width: 70%;
-    margin: 2% calc((30% - 2px)/2);
-    aspect-ratio: 1/1;
-    object-fit: contain;
-    border-radius: 5px;
 }
 
 .cusWrRecipeName{
@@ -524,6 +522,34 @@
     margin-bottom: 10px;
     border-radius: 5px;
 }
+
+.cusWrRecipeName:focus{
+    outline: none;
+}
+
+.cusStepPlusBtn, .cusWrIngreBtn{
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+.cusStepPlusBtn:hover, .cusWrIngreBtn:hover{
+    scale: 1.2;
+}
+
+/*레시피 작성 (메인 이미지)*/
+
+.reciMainImgBox{
+    border: 1px solid gray;
+
+    width: 70%;
+    margin: 2% calc((30% - 2px)/2);
+    aspect-ratio: 1/1;
+    object-fit: contain;
+    border-radius: 5px;
+}
+
+
+/*레시피 작성 (step)*/
 
 .cusRecipeWrStepBox{
     border-top: 1px solid black;
@@ -587,7 +613,7 @@
 }
 
 .cusStepUniOrder{
-    width: 100%;
+    width: calc(100% - 5px);
     height: 15%;
     font-weight: bold;
     padding-left: 5px;
@@ -611,11 +637,81 @@
     cursor: pointer;
 }
 
-.cusStepPlusBtn{
+/*레시피 작성 (재료)*/
+
+.cusWrIngrePlus{
+    width: 95%;
+    height: 17vh;
+    margin: 5px auto;
+
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cusWrIngreSec{
+    width: 95%;
+    min-height: 50px;
+    margin: 3px auto;
+
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.cusWrIngreSecHead{
+    width: 100%;
+    height: 30px;
+    border-bottom: 1px solid black;
+    display: flex;
+    align-items: center;
+}
+
+.cusWrIngreSecHeadName{
+    width: 80%;
+    height: 80%;
+    margin-left: 5px;
+    padding-left: 5px;
+    font-size: 17px;
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-radius: 5px;
+}
+
+.cusWrIngreSecHeadName:focus{
+    outline: none;
+}
+
+.cusWrIngreSecHeadImg{
+    height: 23px;
+    margin-left: 3%;
     cursor: pointer;
     transition: 0.5s all;
 }
 
-.cusStepPlusBtn:hover{
-    scale: 1.2;
+.cusWrIngreSecHeadImg:hover{
+    scale: 1.1;
+}
+
+.cusWrIngreEachPlus{
+    width: 98%;
+    height: 25px;
+    margin-left: 2%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-bottom: 1px solid black;
+}
+
+.cusWrIngreEachAddImg{
+    height: 80%;
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+.cusWrIngreEachAddImg:hover{
+    scale: 1.3;
 }

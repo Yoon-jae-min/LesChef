@@ -146,7 +146,7 @@ body{
     margin-left: 0.3vw;
 }
 
-.mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden{
+.mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden, .mainLogoutButton.hidden{
     display: none;
 }
 
