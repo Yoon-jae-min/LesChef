@@ -652,7 +652,6 @@
 
 .cusWrIngreSec{
     width: 95%;
-    min-height: 50px;
     margin: 3px auto;
 
     border: 1px solid black;
@@ -695,15 +694,61 @@
     scale: 1.1;
 }
 
-.cusWrIngreEachPlus{
+.cusWrIngreEach{
     width: 98%;
     height: 25px;
     margin-left: 2%;
+
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    border-bottom: 1px solid black;
+}
+
+.cusIngreEachName{
+    width: 50%;
+}
+
+.cusIngreEachVolume{
+    width: 15%;
+}
+
+.cusIngreEachPortion{
+    width: 15%;
+    
+}
+
+.cusIngreEachName, .cusIngreEachVolume, .cusIngreEachPortion{
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-radius: 5px;
+
+    background-color: rgb(182, 182, 182);
+
+    height: 70%;
+}
+
+.cusIngreEachName:focus, .cusIngreEachVolume:focus, .cusIngreEachPortion:focus{
+    outline: none;
+}
+
+.cusIngreEachDel{
+    height: 75%;
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+.cusIngreEachDel:hover{
+    scale: 1.2;
+}
+
+.cusWrIngreEachPlus{
+    width: 100%;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    border-bottom: 1px solid black;
 }
 
 .cusWrIngreEachAddImg{

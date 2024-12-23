@@ -6,7 +6,6 @@ const WriteBox = () => {
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
     const [ingreSections, setIngreSections] = useState([]);
-    const [ingreEachs, setIngreEachs] = useState([]);
     const imgRef = useRef();
 
     const preImgFile = () => {
@@ -54,21 +53,70 @@ const WriteBox = () => {
     //ingredientSection 메소드
     const ingreSectionAdd = () => {
         setIngreSections((preSections) => [
-            ...preSections, {id: preSections.length + 1, ingreEachs: ""}
+            ...preSections, {id: preSections.length + 1, sectionName: "", ingreEachs: []}
         ]);
+    }
+
+    const ingreSectionUpD = (sectionId, updateData) => {
+        console.log(sectionId, updateData);
+        setIngreSections((preSections) => 
+            preSections.map((section) => 
+                section.id === sectionId ? { ...section, ...updateData} : section
+            )
+        )
+    }
+
+    const ingreSectionDel = (sectionId) => {
+        setIngreSections((preSections) => 
+            preSections.filter((section) => section.id !== sectionId).map((section, index) => ({
+                ...section,
+                id: index + 1,
+                sectionName: section.sectionName,
+                ingreEachs: section.ingreEachs
+            }))
+        );
     }
 
     //ingredientEach 메소드
     const ingreEachAdd = (sectionId) => {
-        setIngreEachs((preEachs) => [
-            ...preEachs, {id: preEachs.length + 1, ingreName: "", ingreVolume: "", ingreUnit: "", sectionId: sectionId} 
-        ]);
-
         setIngreSections((preSections) => 
             preSections.map((section) => 
-                section.id === sectionId ? [...section, { ingreEachs: ingreEachs }] : section
+                section.id === sectionId ? {
+                    ...section,
+                    ingreEachs: [
+                        ...section.ingreEachs,
+                        {
+                            id: section.ingreEachs.length + 1,
+                            ingreName: "",
+                            ingreVolume: "",
+                            ingreUnit: ""
+                        }
+                    ]
+                } : section
             )
         )
+    }
+
+    const ingreEachUpD = (sectionId, eachId) => {
+
+    }
+
+    const ingreEachDel = (sectionId, eachId) => {
+        setIngreSections((prevSections) =>
+            prevSections.map((section) =>
+                section.id === sectionId
+                    ? {
+                        ...section,
+                        ingreEachs: section.ingreEachs
+                            .filter((each) => each.id !== eachId)
+                            .map((each, index) => ({
+                                ...each,
+                                id: index + 1,
+                            })),
+                    }
+                    : section
+            )
+        );
     }
 
     return(
@@ -77,9 +125,9 @@ const WriteBox = () => {
                 <input className="recipeInputImg" accept="image/*" type="file" onChange={preImgFile} ref={imgRef}/>
                 <img className="reciMainImgBox" src={imgFile ? imgFile : "/Image/CommonImage/preImg.png"}/>
                 <div className="cusRecipeWrStepBox">
-                    {steps.map((step) => (
+                    {steps.map((step, index) => (
                         <StepBoxUnit
-                            key={step.id}
+                            key={index}
                             index={step.id}
                             saveStepImgFile={step.stepImgFile}
                             saveStepContent={step.content}
@@ -93,11 +141,16 @@ const WriteBox = () => {
                 </div>
             </div>
             <div className="cusRecipeWriteRight">
-                    {ingreSections.map((ingreSection) => (
+                    {ingreSections.map((ingreSection, index) => (
                         <IngredientSection
-                            key={ingreSection.id}
-                            index={ingreSection.id}
-                            ingreEachs={ingreEachs}
+                            key={index}
+                            sectionId={ingreSection.id}
+                            ingreSection={ingreSection}
+                            sectionName={ingreSection.sectionName}
+                            ingreSectionDel={ingreSectionDel}
+                            ingreSectionUpD={ingreSectionUpD}
+                            ingreEachAdd={ingreEachAdd}
+                            ingreEachDel={ingreEachDel}
                         />
                     ))}
                     <div className="cusWrIngrePlus">
