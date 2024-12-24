@@ -32,7 +32,7 @@ const IconBox = (props) => {
 
 
     const confirmAction = (message) => {
-        return window.confirm(message); // window.confirm을 사용
+        return window.confirm(message);
     };
 
     const clickLogout = () => {
@@ -42,7 +42,6 @@ const IconBox = (props) => {
             }).then(
                 (response) => {
                     if(response){
-                        // setUser(null);
                         setIsLogin(false);
                         alert("로그아웃 되셨습니다.");
                     }
@@ -55,12 +54,12 @@ const IconBox = (props) => {
 
     return(
         <div className="communityIconBox">
-            <Link to="/"><img className="goToHomeIcon communityLeftIcon" src="/Image/CommonImage/homeIcon.png"/></Link>
-            <img onClick={clickProfile} className="goToCustomerIcon communityLeftIcon" src="/Image/CommonImage/profileIcon.png"/>
-            <Link to="/recipeMain" state={{category: "korean"}}><img className="goToRecipeIcon communityLeftIcon" src="/Image/CommonImage/recipeIcon.png"/></Link>
+            <Link to="/"><img className="goToHomeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
+            <img onClick={clickProfile} className="goToCustomerIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
+            <Link to="/recipeMain" state={{category: "korean"}}><img className="goToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
             <div className="communityLoginBtn">
-                { !isLogin && <img onClick={clickLogin} className='mainLoginButton' src="/Image/MainImage/loginWhite.png"/>}
-                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src="/Image/MainImage/logoutWhite.png"/>}
+                { !isLogin && <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
             </div>
         </div>
     )

@@ -4,8 +4,11 @@ import "./communityPage.css"
 import CommunityBox from "./CommonElement/box";
 import IconBox from "./iconBox";
 import LoginModal from "../MainPage/ModalComponent/loginModal";
+import { useConfig } from "../Context/configContext";
 
 const CommunityPage = () => {
+    const {serverUrl} = useConfig();
+
     //로그인 관련
     const [idPwBox, setIdPwBox] = useState(false);
     const [loginToFind, setLoginToFind] = useState(false);
@@ -33,7 +36,7 @@ const CommunityPage = () => {
 
     return(
         <div className="communityMain">
-            <img src="/Image/CommunityImage/Background/communityBackground.jpg" className="communityBgImg"/>
+            <img src={`${serverUrl}/Image/CommunityImage/Background/communityBackground.jpg`} className="communityBgImg"/>
             <IconBox toggleLoginModal={toggleLoginModal}/>
             <CommunityBox/>
             <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>

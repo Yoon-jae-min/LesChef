@@ -1,7 +1,9 @@
 import React, {useState, useRef, useEffect} from "react";
+import { useConfig } from "../../../../../Context/configContext";
 
 const StepBoxUnit = (props) => {
     const { index, stepDelete, updateStep, saveStepImgFile, saveStepContent } = props;
+    const {serverUrl} = useConfig();
 
     const preStepImgFile = (e) => {
         const file = e.target.files[0];
@@ -23,7 +25,7 @@ const StepBoxUnit = (props) => {
             <div className="cusStepUnitContent">
                 <div className="cusStUniContLeft">
                     <input className="cusStUniContInput" type="file" onChange={(e) => preStepImgFile(e)}/>
-                    <img className="cusStUniContImg" src={saveStepImgFile || "/Image/CommonImage/preImg.png"}/>
+                    <img className="cusStUniContImg" src={saveStepImgFile || `${serverUrl}/Image/CommonImage/preImg.png`}/>
                     <div className="cusStepUnitDelete">
                         <img src="/Image/CommonImage/delete.png" onClick={() => stepDelete(index)}/>
                     </div>

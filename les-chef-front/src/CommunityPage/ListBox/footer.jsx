@@ -1,7 +1,9 @@
 import React from "react";
+import { useConfig } from "../../Context/configContext";
 
 const CommunityFooter = (props) => {
     const { goToWrite } = props;
+    const {serverUrl} = useConfig();
 
     return(
         <div className="communityFooterBox">
@@ -14,12 +16,12 @@ const CommunityFooter = (props) => {
                 </select>
             </div>
             <div className="searchBox">
-                <img className="searchButtonImg" src="/Image/CommonImage/search.png"/>
+                <img className="searchButtonImg" src={`${serverUrl}/Image/CommonImage/search.png`}/>
                 <input className="searchInput" type="text"/>
-                <img className="resetButtonImg" src="/Image/CommonImage/cancel.png"/>
+                <img className="resetButtonImg" src={`${serverUrl}/Image/CommonImage/cancel.png`}/>
             </div>
             <div className="footerButtonBox">
-                <img onClick={goToWrite} className="writeBoxVisible" src="/Image/CommunityImage/write.png"/>
+                <img onClick={goToWrite} className="writeBoxVisible" src={`${serverUrl}/Image/CommunityImage/write.png`}/>
             </div>
         </div>
     )

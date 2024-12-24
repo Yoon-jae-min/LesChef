@@ -25,11 +25,13 @@ const MainPage = () => {
     const [loginModal, setLoginModal] = useState(false);
     const [loginToFind, setLoginToFind] = useState(false);
     const [idPwBox, setIdPwBox] = useState(false);
-    const [ checkPwd, setCheckPwd ] = useState("");
-    const [ diffCheck, setDiffCheck ] = useState(false);
+    const [checkPwd, setCheckPwd] = useState("");
+    const [diffCheck, setDiffCheck] = useState(false);
+    const [topTxt, setTopTxt] = useState("재료 준비부터\n만드는 법, 조리시간");
+    const [bottomTxt, setBottomTxt] = useState("한식부터 일식, 양식까지\n다양하게");
     const { setUserInfo } = useUserContext();
     const { serverUrl } = useConfig();
-    const { setIsLogin, setUser } = useAuthContext();
+    const { setIsLogin } = useAuthContext();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
@@ -43,10 +45,8 @@ const MainPage = () => {
         }).then((data) => {
             if(data.loggedIn){
                 setIsLogin(true);
-                // setUser(data.user);
             }else{
                 setIsLogin(false);
-                // setUser(null);
             }
         }).catch((err) => {
             console.log(err);
@@ -107,6 +107,27 @@ const MainPage = () => {
         });
         setCheckPwd("");
         setDiffCheck(false);
+
+        setTimeout(() => {
+            switch (currentPage) {
+                case 0:
+                    setTopTxt("재료 준비부터\n만드는 법, 조리시간");
+                    setBottomTxt("한식부터 일식, 양식까지\n다양하게");
+                    break;
+                case 1:
+                    setTopTxt("간단한\n아침 레시피부터")
+                    setBottomTxt("온 가족이 즐길수 있는\n저녁 레시피까지")
+                    break;
+                case 2:
+                    setTopTxt("게시판에서\n자신의 레시피를");
+                    setBottomTxt("다른사람들과 함께\n공유해 보세요!");
+                    break;
+                case 3:
+                    setTopTxt("검색 기능으로\n남은재료를 입력해");
+                    setBottomTxt("색다른 방법으로\n음식을 만들어보세요!");
+                    break;
+            }
+        }, 100);
     }, [currentPage]);
 
     useEffect(() => {
@@ -164,8 +185,8 @@ const MainPage = () => {
             <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
             <MenuModal menuModal={menuModal}/>
             {slideCheck  && <MainLeft  goToTopSlide={goToTopSlide} toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}
-            {slideCheck  && <MainTop/>}
-            {slideCheck  && <MainBottom/>}
+            {slideCheck  && <MainTop topTxt={topTxt}/>}
+            {slideCheck  && <MainBottom bottomTxt={bottomTxt}/>}
         </div>);
 
 }

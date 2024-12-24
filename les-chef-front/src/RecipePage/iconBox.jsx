@@ -54,11 +54,11 @@ const IconBox = (props) => {
 
     return(
         <div className="recipeIconBox">
-            <img onClick={clickProfile} src="/Image/CommonImage/profileIcon.png" className="goToCustomerIcon recipeLeftIcon"/>
-            <Link to="/communityMain"><img src="/Image/CommonImage/communityIcon.png" className="goToCommunityIcon recipeLeftIcon"/></Link>
+            <img onClick={clickProfile} src={`${serverUrl}/Image/CommonImage/profileIcon.png`} className="goToCustomerIcon recipeLeftIcon"/>
+            <Link to="/communityMain"><img src={`${serverUrl}/Image/CommonImage/communityIcon.png`} className="goToCommunityIcon recipeLeftIcon"/></Link>
             <div>
-                { !isLogin && <img onClick={clickLogin} className='recipeLeftIcon' src="/Image/MainImage/loginWhite.png"/>}
-                { isLogin && <img onClick={clickLogout} className='recipeLeftIcon' src="/Image/MainImage/logoutWhite.png"/>}
+                { !isLogin && <img onClick={clickLogin} className='recipeLeftIcon' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                { isLogin && <img onClick={clickLogout} className='recipeLeftIcon' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
             </div>
         </div>
     )

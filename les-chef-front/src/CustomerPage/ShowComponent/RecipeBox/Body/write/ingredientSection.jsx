@@ -1,8 +1,10 @@
 import React from "react";
 import IngredientEach from "./ingredientEach";
+import { useConfig } from "../../../../../Context/configContext";
 
 const IngredientSection = (props) => {
-    const { sectionId, ingreSection, sectionName, ingreSectionDel, ingreSectionUpD, ingreEachAdd, ingreEachDel } = props;
+    const { sectionId, ingreSection, sectionName, ingreSectionDel, ingreSectionUpD, ingreEachAdd, ingreEachDel, ingreEachUpD } = props;
+    const {serverUrl} = useConfig();
 
     const changeSecName = (sectionName) => {
         ingreSectionUpD(sectionId, { sectionName: sectionName });
@@ -12,7 +14,7 @@ const IngredientSection = (props) => {
         <div className="cusWrIngreSec">
             <div className="cusWrIngreSecHead">
                 <input onChange={(e) => changeSecName(e.target.value)} value={sectionName} type="text" className="cusWrIngreSecHeadName" placeholder="재료 section name"/>
-                <img onClick={() => ingreSectionDel(sectionId)} className="cusWrIngreSecHeadImg" src="/Image/CommonImage/delete.png"/>
+                <img onClick={() => ingreSectionDel(sectionId)} className="cusWrIngreSecHeadImg" src={`${serverUrl}/Image/CommonImage/delete.png`}/>
             </div>
             {Array.isArray(ingreSection.ingreEachs) &&
                 ingreSection.ingreEachs.map((each, index) => (
@@ -20,11 +22,15 @@ const IngredientSection = (props) => {
                         key={index}
                         eachId={each.id}  
                         sectionId={sectionId}
+                        ingreName={each.ingreName}
+                        ingreVolume={each.ingreVolume}
+                        ingreUnit={each.ingreUnit}
                         ingreEachDel={ingreEachDel}
+                        ingreEachUpD={ingreEachUpD}
                     />
             ))}
             <div className="cusWrIngreEachPlus">
-                <img onClick={() => ingreEachAdd(sectionId)} className="cusWrIngreEachAddImg" src="/Image/CommonImage/add.png"/>
+                <img onClick={() => ingreEachAdd(sectionId)} className="cusWrIngreEachAddImg" src={`${serverUrl}/Image/CommonImage/add.png`}/>
             </div>
         </div>
     )

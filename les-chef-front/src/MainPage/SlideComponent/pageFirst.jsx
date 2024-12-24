@@ -1,15 +1,14 @@
 import React from 'react';
+import { useConfig } from '../../Context/configContext';
 
 const MainFirst = (props) => {
+    const { serverUrl } = useConfig();
 
     return (
         <section className='mainSection'>
             <video muted autoPlay loop id='mainVideo'>
-                <source src="/Video/mainFirstVideo.mp4" type="video/mp4"></source>
+                <source src={`${serverUrl}/Video/mainFirstVideo.mp4`} type="video/mp4"></source>
             </video>
-
-            <p className='topText'>재료 준비부터<br/>만드는 법, 조리시간</p>
-            <p className='bottomText'>한식부터 일식, 양식까지<br/>다양하게</p>
         </section>
     )
 }

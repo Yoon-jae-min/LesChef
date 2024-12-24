@@ -11,14 +11,6 @@ const CustomerPage = () => {
     const { serverUrl } = useConfig();
     const navigate = useNavigate();
 
-    // useEffect(() => {
-    //     fetch(`${serverUrl}/customer/info`, {
-    //         credentials: "include"
-    //     }).then(response => response.json()).then((data) => 
-    //         setUserData(data)
-    //     ).catch(err => console.log(err));
-    // },[]);
-
     const checkUser = () => {
         fetch(`${serverUrl}/customer/auth`,{
             credentials: 'include'
@@ -32,7 +24,7 @@ const CustomerPage = () => {
 
     return (
         <div className="customerPgBox">
-            <img className="customerBgImg" src="/Image/CustomerImage/Background/CustomerBackground.jpg"/>
+            <img className="customerBgImg" src={`${serverUrl}/Image/CustomerImage/Background/CustomerBackground.jpg`}/>
             <IconBox/>
             <CustomerShowBox category={category} checkUser={checkUser}/>
             <CustomerMenuBox setCategory={setCategory} checkUser={checkUser}/>

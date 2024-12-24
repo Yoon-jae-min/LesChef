@@ -7,7 +7,7 @@ import { useUserContext } from '../../../Context/userContext';
 const MainIcon = (props) => {
     const navigate = useNavigate();
     const {toggleLoginModal, toggleMenuModal, menuModal} = props
-    const { isLogin, setUser, setIsLogin } = useAuthContext();
+    const { isLogin, setIsLogin } = useAuthContext();
     const { serverUrl } = useConfig();
     const { setUserData } = useUserContext();
 
@@ -90,11 +90,11 @@ const MainIcon = (props) => {
                 <hr></hr>
             </div>
             <div>
-                { !isLogin && <img onClick={handlerLoginModal} className='mainLoginButton' src="/Image/MainImage/loginWhite.png"/>}
-                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src="/Image/MainImage/logoutWhite.png"/>}
+                { !isLogin && <img onClick={handlerLoginModal} className='mainLoginButton' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
             </div>
             <div className='profileButtonBox'>
-                <img onClick={clickProfile} className='mainProfileButton' src="/Image/CommonImage/profileIcon.png"/>
+                <img onClick={clickProfile} className='mainProfileButton' src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
             </div>
             
         </div>

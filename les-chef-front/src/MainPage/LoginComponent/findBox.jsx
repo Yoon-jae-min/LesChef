@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import FindId from "./findId";
 import FindPw from "./findPw";
+import { useConfig } from "../../Context/configContext";
 
 const FindBox = (props) => {
     const {loginToFind, toggleFindIdPw, idPwBox} = props;
+    const { serverUrl } = useConfig();
 
     useEffect(() => {
         const idButton = document.querySelector('.idButton');
@@ -30,7 +32,7 @@ const FindBox = (props) => {
 
     return(
         <div className="loginBox" style={{opacity: loginToFind ? '1' : '0'}}>
-            <img className='LoginLogo' src="/Image/CommonImage/LogoWhite.png"/>
+            <img className='LoginLogo' src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
             <div className="idPwButton">
                 <div className="idButton click" onClick={HandlerSwitch}>로그인</div>
                 <div className="pwButton" onClick={HandlerSwitch}>비밀번호</div>

@@ -1,8 +1,10 @@
 import React, { useRef, useState } from "react";
 import StepBoxUnit from "./stepBoxUnit";
 import IngredientSection from "./ingredientSection";
+import { useConfig } from "../../../../../Context/configContext";
 
 const WriteBox = () => {
+    const {serverUrl} = useConfig();
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
     const [ingreSections, setIngreSections] = useState([]);
@@ -97,24 +99,37 @@ const WriteBox = () => {
         )
     }
 
-    const ingreEachUpD = (sectionId, eachId) => {
-
+    const ingreEachUpD = (sectionId, eachId, updateData) => {
+        setIngreSections((preSections) => 
+            preSections.map((section) => 
+                section.id === sectionId ? {
+                    ...section,
+                    ingreEachs: section.ingreEachs.map((each) =>
+                        each.id === eachId ? {
+                            ...each,
+                            ...updateData
+                        } : each
+                    )
+                } : section
+            )
+        );
     }
 
     const ingreEachDel = (sectionId, eachId) => {
         setIngreSections((prevSections) =>
             prevSections.map((section) =>
-                section.id === sectionId
-                    ? {
-                        ...section,
-                        ingreEachs: section.ingreEachs
-                            .filter((each) => each.id !== eachId)
-                            .map((each, index) => ({
-                                ...each,
-                                id: index + 1,
-                            })),
-                    }
-                    : section
+                section.id === sectionId ? {
+                    ...section,
+                    ingreEachs: section.ingreEachs
+                        .filter((each) => each.id !== eachId)
+                        .map((each, index) => ({
+                            ...each,
+                            id: index + 1,
+                            ingreName: each.ingreName,
+                            ingreVolume: each.ingreVolume,
+                            ingreUnit: each.ingreUnit
+                        })),
+                } : section
             )
         );
     }
@@ -123,7 +138,7 @@ const WriteBox = () => {
         <>
             <div className="cusRecipeWriteLeft">
                 <input className="recipeInputImg" accept="image/*" type="file" onChange={preImgFile} ref={imgRef}/>
-                <img className="reciMainImgBox" src={imgFile ? imgFile : "/Image/CommonImage/preImg.png"}/>
+                <img className="reciMainImgBox" src={imgFile ? imgFile : `${serverUrl}/Image/CommonImage/preImg.png`}/>
                 <div className="cusRecipeWrStepBox">
                     {steps.map((step, index) => (
                         <StepBoxUnit
@@ -136,7 +151,7 @@ const WriteBox = () => {
                         />
                     ))}
                     <div className="cusRecipeStepPlus">
-                        <img onClick={stepAdd} className="cusStepPlusBtn" src="/Image/CommonImage/add.png"/>
+                        <img onClick={stepAdd} className="cusStepPlusBtn" src={`${serverUrl}/Image/CommonImage/add.png`}/>
                     </div>
                 </div>
             </div>
@@ -151,10 +166,11 @@ const WriteBox = () => {
                             ingreSectionUpD={ingreSectionUpD}
                             ingreEachAdd={ingreEachAdd}
                             ingreEachDel={ingreEachDel}
+                            ingreEachUpD={ingreEachUpD}
                         />
                     ))}
                     <div className="cusWrIngrePlus">
-                        <img onClick={ingreSectionAdd} className="cusWrIngreBtn" src="/Image/CommonImage/add.png"/>
+                        <img onClick={ingreSectionAdd} className="cusWrIngreBtn" src={`${serverUrl}/Image/CommonImage/add.png`}/>
                     </div>
             </div>
         </>

@@ -1,5 +1,6 @@
 const express = require("express");
 const session = require("express-session");
+const path = require('path');
 const https = require('https');
 const fs = require('fs');
 const MongoStore = require('connect-mongo'); 
@@ -41,12 +42,15 @@ app.use(session({
 
 // CORS 설정 (세션 이후에 위치)
 app.use(cors({
-    origin: 'https://localhost:3000', 
+    origin: ['https://localhost:3000', 'http://localhost:3000'], 
     credentials: true
 }));
 
 // JSON 파싱 미들웨어
 app.use(express.json());
+
+//정적 파일 경로 설정
+app.use(express.static('public'));
 
 // 라우터 설정
 app.use("/customer", customer);

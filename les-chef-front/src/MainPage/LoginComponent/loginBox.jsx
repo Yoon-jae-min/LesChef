@@ -9,7 +9,7 @@ const LoginBox = (props) => {
     const [ customerId, setCustomerId ] = useState("");
     const [ customerPwd, setCustomerPwd ] = useState("");
     const { serverUrl } = useConfig();
-    const { setUser, setIsLogin } = useAuthContext();
+    const { setIsLogin } = useAuthContext();
 
     const clickLogin = () => {
         if(customerId === ""){
@@ -37,7 +37,6 @@ const LoginBox = (props) => {
                     .then(response => response.json())
                     .then(data => {
                         if (data.loggedIn) {
-                            // setUser(data.user); 
                             setIsLogin(true); 
                             toggleLoginModal();
                             alert("로그인 하셨습니다.");
@@ -69,14 +68,14 @@ const LoginBox = (props) => {
 
     return(
         <div className="loginBox" style={{opacity: loginModal ? '1' : '0'}}>
-            <img className='LoginLogo' src="/Image/CommonImage/LogoWhite.png"/>
+            <img className='LoginLogo' src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
             <LoginInput inputId={inputId} inputPwd={inputPwd} idValue={customerId} pwdValue={customerPwd}/>
             <p id="findUser" onClick={toggleFindBox}>아이디/비밀번호 찾기</p>
             <button className="loginButton" onClick={clickLogin}>로그인</button>
             <div id="hrAndOr"><hr/><p>or</p><hr/></div>
             <div id="SNSLogin">
                 <div id="kakaoButtonContainer">
-                    <img src="/Image/MainImage/kakaoLoginButton.png"></img>
+                    <img src={`${serverUrl}/Image/MainImage/kakaoLoginButton.png`}></img>
                 </div>
                 <div id="googleButtonContainer">
                     <div id="customBtn" className="customGPlusSignIn">
@@ -85,7 +84,7 @@ const LoginBox = (props) => {
                     </div>
                 </div>
                 <div id="naverButtonContainer">
-                    <img className="naverIcon" src="/Image/MainImage/naverIcon.png"></img>
+                    <img className="naverIcon" src={`${serverUrl}/Image/MainImage/naverIcon.png`}></img>
                     <span className="buttonText">로그인</span>
                 </div>
             </div>

@@ -165,12 +165,12 @@ body{
 .topText{
     position: absolute;
     top: 3vh;
-    left: 20vw;
+    left: 3vw;
 }
 
 .bottomText{
     position: absolute;
-    top: 68vh;
+    top: 3vh;
     right: 3vw;
     text-align: end;
 }
@@ -473,4 +473,34 @@ body{
 
 .goToRecipePage:hover{
     color: rgb(217, 169, 169);
+}
+
+
+
+
+/*애니메이션*/
+.fade-in {
+    animation: fadeIn 0.5s forwards;
+}
+
+.fade-out {
+    animation: fadeOut 0s forwards;
+}
+
+@keyframes fadeIn {
+0% {
+    opacity: 0;
+}
+100% {
+    opacity: 1;
+}
+}
+
+@keyframes fadeOut {
+0% {
+    opacity: 1;
+}
+100% {
+    opacity: 0;
+}
 }

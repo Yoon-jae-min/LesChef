@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { useUserContext } from "../../../Context/userContext";
+import { useConfig } from "../../../Context/configContext";
 
 const CustomerInfoBox = () => {
     const { userData } = useUserContext();
+    const { serverUrl } = useConfig();
     const [ changeInfo, setChangeInfo ] = useState(false);
     const [ pwdChange, setPwdChange] = useState(false);
     const [ checkedPwd, setCheckPwd ] = useState(false);
@@ -58,7 +60,7 @@ const CustomerInfoBox = () => {
         <div className="customerInfoBox">
             <div className="customerInfoBoxInner">
                 <div className="infoBoxInnerMain">
-                    <img className="profileImg" src="/Image/CustomerImage/profileImg.jpg"/>
+                    <img className="profileImg" src={`${serverUrl}/Image/CustomerImage/profileImg.jpg`}/>
                     <div className="customerInfoUnits">
                         <div className="userIdBox customerInfoUnit">
                             <p className="infoUnitLabel">아이디</p>
