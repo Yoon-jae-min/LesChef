@@ -6,6 +6,7 @@ import RecipeMenuBox from "./MenuComponent/box";
 import IconBox from "./iconBox";
 import LoginModal from "../MainPage/ModalComponent/loginModal";
 import { useConfig } from "../Context/configContext";
+import { useRecipeContext } from "../Context/recipeContext";
 
 const RecipePage = () => {
     const location = useLocation();
@@ -13,33 +14,46 @@ const RecipePage = () => {
     const [infoGoto, setInfoGoto] = useState(false);
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
+    const { setRecipeList } = useRecipeContext();
 
     useEffect(() => {
+        setRecipeList([]);
         setCategory(location.state.category);
-        let recipeListUrl = "";
+        const recipeListUrl = selectRecipeListUrl();
+        recipeListSearch(recipeListUrl);
+    },[]);
 
+    useEffect(() => {
+        setRecipeList([]);
+        const recipeListUrl = selectRecipeListUrl();
+        recipeListSearch(recipeListUrl);
+    }, [category])
+
+    //레시피 리스트 조회
+    const recipeListSearch = (recipeListUrl) => {
+        fetch(`${serverUrl}/recipe${recipeListUrl}`).then((response) => {
+            return response.json();
+        }).then((data) => {
+            setRecipeList(data);
+            setInfoGoto(false);
+        }).catch(err => console.log(err));
+    }
+
+    //레시피 리스트 카테고리 URL 선택
+    const selectRecipeListUrl = () => {
         switch (category) {
             case 'korean':
-                recipeListUrl = '/koreanList';
-                break;
+                return '/koreanList';
             case 'japanese':
-                recipeListUrl = '/japaneseList';
-                break;
+                return '/japaneseList';
             case 'chinese':
-                recipeListUrl = '/chineseList';
-                break;
+                return '/chineseList';
             case 'western':
-                recipeListUrl = '/westernList';
-                break;
+                return '/westernList';
             case 'share':
-                recipeListUrl = '/shareList';
-                break;
+                return '/shareList';
         }
-
-        fetch(`${serverUrl}/recipe${recipeListUrl}`).then((response) => {
-
-        }).catch(err => console.log(err));
-    },[]);
+    }
 
     //로그인 관련
     const [idPwBox, setIdPwBox] = useState(false);

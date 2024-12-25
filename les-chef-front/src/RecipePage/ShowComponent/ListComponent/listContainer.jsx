@@ -1,14 +1,20 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ListElement from "./listInner";
+import { useRecipeContext } from "../../../Context/recipeContext";
 
 const ElementContainer = (props) => {
     const {setInfoGoto} = props;
-    const [elementCount, setElementCount] = useState(4);
+    const {recipeList} = useRecipeContext();
 
     return(
         <div className="elementContainer">
-            {Array.from({ length: elementCount }).map((_, index) => {
-                return <ListElement key={index} setInfoGoto={setInfoGoto} />;
+            {recipeList.map((recipe, index) => {
+                return (<ListElement 
+                    key={index} 
+                    setInfoGoto={setInfoGoto} 
+                    recipeImg={recipe.recipeImg}
+                    recipeName={recipe.recipeName}/>
+                );
             })}
         </div>
     )

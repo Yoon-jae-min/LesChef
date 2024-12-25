@@ -110,11 +110,10 @@
     position: relative;
     width: 100%;
     height: calc(30% - 15px);
-    border: 1px solid black;
 }
 
 .elementInfoBox p{
-    margin: 5px 0;
+    margin: 0;
     width: 100%;
     font-size: 22px;
     font-family: "Jua", sans-serif;

@@ -8,24 +8,41 @@ const removeId = (recipeList) => {
 }
 
 const koreanList = asyncHandler(async(req, res) => {
-    const recipeList = await Recipe.find({majorCategory: "한식"}).lean();
-    console.log(removeId(recipeList));
+    const recipeList = await Recipe.find({majorCategory: "한식", isShare: false}).lean();
+    res.send(recipeList);
 });
 
-const japaneseList = asyncHandler((req, res) => {
-
+const japaneseList = asyncHandler(async(req, res) => {
+    const recipeList = await Recipe.find({majorCategory: "일식", isShare: false}).lean();
+    res.send(recipeList);
 });
 
-const chineseList = asyncHandler((req, res) => {
-
+const chineseList = asyncHandler(async(req, res) => {
+    const recipeList = await Recipe.find({majorCategory: "중식", isShare: false}).lean();
+    res.send(recipeList);
 });
 
-const westernList = asyncHandler((req, res) => {
-
+const westernList = asyncHandler(async(req, res) => {
+    const recipeList = await Recipe.find({majorCategory: "양식", isShare: false}).lean();
+    res.send(recipeList);
 });
 
-const shareList = asyncHandler((req, res) => {
-
+const shareList = asyncHandler(async(req, res) => {
+    const recipeList = await Recipe.find({isShare: true}).lean();
+    res.send(recipeList);
 });
 
-module.exports = { koreanList, japaneseList, chineseList, westernList, shareList };
+const recipeInfo = asyncHandler(async(req, res) => {
+    const recipeId = await Recipe.findOne({recipeName: req.query.recipeName});
+    const recipeIngres = await RecipeIngredient.find({recipeId: recipeId._id}).lean();
+    const recipeSteps = await RecipeStep.find({recipeId: recipeId._id}).lean();
+
+    const recipeInfo = {
+        recipeIngres: recipeIngres,
+        recipeSteps: recipeSteps
+    }
+
+    res.send(recipeInfo)
+});
+
+module.exports = { koreanList, japaneseList, chineseList, westernList, shareList, recipeInfo };

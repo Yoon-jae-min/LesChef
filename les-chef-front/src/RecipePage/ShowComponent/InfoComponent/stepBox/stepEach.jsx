@@ -1,7 +1,7 @@
 import React from "react";
 
 const InfoStepEach = (props) => {
-    const { imageSrc, stepNum, stepText, stepTip } = props;
+    const { imageSrc, stepNum, stepText} = props;
 
     return(
         <div className="infoStepEach">
@@ -9,8 +9,14 @@ const InfoStepEach = (props) => {
             <div className="stepTextBox">
                 <p className="stepNum">Step {stepNum}.</p>
                 <p className="stepText">
-                    {stepText}
-                    { (stepTip !== "") && <p className="stepTip">{stepTip}</p> }
+                    {stepText.split('\n').map((line) => {
+                        return(
+                            <React.Fragment>
+                                {line}
+                                <br/>
+                            </React.Fragment>
+                        )
+                    })}
                 </p>
             </div>
         </div>
