@@ -16,6 +16,7 @@ const IconBox = (props) => {
             return response.json();
         }).then((data) => {
             if(data.loggedIn){
+                categoryStateReset();
                 navigate('/customerMain');
             }else{
                 alert("로그인을 해주세요");
@@ -41,7 +42,6 @@ const IconBox = (props) => {
             }).then(
                 (response) => {
                     if(response){
-                        // setUser(null);
                         setIsLogin(false);
                         alert("로그아웃 되셨습니다.");
                     }
@@ -52,10 +52,14 @@ const IconBox = (props) => {
         }
     }
 
+    const categoryStateReset = () => {
+        localStorage.setItem("selectedCategory", "");
+    }
+
     return(
         <div className="recipeIconBox">
             <img onClick={clickProfile} src={`${serverUrl}/Image/CommonImage/profileIcon.png`} className="goToCustomerIcon recipeLeftIcon"/>
-            <Link to="/communityMain"><img src={`${serverUrl}/Image/CommonImage/communityIcon.png`} className="goToCommunityIcon recipeLeftIcon"/></Link>
+            <Link to="/communityMain" onClick={categoryStateReset}><img src={`${serverUrl}/Image/CommonImage/communityIcon.png`} className="goToCommunityIcon recipeLeftIcon"/></Link>
             <div>
                 { !isLogin && <img onClick={clickLogin} className='recipeLeftIcon' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
                 { isLogin && <img onClick={clickLogout} className='recipeLeftIcon' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}

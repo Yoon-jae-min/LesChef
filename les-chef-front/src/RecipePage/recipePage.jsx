@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./recipePage.css";
 import RecipeShowBox from "./ShowComponent/box";
 import RecipeMenuBox from "./MenuComponent/box";
@@ -9,8 +9,7 @@ import { useConfig } from "../Context/configContext";
 import { useRecipeContext } from "../Context/recipeContext";
 
 const RecipePage = () => {
-    const location = useLocation();
-    const [category, setCategory] = useState('korean');
+    const [category, setCategory] = useState(localStorage.getItem("selectedCategory") || "korean");
     const [infoGoto, setInfoGoto] = useState(false);
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
@@ -18,14 +17,14 @@ const RecipePage = () => {
 
     useEffect(() => {
         setRecipeList([]);
-        setCategory(location.state.category);
-        const recipeListUrl = selectRecipeListUrl();
+        const recipeListUrl = selectRecipeListUrl(category);
         recipeListSearch(recipeListUrl);
     },[]);
 
     useEffect(() => {
+        console.log("test");
         setRecipeList([]);
-        const recipeListUrl = selectRecipeListUrl();
+        const recipeListUrl = selectRecipeListUrl(category);
         recipeListSearch(recipeListUrl);
     }, [category])
 
@@ -40,7 +39,8 @@ const RecipePage = () => {
     }
 
     //레시피 리스트 카테고리 URL 선택
-    const selectRecipeListUrl = () => {
+    const selectRecipeListUrl = (category) => {
+        console.log(category);
         switch (category) {
             case 'korean':
                 return '/koreanList';

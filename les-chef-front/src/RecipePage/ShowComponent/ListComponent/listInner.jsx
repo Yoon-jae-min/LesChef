@@ -5,7 +5,7 @@ import { useRecipeContext } from "../../../Context/recipeContext";
 const RecipeElement = (props) => {
     const {setInfoGoto, recipeImg, recipeName} = props;
     const {serverUrl} = useConfig();
-    const {setRecipeIngres, setRecipeSteps, setSelectedRecipeUrl, recipeSteps, recipeIngres} = useRecipeContext();
+    const {setRecipeIngres, setRecipeSteps, setSelectedRecipe} = useRecipeContext();
 
     const handleClick = () => {
         fetch(`${serverUrl}/recipe/info?recipeName=${encodeURIComponent(recipeName)}`,{
@@ -16,10 +16,9 @@ const RecipeElement = (props) => {
         }).then((response) => {
             return response.json();
         }).then((data) => {
-            console.log(data.recipeSteps);
             setRecipeIngres(data.recipeIngres);
             setRecipeSteps(data.recipeSteps);
-            setSelectedRecipeUrl(recipeImg);
+            setSelectedRecipe(data.selectedRecipe);
             setInfoGoto(true);
         }).catch(err => console.log(err));
     }

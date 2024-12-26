@@ -6,6 +6,8 @@ const MenuTxtUnit = (props) => {
     const HandlerClick = () => {
         setCategory(englishTxt);
         setInfoGoto(false);
+        localStorage.setItem("selectedCategory", englishTxt);
+        console.log(localStorage.getItem("selectedCategory"));
     }
 
     return(

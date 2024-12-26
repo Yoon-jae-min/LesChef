@@ -7,12 +7,12 @@ import { useRecipeContext } from "../../../Context/recipeContext";
 
 const InfoElement = () => {
     const {serverUrl} = useConfig();
-    const {recipeIngres, recipeSteps, selectedRecipeUrl} = useRecipeContext();
+    const {recipeIngres, recipeSteps, selectedRecipe} = useRecipeContext();
     
     return(
         <div className="infoContainer">
             <div className="infoLeft">
-                <img className="infoMainImg" src={`${serverUrl}${selectedRecipeUrl}`}/>
+                <img className="infoMainImg" src={`${serverUrl}${selectedRecipe.recipeImg}`}/>
                 <InfoStepBox recipeSteps={recipeSteps}/>
             </div>
             <div className="infoRight">
@@ -20,9 +20,9 @@ const InfoElement = () => {
                     <InfoIngredientSection sectionText="기본 재료" recipeIngres={recipeIngres}/>
                 </div>
                 <div className="iconBox">
-                    <InfoIconBoxEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/timer.png`} infoIconText="25분"/>
-                    <InfoIconBoxEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/people.png`} infoIconText="2인분"/>
-                    <InfoIconBoxEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/level.png`} infoIconText="쉬움"/>
+                    <InfoIconBoxEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/timer.png`} infoIconText={`${selectedRecipe.cookTime}분`}/>
+                    <InfoIconBoxEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/people.png`} infoIconText={`${selectedRecipe.portion}${selectedRecipe.portionUnit}`}/>
+                    <InfoIconBoxEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/level.png`} infoIconText={`${selectedRecipe.cookLevel}`}/>
                 </div>
             </div>
         </div>

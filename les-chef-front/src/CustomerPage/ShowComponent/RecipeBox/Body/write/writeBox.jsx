@@ -156,6 +156,7 @@ const WriteBox = () => {
                 </div>
             </div>
             <div className="cusRecipeWriteRight">
+                <div className="cusWrIngreBox">
                     {ingreSections.map((ingreSection, index) => (
                         <IngredientSection
                             key={index}
@@ -172,7 +173,21 @@ const WriteBox = () => {
                     <div className="cusWrIngrePlus">
                         <img onClick={ingreSectionAdd} className="cusWrIngreBtn" src={`${serverUrl}/Image/CommonImage/add.png`}/>
                     </div>
+                </div>
+                <div className="cusWrExtraInfoBox">
+                    <input type="text" className="cusWrExtraTime cusWrExtraInfoInput" placeholder="조리시간(분)"/>
+                    <div className="cusWrExtraVolumeBox">
+                        <input type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="수량"/>
+                        <input type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="단위"/>
+                    </div>
+                    <select type="text" className="cusWrExtraLevel">
+                        <option value="쉬움">쉬움</option>
+                        <option value="중간">중간</option>
+                        <option value="어려움">어려움</option>
+                    </select>
+                </div>
             </div>
+            
         </>
     )
 }

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { useUserContext } from "../../Context/userContext";
+import { useConfig } from "../../Context/configContext";
 
 const LabelInput = (props) => {
-    const { labelText, boxType, inputValue, basicValue, setCheckPwd, diffCheck, setDiffCheck } = props;
+    const { labelText, boxType, inputValue, basicValue, setCheckPwd, diffCheck, setDiffCheck, dupliCheck, setDupliCheck } = props;
     const { userInfo, setUserInfo } = useUserContext();
+    const {serverUrl} = useConfig();
 
     const changeValue = (value) => {
         if(boxType === "join"){
@@ -53,11 +55,44 @@ const LabelInput = (props) => {
         }
     };
 
+    const clickDupliCheck = () => {
+        const idValue = document.querySelector('.emailInput').value;
+        if(idValue){
+            fetch(`${serverUrl}/customer/idCheck?id=${idValue}`)
+            .then(response => response.text())
+            .then((data) => {
+                console.log(data);
+                if(data === "중복"){
+                    alert("중복된 아이디 입니다.");
+                }else{
+                    setDupliCheck(true);
+                }
+            }).catch(err => console.log(err));
+        }else{
+            alert("아이디를 입력해주세요");
+        }
+        
+    }
+
     return(
-        <div>
-            <label className="eachLabel">{labelText}{ ( diffCheck && (labelText === "비밀번호 확인")) && <p className="diffCheck"> ※ 비밀번호가 다릅니다</p>}</label>
-            <input type={labelText.includes("비밀번호") ? "password" : "text"} value={basicValue} onChange={(e) => {changeValue(e.target.value)}} className="eachInput"></input>
-        </div>
+        <React.Fragment>
+            <label className="eachLabel">
+                {labelText}
+                { ( diffCheck && (labelText === "비밀번호 확인")) && 
+                    <p className="diffCheck"> ※ 비밀번호가 다릅니다</p>
+                }
+                { ( !dupliCheck && (labelText === "이메일(아이디)")) && 
+                    <button onClick={clickDupliCheck} type="button" className="dupliCheckBtn">중복확인</button>
+                }
+                { ( dupliCheck && (labelText === "이메일(아이디)")) && 
+                    <p className="idCheckedText">확인 되었습니다</p>
+                }
+            </label>
+            <input 
+                type={labelText.includes("비밀번호") ? "password" : "text"} 
+                value={basicValue} onChange={(e) => {changeValue(e.target.value)}} 
+                className={`eachInput ${labelText === "이메일(아이디)" ? "emailInput" : ""}`}></input>
+        </React.Fragment>
     )
 }
 

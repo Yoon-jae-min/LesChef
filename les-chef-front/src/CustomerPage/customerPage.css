@@ -499,17 +499,76 @@
 }
 
 .cusRecipeWriteRight{
-    overflow: scroll;
     width: 40%;
     height: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
+.cusRecipeWriteLeft::-webkit-scrollbar, .cusRecipeWriteRight::-webkit-scrollbar{
+    display: none;
+}
+
+.cusWrIngreBox{
+    overflow: scroll;
+    width: 100%;
+    height: 85%;
     border-radius: 5px;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
 }
 
-.cusRecipeWriteLeft::-webkit-scrollbar, .cusRecipeWriteRight::-webkit-scrollbar{
-    display: none;
+.cusWrExtraInfoBox{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-radius: 5px;
+
+    margin: 3% auto 0;
+    width: 95%;
+    height: 12%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.cusWrExtraInfoInput{
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-radius: 5px;
+    background-color: rgb(182, 182, 182);
+}
+
+.cusWrExtraInfoUnit{
+    width: 33%;
+}
+
+.cusWrExtraVolumeBox{
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.cusWrExtraVolume{
+    width: 40%;
+    height: 50%;
+}
+
+.cusWrExtraTime{
+    width: 25%;
+    height: 50%;
+}
+
+.cusWrExtraLevel{
+    width: 20%;
+    height: 50%;
+    border-radius: 5px;
+
+    background-color: rgb(182, 182, 182);
 }
 
 .cusWrRecipeName{

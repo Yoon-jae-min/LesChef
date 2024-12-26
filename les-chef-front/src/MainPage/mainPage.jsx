@@ -27,6 +27,7 @@ const MainPage = () => {
     const [idPwBox, setIdPwBox] = useState(false);
     const [checkPwd, setCheckPwd] = useState("");
     const [diffCheck, setDiffCheck] = useState(false);
+    const [dupliCheck, setDupliCheck] = useState(false);
     const [topTxt, setTopTxt] = useState("재료 준비부터\n만드는 법, 조리시간");
     const [bottomTxt, setBottomTxt] = useState("한식부터 일식, 양식까지\n다양하게");
     const { setUserInfo } = useUserContext();
@@ -107,6 +108,7 @@ const MainPage = () => {
         });
         setCheckPwd("");
         setDiffCheck(false);
+        setDupliCheck(false);
 
         setTimeout(() => {
             switch (currentPage) {
@@ -181,10 +183,31 @@ const MainPage = () => {
             <MainSecond/>
             <MainThird/>
             <MainFourth/>
-            <MainFifth toggleLoginModal={toggleLoginModal} goToTopSlide={goToTopSlide} checkPwd={checkPwd} setCheckPwd={setCheckPwd} diffCheck={diffCheck} setDiffCheck={setDiffCheck}/>
-            <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
+            <MainFifth 
+                toggleLoginModal={toggleLoginModal} 
+                goToTopSlide={goToTopSlide} 
+                checkPwd={checkPwd} 
+                setCheckPwd={setCheckPwd} 
+                diffCheck={diffCheck} 
+                setDiffCheck={setDiffCheck} 
+                dupliCheck={dupliCheck}
+                setDupliCheck={setDupliCheck}/>
+            <LoginModal 
+                toggleFindIdPw={toggleFindIdPw} 
+                idPwBox={idPwBox} 
+                loginToFind={loginToFind} 
+                loginModal={loginModal} 
+                toggleFindBox={toggleFindBox} 
+                toggleLoginModal={toggleLoginModal} 
+                goToJoinBox={goToJoinBox}/>
             <MenuModal menuModal={menuModal}/>
-            {slideCheck  && <MainLeft  goToTopSlide={goToTopSlide} toggleMenuModal={toggleMenuModal} toggleLoginModal={toggleLoginModal} menuModal={menuModal}/>}
+            {slideCheck  && 
+                <MainLeft  
+                    goToTopSlide={goToTopSlide} 
+                    toggleMenuModal={toggleMenuModal} 
+                    toggleLoginModal={toggleLoginModal} 
+                    menuModal={menuModal}/>
+            }
             {slideCheck  && <MainTop topTxt={topTxt}/>}
             {slideCheck  && <MainBottom bottomTxt={bottomTxt}/>}
         </div>);

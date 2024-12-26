@@ -10,8 +10,6 @@ const recipeWrite = asyncHandler(async(req, res) => {
     const userInfo = await User.findOne({id: req.session.user.id});
     let isShare = true;
 
-
-
     if(userInfo.checkAdmin){
         isShare = false;
     }
@@ -22,7 +20,7 @@ const recipeWrite = asyncHandler(async(req, res) => {
         portion: recipeInfo.portion, 
         portionUnit: recipeInfo.portionUnit, 
         cookLevel: recipeInfo.cookLevel,
-        userName: userInfo.nickName, 
+        userName: userInfo.id, 
         majorCategory: recipeInfo.majorCategory, 
         subCategory: recipeInfo.subCategory, 
         recipeImg: recipeInfo.recipeImg, 
@@ -61,7 +59,7 @@ const adminWrite = asyncHandler(async(req, res) => {
         portion: recipeInfo.portion, 
         portionUnit: recipeInfo.portionUnit, 
         cookLevel: recipeInfo.cookLevel,
-        userName: "admin", 
+        userId: "admin@admin.com", 
         majorCategory: recipeInfo.majorCategory, 
         subCategory: recipeInfo.subCategory, 
         recipeImg: recipeInfo.recipeImg, 
@@ -97,7 +95,7 @@ const commonWrite = asyncHandler(async(req, res) => {
         portion: recipeInfo.portion, 
         portionUnit: recipeInfo.portionUnit, 
         cookLevel: recipeInfo.cookLevel,
-        userName: "user00", 
+        userId: "user00@user.com", 
         majorCategory: recipeInfo.majorCategory, 
         subCategory: recipeInfo.subCategory, 
         recipeImg: recipeInfo.recipeImg, 

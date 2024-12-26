@@ -9,7 +9,13 @@ const InfoStepEach = (props) => {
             <div className="stepTextBox">
                 <p className="stepNum">Step {stepNum}.</p>
                 <p className="stepText">
-                    {stepText}
+                    {stepText.split('\n').map((line) => {
+                        return (
+                            <React.Fragment>
+                                {line}<br/>
+                            </React.Fragment>
+                        )
+                    })}
                 </p>
             </div>
         </div>

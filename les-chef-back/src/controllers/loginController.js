@@ -47,7 +47,6 @@ const getAuth = (req, res) => {
     if (req.session.user) {
         res.json({
             loggedIn: true,
-            // user: req.session.user
         });
     } else {
         res.json({
@@ -75,4 +74,15 @@ const getInfo = asyncHandler(async(req, res) => {
     }
 });
 
-module.exports = {postLogin, getLogout, getAuth, getInfo};
+//id 중복 확인
+const idCheck = asyncHandler(async(req, res) => {
+    const user = await User.findOne({id: req.query.id});
+
+    if(user){
+        res.send("중복");
+    }else{
+        res.send("중복 아님");
+    }
+});
+
+module.exports = {postLogin, getLogout, getAuth, getInfo, idCheck};

@@ -6,10 +6,14 @@ export const RecipeProvider = ({children}) => {
     const [recipeList, setRecipeList] = useState([]);
     const [recipeIngres, setRecipeIngres] = useState([]);
     const [recipeSteps, setRecipeSteps] = useState([]);
-    const [selectedRecipeUrl, setSelectedRecipeUrl] = useState(null);
+    const [selectedRecipe, setSelectedRecipe] = useState(null);
 
     return(
-        <RecipeContext.Provider value={{recipeList, setRecipeList, recipeIngres, setRecipeIngres, recipeSteps, setRecipeSteps, selectedRecipeUrl, setSelectedRecipeUrl}}>
+        <RecipeContext.Provider 
+            value={{recipeList, setRecipeList, 
+                    recipeIngres, setRecipeIngres, 
+                    recipeSteps, setRecipeSteps, 
+                    selectedRecipe, setSelectedRecipe}}>
             {children}
         </RecipeContext.Provider>
     )

@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const User = require("../models/userModel");
 const Recipe = require("../models/recipeModel");
 const RecipeIngredient = require("../models/recipeIngredientsModel");
 const RecipeStep = require("../models/recipeStepModel");
@@ -32,12 +33,18 @@ const shareList = asyncHandler(async(req, res) => {
     res.send(recipeList);
 });
 
+const myList = asyncHandler(async(req, res) => {
+    const recipeList = await Recipe.find({userName: req.session.user.id}).lean();
+    res.send(recipeList);
+})
+
 const recipeInfo = asyncHandler(async(req, res) => {
-    const recipeId = await Recipe.findOne({recipeName: req.query.recipeName});
-    const recipeIngres = await RecipeIngredient.find({recipeId: recipeId._id}).lean();
-    const recipeSteps = await RecipeStep.find({recipeId: recipeId._id}).lean();
+    const recipe = await Recipe.findOne({recipeName: req.query.recipeName});
+    const recipeIngres = await RecipeIngredient.find({recipeId: recipe._id}).lean();
+    const recipeSteps = await RecipeStep.find({recipeId: recipe._id}).lean();
 
     const recipeInfo = {
+        selectedRecipe: recipe,
         recipeIngres: recipeIngres,
         recipeSteps: recipeSteps
     }
@@ -45,4 +52,4 @@ const recipeInfo = asyncHandler(async(req, res) => {
     res.send(recipeInfo)
 });
 
-module.exports = { koreanList, japaneseList, chineseList, westernList, shareList, recipeInfo };
+module.exports = { koreanList, japaneseList, chineseList, westernList, shareList, myList, recipeInfo };
