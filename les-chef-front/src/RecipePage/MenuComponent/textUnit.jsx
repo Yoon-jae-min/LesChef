@@ -1,7 +1,11 @@
+//기타
 import React from "react";
 
 const MenuTxtUnit = (props) => {
-    const {koreanTxt, englishTxt, setCategory, setInfoGoto} = props;
+    const { koreanTxt, 
+            englishTxt, 
+            setCategory, 
+            setInfoGoto } = props;
 
     const HandlerClick = () => {
         setCategory(englishTxt);

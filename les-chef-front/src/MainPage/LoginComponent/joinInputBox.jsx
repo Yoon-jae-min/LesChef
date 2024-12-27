@@ -1,9 +1,20 @@
+//기타
 import React from "react";
-import LabelInput from "./labelInput";
+
+//컨텍스트
 import { useUserContext } from "../../Context/userContext";
 
+//컴포넌트
+import LabelInput from "./labelInput";
+
+
 const JoinInput = (props) => {
-    const { setCheckPwd, checkPwd, diffCheck, setDiffCheck, dupliCheck, setDupliCheck } = props;
+    const { setCheckPwd, 
+            checkPwd, 
+            diffCheck, 
+            setDiffCheck, 
+            dupliCheck, 
+            setDupliCheck } = props;
     const { userInfo } = useUserContext();
 
     return(

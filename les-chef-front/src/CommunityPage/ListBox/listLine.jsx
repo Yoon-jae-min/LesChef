@@ -1,4 +1,7 @@
+//기타
 import React from "react";
+
+//컨텍스트
 import { useWatchContext } from "../../Context/watchContext";
 
 const CommunityListLine = (props) => {

@@ -1,11 +1,18 @@
+//기타
 import React from "react";
+
+//컨텍스트
 import { useConfig } from "../../../Context/configContext";
 import { useRecipeContext } from "../../../Context/recipeContext";
 
 const RecipeElement = (props) => {
-    const {setInfoGoto, recipeImg, recipeName} = props;
+    const { setInfoGoto, 
+            recipeImg, 
+            recipeName} = props;
     const {serverUrl} = useConfig();
-    const {setRecipeIngres, setRecipeSteps, setSelectedRecipe} = useRecipeContext();
+    const { setRecipeIngres, 
+            setRecipeSteps, 
+            setSelectedRecipe } = useRecipeContext();
 
     const handleClick = () => {
         fetch(`${serverUrl}/recipe/info?recipeName=${encodeURIComponent(recipeName)}`,{

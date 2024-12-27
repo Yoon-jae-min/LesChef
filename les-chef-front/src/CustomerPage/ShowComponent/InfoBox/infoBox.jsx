@@ -1,4 +1,7 @@
+//기타
 import React, { useState } from "react";
+
+//컨텍스트
 import { useUserContext } from "../../../Context/userContext";
 import { useConfig } from "../../../Context/configContext";
 
@@ -106,12 +109,36 @@ const CustomerInfoBox = () => {
 
             </div>
             <div className="customerInfoBtnBox">
-                { (!changeInfo && !pwdChange && !checkedPwd && !deleteInfo) && <button onClick={deleteInfoClick} type="button" className="customerDeleteBtn infoUnderBtn">회원 탈퇴</button> }
-                { (deleteInfo || checkedPwd) && <button onClick={deleteInfoCancel} type="button" className="customerpwdDelBtnCancel infoUnderBtn">회원 탈퇴 취소</button> }
-                { (!changeInfo && !pwdChange && !checkedPwd && !deleteInfo) && <button onClick={changeInfoClick} type="button" className="customerInfoChangeBtn infoUnderBtn">회원정보 변경</button>}
-                { changeInfo && <button onClick={changeInfoCancel} type="button" className="customerInfoCgBtnCancel infoUnderBtn">회원정보 변경 취소</button>}
-                { (!changeInfo && !pwdChange && !checkedPwd && !deleteInfo) && <button onClick={changePwdClick} type="button" className="customerpwdChangeBtn infoUnderBtn">비밀번호 변경</button>}
-                { (pwdChange || checkedPwd) && <button onClick={changePwdCancel} type="button" className="customerpwdCgBtnCancel infoUnderBtn">비밀번호 변경 취소</button> }
+                { (!changeInfo && !pwdChange && !checkedPwd && !deleteInfo) && 
+                    <button 
+                        onClick={deleteInfoClick} 
+                        type="button" 
+                        className="customerDeleteBtn infoUnderBtn">회원 탈퇴</button> }
+                { (deleteInfo || checkedPwd) && 
+                    <button 
+                        onClick={deleteInfoCancel} 
+                        type="button" 
+                        className="customerpwdDelBtnCancel infoUnderBtn">회원 탈퇴 취소</button> }
+                { (!changeInfo && !pwdChange && !checkedPwd && !deleteInfo) && 
+                    <button 
+                        onClick={changeInfoClick} 
+                        type="button" 
+                        className="customerInfoChangeBtn infoUnderBtn">회원정보 변경</button>}
+                { changeInfo && 
+                    <button 
+                        onClick={changeInfoCancel} 
+                        type="button" 
+                        className="customerInfoCgBtnCancel infoUnderBtn">회원정보 변경 취소</button>}
+                { (!changeInfo && !pwdChange && !checkedPwd && !deleteInfo) && 
+                    <button 
+                        onClick={changePwdClick} 
+                        type="button" 
+                        className="customerpwdChangeBtn infoUnderBtn">비밀번호 변경</button>}
+                { (pwdChange || checkedPwd) && 
+                    <button 
+                        onClick={changePwdCancel} 
+                        type="button" 
+                        className="customerpwdCgBtnCancel infoUnderBtn">비밀번호 변경 취소</button> }
             </div>
         </div>
     )

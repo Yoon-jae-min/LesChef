@@ -1,4 +1,4 @@
-/*page Common*/
+/*Customer 공통 --------------------------------------------------------------------------------------*/
 .customerPgBox{
     overflow: hidden;
     width: 100vw;
@@ -14,7 +14,7 @@
     opacity: 0.85;
 }
 
-/*iconBox*/
+/*Icon Box*/
 .customerIconBox{
     position: absolute;
     top: 5vh;
@@ -28,7 +28,7 @@
     width: 3.5vw;
 }
 
-/*menuBox*/
+/*Menu Box*/
 .customerMenuBox{
     position: fixed;
     top: 15vh;
@@ -69,16 +69,17 @@
     cursor: pointer;
 }
 
-.customerKoreanText:hover{
-    color: burlywood;
-}
-
 .customerEnglishText{
     font-size: 4vh;
 }
 
+/*가상 선택자*/
+.customerKoreanText:hover{
+    color: burlywood;
+}
 
-/*showBox*/
+
+/*Show Box ---------------------------------------------------------------------------------------------------------------------------*/
 .customerShowBox{
     position: fixed;
     top: 5vh;
@@ -91,6 +92,7 @@
     box-shadow: 0px 0px 7px 1px black;
 }
 
+/*Head*/
 .customerShowHead{
     position: absolute;
     top: 0;
@@ -124,6 +126,7 @@
     text-shadow: 0 0 10px black;
 }
 
+/*Body Box ---------------------------------------------------------------------------------------------------------------------*/
 .customerShowBody{
     position: absolute;
     top: 15%;
@@ -131,17 +134,14 @@
     height: 85%;
 }
 
-
-/*infoBox*/
 .customerInfoBox, .customerRecipeBox, .customerFoodsBox, .customerWishListBox{
     width: 90%;
     height: 93%;
     margin: 2% 5% 0;
-
-    /* border-top: 1px solid rgba(128, 128, 128, 0.3); */
     border-bottom: 1px solid rgba(128, 128, 128, 0.3);
 }
 
+/*Info Box ------------------------------------------------------------------------------------------------------------*/
 .customerInfoBoxInner{
     width: 70%;
     height: 70%;
@@ -222,10 +222,6 @@
     border-bottom: 1px solid black;
 }
 
-.passwordCheckInput:focus{
-    outline: none;
-}
-
 .passwordCheckBtn{
     margin-left: 7%;
     width: 15%;
@@ -269,10 +265,6 @@
     border-bottom: 1px solid black;
 }
 
-.passwordUpdateInput:focus{
-    outline: none;
-}
-
 .passwordUpdateBtn{
     width: 15%;
     background-color: rgb(136, 77, 77);
@@ -309,7 +301,16 @@
     box-shadow: 0 0 10px 3px gray;
 }
 
-/*recipeBox*/
+/*가상 선택자*/
+.passwordCheckInput:focus{
+    outline: none;
+}
+
+.passwordUpdateInput:focus{
+    outline: none;
+}
+
+/*Recipe Box --------------------------------------------------------------------------------------------------------*/
 .customerRecipeBox{
     display: flex;
     flex-direction: column;
@@ -352,10 +353,21 @@
     padding-top: 15px;
 }
 
+.goToRecipeList, .addRecipeBtn{
+    height: 70%;
+    margin-top: 1%;
+    float: right;
+    cursor: pointer;
+}
+
+/*가상 선택자*/
 .customerRecipeBody::-webkit-scrollbar{
     display: none;
 }
 
+/*Recipe Show ------------------------------------------------------------------------------------------------------------*/
+
+/*List*/
 .recipeListUnit{
     border-radius: 10px;
     box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.7);
@@ -367,10 +379,6 @@
     transition: all 0.5s;
 
     border: 1px solid black;
-}
-
-.recipeListUnit:hover{
-    scale: 1.03;
 }
 
 .customerListImg{
@@ -416,13 +424,7 @@
     border: 1px solid black;
 }
 
-.goToRecipeList, .addRecipeBtn{
-    height: 70%;
-    margin-top: 1%;
-    float: right;
-    cursor: pointer;
-}
-
+/*Info*/
 .recipeInfoTitle{
     margin-right: 20px;
     font-size: 22px;
@@ -435,10 +437,6 @@
     width: 60%;
     height: 100%;
     overflow: scroll;
-}
-
-.customerRecipeLeft::-webkit-scrollbar{
-    display: none;
 }
 
 .customerRecipeRight{
@@ -488,10 +486,16 @@
     display: flex;
 }
 
-/*-------------------------------------------------------------------------------------------------------------------------*/
+/*가상 선택자*/
+.recipeListUnit:hover{
+    scale: 1.03;
+}
 
-/*레시피 작성 페이지*/
+.customerRecipeLeft::-webkit-scrollbar{
+    display: none;
+}
 
+/*Recipe Write --------------------------------------------------------------------------------------------------------*/
 .cusRecipeWriteLeft{
     overflow: scroll;
     width: 60%;
@@ -506,17 +510,25 @@
     justify-content: center;
 }
 
-.cusRecipeWriteLeft::-webkit-scrollbar, .cusRecipeWriteRight::-webkit-scrollbar{
-    display: none;
+.cusWrRecipeName{
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    width: 100%;
+    font-size: 2.5vh;
+    margin-bottom: 10px;
+    border-radius: 5px;
 }
 
-.cusWrIngreBox{
-    overflow: scroll;
-    width: 100%;
-    height: 85%;
+.reciMainImgBox{
+    border: 1px solid gray;
+
+    width: 70%;
+    margin: 2% calc((30% - 2px)/2);
+    aspect-ratio: 1/1;
+    object-fit: contain;
     border-radius: 5px;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
 }
 
 .cusWrExtraInfoBox{
@@ -571,50 +583,15 @@
     background-color: rgb(182, 182, 182);
 }
 
-.cusWrRecipeName{
-    background-color: rgb(182, 182, 182);
-    border: none;
-    border-left: 2px solid black;
-    border-right: 2px solid black;
-    width: 100%;
-    font-size: 2.5vh;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
-.cusWrRecipeName:focus{
-    outline: none;
-}
-
 .cusStepPlusBtn, .cusWrIngreBtn{
     cursor: pointer;
     transition: 0.5s all;
 }
 
-.cusStepPlusBtn:hover, .cusWrIngreBtn:hover{
-    scale: 1.2;
-}
-
-/*레시피 작성 (메인 이미지)*/
-
-.reciMainImgBox{
-    border: 1px solid gray;
-
-    width: 70%;
-    margin: 2% calc((30% - 2px)/2);
-    aspect-ratio: 1/1;
-    object-fit: contain;
-    border-radius: 5px;
-}
-
-
-/*레시피 작성 (step)*/
-
+/*Step*/
 .cusRecipeWrStepBox{
     border-top: 1px solid black;
     border-bottom: 1px solid black;
-    
-
     width: 90%;
     margin: 2% 5%;
     border-radius: 10px;
@@ -696,7 +673,15 @@
     cursor: pointer;
 }
 
-/*레시피 작성 (재료)*/
+/*Ingredient*/
+.cusWrIngreBox{
+    overflow: scroll;
+    width: 100%;
+    height: 85%;
+    border-radius: 5px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
 
 .cusWrIngrePlus{
     width: 95%;
@@ -738,19 +723,11 @@
     border-radius: 5px;
 }
 
-.cusWrIngreSecHeadName:focus{
-    outline: none;
-}
-
 .cusWrIngreSecHeadImg{
     height: 23px;
     margin-left: 3%;
     cursor: pointer;
     transition: 0.5s all;
-}
-
-.cusWrIngreSecHeadImg:hover{
-    scale: 1.1;
 }
 
 .cusWrIngreEach{
@@ -788,18 +765,10 @@
     height: 70%;
 }
 
-.cusIngreEachName:focus, .cusIngreEachVolume:focus, .cusIngreEachPortion:focus{
-    outline: none;
-}
-
 .cusIngreEachDel{
     height: 75%;
     cursor: pointer;
     transition: 0.5s all;
-}
-
-.cusIngreEachDel:hover{
-    scale: 1.2;
 }
 
 .cusWrIngreEachPlus{
@@ -814,6 +783,35 @@
     height: 80%;
     cursor: pointer;
     transition: 0.5s all;
+}
+
+/*가상 선택자*/
+.cusRecipeWriteLeft::-webkit-scrollbar, .cusRecipeWriteRight::-webkit-scrollbar{
+    display: none;
+}
+
+.cusWrRecipeName:focus{
+    outline: none;
+}
+
+.cusStepPlusBtn:hover, .cusWrIngreBtn:hover{
+    scale: 1.2;
+}
+
+.cusWrIngreSecHeadName:focus{
+    outline: none;
+}
+
+.cusWrIngreSecHeadImg:hover{
+    scale: 1.1;
+}
+
+.cusIngreEachName:focus, .cusIngreEachVolume:focus, .cusIngreEachPortion:focus{
+    outline: none;
+}
+
+.cusIngreEachDel:hover{
+    scale: 1.2;
 }
 
 .cusWrIngreEachAddImg:hover{

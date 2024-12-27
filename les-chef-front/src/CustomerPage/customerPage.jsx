@@ -1,10 +1,18 @@
-import React, { useEffect, useState } from "react";
+//기타
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./customerPage.css";
+
+//CSS
+import "../CSS/customerPage.css";
+
+//컨텍스트
+import { useConfig } from "../Context/configContext";
+
+//컴포넌트
 import CustomerShowBox from "./ShowComponent/container";
 import CustomerMenuBox from "./MenuComponent/box";
 import IconBox from "./iconBox";
-import { useConfig } from "../Context/configContext";
+
 
 const CustomerPage = () => {
     const [category, setCategory] = useState('My Info');
@@ -26,8 +34,12 @@ const CustomerPage = () => {
         <div className="customerPgBox">
             <img className="customerBgImg" src={`${serverUrl}/Image/CustomerImage/Background/CustomerBackground.jpg`}/>
             <IconBox/>
-            <CustomerShowBox category={category} checkUser={checkUser}/>
-            <CustomerMenuBox setCategory={setCategory} checkUser={checkUser}/>
+            <CustomerShowBox 
+                category={category} 
+                checkUser={checkUser}/>
+            <CustomerMenuBox 
+                setCategory={setCategory} 
+                checkUser={checkUser}/>
         </div>
     )
 }

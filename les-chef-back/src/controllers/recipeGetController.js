@@ -34,7 +34,7 @@ const shareList = asyncHandler(async(req, res) => {
 });
 
 const myList = asyncHandler(async(req, res) => {
-    const recipeList = await Recipe.find({userName: req.session.user.id}).lean();
+    const recipeList = await Recipe.find({userId: req.session.user.id}).lean();
     res.send(recipeList);
 })
 

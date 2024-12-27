@@ -1,4 +1,7 @@
+//기타
 import React, { useState } from "react";
+
+//컴포넌트
 import RecipeHead from "./Head/head";
 import RecipeBody from "./Body/body";
 
@@ -9,8 +12,20 @@ const CustomerRecipeBox = () => {
 
     return(
         <div className="customerRecipeBox">
-            <RecipeHead listPage={listPage} setListPage={setListPage} writePage={writePage} setWritePage={setWritePage} infoPage={infoPage} setInfoPage={setInfoPage}/>
-            <RecipeBody listPage={listPage} setListPage={setListPage} writePage={writePage} setWritePage={setWritePage} infoPage={infoPage} setInfoPage={setInfoPage}/>
+            <RecipeHead 
+                listPage={listPage} 
+                setListPage={setListPage} 
+                writePage={writePage} 
+                setWritePage={setWritePage} 
+                infoPage={infoPage} 
+                setInfoPage={setInfoPage}/>
+            <RecipeBody 
+                listPage={listPage} 
+                setListPage={setListPage} 
+                writePage={writePage} 
+                setWritePage={setWritePage} 
+                infoPage={infoPage} 
+                setInfoPage={setInfoPage}/>
         </div>
     )
 }

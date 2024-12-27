@@ -1,7 +1,10 @@
+//기타
 import React from "react";
 
 const InfoStepEach = (props) => {
-    const { imageSrc, stepNum, stepText} = props;
+    const { imageSrc, 
+            stepNum, 
+            stepText} = props;
 
     return(
         <div className="infoStepEach">

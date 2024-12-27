@@ -1,5 +1,10 @@
+//기타
 import React, { useState } from "react";
+
+//컨텍스트
 import { useWatchContext } from "../../Context/watchContext";
+
+//컴포넌트
 import CommentUnit from "./watchCommentUnit";
 
 const CommunityWatchBox = (props) => {
@@ -66,7 +71,10 @@ const CommunityWatchBox = (props) => {
                         onKeyDown={enterKeyDown}></textarea>
                     <div className="commentListBox">
                         {comments.map((comment, index) => (
-                            <CommentUnit key={index} content={comment.content} dateTime={comment.dateTime}/>
+                            <CommentUnit 
+                                key={index} 
+                                content={comment.content} 
+                                dateTime={comment.dateTime}/>
                         ))}
                     </div>
                 </div>

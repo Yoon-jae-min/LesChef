@@ -1,8 +1,17 @@
+//기타
 import React from "react";
+
+//컨텍스트
 import { useConfig } from "../../../../../Context/configContext";
 
 const IngredientEach = (props) => {
-    const { eachId, sectionId, ingreEachDel, ingreEachUpD, ingreName, ingreVolume, ingreUnit } = props
+    const { eachId, 
+            sectionId, 
+            ingreEachDel, 
+            ingreEachUpD, 
+            ingreName, 
+            ingreVolume, 
+            ingreUnit } = props
     const {serverUrl} = useConfig();
 
     return(
@@ -25,7 +34,10 @@ const IngredientEach = (props) => {
                 className="cusIngreEachPortion cusIngreEachInput"
                 value={ingreUnit}
                 onChange={(e) => ingreEachUpD(sectionId, eachId, {ingreUnit: e.target.value})}/>
-            <img onClick={() => ingreEachDel(sectionId, eachId)} className="cusIngreEachDel" src={`${serverUrl}/Image/CommonImage/delete.png`}/>
+            <img 
+                onClick={() => ingreEachDel(sectionId, eachId)} 
+                className="cusIngreEachDel" 
+                src={`${serverUrl}/Image/CommonImage/delete.png`}/>
         </div>
     )
 }

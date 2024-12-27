@@ -1,10 +1,18 @@
+//기타
 import React, { useEffect } from "react";
-import FindId from "./findId";
-import FindPw from "./findPw";
+
+//컨텍스트
 import { useConfig } from "../../Context/configContext";
 
+//컴포넌트
+import FindId from "./findId";
+import FindPw from "./findPw";
+
+
 const FindBox = (props) => {
-    const {loginToFind, toggleFindIdPw, idPwBox} = props;
+    const { loginToFind, 
+            toggleFindIdPw, 
+            idPwBox } = props;
     const { serverUrl } = useConfig();
 
     useEffect(() => {
@@ -37,8 +45,12 @@ const FindBox = (props) => {
                 <div className="idButton click" onClick={HandlerSwitch}>로그인</div>
                 <div className="pwButton" onClick={HandlerSwitch}>비밀번호</div>
             </div>
-            {!idPwBox && <FindId idPwBox={idPwBox}/>}
-            {idPwBox && <FindPw idPwBox={idPwBox}/>}
+            {!idPwBox && 
+                <FindId 
+                    idPwBox={idPwBox}/>}
+            {idPwBox && 
+                <FindPw 
+                    idPwBox={idPwBox}/>}
         </div>
     )
 }

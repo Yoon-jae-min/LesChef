@@ -1,3 +1,4 @@
+//기타
 import React from "react";
 
 const CommentUnit = (props) => {

@@ -1,11 +1,18 @@
+//기타
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import './index.css';
 import reportWebVitals from './reportWebVitals';
+
+//CSS
+import './CSS/index.css';
+
+//컴포넌트
 import MainPage from './MainPage/mainPage';
 import RecipePage from './RecipePage/recipePage';
 import CustomerPage from './CustomerPage/customerPage';
 import CommunityPage from './CommunityPage/communityPage';
+
+//컨텍스트
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ConfigProvider } from './Context/configContext';
 import { UserProvider } from './Context/userContext';

@@ -1,8 +1,15 @@
-import React, {useState, useRef, useEffect} from "react";
+//기타
+import React from "react";
+
+//컨텍스트
 import { useConfig } from "../../../../../Context/configContext";
 
 const StepBoxUnit = (props) => {
-    const { index, stepDelete, updateStep, saveStepImgFile, saveStepContent } = props;
+    const { index, 
+            stepDelete, 
+            updateStep, 
+            saveStepImgFile, 
+            saveStepContent } = props;
     const {serverUrl} = useConfig();
 
     const preStepImgFile = (e) => {
@@ -32,7 +39,10 @@ const StepBoxUnit = (props) => {
                 </div>
                 <div className="cusStUniContRight">
                     <div className="cusStepUniOrder">{`Step.${index}`}</div>
-                    <textarea className="cusStepUniDes" value={saveStepContent || ""} onChange={(e) => updateStep(index, {content: e.target.value})}></textarea>
+                    <textarea 
+                        className="cusStepUniDes" 
+                        value={saveStepContent || ""} 
+                        onChange={(e) => updateStep(index, {content: e.target.value})}></textarea>
                 </div>
             </div>
             

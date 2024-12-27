@@ -1,8 +1,11 @@
+//기타
 import React from "react";
+
+//컴포넌트
 import InfoIngredientEach from "./ingredientEach";
 
 const InfoIngredientSection = (props) => {
-    const { sectionText, recipeIngres } = props;
+    const { recipeIngres } = props;
 
     return(
         <div className="infoIngredientSections">

@@ -1,7 +1,10 @@
+//기타
 import React from "react";
 
 const InfoIngredientEach = (props) => {
-    const { ingredientName, ingredientCount, ingredientUnit } = props
+    const { ingredientName, 
+            ingredientCount, 
+            ingredientUnit } = props
 
     return(
         <div className="infoIngredientEach">

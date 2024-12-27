@@ -1,13 +1,21 @@
+//기타
 import React from "react";
-import InfoStepEach from "./infoStepEach";
-import IngredientSection from "./ingredientSection";
-import IconEach from "./iconEach";
+
+//컨텍스트
 import { useConfig } from "../../../../../Context/configContext";
 import { useRecipeContext } from "../../../../../Context/recipeContext";
 
+//컴포넌트
+import InfoStepEach from "./infoStepEach";
+import IngredientSection from "./ingredientSection";
+import IconEach from "./iconEach";
+
+
 const InfoBox = () => {
     const {serverUrl} = useConfig();
-    const {recipeIngres, recipeSteps, selectedRecipe} = useRecipeContext();
+    const { recipeIngres, 
+            recipeSteps, 
+            selectedRecipe } = useRecipeContext();
 
     return(
         <>
@@ -28,12 +36,19 @@ const InfoBox = () => {
             </div>
             <div className="customerRecipeRight">
                 <div className="customerRecipeIngredientBox">
-                    <IngredientSection sectionText="기본 재료" recipeIngres={recipeIngres}/>
+                    <IngredientSection 
+                        recipeIngres={recipeIngres}/>
                 </div>
                 <div className="customerRecipeIconBox">
-                    <IconEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/timer.png`} infoIconText={`${selectedRecipe.cookTime}분`}/>
-                    <IconEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/people.png`} infoIconText={`${selectedRecipe.portion}${selectedRecipe.portionUnit}`}/>
-                    <IconEach infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/level.png`} infoIconText={`${selectedRecipe.cookLevel}`}/>
+                    <IconEach 
+                        infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/timer.png`} 
+                        infoIconText={`${selectedRecipe.cookTime}분`}/>
+                    <IconEach 
+                        infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/people.png`} 
+                        infoIconText={`${selectedRecipe.portion}${selectedRecipe.portionUnit}`}/>
+                    <IconEach 
+                        infoIconImg={`${serverUrl}/Image/RecipeImage/InfoImg/level.png`} 
+                        infoIconText={`${selectedRecipe.cookLevel}`}/>
                 </div>
             </div>
         </>

@@ -1,6 +1,11 @@
-import React, { useEffect, useState } from "react";
-import ListElement from "./listInner";
+//기타
+import React from "react";
+
+//컨텍스트
 import { useRecipeContext } from "../../../Context/recipeContext";
+
+//컴포넌트
+import ListElement from "./listInner";
 
 const ElementContainer = (props) => {
     const {setInfoGoto} = props;

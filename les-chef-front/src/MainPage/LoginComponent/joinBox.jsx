@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
-import JoinInput from './joinInputBox';
+//기타
+import React from 'react';
+
+//컨텍스트
 import { useConfig } from '../../Context/configContext.jsx';
 import { useUserContext } from '../../Context/userContext.jsx';
 
+//컴포넌트
+import JoinInput from './joinInputBox';
+
+
 const JoinBox = (props) => {
-    const {toggleLoginModal, goToTopSlide, checkPwd, setCheckPwd, diffCheck, setDiffCheck, dupliCheck, setDupliCheck} = props;
+    const { toggleLoginModal, 
+            goToTopSlide, 
+            checkPwd, 
+            setCheckPwd, 
+            diffCheck, 
+            setDiffCheck, 
+            dupliCheck, 
+            setDupliCheck} = props;
     const { serverUrl } = useConfig();
     const { userInfo } = useUserContext();
 
@@ -37,7 +50,10 @@ const JoinBox = (props) => {
 
     return(
         <div className='joinBox'>
-            <img onClick={goToTopSlide} className='LoginLogo' src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
+            <img 
+                onClick={goToTopSlide} 
+                className='LoginLogo' 
+                src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
             <JoinInput 
                 setCheckPwd={setCheckPwd} 
                 checkPwd={checkPwd} 
@@ -46,7 +62,10 @@ const JoinBox = (props) => {
                 dupliCheck={dupliCheck}
                 setDupliCheck={setDupliCheck}/>
             <button onClick={clickJoin} className='joinButton'>회원가입</button>
-            <div className='textLoginBox'><span>이미 회원이신가요?</span><span className='goToLoginText' onClick={toggleLoginModal}>로그인</span></div>
+            <div className='textLoginBox'>
+                <span>이미 회원이신가요?</span>
+                <span className='goToLoginText' onClick={toggleLoginModal}>로그인</span>
+            </div>
         </div>
     )
 }

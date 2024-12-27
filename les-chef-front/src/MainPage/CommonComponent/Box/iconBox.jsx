@@ -1,18 +1,23 @@
+//기타
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+//컨텍스트
 import { useAuthContext } from '../../../Context/authContext';
 import { useConfig } from '../../../Context/configContext';
 import { useUserContext } from '../../../Context/userContext';
 
 const MainIcon = (props) => {
     const navigate = useNavigate();
-    const {toggleLoginModal, toggleMenuModal, menuModal} = props
+    const { toggleLoginModal, 
+            toggleMenuModal, 
+            menuModal} = props
     const { isLogin, setIsLogin } = useAuthContext();
     const { serverUrl } = useConfig();
     const { setUserData } = useUserContext();
 
     const confirmAction = (message) => {
-        return window.confirm(message); // window.confirm을 사용
+        return window.confirm(message);
     };
 
     const handlerMenuModal = () => {
@@ -30,7 +35,6 @@ const MainIcon = (props) => {
             }).then(
                 (response) => {
                     if(response){
-                        // setUser(null);
                         setIsLogin(false);
                         alert("로그아웃 되셨습니다.");
                     }
@@ -85,16 +89,25 @@ const MainIcon = (props) => {
     return (
         <div className='mainIconBox'>
             <div onClick={handlerMenuModal} className='mainMenuButton'>
-                <hr></hr>
-                <hr></hr>
-                <hr></hr>
+                <hr/><hr/><hr/>
             </div>
             <div>
-                { !isLogin && <img onClick={handlerLoginModal} className='mainLoginButton' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
-                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
+                { !isLogin && 
+                    <img 
+                        onClick={handlerLoginModal} 
+                        className='mainLoginButton' 
+                        src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                { isLogin && 
+                    <img 
+                        onClick={clickLogout} 
+                        className='mainLogoutButton' 
+                        src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
             </div>
             <div className='profileButtonBox'>
-                <img onClick={clickProfile} className='mainProfileButton' src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
+                <img 
+                    onClick={clickProfile} 
+                    className='mainProfileButton' 
+                    src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
             </div>
             
         </div>

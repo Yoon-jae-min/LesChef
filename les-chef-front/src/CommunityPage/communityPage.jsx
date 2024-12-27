@@ -1,10 +1,18 @@
+//r기타
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./communityPage.css"
+
+//CSS
+import "../CSS/communityPage.css"
+
+//컨텍스트
+import { useConfig } from "../Context/configContext";
+
+//컴포넌트
 import CommunityBox from "./CommonElement/box";
 import IconBox from "./iconBox";
 import LoginModal from "../MainPage/ModalComponent/loginModal";
-import { useConfig } from "../Context/configContext";
+
 
 const CommunityPage = () => {
     const {serverUrl} = useConfig();
@@ -39,7 +47,14 @@ const CommunityPage = () => {
             <img src={`${serverUrl}/Image/CommunityImage/Background/communityBackground.jpg`} className="communityBgImg"/>
             <IconBox toggleLoginModal={toggleLoginModal}/>
             <CommunityBox/>
-            <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
+            <LoginModal 
+                toggleFindIdPw={toggleFindIdPw} 
+                idPwBox={idPwBox} 
+                loginToFind={loginToFind} 
+                loginModal={loginModal} 
+                toggleFindBox={toggleFindBox} 
+                toggleLoginModal={toggleLoginModal} 
+                goToJoinBox={goToJoinBox}/>
         </div>
     )
 }

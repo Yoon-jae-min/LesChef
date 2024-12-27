@@ -1,3 +1,4 @@
+/*Community 공통 ---------------------------------------------------------------------------------------------*/
 .communityMain{
     overflow-y: hidden;
     width: 100vw;
@@ -87,6 +88,15 @@
     height: 65%;
 }
 
+.writeForm, .watchForm{
+    position: absolute;
+    top:15%;
+    width: 100%;
+    height: 85%;
+}
+
+
+/*List -------------------------------------------------------------------------------------------------------------*/
 .communityListBox{
     width: 100%;
     height: 100%;
@@ -116,17 +126,9 @@
     background-color: rgb(213, 213, 213);
 }
 
-.communityListBody::-webkit-scrollbar{
-    display: none;
-}
-
 .listTitleUnit{
     width: 73%;
     cursor: pointer;
-}
-
-.listTitleUnit:hover{
-    text-decoration: underline solid gray 1px;
 }
 
 .listNameUnit, .listDateUnit{
@@ -207,23 +209,26 @@
     border: none;
 }
 
-.searchInput:focus{
-    outline: none;
-}
-
 .writeBoxVisible{
     height: 100%;
     float: right;
     cursor: pointer;
 }
 
-.writeForm, .watchForm{
-    position: absolute;
-    top:15%;
-    width: 100%;
-    height: 85%;
+/*가상 선택자*/
+.communityListBody::-webkit-scrollbar{
+    display: none;
 }
 
+.listTitleUnit:hover{
+    text-decoration: underline solid gray 1px;
+}
+
+.searchInput:focus{
+    outline: none;
+}
+
+/*Write ------------------------------------------------------------------------------------------------------------*/
 .communityWriteBox{
     position: absolute;
     top: 5%;
@@ -231,8 +236,6 @@
     width: 80%;
     margin: 0 10%;
     height: 75%;
-
-
     border-radius: 10px;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
@@ -241,23 +244,6 @@
 .communityWriteBox{
     display: flex;
     flex-direction: column;
-}
-
-.communityWatchBox{
-    display: flex;
-    flex-direction: row;
-
-    position: absolute;
-    top: 5%;
-    left: 0;
-    width: 80%;
-    margin: 0 10%;
-    height: 75%;
-
-
-    border-radius: 10px;
-    border-top: 1px solid black;
-    border-bottom: 1px solid black;
 }
 
 .writeLabel{
@@ -280,7 +266,6 @@
     flex-wrap: wrap;
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.564);
     background-color: rgb(213, 213, 213);
-
     border: 1px solid black;
 }
 
@@ -289,22 +274,12 @@
     justify-content: center;
 }
 
-.watchTextarea{
-    width: 97%;
-    height: 95%;
-    background-color: rgb(213, 213, 213);
-}
-
 .writeTextarea{
     width: 97%;
     height: 95%;
     background-color: rgb(213, 213, 213);
     border: none;
     resize: none;
-}
-
-.writeTextarea:focus{
-    outline-style: none;
 }
 
 .titleUnit, .nickNameUnit{
@@ -349,12 +324,37 @@
     box-shadow: 0 0 10px 3px gray;
 }
 
-
 .nickNameUnit{
     margin: 0 0 0 1%;
     width: 70%;
     overflow: scroll;
     align-content: center;
+}
+
+/*가상 선택자*/
+.writeTextarea:focus{
+    outline-style: none;
+}
+
+/*Show -------------------------------------------------------------------------------------------------------------*/
+.communityWatchBox{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 5%;
+    left: 0;
+    width: 80%;
+    margin: 0 10%;
+    height: 75%;
+    border-radius: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.watchTextarea{
+    width: 97%;
+    height: 95%;
+    background-color: rgb(213, 213, 213);
 }
 
 .writeDateUnit, .watchNameValue{
@@ -364,18 +364,11 @@
     align-content: center;
 }
 
-
-/* watchPage */
-
 .watchTitleUnit{
     margin: 0 0 0 1%;
     width: 89%;
     overflow: scroll;
     align-content: center;
-}
-
-.watchTitleUnit::-webkit-scrollbar, .nickNameUnit::-webkit-scrollbar{
-    display: none;
 }
 
 .watchTitleBox, .watchWriteDate{
@@ -441,12 +434,7 @@
     height: 71%;
     margin: 0 auto;
     overflow: scroll;
-
     border-top: 2px solid gray;
-}
-
-.watchContent::-webkit-scrollbar{
-    display: none;
 }
 
 .watchContentInner{
@@ -473,17 +461,12 @@
     width: 87%;
     height: 15%;
     padding: 3%;
-
     border: none;
     resize: none;
     border-radius: 5px;
     margin: 3% auto 0;
     box-shadow: 0 0 4px 1px black;
     background-color: rgb(213, 213, 213);
-}
-
-.commentWriteBox:focus{
-    outline: none;
 }
 
 .commentListBox{
@@ -493,10 +476,6 @@
     overflow: scroll;
     display: flex;
     flex-direction: column;
-}
-
-.commentListBox::-webkit-scrollbar{
-    display: none;
 }
 
 .watchCommentUnit{
@@ -561,3 +540,65 @@
     border: none;
     box-shadow: 0 0 10px 3px gray;
 }
+
+/*가상 선택자*/
+.watchTitleUnit::-webkit-scrollbar, .nickNameUnit::-webkit-scrollbar{
+    display: none;
+}
+
+.watchContent::-webkit-scrollbar{
+    display: none;
+}
+
+.commentWriteBox:focus{
+    outline: none;
+}
+
+.commentListBox::-webkit-scrollbar{
+    display: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* watchPage */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

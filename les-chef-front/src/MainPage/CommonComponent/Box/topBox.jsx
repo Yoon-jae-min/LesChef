@@ -1,16 +1,9 @@
+//기타
 import React, {useState, useEffect} from 'react';
 
 const MainTop = (props) => {
     const { topTxt } = props
     const [animationClass, setAnimationClass] = useState("fade-in");
-
-    // const handleAnimationEnd = () => {
-    //     setTimeout(() => {
-    //         if (animationClass === "fade-out") {
-    //             setAnimationClass("fade-in");
-    //         }
-    //     }, 300);
-    // }
 
     useEffect(() => {
         setTimeout(() => {

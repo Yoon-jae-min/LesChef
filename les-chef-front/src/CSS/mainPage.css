@@ -1,12 +1,10 @@
+/*Main 공통----------------------------------------------------------------------------------------------------------*/
 html, body{
     margin: 0;
     padding: 0;
     height: 100%;
 }
 
-body::-webkit-scrollbar{
-    display: none;
-}
 body{
     -ms-overflow-style: none;
     overflow-x: hidden;
@@ -32,6 +30,7 @@ body{
     opacity: 1;
 }
 
+/*Main 첫번째 Section*/
 #mainVideo{
     width: 100vw;
     height: 100vh;
@@ -39,6 +38,7 @@ body{
     object-position: center center;
 }
 
+/*Main 고정 왼쪽 박스*/
 .mainLeft{
     position: fixed;
     top: 0;
@@ -46,27 +46,6 @@ body{
     width: 17vw;
     height: 100vh;
     z-index: 140;
-}
-
-.mainTop{
-    position: fixed;
-    top: 0;
-    left: 17vw;
-    width: 83vw;
-    height: 65vh;
-    z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
-    border-left: 1px solid rgba(255, 255, 255, 0.432);
-}
-
-.mainBottom{
-    position: fixed;
-    top: 65vh;
-    left: 17vw;
-    width: 83vw;
-    height: 35vh;
-    z-index: 100;
-    border-left: 1px solid rgba(255, 255, 255, 0.432);
 }
 
 .mainLogo{
@@ -84,7 +63,6 @@ body{
     left: 3vw;
     width: 11vw;
     height: auto;
-    /* z-index: 101; */
     display: flex;
     justify-content: space-between;
 }
@@ -95,18 +73,6 @@ body{
     flex-direction: column;
     justify-content: space-around;
     padding-top: calc(1vh - 6px);
-}
-
-.mainMenuButton hr:nth-of-type(1){
-    width: 3vw;
-}
-
-.mainMenuButton hr:nth-of-type(2){
-    width: calc(3vw - 10px);
-}
-
-.mainMenuButton hr:nth-of-type(3){
-    width: calc(3vw - 5px);
 }
 
 .mainMenuButton hr{
@@ -150,6 +116,28 @@ body{
     display: none;
 }
 
+/*Main 고정 오른쪽 (위/아래) 박스*/
+.mainTop{
+    position: fixed;
+    top: 0;
+    left: 17vw;
+    width: 83vw;
+    height: 65vh;
+    z-index: 100;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.432);
+    border-left: 1px solid rgba(255, 255, 255, 0.432);
+}
+
+.mainBottom{
+    position: fixed;
+    top: 65vh;
+    left: 17vw;
+    width: 83vw;
+    height: 35vh;
+    z-index: 100;
+    border-left: 1px solid rgba(255, 255, 255, 0.432);
+}
+
 .topText, .bottomText{
     color: white;
     font-size: 70px;
@@ -175,6 +163,7 @@ body{
     text-align: end;
 }
 
+/*Main Menu Modal*/
 #mainMenuModal{
     position: fixed;
     top: 0;
@@ -184,101 +173,6 @@ body{
     background-color: rgba(0, 0, 0, 0.99);
     z-index: 110;
     transition: all 0.5s;
-}
-
-#mainLoginModal{
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.7);
-}
-
-.joinBox{
-    position: absolute;
-    top: 5vh;
-    right: 2vw;
-    height: 90vh;
-    width: 380px;
-    z-index: 200;
-    background-color: rgb(0, 51, 0);
-    border-radius: 20px;
-    display: flex;
-    justify-content: center;
-}
-
-.LoginLogo{
-    position: absolute;
-    top: 30px;
-    width: 180px;
-    cursor: pointer;
-}
-
-.JoinInput{
-    position: absolute;
-    top: 180px;
-    width: 70%;
-}
-
-.eachLabel{
-    display: flex;
-    align-items: center;
-    color: white;
-    font-weight: bold;
-}
-
-.diffCheck{
-    color: red;
-    margin: 0 0 0 10px;
-    font-size: 13px;
-}
-
-.eachInput{
-    width: 99%;
-    background-color: rgba(255, 255, 255, 0);
-    border: none;
-    border-bottom: 1px solid white;
-    height: 30px;
-    margin-bottom: 5px;
-    color: white;
-    outline: none;
-}
-
-.joinButton{
-    position: absolute;
-    bottom: 8vh;
-    width: 72%;
-    height: 6vh;
-    border-radius: 12px;
-    background-color: rgb(90, 166, 123);
-    color: white;
-    font-weight: bold;
-    font-size: 15px;
-    cursor: pointer;
-    border: none;
-}
-
-.textLoginBox{
-    position: absolute;
-    bottom: 4vh;
-    width: 50%;
-    display: flex;
-    justify-content: space-around;
-}
-
-.joinBox span{
-    color: white;
-    font-size: 15px;
-}
-
-.goToLoginText, .goToJoinText{
-    cursor: pointer;
-    font-weight: bold;
-}
-
-.goToLoginText:hover, .goToJoinText:hover{
-    text-decoration: underline;
 }
 
 .mainCategoryText{
@@ -310,6 +204,74 @@ body{
     padding-top: 20px;
     pointer-events: none;
     opacity: 0;
+}
+
+.goToRecipePage{
+    text-decoration: none;
+    color: white;
+}
+
+/*가상 선택자*/
+body::-webkit-scrollbar{
+    display: none;
+}
+
+.mainMenuButton hr:nth-of-type(1){
+    width: 3vw;
+}
+
+.mainMenuButton hr:nth-of-type(2){
+    width: calc(3vw - 10px);
+}
+
+.mainMenuButton hr:nth-of-type(3){
+    width: calc(3vw - 5px);
+}
+
+.goToRecipePage:hover{
+    color: rgb(217, 169, 169);
+}
+
+
+/*로그인, 회원가입----------------------------------------------------------------------------------------------------*/
+.LoginLogo{
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    cursor: pointer;
+}
+
+.eachLabel{
+    display: flex;
+    align-items: center;
+    color: white;
+    font-weight: bold;
+}
+
+.eachInput{
+    width: 99%;
+    background-color: rgba(255, 255, 255, 0);
+    border: none;
+    border-bottom: 1px solid white;
+    height: 30px;
+    margin-bottom: 5px;
+    color: white;
+    outline: none;
+}
+
+.goToLoginText, .goToJoinText{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/*로그인*/
+#mainLoginModal{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
 }
 
 .loginBox{
@@ -346,6 +308,14 @@ body{
     cursor: pointer;
 }
 
+#hrAndOr{
+    position: absolute;
+    top: 405px;
+    width: 80%;
+    display: flex;
+    color: white;
+}
+
 #findUser{
     position: absolute;
     top: 300px;
@@ -353,18 +323,6 @@ body{
     color: rgb(157, 157, 196);
     font-weight: bold;
     cursor: pointer;
-}
-
-#findUser:hover{
-    text-decoration: underline;
-}
-
-#hrAndOr{
-    position: absolute;
-    top: 405px;
-    width: 80%;
-    display: flex;
-    color: white;
 }
 
 #hrAndOr p{
@@ -404,6 +362,28 @@ body{
     margin-left: 3px;
 }
 
+#customBtn {
+    display: inline-block;
+    background: white;
+    color: #444;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+span.icon {
+    background: url('https://developers.google.com/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 35px;
+    height: 45px;
+}
+span.buttonText {
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
 .textJoinBox{
     position: absolute;
     top: 510px;
@@ -413,6 +393,75 @@ body{
     color: white;
 }
 
+/*회원가입*/
+.joinBox{
+    position: absolute;
+    top: 5vh;
+    right: 2vw;
+    height: 90vh;
+    width: 380px;
+    z-index: 200;
+    background-color: rgb(0, 51, 0);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.JoinInput{
+    position: absolute;
+    top: 180px;
+    width: 70%;
+}
+
+.joinButton{
+    position: absolute;
+    bottom: 8vh;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+}
+
+.textLoginBox{
+    position: absolute;
+    bottom: 4vh;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.joinBox span{
+    color: white;
+    font-size: 15px;
+}
+
+.diffCheck{
+    color: red;
+    margin: 0 0 0 10px;
+    font-size: 13px;
+}
+
+.dupliCheckBtn{
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(90, 166, 123)
+}
+
+.idCheckedText{
+    font-size: 10px;
+    color: rgb(90, 166, 123);
+    margin: 0 0 0 10px;
+}
+
+/*(아이디/비밀번호) 찾기*/
 .idPwButton{
     position: absolute;
     top: 190px;
@@ -466,32 +515,15 @@ body{
     top: 200px;
 }
 
-.goToRecipePage{
-    text-decoration: none;
-    color: white;
+
+/*가상 선택자*/
+.goToLoginText:hover, .goToJoinText:hover{
+    text-decoration: underline;
 }
 
-.goToRecipePage:hover{
-    color: rgb(217, 169, 169);
+#findUser:hover{
+    text-decoration: underline;
 }
-
-.dupliCheckBtn{
-    cursor: pointer;
-    font-weight: bold;
-    margin-left: 10px;
-    border-radius: 5px;
-    color: white;
-    background-color: rgb(90, 166, 123)
-}
-
-.idCheckedText{
-    font-size: 10px;
-    color: rgb(90, 166, 123);
-    margin: 0 0 0 10px;
-}
-
-
-
 
 /*애니메이션*/
 .fade-in {

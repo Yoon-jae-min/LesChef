@@ -1,12 +1,19 @@
+//기타
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./recipePage.css";
+
+//CSS
+import "../CSS/recipePage.css";
+
+//컨텍스트
+import { useConfig } from "../Context/configContext";
+import { useRecipeContext } from "../Context/recipeContext";
+
+//컴포넌트
 import RecipeShowBox from "./ShowComponent/box";
 import RecipeMenuBox from "./MenuComponent/box";
 import IconBox from "./iconBox";
 import LoginModal from "../MainPage/ModalComponent/loginModal";
-import { useConfig } from "../Context/configContext";
-import { useRecipeContext } from "../Context/recipeContext";
 
 const RecipePage = () => {
     const [category, setCategory] = useState(localStorage.getItem("selectedCategory") || "korean");
@@ -81,11 +88,26 @@ const RecipePage = () => {
 
     return(
         <div className="recipeBody">
-            <img src={`${serverUrl}/Image/RecipeImage/Background/recipeBackground.jpg`} className="recipeBgImg"/>
-            <IconBox toggleLoginModal={toggleLoginModal}/>
-            <RecipeMenuBox setCategory={setCategory} setInfoGoto={setInfoGoto}/>
-            <RecipeShowBox category={category} infoGoto={infoGoto} setInfoGoto={setInfoGoto}/>
-            <LoginModal toggleFindIdPw={toggleFindIdPw} idPwBox={idPwBox} loginToFind={loginToFind} loginModal={loginModal} toggleFindBox={toggleFindBox} toggleLoginModal={toggleLoginModal} goToJoinBox={goToJoinBox}/>
+            <img 
+                src={`${serverUrl}/Image/RecipeImage/Background/recipeBackground.jpg`} 
+                className="recipeBgImg"/>
+            <IconBox 
+                toggleLoginModal={toggleLoginModal}/>
+            <RecipeMenuBox 
+                setCategory={setCategory} 
+                setInfoGoto={setInfoGoto}/>
+            <RecipeShowBox 
+                category={category} 
+                infoGoto={infoGoto} 
+                setInfoGoto={setInfoGoto}/>
+            <LoginModal 
+                toggleFindIdPw={toggleFindIdPw} 
+                idPwBox={idPwBox} 
+                loginToFind={loginToFind} 
+                loginModal={loginModal} 
+                toggleFindBox={toggleFindBox} 
+                toggleLoginModal={toggleLoginModal} 
+                goToJoinBox={goToJoinBox}/>
         </div>
     )
 }

@@ -1,10 +1,15 @@
+//기타
 import React, { useState } from "react";
+
+//컨텍스트
+import { WatchProvider } from "../../Context/watchContext";
+
+//컴포넌트
 import CommunityHeader from "./header";
 import CommunityBody from "../ListBox/body";
 import CommunityFooter from "../ListBox/footer";
 import CommunityWriteBox from "../WriteBox/writeBox";
 import CommunityWatchBox from "../WatchBox/watchBox";
-import { WatchProvider } from "../../Context/watchContext";
 
 const CommunityBox = () => {
     const [ writeBoxVisible, setWriteBoxVisible ] = useState(false);
@@ -42,10 +47,17 @@ const CommunityBox = () => {
         <WatchProvider>
             <div className="communityBox">
                 <CommunityHeader/>
-                { !writeBoxVisible && !watchBoxVisible && <CommunityBody  goToWatch={goToWatch}/>}
-                { !writeBoxVisible && !watchBoxVisible && <CommunityFooter goToWrite={goToWrite}/>}
-                { (writeBoxVisible && !watchBoxVisible) && <CommunityWriteBox goToList={goToList}/>}
-                { watchBoxVisible && !writeBoxVisible && <CommunityWatchBox goToList={goToList}/>}
+                { !writeBoxVisible && 
+                    !watchBoxVisible && 
+                        <CommunityBody  goToWatch={goToWatch}/>}
+                { !writeBoxVisible && 
+                    !watchBoxVisible && 
+                        <CommunityFooter goToWrite={goToWrite}/>}
+                { (writeBoxVisible && !watchBoxVisible) && 
+                        <CommunityWriteBox goToList={goToList}/>}
+                { watchBoxVisible && 
+                    !writeBoxVisible && 
+                        <CommunityWatchBox goToList={goToList}/>}
             </div>
         </WatchProvider>
     )

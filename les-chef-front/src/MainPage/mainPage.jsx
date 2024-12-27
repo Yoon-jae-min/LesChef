@@ -1,6 +1,16 @@
-import "./mainPage.css";
+//기타
 import React, {useEffect, useRef, useState} from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
+
+//CSS
+import "../CSS/mainPage.css";
+
+//컨텍스트
+import { useUserContext } from "../Context/userContext";
+import { useConfig } from "../Context/configContext";
+import { useAuthContext } from "../Context/authContext";
+
+//컴포넌트
 import MainFirst from './SlideComponent/pageFirst';
 import MainSecond from './SlideComponent/pageSecond';
 import MainThird from './SlideComponent/pageThird';
@@ -11,9 +21,7 @@ import MainTop from './CommonComponent/Box/topBox';
 import MainBottom from './CommonComponent/Box/bottomBox';
 import MenuModal from './ModalComponent/menuModal';
 import LoginModal from './ModalComponent/loginModal';
-import { useUserContext } from "../Context/userContext";
-import { useConfig } from "../Context/configContext";
-import { useAuthContext } from "../Context/authContext";
+
 
 const MainPage = () => {
     const outerDivRef = useRef();
@@ -136,7 +144,6 @@ const MainPage = () => {
         if (location.state?.currentPage !== undefined) {
             setCurrentPage(location.state.currentPage);
 
-            // state 초기화
             navigate(location.pathname, { replace: true });
         }
     }, [location.state]);

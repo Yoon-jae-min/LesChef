@@ -1,7 +1,12 @@
-import React, { useEffect, useState } from "react";
-import RecipeListUnit from "./listUnit";
+//기타
+import React, { useEffect } from "react";
+
+//컨텍스트
 import { useConfig } from "../../../../../Context/configContext";
 import { useRecipeContext } from "../../../../../Context/recipeContext";
+
+//컴포넌트
+import RecipeListUnit from "./listUnit";
 
 const ListBox = (props) => {
     const { setInfoPage, setListPage } = props;

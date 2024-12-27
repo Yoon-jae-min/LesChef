@@ -1,4 +1,7 @@
+//기타
 import React, { useEffect, useState } from "react";
+
+//컨텍스트
 import { useConfig } from "../../Context/configContext";
 
 const RecipeShowHead = (props) => {

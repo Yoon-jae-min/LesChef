@@ -1,5 +1,8 @@
+//기타
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+//컨텍스트
 import { useConfig } from "../Context/configContext";
 import { useAuthContext } from "../Context/authContext";
 
@@ -58,11 +61,27 @@ const IconBox = (props) => {
 
     return(
         <div className="recipeIconBox">
-            <img onClick={clickProfile} src={`${serverUrl}/Image/CommonImage/profileIcon.png`} className="goToCustomerIcon recipeLeftIcon"/>
-            <Link to="/communityMain" onClick={categoryStateReset}><img src={`${serverUrl}/Image/CommonImage/communityIcon.png`} className="goToCommunityIcon recipeLeftIcon"/></Link>
+            <img 
+                onClick={clickProfile} 
+                src={`${serverUrl}/Image/CommonImage/profileIcon.png`} 
+                className="goToCustomerIcon recipeLeftIcon"/>
+            <Link 
+                to="/communityMain" 
+                onClick={categoryStateReset}>
+                    <img 
+                        src={`${serverUrl}/Image/CommonImage/communityIcon.png`} 
+                        className="goToCommunityIcon recipeLeftIcon"/></Link>
             <div>
-                { !isLogin && <img onClick={clickLogin} className='recipeLeftIcon' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
-                { isLogin && <img onClick={clickLogout} className='recipeLeftIcon' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
+                { !isLogin && 
+                    <img 
+                        onClick={clickLogin} 
+                        className='recipeLeftIcon' 
+                        src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                { isLogin && 
+                    <img 
+                        onClick={clickLogout} 
+                        className='recipeLeftIcon' 
+                        src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
             </div>
         </div>
     )

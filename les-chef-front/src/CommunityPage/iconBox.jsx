@@ -1,5 +1,8 @@
+//기타
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
+
+//컨텍스트
 import { useConfig } from "../Context/configContext";
 import { useAuthContext } from "../Context/authContext";
 
@@ -54,12 +57,16 @@ const IconBox = (props) => {
 
     return(
         <div className="communityIconBox">
-            <Link to="/"><img className="goToHomeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
+            <Link to="/">
+                <img className="goToHomeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
             <img onClick={clickProfile} className="goToCustomerIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
-            <Link to="/recipeMain" state={{category: "korean"}}><img className="goToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
+            <Link to="/recipeMain" state={{category: "korean"}}>
+                <img className="goToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
             <div className="communityLoginBtn">
-                { !isLogin && <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
-                { isLogin && <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
+                { !isLogin && 
+                    <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                { isLogin && 
+                    <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
             </div>
         </div>
     )

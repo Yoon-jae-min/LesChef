@@ -1,4 +1,7 @@
+//기타
 import React from "react";
+
+//컴포넌트
 import CommunityListLine from "./listLine";
 
 const CommunityList = (props) => {

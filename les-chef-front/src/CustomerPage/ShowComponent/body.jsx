@@ -1,4 +1,7 @@
+//기타
 import React from "react";
+
+//컴포넌트
 import CustomerInfoBox from "./InfoBox/infoBox";
 import CustomerRecipeBox from "./RecipeBox/recipeBox";
 import CustomerFoodsBox from "./FoodsBox/foodsBox";
@@ -9,10 +12,14 @@ const CustomerShowBody = (props) => {
 
     return(
         <div className="customerShowBody">
-            { (category === "My Info") && <CustomerInfoBox/> }
-            { (category === "My Recipe") && <CustomerRecipeBox/> }
-            { (category === "My Foods") && <CustomerFoodsBox/> }
-            { (category === "Wish List") && <CustomerWishListBox/> }
+            { (category === "My Info") && 
+                <CustomerInfoBox/> }
+            { (category === "My Recipe") && 
+                <CustomerRecipeBox/> }
+            { (category === "My Foods") && 
+                <CustomerFoodsBox/> }
+            { (category === "Wish List") && 
+                <CustomerWishListBox/> }
 
         </div>
     )

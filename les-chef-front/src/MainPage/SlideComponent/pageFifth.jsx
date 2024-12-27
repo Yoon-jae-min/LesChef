@@ -1,9 +1,22 @@
+//기타
 import React from 'react';
-import JoinBox from '../LoginComponent/joinBox';
+
+//컨텍스트
 import { useConfig } from '../../Context/configContext';
 
+//컴포넌트
+import JoinBox from '../LoginComponent/joinBox';
+
+
 const MainFifth = (props) => {
-    const {toggleLoginModal, goToTopSlide, checkPwd, setCheckPwd, diffCheck, setDiffCheck, dupliCheck, setDupliCheck} = props;
+    const { toggleLoginModal, 
+            goToTopSlide, 
+            checkPwd, 
+            setCheckPwd, 
+            diffCheck, 
+            setDiffCheck, 
+            dupliCheck, 
+            setDupliCheck} = props;
     const { serverUrl } = useConfig();
 
     return (

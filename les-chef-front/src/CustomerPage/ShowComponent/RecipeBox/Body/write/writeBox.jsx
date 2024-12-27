@@ -1,7 +1,12 @@
+//기타
 import React, { useRef, useState } from "react";
+
+//컨텍스트
+import { useConfig } from "../../../../../Context/configContext";
+
+//컴포넌트
 import StepBoxUnit from "./stepBoxUnit";
 import IngredientSection from "./ingredientSection";
-import { useConfig } from "../../../../../Context/configContext";
 
 const WriteBox = () => {
     const {serverUrl} = useConfig();

@@ -1,11 +1,19 @@
+//기타
 import React, { useEffect, useState } from "react";
-import LoginInput from "./loginInputBox.jsx";
+
+//컨텍스트
 import { useConfig } from '../../Context/configContext.jsx';
 import { useAuthContext } from "../../Context/authContext.jsx";
-import '../googleButton.css'
+
+//컴포넌트
+import LoginInput from "./loginInputBox.jsx";
+
 
 const LoginBox = (props) => {
-    const { loginModal, goToJoinBox, toggleFindBox, toggleLoginModal } = props;
+    const { loginModal, 
+            goToJoinBox, 
+            toggleFindBox, 
+            toggleLoginModal } = props;
     const [ customerId, setCustomerId ] = useState("");
     const [ customerPwd, setCustomerPwd ] = useState("");
     const { serverUrl } = useConfig();
@@ -69,10 +77,18 @@ const LoginBox = (props) => {
     return(
         <div className="loginBox" style={{opacity: loginModal ? '1' : '0'}}>
             <img className='LoginLogo' src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
-            <LoginInput inputId={inputId} inputPwd={inputPwd} idValue={customerId} pwdValue={customerPwd}/>
+            <LoginInput 
+                inputId={inputId} 
+                inputPwd={inputPwd} 
+                idValue={customerId} 
+                pwdValue={customerPwd}/>
             <p id="findUser" onClick={toggleFindBox}>아이디/비밀번호 찾기</p>
             <button className="loginButton" onClick={clickLogin}>로그인</button>
-            <div id="hrAndOr"><hr/><p>or</p><hr/></div>
+            <div id="hrAndOr">
+                <hr/>
+                <p>or</p>
+                <hr/>
+            </div>
             <div id="SNSLogin">
                 <div id="kakaoButtonContainer">
                     <img src={`${serverUrl}/Image/MainImage/kakaoLoginButton.png`}></img>
@@ -88,7 +104,10 @@ const LoginBox = (props) => {
                     <span className="buttonText">로그인</span>
                 </div>
             </div>
-            <div className="textJoinBox"><span>아직 회원이 아니신가요?</span><span className='goToJoinText' onClick={goToJoinBox}>회원가입</span></div>
+            <div className="textJoinBox">
+                <span>아직 회원이 아니신가요?</span>
+                <span className='goToJoinText' onClick={goToJoinBox}>회원가입</span>
+            </div>
         </div>
     )
 }

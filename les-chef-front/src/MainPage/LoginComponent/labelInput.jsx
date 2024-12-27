@@ -1,9 +1,20 @@
+//기타
 import React from "react";
+
+//컨텍스트
 import { useUserContext } from "../../Context/userContext";
 import { useConfig } from "../../Context/configContext";
 
 const LabelInput = (props) => {
-    const { labelText, boxType, inputValue, basicValue, setCheckPwd, diffCheck, setDiffCheck, dupliCheck, setDupliCheck } = props;
+    const { labelText, 
+            boxType, 
+            inputValue, 
+            basicValue, 
+            setCheckPwd, 
+            diffCheck, 
+            setDiffCheck, 
+            dupliCheck, 
+            setDupliCheck } = props;
     const { userInfo, setUserInfo } = useUserContext();
     const {serverUrl} = useConfig();
 

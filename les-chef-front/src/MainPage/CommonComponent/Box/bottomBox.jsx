@@ -1,3 +1,4 @@
+//기타
 import React, {useState, useEffect} from 'react';
 
 const MainBottom = (props) => {
