@@ -8,7 +8,10 @@ import { useRecipeContext } from "../../../Context/recipeContext";
 const RecipeElement = (props) => {
     const { setInfoGoto, 
             recipeImg, 
-            recipeName} = props;
+            recipeName,
+            recipeNickName,
+            recipeWatch,
+            isShare } = props;
     const {serverUrl} = useConfig();
     const { setRecipeIngres, 
             setRecipeSteps, 
@@ -35,8 +38,9 @@ const RecipeElement = (props) => {
             <img className="elementImg" src={`${serverUrl}${recipeImg}`}/>
             <div className="elementInfoBox">
                 <p className="listRecipeTitle">{recipeName}</p>
-                <div className="starBox"></div>
-                <div className="showCountBox"></div>
+                {isShare && 
+                    <div className="reciNickNameBox">{recipeNickName}</div>}
+                <div className="showCountBox">{recipeWatch}</div>
             </div>
         </div>
     )

@@ -29,11 +29,17 @@ const RecipeMenuText = (props) => {
                 englishTxt="western" 
                 setCategory={setCategory} 
                 setInfoGoto={setInfoGoto}/>
+            <MenuTxtUnit
+                koreanTxt="기타레시피"
+                englishTxt="other"
+                setCategory={setCategory} 
+                setInfoGoto={setInfoGoto}/>
             <MenuTxtUnit 
                 koreanTxt="공유레시피" 
                 englishTxt="share" 
                 setCategory={setCategory} 
                 setInfoGoto={setInfoGoto}/>
+            
         </div>
     )
 }

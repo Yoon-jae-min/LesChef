@@ -57,6 +57,8 @@ const RecipePage = () => {
                 return '/chineseList';
             case 'western':
                 return '/westernList';
+            case 'other':
+                return '/otherList';
             case 'share':
                 return '/shareList';
         }

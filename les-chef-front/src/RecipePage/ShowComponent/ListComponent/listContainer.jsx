@@ -18,7 +18,10 @@ const ElementContainer = (props) => {
                     key={index} 
                     setInfoGoto={setInfoGoto} 
                     recipeImg={recipe.recipeImg}
-                    recipeName={recipe.recipeName}/>
+                    recipeName={recipe.recipeName}
+                    recipeNickName={recipe.userNickName}
+                    recipeWatch={recipe.viewCount}
+                    isShare={recipe.isShare}/>
                 );
             })}
         </div>

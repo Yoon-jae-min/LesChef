@@ -16,7 +16,7 @@ const ShowGpBoxRight = (props) => {
             {!infoGoto && 
                 <React.Fragment>
                     <div className="orderButton">최신순</div>
-                    <div className="orderButton">추천순</div></React.Fragment>
+                    <div className="orderButton">조회순</div></React.Fragment>
             }
         </div>
     )

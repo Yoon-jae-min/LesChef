@@ -16,7 +16,7 @@
     position: absolute;
     bottom: 2vh;
     left: 3vw;
-    width: 14vw;
+    width: 10vw;
 }
 
 .recipeLeftIcon{
@@ -186,7 +186,7 @@
 .recipeElement{
     border-radius: 10px;
     box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.7);
-    height: 280px;
+    height: 270px;
     width: 31%;
     margin: 0 calc(7% / 6) 20px;
     min-width: 250px;
@@ -196,7 +196,7 @@
 
 .elementImg{
     width: calc(90% - 2px);
-    height: 70%;
+    height: 72%;
     object-fit: cover;
     overflow: hidden;
     margin: 10px 5% 0;
@@ -207,7 +207,7 @@
 .elementInfoBox{
     position: relative;
     width: 100%;
-    height: calc(30% - 15px);
+    height: calc(28% - 15px);
 }
 
 .elementInfoBox p{
@@ -218,22 +218,29 @@
     text-align: center;
 }
 
-.starBox{
+.reciNickNameBox{
     position: absolute;
-    bottom: 5px;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: oblique;
+    color: rgb(103, 108, 88);
+    bottom: 10px;
     left: 10px;
     width: 100px;
     height: 20px;
-    border: 1px solid black;
 }
 
 .showCountBox{
     position: absolute;
-    bottom: 5px;
-    right: 10px;
+    font-size: 20px;
+    font-weight: 400;
+    font-style: oblique;
+    color: rgb(103, 108, 88);
+    bottom: 10px;
+    right: 15px;
     width: 70px;
     height: 20px;
-    border: 1px solid black;
+    text-align: right;
 }
 
 /*Info -------------------------------------------------------------------------------------------------------*/

@@ -20,6 +20,10 @@ const userSchema = new mongoose.Schema({
     tel:{
         type: String
     },
+    profileImg:{
+        type: String,
+        default: ""
+    },
     checkAdmin:{
         type: Boolean,
         default: false

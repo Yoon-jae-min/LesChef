@@ -76,12 +76,12 @@ const IconBox = (props) => {
                     <img 
                         onClick={clickLogin} 
                         className='recipeLeftIcon' 
-                        src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                        src={`${serverUrl}/Image/CommonImage/loginWhite.png`}/>}
                 { isLogin && 
                     <img 
                         onClick={clickLogout} 
                         className='recipeLeftIcon' 
-                        src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
+                        src={`${serverUrl}/Image/CommonImage/logoutWhite.png`}/>}
             </div>
         </div>
     )

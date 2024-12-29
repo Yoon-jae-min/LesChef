@@ -26,6 +26,7 @@
 .customerLeftIcon{
     margin: 0 0.5vw;
     width: 3.5vw;
+    cursor: pointer;
 }
 
 /*Menu Box*/
@@ -325,9 +326,10 @@
 }
 
 .customerRecipeSolt{
-    width: 40%;
+    width: 60%;
     position: absolute;
     bottom: 0;
+    display: flex;
 }
 
 .headSoltUnit{
@@ -353,11 +355,15 @@
     padding-top: 15px;
 }
 
-.goToRecipeList, .addRecipeBtn{
+.goToRecipeList, .addRecipeBtn, .enrollRecipeBtn{
     height: 70%;
     margin-top: 1%;
     float: right;
     cursor: pointer;
+}
+
+.enrollRecipeBtn{
+    margin-right: 5px;
 }
 
 /*가상 선택자*/
@@ -519,6 +525,14 @@
     font-size: 2.5vh;
     margin-bottom: 10px;
     border-radius: 5px;
+    padding: 0 10px;
+}
+
+.cusWrCategorySelect{
+    margin-left: 10px;
+    height: 3.5vh;
+    border-radius: 5px;
+    background-color: rgb(182, 182, 182);
 }
 
 .reciMainImgBox{

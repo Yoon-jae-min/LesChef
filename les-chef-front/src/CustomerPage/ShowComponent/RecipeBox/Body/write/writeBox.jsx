@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 
 //컨텍스트
 import { useConfig } from "../../../../../Context/configContext";
+import { useRecipeContext } from "../../../../../Context/recipeContext";
 
 //컴포넌트
 import StepBoxUnit from "./stepBoxUnit";
@@ -10,24 +11,37 @@ import IngredientSection from "./ingredientSection";
 
 const WriteBox = () => {
     const {serverUrl} = useConfig();
+    const {setWrRecipeInfo, setWrRecipeImg} = useRecipeContext();
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
     const [ingreSections, setIngreSections] = useState([]);
     const imgRef = useRef();
+
 
     const preImgFile = () => {
         const file = imgRef.current.files[0];
 
         if (!imgRef.current || !imgRef.current.files || imgRef.current.files.length === 0 || !file) {
             setImgFile("");
+            setWrRecipeInfo((preInfo) => (
+                {...preInfo, recipeImg: ""}
+            ))
+            setWrRecipeImg(null);
             return;
         }
+
+        const fileName= file.name;
 
         const reader = new FileReader();
         reader.readAsDataURL(file);
         reader.onloadend = () => {
             setImgFile(reader.result);
         };
+
+        setWrRecipeInfo((preInfo) => (
+            {...preInfo, recipeImg: `/Image/RecipeImage/ListImg/${fileName}`}
+        ))
+        setWrRecipeImg(file)
     };
 
     //step 메소드
@@ -139,6 +153,31 @@ const WriteBox = () => {
         );
     }
 
+    //레시피 등록 정보 업데이트
+    const changeCookTime = (cookTime) => {
+        setWrRecipeInfo((preInfo) => (
+            {...preInfo, cookTime: cookTime}
+        ))
+    }
+
+    const changePortion = (portion) => {
+        setWrRecipeInfo((preInfo) => (
+            {...preInfo, portion: portion}
+        ))
+    }
+
+    const changePortionUnit = (portionUnit) => {
+        setWrRecipeInfo((preInfo) => (
+            {...preInfo, portionUnit: portionUnit}
+        ))
+    }
+
+    const changeCookLevel = (cookLevel) => {
+        setWrRecipeInfo((preInfo) => (
+            {...preInfo, cookLevel: cookLevel}
+        ))
+    }
+
     return(
         <>
             <div className="cusRecipeWriteLeft">
@@ -180,12 +219,12 @@ const WriteBox = () => {
                     </div>
                 </div>
                 <div className="cusWrExtraInfoBox">
-                    <input type="text" className="cusWrExtraTime cusWrExtraInfoInput" placeholder="조리시간(분)"/>
+                    <input onChange={(e) => changeCookTime(e.target.value)} type="text" className="cusWrExtraTime cusWrExtraInfoInput" placeholder="조리시간(분)"/>
                     <div className="cusWrExtraVolumeBox">
-                        <input type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="수량"/>
-                        <input type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="단위"/>
+                        <input onChange={(e) => changePortion(e.target.value)} type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="수량"/>
+                        <input onChange={(e) => changePortionUnit(e.target.value)} type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="단위"/>
                     </div>
-                    <select type="text" className="cusWrExtraLevel">
+                    <select onChange={(e) => changeCookLevel(e.target.value)} className="cusWrExtraLevel">
                         <option value="쉬움">쉬움</option>
                         <option value="중간">중간</option>
                         <option value="어려움">어려움</option>

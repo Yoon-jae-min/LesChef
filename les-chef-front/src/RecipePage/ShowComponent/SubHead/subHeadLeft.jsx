@@ -29,6 +29,10 @@ const ShowGpBoxLeft = (props) => {
             setFirstText("스프/스튜");
             setSecondText("면");
             setThirdText("빵");
+        }else if(category === "other"){
+            setFirstText("면");
+            setSecondText("밥");
+            setThirdText("국");
         }
 
         setActiveIndex(0);

@@ -16,9 +16,6 @@ const recipeSchema = new mongoose.Schema({
     cookLevel:{
         type: String
     },
-    userName:{
-        type: String
-    },
     majorCategory:{
         type: String
     },
@@ -31,6 +28,12 @@ const recipeSchema = new mongoose.Schema({
     viewCount:{
         type: Number,
         default: 0
+    },
+    userId:{
+        type: String
+    },
+    userNickName:{
+        type: String
     },
     isShare:{
         type: Boolean

@@ -92,7 +92,7 @@ const LabelInput = (props) => {
                 { ( diffCheck && (labelText === "비밀번호 확인")) && 
                     <p className="diffCheck"> ※ 비밀번호가 다릅니다</p>
                 }
-                { ( !dupliCheck && (labelText === "이메일(아이디)")) && 
+                { ( !dupliCheck && (labelText === "이메일(아이디)") && (boxType === "join")) && 
                     <button onClick={clickDupliCheck} type="button" className="dupliCheckBtn">중복확인</button>
                 }
                 { ( dupliCheck && (labelText === "이메일(아이디)")) && 

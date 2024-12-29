@@ -34,7 +34,14 @@ const shareList = asyncHandler(async(req, res) => {
 });
 
 const myList = asyncHandler(async(req, res) => {
-    const recipeList = await Recipe.find({userId: req.session.user.id}).lean();
+    const user = await User.findOne({id: req.session.user.id});
+    let recipeList = null;
+
+    if(user.checkAdmin){
+        recipeList = await Recipe.find({}).lean();
+    }else{
+        recipeList = await Recipe.find({userId: req.session.user.id}).lean();
+    }
     res.send(recipeList);
 })
 

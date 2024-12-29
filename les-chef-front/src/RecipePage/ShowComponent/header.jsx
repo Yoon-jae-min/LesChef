@@ -23,6 +23,9 @@ const RecipeShowHead = (props) => {
         }else if(category === "western"){
             setHeadImgUrl(`${serverUrl}/Image/RecipeImage/Background/listHeaderWestern.png`);
             setHeadText("Western");
+        }else if(category === "other"){
+            setHeadImgUrl(`${serverUrl}/Image/RecipeImage/Background/listHeaderOther.png`);
+            setHeadText("Other");
         }else if(category === "share"){
             setHeadImgUrl(`${serverUrl}/Image/RecipeImage/Background/listHeaderShare.png`);
             setHeadText("Share");

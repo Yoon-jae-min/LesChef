@@ -64,9 +64,9 @@ const IconBox = (props) => {
                 <img className="goToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
             <div className="communityLoginBtn">
                 { !isLogin && 
-                    <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/MainImage/loginWhite.png`}/>}
+                    <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/CommonImage/loginWhite.png`}/>}
                 { isLogin && 
-                    <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/MainImage/logoutWhite.png`}/>}
+                    <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/CommonImage/logoutWhite.png`}/>}
             </div>
         </div>
     )
