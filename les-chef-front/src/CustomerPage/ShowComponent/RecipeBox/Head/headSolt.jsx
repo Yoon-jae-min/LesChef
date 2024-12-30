@@ -52,7 +52,7 @@ const RecipeHeadSolt = (props) => {
                     <input onChange={(e) => changeRecipeName(e.target.value)} type="text" className="cusWrRecipeName" placeholder="레시피 이름"/>
                     <select className="cusWrCategorySelect" onChange={(e) => changeMajorCategory(e.target.value)}>
                         <option value="">-- 선택하세요 --</option>
-                        {categories.map((category) => (
+                        {categories && categories.map((category) => (
                             <option key={category} value={category}>
                             {category}
                             </option>
@@ -60,7 +60,7 @@ const RecipeHeadSolt = (props) => {
                     </select>
                     <select className="cusWrCategorySelect" onChange={(e) => changeSubCategory(e.target.value)}>
                         <option value="">-- 선택하세요 --</option>
-                        {options.map((subCategory) => (
+                        {options && options.map((subCategory) => (
                             <option key={subCategory} value={subCategory}>
                                 {subCategory}
                             </option>

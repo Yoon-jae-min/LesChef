@@ -18,7 +18,9 @@ const RecipeHead = (props) => {
     const {serverUrl} = useConfig();
     const { wrRecipeInfo, 
             wrRecipeIngres, 
-            wrRecipeSteps } = useRecipeContext();
+            wrRecipeSteps,
+            wrRecipeImg,
+            wrStepImgs } = useRecipeContext();
     
 
     const clickGoList = () => {
@@ -33,7 +35,25 @@ const RecipeHead = (props) => {
     }
 
     const enrollRecipe = () => {
+        const formData = new FormData();
 
+        formData.append("recipeInfo", JSON.stringify(wrRecipeInfo));
+        formData.append("recipeIngredients", JSON.stringify(wrRecipeIngres)); 
+        formData.append("recipeSteps", JSON.stringify(wrRecipeSteps));
+        formData.append("recipeImgFile", wrRecipeImg);
+        wrStepImgs.forEach((stepImg) => {
+            formData.append("recipeStepImgFiles", stepImg);
+        });
+
+        fetch(`${serverUrl}/recipe/write`, {
+            method: "POST",
+            body: formData
+        }).then(response => console.log(response)).catch(err => console.log(err));
+        console.log(wrRecipeInfo);
+        console.log(wrRecipeIngres);
+        console.log(wrRecipeSteps);
+        console.log(wrRecipeImg);
+        console.log(wrStepImgs);
     }
 
     return(

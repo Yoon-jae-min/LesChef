@@ -1,5 +1,5 @@
 //기타
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 //컨텍스트
 import { useConfig } from "../../../../../Context/configContext";
@@ -11,37 +11,72 @@ import IngredientSection from "./ingredientSection";
 
 const WriteBox = () => {
     const {serverUrl} = useConfig();
-    const {setWrRecipeInfo, setWrRecipeImg} = useRecipeContext();
+    const {setWrRecipeInfo, setWrRecipeImg, setWrRecipeSteps, setWrStepImgs, setWrRecipeIngres} = useRecipeContext();
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
     const [ingreSections, setIngreSections] = useState([]);
     const imgRef = useRef();
 
+    useEffect(() => {
+        setWrRecipeInfo({});
+        setWrRecipeIngres([]);
+        setWrRecipeSteps([]);
+        setWrRecipeImg(null);
+        setWrStepImgs([]);
+    }, [])
+
+    const categoryTrans = (category) => {
+        switch (category) {
+            case '한식':
+                return 'korean';
+            case '일식':
+                return 'japanese';
+            case '중식':
+                return 'chinese';
+            case '양식':
+                return 'western';
+            case '기타':
+                return 'other';
+            default:
+                return '';
+        }
+    }
 
     const preImgFile = () => {
         const file = imgRef.current.files[0];
+        const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
 
-        if (!imgRef.current || !imgRef.current.files || imgRef.current.files.length === 0 || !file) {
+        if(category){
+            if (!imgRef.current || !imgRef.current.files || imgRef.current.files.length === 0 || !file) {
+                setImgFile("");
+                setWrRecipeInfo((preInfo) => (
+                    {...preInfo, recipeImg: ""}
+                ))
+                setWrRecipeImg(null);
+                return;
+            }
+    
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onloadend = () => {
+                setImgFile(reader.result);
+            };
+    
+            setWrRecipeInfo((preInfo) => (
+                {...preInfo, recipeImg: `/Image/RecipeImage/ListImg/${category}/${file.name}`}
+            ))
+            setWrRecipeImg(file)
+        }else{
             setImgFile("");
             setWrRecipeInfo((preInfo) => (
                 {...preInfo, recipeImg: ""}
             ))
             setWrRecipeImg(null);
-            return;
+            document.querySelector('.recipeInputImg').value = "";
+            alert("카테고리를 선택 후 첨부해주세요");
         }
 
-        const fileName= file.name;
-
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onloadend = () => {
-            setImgFile(reader.result);
-        };
-
-        setWrRecipeInfo((preInfo) => (
-            {...preInfo, recipeImg: `/Image/RecipeImage/ListImg/${fileName}`}
-        ))
-        setWrRecipeImg(file)
+        
     };
 
     //step 메소드
@@ -50,14 +85,50 @@ const WriteBox = () => {
             ...prevSteps,
             { id: prevSteps.length + 1, stepImgFile: "", content: ""},
         ]);
+
+        setWrRecipeSteps((preSteps) => [
+            ...preSteps, { stepNum: preSteps.length + 1, stepWay: "", stepImg: "" }
+        ]);
+
+        setWrStepImgs((preStepImgs) => [
+            ...preStepImgs, ""
+        ])
     }
 
-    const updateStep = (id, updatedData) => {
-        setSteps((prevSteps) =>
-            prevSteps.map((step) =>
-                step.id === id ? { ...step, ...updatedData } : step
-            )
-        );
+    const updateStep = (id, updatedData, select) => {
+        console.log(updatedData);
+        if(select === "image"){
+            setSteps((prevSteps) =>
+                prevSteps.map((step) =>
+                    step.id === id ? { ...step, stepImgFile: updatedData.stepImgFile } : step
+                )
+            );
+    
+            setWrRecipeSteps((preSteps) => 
+                preSteps.map((step, index) => 
+                    index + 1 === id ? {...step, stepImg: updatedData.stepImgUrl} : step
+                )
+            );
+    
+            setWrStepImgs((stepImgs) =>
+                stepImgs.map((stepImg, index) => 
+                    index + 1 === id ? (stepImg = updatedData.sendStepImgFile) : stepImg
+                )
+            );
+        }else if(select === "content"){
+            setSteps((prevSteps) =>
+                prevSteps.map((step) =>
+                    step.id === id ? { ...step, ...updatedData } : step
+                )
+            );
+
+            setWrRecipeSteps((preSteps) => 
+                preSteps.map((step, index) => 
+                    index + 1 === id ? {...step, stepWay: updatedData.content} : step
+                )
+            );
+        }
+        
     };
 
     const stepDelete = (id) => {
@@ -69,6 +140,23 @@ const WriteBox = () => {
                 content: step.content
             }))
         );
+
+        setWrRecipeSteps((preSteps) => 
+            preSteps.filter((step) => step.stepNum !== id).map((step, index) => ({
+                ...step,
+                stepNum: index + 1,
+                stepWay: step.stepWay,
+                stepImg: step.stepImg
+            }))
+        );
+
+        setWrStepImgs((preStepImgs) => {
+            const newStepImgs = [...preStepImgs];
+            if (id > 0 && id <= preStepImgs.length) {
+                newStepImgs.splice(id - 1, 1);
+            }
+            return newStepImgs;
+        });
     }
 
     //ingredientSection 메소드
@@ -76,15 +164,24 @@ const WriteBox = () => {
         setIngreSections((preSections) => [
             ...preSections, {id: preSections.length + 1, sectionName: "", ingreEachs: []}
         ]);
+
+        setWrRecipeIngres((preIngres) => [
+            ...preIngres, {sortType: "", ingredientUnit: []}
+        ])
     }
 
     const ingreSectionUpD = (sectionId, updateData) => {
-        console.log(sectionId, updateData);
         setIngreSections((preSections) => 
             preSections.map((section) => 
                 section.id === sectionId ? { ...section, ...updateData} : section
             )
-        )
+        );
+
+        setWrRecipeIngres((ingres) => 
+            ingres.map((ingre, index) => 
+                index + 1 === sectionId ? {...ingre, sortType: updateData.sectionName} : ingre
+            )
+        );
     }
 
     const ingreSectionDel = (sectionId) => {
@@ -96,6 +193,14 @@ const WriteBox = () => {
                 ingreEachs: section.ingreEachs
             }))
         );
+
+        setWrRecipeIngres((preIngres) => {
+            const newIngres = [...preIngres];
+            if(sectionId > 0 && sectionId <= preIngres.length){
+                newIngres.slice(sectionId - 1, 1);
+            }
+            return newIngres;
+        })
     }
 
     //ingredientEach 메소드
@@ -115,10 +220,26 @@ const WriteBox = () => {
                     ]
                 } : section
             )
-        )
+        );
+
+        setWrRecipeIngres((preIngres) => 
+            preIngres.map((ingre, index) => 
+                index + 1 === sectionId ? {
+                    ...ingre,
+                    ingredientUnit:[
+                        ...ingre.ingredientUnit,
+                        {
+                            ingredientName: "",
+                            volume: "",
+                            unit: ""
+                        }
+                    ]
+                } : ingre
+            )
+        );
     }
 
-    const ingreEachUpD = (sectionId, eachId, updateData) => {
+    const ingreEachUpD = (sectionId, eachId, updateData, sendData) => {
         setIngreSections((preSections) => 
             preSections.map((section) => 
                 section.id === sectionId ? {
@@ -130,6 +251,20 @@ const WriteBox = () => {
                         } : each
                     )
                 } : section
+            )
+        );
+
+        setWrRecipeIngres((ingres) => 
+            ingres.map((ingre, index) => 
+                index + 1 === sectionId ? {
+                    ...ingre,
+                    ingredientUnit: ingre.ingredientUnit.map((ingreEach, index) =>
+                        index + 1 === eachId ? {
+                            ...ingreEach,
+                            ...sendData
+                        } : ingreEach
+                    )
+                } : ingre
             )
         );
     }
@@ -150,6 +285,23 @@ const WriteBox = () => {
                         })),
                 } : section
             )
+        );
+
+        setWrRecipeIngres((preIngres) => 
+            preIngres.map((ingre, index) => {
+                if(index + 1 === sectionId){
+                    return (
+                        {
+                            ...ingre, 
+                            ingredientUnit: [
+                                ...ingre.ingredientUnit.slice(0, eachId - 1),
+                                ...ingre.ingredientUnit.slice(eachId)
+                            ]
+                        }
+                    );
+                }
+                return ingre;
+            })
         );
     }
 
@@ -188,6 +340,7 @@ const WriteBox = () => {
                         <StepBoxUnit
                             key={index}
                             index={step.id}
+                            categoryTrans={categoryTrans}
                             saveStepImgFile={step.stepImgFile}
                             saveStepContent={step.content}
                             stepDelete={stepDelete}

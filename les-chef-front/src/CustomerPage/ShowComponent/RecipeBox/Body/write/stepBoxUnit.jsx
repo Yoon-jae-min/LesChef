@@ -9,19 +9,24 @@ const StepBoxUnit = (props) => {
             stepDelete, 
             updateStep, 
             saveStepImgFile, 
-            saveStepContent } = props;
+            saveStepContent,
+            categoryTrans } = props;
     const {serverUrl} = useConfig();
 
     const preStepImgFile = (e) => {
         const file = e.target.files[0];
         if (!file) {
-            updateStep(index, {stepImgFile: ""});
+            updateStep(index, {stepImgFile: "", stepImgUrl: "", sendStepImgFile: ""}, "image");
         }else{
             const reader = new FileReader();
             reader.readAsDataURL(file);
             reader.onloadend = () => {
                 const result = reader.result;
-                updateStep(index, {stepImgFile: result});
+                const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
+                updateStep(index, 
+                    {stepImgFile: result, 
+                    stepImgUrl: `/Image/RecipeImage/InfoImg/step/${category}/${file.name}`, 
+                    sendStepImgFile: file}, "image");
             };
         }
     };
@@ -42,7 +47,7 @@ const StepBoxUnit = (props) => {
                     <textarea 
                         className="cusStepUniDes" 
                         value={saveStepContent || ""} 
-                        onChange={(e) => updateStep(index, {content: e.target.value})}></textarea>
+                        onChange={(e) => updateStep(index, {content: e.target.value}, "content")}></textarea>
                 </div>
             </div>
             

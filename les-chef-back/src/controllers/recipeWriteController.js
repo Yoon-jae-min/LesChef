@@ -6,7 +6,7 @@ const RecipeStep = require("../models/recipeStepModel");
 
 //실제 사용
 const recipeWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps } = req.body;
+    const { recipeInfo, recipeIngredients, recipeSteps, recipeImgFile, recipeStepImgFiles } = req.body;
     const userInfo = await User.findOne({id: req.session.user.id});
     let isShare = true;
 
