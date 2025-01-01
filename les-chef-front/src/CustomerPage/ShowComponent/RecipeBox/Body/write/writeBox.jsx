@@ -25,58 +25,47 @@ const WriteBox = () => {
         setWrStepImgs([]);
     }, [])
 
-    const categoryTrans = (category) => {
-        switch (category) {
-            case '한식':
-                return 'korean';
-            case '일식':
-                return 'japanese';
-            case '중식':
-                return 'chinese';
-            case '양식':
-                return 'western';
-            case '기타':
-                return 'other';
-            default:
-                return '';
-        }
-    }
+    // const categoryTrans = (category) => {
+    //     switch (category) {
+    //         case '한식':
+    //             return 'korean';
+    //         case '일식':
+    //             return 'japanese';
+    //         case '중식':
+    //             return 'chinese';
+    //         case '양식':
+    //             return 'western';
+    //         case '기타':
+    //             return 'other';
+    //         default:
+    //             return '';
+    //     }
+    // }
 
     const preImgFile = () => {
         const file = imgRef.current.files[0];
-        const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
+        // const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
 
-        if(category){
-            if (!imgRef.current || !imgRef.current.files || imgRef.current.files.length === 0 || !file) {
-                setImgFile("");
-                setWrRecipeInfo((preInfo) => (
-                    {...preInfo, recipeImg: ""}
-                ))
-                setWrRecipeImg(null);
-                return;
-            }
-    
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                setImgFile(reader.result);
-            };
-    
-            setWrRecipeInfo((preInfo) => (
-                {...preInfo, recipeImg: `/Image/RecipeImage/ListImg/${category}/${file.name}`}
-            ))
-            setWrRecipeImg(file)
-        }else{
+        if (!imgRef.current || !imgRef.current.files || imgRef.current.files.length === 0 || !file) {
             setImgFile("");
             setWrRecipeInfo((preInfo) => (
                 {...preInfo, recipeImg: ""}
             ))
             setWrRecipeImg(null);
-            document.querySelector('.recipeInputImg').value = "";
-            alert("카테고리를 선택 후 첨부해주세요");
+            return;
         }
 
-        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onloadend = () => {
+            setImgFile(reader.result);
+        };
+
+        setWrRecipeInfo((preInfo) => (
+            // {...preInfo, recipeImg: `/Image/RecipeImage/ListImg/${category}/${file.name}`}
+            {...preInfo, recipeImg: ""}
+        ))
+        setWrRecipeImg(file);
     };
 
     //step 메소드
@@ -96,7 +85,6 @@ const WriteBox = () => {
     }
 
     const updateStep = (id, updatedData, select) => {
-        console.log(updatedData);
         if(select === "image"){
             setSteps((prevSteps) =>
                 prevSteps.map((step) =>
@@ -104,11 +92,11 @@ const WriteBox = () => {
                 )
             );
     
-            setWrRecipeSteps((preSteps) => 
-                preSteps.map((step, index) => 
-                    index + 1 === id ? {...step, stepImg: updatedData.stepImgUrl} : step
-                )
-            );
+            // setWrRecipeSteps((preSteps) => 
+            //     preSteps.map((step, index) => 
+            //         index + 1 === id ? {...step, stepImg: updatedData.stepImgUrl} : step
+            //     )
+            // );
     
             setWrStepImgs((stepImgs) =>
                 stepImgs.map((stepImg, index) => 
@@ -197,7 +185,7 @@ const WriteBox = () => {
         setWrRecipeIngres((preIngres) => {
             const newIngres = [...preIngres];
             if(sectionId > 0 && sectionId <= preIngres.length){
-                newIngres.slice(sectionId - 1, 1);
+                newIngres.splice(sectionId - 1, 1);
             }
             return newIngres;
         })
@@ -333,14 +321,14 @@ const WriteBox = () => {
     return(
         <>
             <div className="cusRecipeWriteLeft">
-                <input className="recipeInputImg" accept="image/*" type="file" onChange={preImgFile} ref={imgRef}/>
+                <input name="recipeImgFile" className="recipeInputImg" accept="image/*" type="file" onChange={preImgFile} ref={imgRef}/>
                 <img className="reciMainImgBox" src={imgFile ? imgFile : `${serverUrl}/Image/CommonImage/preImg.png`}/>
                 <div className="cusRecipeWrStepBox">
                     {steps.map((step, index) => (
                         <StepBoxUnit
                             key={index}
                             index={step.id}
-                            categoryTrans={categoryTrans}
+                            // categoryTrans={categoryTrans}
                             saveStepImgFile={step.stepImgFile}
                             saveStepContent={step.content}
                             stepDelete={stepDelete}
@@ -378,6 +366,7 @@ const WriteBox = () => {
                         <input onChange={(e) => changePortionUnit(e.target.value)} type="text" className="cusWrExtraVolume cusWrExtraInfoInput" placeholder="단위"/>
                     </div>
                     <select onChange={(e) => changeCookLevel(e.target.value)} className="cusWrExtraLevel">
+                        <option value="">선택하세요</option>
                         <option value="쉬움">쉬움</option>
                         <option value="중간">중간</option>
                         <option value="어려움">어려움</option>

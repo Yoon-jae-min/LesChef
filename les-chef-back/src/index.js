@@ -34,7 +34,7 @@ app.use(session({
     saveUninitialized: false,
     cookie: {
         secure: true,
-        maxAge: 1000 * 60 * 15,
+        maxAge: 1000 * 60 * 60,
         httpOnly: true,
         sameSite: 'none',
         signed: true
@@ -44,10 +44,13 @@ app.use(session({
 // CORS 설정 (세션 이후에 위치)
 app.use(cors({
     origin: ['https://localhost:3000', 'http://localhost:3000'], 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
 }));
 
 // JSON 파싱 미들웨어
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 //정적 파일 경로 설정

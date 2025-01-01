@@ -36,11 +36,13 @@ const RecipeElement = (props) => {
     return(
         <div className="recipeElement" onClick={handleClick}>
             <img className="elementImg" src={`${serverUrl}${recipeImg}`}/>
+            <p className="listRecipeTitle">{recipeName}</p>
             <div className="elementInfoBox">
-                <p className="listRecipeTitle">{recipeName}</p>
-                {isShare && 
-                    <div className="reciNickNameBox">{recipeNickName}</div>}
-                <div className="showCountBox">{recipeWatch}</div>
+                <div className="reciNickNameBox">{isShare && recipeNickName}</div>
+                <div className="reciShowCountBox">
+                    <img className="reciShowCountImg" src={`${serverUrl}/Image/CommonImage/watch.png`}/>
+                    <div className="showCountText">{recipeWatch}</div>
+                </div>
             </div>
         </div>
     )

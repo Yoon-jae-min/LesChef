@@ -10,7 +10,8 @@ const StepBoxUnit = (props) => {
             updateStep, 
             saveStepImgFile, 
             saveStepContent,
-            categoryTrans } = props;
+            // categoryTrans 
+        } = props;
     const {serverUrl} = useConfig();
 
     const preStepImgFile = (e) => {
@@ -22,10 +23,10 @@ const StepBoxUnit = (props) => {
             reader.readAsDataURL(file);
             reader.onloadend = () => {
                 const result = reader.result;
-                const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
+                // const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
                 updateStep(index, 
                     {stepImgFile: result, 
-                    stepImgUrl: `/Image/RecipeImage/InfoImg/step/${category}/${file.name}`, 
+                    // stepImgUrl: `/Image/RecipeImage/InfoImg/step/${category}/${file.name}`, 
                     sendStepImgFile: file}, "image");
             };
         }
@@ -36,7 +37,7 @@ const StepBoxUnit = (props) => {
         <div className={`cusReciWrStepUnit-${index} cusReciWrStepUnit`}>
             <div className="cusStepUnitContent">
                 <div className="cusStUniContLeft">
-                    <input className="cusStUniContInput" type="file" onChange={(e) => preStepImgFile(e)}/>
+                    <input name="recipeStepImgFiles" className="cusStUniContInput" type="file" onChange={(e) => preStepImgFile(e)}/>
                     <img className="cusStUniContImg" src={saveStepImgFile || `${serverUrl}/Image/CommonImage/preImg.png`}/>
                     <div className="cusStepUnitDelete">
                         <img src="/Image/CommonImage/delete.png" onClick={() => stepDelete(index)}/>

@@ -34,18 +34,24 @@ const shareList = asyncHandler(async(req, res) => {
 });
 
 const myList = asyncHandler(async(req, res) => {
-    const user = await User.findOne({id: req.session.user.id});
-    let recipeList = null;
+    if(req.session.user.id){
+        const user = await User.findOne({id: req.session.user.id});
+        let recipeList = null;
 
-    if(user.checkAdmin){
-        recipeList = await Recipe.find({}).lean();
+        if(user.checkAdmin){
+            recipeList = await Recipe.find({}).lean();
+        }else{
+            recipeList = await Recipe.find({userId: req.session.user.id}).lean();
+        }
+        res.send(recipeList);
     }else{
-        recipeList = await Recipe.find({userId: req.session.user.id}).lean();
+        res.send(null);
     }
-    res.send(recipeList);
+    
 })
 
 const recipeInfo = asyncHandler(async(req, res) => {
+    await Recipe.updateOne({recipeName: req.query.recipeName}, {$inc: {viewCount: 1}});
     const recipe = await Recipe.findOne({recipeName: req.query.recipeName});
     const recipeIngres = await RecipeIngredient.find({recipeId: recipe._id}).lean();
     const recipeSteps = await RecipeStep.find({recipeId: recipe._id}).lean();

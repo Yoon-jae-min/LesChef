@@ -29,11 +29,10 @@ const RecipePage = () => {
     },[]);
 
     useEffect(() => {
-        console.log("test");
         setRecipeList([]);
         const recipeListUrl = selectRecipeListUrl(category);
         recipeListSearch(recipeListUrl);
-    }, [category])
+    }, [category, infoGoto])
 
     //레시피 리스트 조회
     const recipeListSearch = (recipeListUrl) => {
@@ -41,7 +40,6 @@ const RecipePage = () => {
             return response.json();
         }).then((data) => {
             setRecipeList(data);
-            setInfoGoto(false);
         }).catch(err => console.log(err));
     }
 

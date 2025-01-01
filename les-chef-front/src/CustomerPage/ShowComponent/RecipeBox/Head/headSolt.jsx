@@ -6,7 +6,7 @@ import { useRecipeContext } from "../../../../Context/recipeContext";
 
 const RecipeHeadSolt = (props) => {
     const { infoPage, listPage, writePage } = props;
-    const { setWrRecipeInfo } = useRecipeContext();
+    const { setWrRecipeInfo, selectedRecipe } = useRecipeContext();
     const [options, setOptions] = useState([]);
 
     const categories = ["한식", "일식", "중식", "양식", "기타"];
@@ -46,7 +46,7 @@ const RecipeHeadSolt = (props) => {
                     <span className="headSoltUnit">양식</span>
                 </React.Fragment> }
             { infoPage && 
-                <span className="recipeInfoTitle">새우 오일 파스타</span> }
+                <span className="recipeInfoTitle">{selectedRecipe.recipeName}</span> }
             { writePage &&
                 <React.Fragment>
                     <input onChange={(e) => changeRecipeName(e.target.value)} type="text" className="cusWrRecipeName" placeholder="레시피 이름"/>

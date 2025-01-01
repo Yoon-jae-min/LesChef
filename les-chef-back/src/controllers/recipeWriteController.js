@@ -6,7 +6,10 @@ const RecipeStep = require("../models/recipeStepModel");
 
 //실제 사용
 const recipeWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps, recipeImgFile, recipeStepImgFiles } = req.body;
+    const { recipeInfo, recipeIngredients, recipeSteps} = req.body;
+    const parsedRecipeInfo = JSON.parse(recipeInfo);
+    const parsedRecipeIngredients = JSON.parse(recipeIngredients);
+    const parsedRecipeSteps = JSON.parse(recipeSteps);
     const userInfo = await User.findOne({id: req.session.user.id});
     let isShare = true;
 
@@ -14,27 +17,36 @@ const recipeWrite = asyncHandler(async(req, res) => {
         isShare = false;
     }
 
+    parsedRecipeInfo.recipeImg = req.files.recipeImgFile[0].newPath;
+    const uploadedFiles = req.files.recipeStepImgFiles; 
+    parsedRecipeSteps.map((step, index) => {
+        if (uploadedFiles[index]) {
+            step.stepImg = uploadedFiles[index].newPath; 
+        }
+    });
+
     const infoAdd = await Recipe.create({
-        recipeName: recipeInfo.recipeName,
-        cookTime: recipeInfo.cookTime, 
-        portion: recipeInfo.portion, 
-        portionUnit: recipeInfo.portionUnit, 
-        cookLevel: recipeInfo.cookLevel,
-        userName: userInfo.id, 
-        majorCategory: recipeInfo.majorCategory, 
-        subCategory: recipeInfo.subCategory, 
-        recipeImg: recipeInfo.recipeImg, 
-        viewCount: recipeInfo.viewCount,  
+        recipeName: parsedRecipeInfo.recipeName,
+        cookTime: parsedRecipeInfo.cookTime, 
+        portion: parsedRecipeInfo.portion, 
+        portionUnit: parsedRecipeInfo.portionUnit, 
+        cookLevel: parsedRecipeInfo.cookLevel,
+        userId: userInfo.id,
+        userNickName: userInfo.nickName, 
+        majorCategory: parsedRecipeInfo.majorCategory, 
+        subCategory: parsedRecipeInfo.subCategory, 
+        recipeImg: parsedRecipeInfo.recipeImg, 
+        viewCount: parsedRecipeInfo.viewCount,  
         isShare: isShare
     });
 
-    const ingredientsData = recipeIngredients.map((item) => ({
+    const ingredientsData = parsedRecipeIngredients.map((item) => ({
         recipeId: infoAdd._id,
         sortType: item.sortType,
         ingredientUnit: item.ingredientUnit
     }));
 
-    const stepsData = recipeSteps.map((item) => ({
+    const stepsData = parsedRecipeSteps.map((item) => ({
         recipeId: infoAdd._id,
         stepNum: item.stepNum,
         stepWay: item.stepWay,

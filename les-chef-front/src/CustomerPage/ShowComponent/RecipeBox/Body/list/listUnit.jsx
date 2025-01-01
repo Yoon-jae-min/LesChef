@@ -9,7 +9,9 @@ const RecipeListUnit = (props) => {
     const { setInfoPage, 
             setListPage, 
             recipeImgUrl, 
-            recipeName } = props;
+            recipeName,
+            recipeNickName,
+            recipeWatch } = props;
     const {serverUrl} = useConfig();
     const { setRecipeIngres, 
             setRecipeSteps, 
@@ -30,10 +32,14 @@ const RecipeListUnit = (props) => {
     return(
         <div className="recipeListUnit" onClick={clickUnit}>
             <img className="customerListImg" src={`${serverUrl}${recipeImgUrl}`}/>
+            <p className="customerListText">{recipeName}</p>
             <div className="customerListInfo">
-                <p className="customerListText">{recipeName}</p>
-                <div className="customerListStars"></div>
-                <div className="customerListWatchs"></div>
+                <div className="customerNickNameBox">{recipeNickName}</div>
+                <div className="cusListWatchBox">
+                    <img className="cusListWatchImg" src={`${serverUrl}/Image/CommonImage/watch.png`}/>
+                    <div className="customerListWatchs">{recipeWatch}</div>
+                </div>
+                
             </div>
         </div>
     )

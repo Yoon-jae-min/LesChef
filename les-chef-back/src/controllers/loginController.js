@@ -65,11 +65,12 @@ const getInfo = asyncHandler(async(req, res) => {
             nickName: userData.nickName,
             name: userData.name,
             tel: userData.tel,
-            checkAdmin: userData.checkAdmin
+            checkAdmin: userData.checkAdmin,
+            text: true
         });
     }else{
         res.json({
-            text: "로그인 해주세요"
+            text: false
         });
     }
 });
