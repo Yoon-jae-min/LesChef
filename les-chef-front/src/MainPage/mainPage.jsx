@@ -183,6 +183,11 @@ const MainPage = () => {
     const toggleFindIdPw = () => {
         setIdPwBox((prev) => !prev);
     }
+
+    const switchFindToLogin = () => {
+        setLoginToFind((prev) => !prev);
+        setLoginModal(true);
+    }
     
     return (
         <div ref={outerDivRef}>
@@ -206,7 +211,8 @@ const MainPage = () => {
                 loginModal={loginModal} 
                 toggleFindBox={toggleFindBox} 
                 toggleLoginModal={toggleLoginModal} 
-                goToJoinBox={goToJoinBox}/>
+                goToJoinBox={goToJoinBox}
+                switchFindToLogin={switchFindToLogin}/>
             <MenuModal menuModal={menuModal}/>
             {slideCheck  && 
                 <MainLeft  

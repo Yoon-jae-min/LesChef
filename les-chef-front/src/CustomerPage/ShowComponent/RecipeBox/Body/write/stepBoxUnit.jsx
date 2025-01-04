@@ -40,7 +40,7 @@ const StepBoxUnit = (props) => {
                     <input name="recipeStepImgFiles" className="cusStUniContInput" type="file" onChange={(e) => preStepImgFile(e)}/>
                     <img className="cusStUniContImg" src={saveStepImgFile || `${serverUrl}/Image/CommonImage/preImg.png`}/>
                     <div className="cusStepUnitDelete">
-                        <img src="/Image/CommonImage/delete.png" onClick={() => stepDelete(index)}/>
+                        <img className="cusStepUnitDeleteImg" src="/Image/CommonImage/cancel.png" onClick={() => stepDelete(index)}/>
                     </div>
                 </div>
                 <div className="cusStUniContRight">

@@ -15,21 +15,25 @@ const RecipeElement = (props) => {
     const {serverUrl} = useConfig();
     const { setRecipeIngres, 
             setRecipeSteps, 
-            setSelectedRecipe } = useRecipeContext();
+            setSelectedRecipe,
+            setRecipeWish } = useRecipeContext();
 
     const handleClick = () => {
         fetch(`${serverUrl}/recipe/info?recipeName=${encodeURIComponent(recipeName)}`,{
             method: "GET",
             headers: {
                 "Content-Type": "application/json"
-            }
+            },
+            credentials: "include"
         }).then((response) => {
             return response.json();
         }).then((data) => {
             setRecipeIngres(data.recipeIngres);
             setRecipeSteps(data.recipeSteps);
             setSelectedRecipe(data.selectedRecipe);
+            setRecipeWish(data.recipeWish);
             setInfoGoto(true);
+            console.log(data.recipeWish);
         }).catch(err => console.log(err));
     }
 

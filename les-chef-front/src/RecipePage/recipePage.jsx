@@ -45,7 +45,6 @@ const RecipePage = () => {
 
     //레시피 리스트 카테고리 URL 선택
     const selectRecipeListUrl = (category) => {
-        console.log(category);
         switch (category) {
             case 'korean':
                 return '/koreanList';

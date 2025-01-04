@@ -36,13 +36,13 @@ const IconBox = () => {
     return(
         <div className="customerIconBox">
             <Link to="/communityMain">
-                <img className="goToCommunityIcon customerLeftIcon" src={`${serverUrl}/Image/CommonImage/communityIcon.png`}/></Link>
+                <img className="cusToCommuIcon customerLeftIcon" src={`${serverUrl}/Image/CommonImage/communityIcon.png`}/></Link>
             <Link to="/recipeMain" state={{ category: "korean" }}>
-                <img className="goToRecipeIcon customerLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
+                <img className="cusToReciIcon customerLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
             <img 
                 onClick={clickLogout} 
                 className="cusLogoutBtn customerLeftIcon" 
-                src={`${serverUrl}/Image/CommonImage/logoutWhite.png`}/>
+                src={`${serverUrl}/Image/CommonImage/logoutIcon.png`}/>
         </div>
     )  
 }

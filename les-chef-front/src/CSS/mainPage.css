@@ -60,56 +60,29 @@ body{
 .mainIconBox{
     position: absolute;
     top: 89vh;
-    left: 3vw;
+    left: 2.3vw;
     width: 11vw;
     height: auto;
     display: flex;
     justify-content: space-between;
 }
 
-.mainMenuButton{
-    display: flex;
-    height: 3.5vw;
-    flex-direction: column;
-    justify-content: space-around;
-    padding-top: calc(1vh - 6px);
-}
-
-.mainMenuButton hr{
-    display: inline-block;
-    background-color: white;
-    height: calc(1vh - 4px);
-    
-    margin: 0;
-    border: 0;
-}
-
 .mainMenuButton, .mainLoginButton, .mainProfileButton, .mainLogoutButton{
-    width: 3vw;
+    height: 4vw;
+    width: auto;
     cursor: pointer;
 }
 
-.mainLoginButton, .mainProfileButton{
-    display: inline-block;
-}
-
-.mainLoginButton, .mainLogoutButton{
-    height: 100%;
+.mainLoginButton{
+    margin-right: 7px;
 }
 
 .mainLogoutButton{
-    width: 3.3vw;
-    margin-left: 0.5vw;
-}
-
-.profileButtonBox{
-    display: flex;
-    align-items: center;
+    margin-left: 7px;
 }
 
 .mainProfileButton{
-    height: 6.8vh;
-    margin-left: 0.3vw;
+    margin-left: 3px;
 }
 
 .mainMenuButton.hidden, .mainLoginButton.hidden, .mainProfileButton.hidden, .mainLogoutButton.hidden{
@@ -214,18 +187,6 @@ body{
 /*가상 선택자*/
 body::-webkit-scrollbar{
     display: none;
-}
-
-.mainMenuButton hr:nth-of-type(1){
-    width: 3vw;
-}
-
-.mainMenuButton hr:nth-of-type(2){
-    width: calc(3vw - 10px);
-}
-
-.mainMenuButton hr:nth-of-type(3){
-    width: calc(3vw - 5px);
 }
 
 .goToRecipePage:hover{
@@ -513,6 +474,23 @@ span.buttonText {
 
 .pwSearch{
     top: 200px;
+}
+
+.findToLoginText{
+    color: white;
+    margin-top: 75px;
+    display: flex;
+    justify-content: center;
+}
+
+.findToLoginBtn{
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.findToLoginBtn:hover{
+    text-decoration: underline;
 }
 
 

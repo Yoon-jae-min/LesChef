@@ -11,12 +11,9 @@ const InfoStepBox = (props) => {
     const {serverUrl} = useConfig();
     const {recipeSteps} = props;
 
-    console.log("Received recipeSteps:", recipeSteps);
-
     return(
         <div className="infoStepBox">
             {recipeSteps.map((recipeStep, index) => {
-                console.log(recipeStep);
                 return (
                     <InfoStepEach 
                         key={index} 

@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const Recipe = require("../models/recipeModel");
 const RecipeIngredient = require("../models/recipeIngredientsModel");
 const RecipeStep = require("../models/recipeStepModel");
+const RecipeWishList = require("../models/recipeWishListModel");
 
 const removeId = (recipeList) => {
     return recipeList.map(({_id, ...rest}) => rest);
@@ -51,15 +52,34 @@ const myList = asyncHandler(async(req, res) => {
 })
 
 const recipeInfo = asyncHandler(async(req, res) => {
+    let recipeWish = false;
     await Recipe.updateOne({recipeName: req.query.recipeName}, {$inc: {viewCount: 1}});
     const recipe = await Recipe.findOne({recipeName: req.query.recipeName});
     const recipeIngres = await RecipeIngredient.find({recipeId: recipe._id}).lean();
     const recipeSteps = await RecipeStep.find({recipeId: recipe._id}).lean();
 
+
+    if(req.session.user){
+        const user = await User.findOne({id: req.session.user.id});
+
+        const recipeWishList = await RecipeWishList.findOne({userId: user._id});
+
+        console.log(recipeWishList);
+
+        if(recipeWishList){
+            recipeWishList.wishList.map((wish) => {
+                if(wish.recipeId.toString() === recipe._id.toString()){
+                    recipeWish = true;
+                }
+            })
+        }
+    }
+
     const recipeInfo = {
         selectedRecipe: recipe,
         recipeIngres: recipeIngres,
-        recipeSteps: recipeSteps
+        recipeSteps: recipeSteps,
+        recipeWish: recipeWish
     }
 
     res.send(recipeInfo)

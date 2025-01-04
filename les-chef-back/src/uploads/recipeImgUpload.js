@@ -26,48 +26,6 @@ const generateUniqueFileName = (originalName) => {
     return `${fileName}-${Date.now()}${fileExtension}`;
 };
 
-// const recipeImgStorage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         const recipeInfo = JSON.parse(req.body.recipeInfo);
-//         const { majorCategory } = recipeInfo;
-//         const category = categoryTrans(majorCategory);
-//         cb(null, path.join(__dirname, `../../public/Image/RecipeImage/ListImg/${category}`));
-//     },
-//     filename: function (req, file, cb) {
-//         const recipeInfo = JSON.parse(req.body.recipeInfo);
-//         const { majorCategory } = recipeInfo;
-//         const category = categoryTrans(majorCategory);
-//         const uniqueName = generateUniqueFileName(file.originalname);
-        
-//         cb(null, uniqueName);
-//         file.newPath = `/Image/RecipeImage/ListImg/${category}/${uniqueName}`
-//         console.log('에러확인1');
-//     }
-// });
-
-// const recipeStepImgStorage = multer.diskStorage({
-//     destination: function (req, file, cb) {
-//         const recipeInfo = JSON.parse(req.body.recipeInfo);
-//         const { majorCategory } = recipeInfo;
-//         const category = categoryTrans(majorCategory);
-
-//         cb(null, path.join(__dirname, `../../public/Image/RecipeImage/InfoImg/step/${category}`)); 
-//     },
-//     filename: function (req, file, cb) {
-//         const recipeInfo = JSON.parse(req.body.recipeInfo);
-//         const { majorCategory } = recipeInfo;
-//         const category = categoryTrans(majorCategory);
-//         const uniqueName = generateUniqueFileName(file.originalname);
-
-//         file.newPath = `/Image/RecipeImage/InfoImg/step/${category}/${uniqueName}`;
-//         cb(null, uniqueName);
-//         console.log('에러확인2');
-//     }
-// });
-
-// const recipeImgUpload = multer({ storage: recipeImgStorage }).single('recipeImgFile');
-// const recipeStepImgUpload = multer({ storage: recipeStepImgStorage }).array('recipeStepImgFiles');
-
 const upload = multer({
     storage: multer.diskStorage({
         destination: function (req, file, cb) {

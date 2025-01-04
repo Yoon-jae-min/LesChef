@@ -21,8 +21,7 @@ const IconBox = (props) => {
             if(data.loggedIn){
                 navigate('/customerMain');
             }else{
-                alert("로그인을 해주세요");
-                toggleLoginModal();
+                alert("로그인이 필요합니다!!!");
             }
         }).catch((err) => {
             console.log(err);
@@ -58,15 +57,15 @@ const IconBox = (props) => {
     return(
         <div className="communityIconBox">
             <Link to="/">
-                <img className="goToHomeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
-            <img onClick={clickProfile} className="goToCustomerIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
+                <img className="commuToHomeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
+            <img onClick={clickProfile} className="commuToCustomerIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
             <Link to="/recipeMain" state={{category: "korean"}}>
-                <img className="goToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
+                <img className="commuToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
             <div className="communityLoginBtn">
                 { !isLogin && 
-                    <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/CommonImage/loginWhite.png`}/>}
+                    <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/CommonImage/loginIcon.png`}/>}
                 { isLogin && 
-                    <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/CommonImage/logoutWhite.png`}/>}
+                    <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/CommonImage/logoutIcon.png`}/>}
             </div>
         </div>
     )

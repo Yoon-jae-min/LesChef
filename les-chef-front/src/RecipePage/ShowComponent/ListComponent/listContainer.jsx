@@ -1,5 +1,5 @@
 //기타
-import React from "react";
+import React, { useEffect } from "react";
 
 //컨텍스트
 import { useRecipeContext } from "../../../Context/recipeContext";

@@ -43,7 +43,7 @@ app.use(session({
 
 // CORS 설정 (세션 이후에 위치)
 app.use(cors({
-    origin: ['https://localhost:3000', 'http://localhost:3000'], 
+    origin: ['https://localhost:3000', 'https://172.30.1.93:3000'], 
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true

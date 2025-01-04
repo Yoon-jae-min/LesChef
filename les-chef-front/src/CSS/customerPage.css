@@ -25,7 +25,8 @@
 
 .customerLeftIcon{
     margin: 0 0.5vw;
-    width: 3.5vw;
+    width: auto;
+    height: 4vw;
     cursor: pointer;
 }
 
@@ -356,8 +357,7 @@
 }
 
 .goToRecipeList, .addRecipeBtn, .enrollRecipeBtn{
-    height: 70%;
-    margin-top: 1%;
+    height: 100%;
     float: right;
     cursor: pointer;
 }
@@ -616,6 +616,7 @@
 }
 
 .cusStepPlusBtn, .cusWrIngreBtn{
+    width: 100px;
     cursor: pointer;
     transition: 0.5s all;
 }
@@ -704,6 +705,10 @@
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.cusStepUnitDeleteImg{
+    width: 30px;
 }
 
 /*Ingredient*/

@@ -7,6 +7,7 @@ export const RecipeProvider = ({children}) => {
     const [recipeIngres, setRecipeIngres] = useState([]);
     const [recipeSteps, setRecipeSteps] = useState([]);
     const [selectedRecipe, setSelectedRecipe] = useState(null);
+    const [recipeWish, setRecipeWish] = useState(false);
 
     //레시피 등록 정보
     const [wrRecipeInfo, setWrRecipeInfo] = useState({});
@@ -21,6 +22,7 @@ export const RecipeProvider = ({children}) => {
                     recipeIngres, setRecipeIngres, 
                     recipeSteps, setRecipeSteps, 
                     selectedRecipe, setSelectedRecipe,
+                    recipeWish, setRecipeWish,
                     wrRecipeInfo, setWrRecipeInfo,
                     wrRecipeIngres, setWrRecipeIngres,
                     wrRecipeSteps, setWrRecipeSteps,

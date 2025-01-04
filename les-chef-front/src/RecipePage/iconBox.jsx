@@ -22,8 +22,7 @@ const IconBox = (props) => {
                 categoryStateReset();
                 navigate('/customerMain');
             }else{
-                alert("로그인을 해주세요");
-                toggleLoginModal();
+                alert("로그인이 필요합니다!!!");
             }
         }).catch((err) => {
             console.log(err);
@@ -64,24 +63,24 @@ const IconBox = (props) => {
             <img 
                 onClick={clickProfile} 
                 src={`${serverUrl}/Image/CommonImage/profileIcon.png`} 
-                className="goToCustomerIcon recipeLeftIcon"/>
+                className="reciToCustomerIcon recipeLeftIcon"/>
             <Link 
                 to="/communityMain" 
                 onClick={categoryStateReset}>
                     <img 
                         src={`${serverUrl}/Image/CommonImage/communityIcon.png`} 
-                        className="goToCommunityIcon recipeLeftIcon"/></Link>
+                        className="reciToCommunityIcon recipeLeftIcon"/></Link>
             <div>
                 { !isLogin && 
                     <img 
                         onClick={clickLogin} 
                         className='recipeLeftIcon' 
-                        src={`${serverUrl}/Image/CommonImage/loginWhite.png`}/>}
+                        src={`${serverUrl}/Image/CommonImage/loginIcon.png`}/>}
                 { isLogin && 
                     <img 
                         onClick={clickLogout} 
                         className='recipeLeftIcon' 
-                        src={`${serverUrl}/Image/CommonImage/logoutWhite.png`}/>}
+                        src={`${serverUrl}/Image/CommonImage/logoutIcon.png`}/>}
             </div>
         </div>
     )

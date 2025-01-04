@@ -3,8 +3,8 @@ const User = require("../models/userModel");
 const Recipe = require("../models/recipeModel");
 const RecipeIngredient = require("../models/recipeIngredientsModel");
 const RecipeStep = require("../models/recipeStepModel");
+const RecipeWishList = require("../models/recipeWishListModel");
 
-//실제 사용
 const recipeWrite = asyncHandler(async(req, res) => {
     const { recipeInfo, recipeIngredients, recipeSteps} = req.body;
     const parsedRecipeInfo = JSON.parse(recipeInfo);
@@ -60,79 +60,32 @@ const recipeWrite = asyncHandler(async(req, res) => {
     res.status(200).send("success");
 });
 
+const clickWish = asyncHandler(async(req, res) => {
+    const {recipeId} = req.body;
+    const user = await User.findOne({id: req.session.user.id});
+    const wishList = await RecipeWishList.findOne({userId: user._id});
+    let recipeWish = true;
+    
+    if(wishList){
+        const exist = wishList.wishList.some(wish => wish.recipeId.toString() === recipeId.toString());
 
-//임시 사용
-const adminWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps } = req.body;
+        await RecipeWishList.updateOne({userId: user._id},
+            exist ?
+                {$pull: {wishList: {recipeId: recipeId}}} :
+                {$addToSet: {wishList: {recipeId: recipeId}}}
+        );
+        recipeWish = exist ? false : true;
+    }else{
+        await RecipeWishList.create({
+            userId: user._id,
+            wishList: [{
+                recipeId: recipeId
+            }]
+        });
+    }
 
-    const infoAdd = await Recipe.create({
-        recipeName: recipeInfo.recipeName,
-        cookTime: recipeInfo.cookTime, 
-        portion: recipeInfo.portion, 
-        portionUnit: recipeInfo.portionUnit, 
-        cookLevel: recipeInfo.cookLevel,
-        userId: "admin@admin.com", 
-        majorCategory: recipeInfo.majorCategory, 
-        subCategory: recipeInfo.subCategory, 
-        recipeImg: recipeInfo.recipeImg, 
-        isShare: false
-    });
-
-    const ingredientsData = recipeIngredients.map((item) => ({
-        recipeId: infoAdd._id,
-        sortType: item.sortType,
-        ingredientUnit: item.ingredientUnit
-    }));
-
-    const stepsData = recipeSteps.map((item) => ({
-        recipeId: infoAdd._id,
-        stepNum: item.stepNum,
-        stepWay: item.stepWay,
-        stepImg: item.stepImg
-    }));
-
-    await RecipeIngredient.insertMany(ingredientsData);
-
-    await RecipeStep.insertMany(stepsData);
-
-    res.status(200).send("admin success");
+    res.send({recipeWish: recipeWish});
 });
 
-const commonWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps } = req.body;
 
-    const infoAdd = await Recipe.create({
-        recipeName: recipeInfo.recipeName,
-        cookTime: recipeInfo.cookTime, 
-        portion: recipeInfo.portion, 
-        portionUnit: recipeInfo.portionUnit, 
-        cookLevel: recipeInfo.cookLevel,
-        userId: "user00@user.com", 
-        majorCategory: recipeInfo.majorCategory, 
-        subCategory: recipeInfo.subCategory, 
-        recipeImg: recipeInfo.recipeImg, 
-        viewCount: recipeInfo.viewCount,  
-        isShare: true
-    });
-
-    const ingredientsData = recipeIngredients.map((item) => ({
-        recipeId: infoAdd._id,
-        sortType: item.sortType,
-        ingredientUnit: item.ingredientUnit
-    }));
-
-    const stepsData = recipeSteps.map((item) => ({
-        recipeId: infoAdd._id,
-        stepNum: item.stepNum,
-        stepWay: item.stepWay,
-        stepImg: item.stepImg
-    }));
-
-    await RecipeIngredient.insertMany(ingredientsData);
-
-    await RecipeStep.insertMany(stepsData);
-
-    res.status(200).send("common success");
-});
-
-module.exports = { adminWrite, commonWrite, recipeWrite };
+module.exports = { recipeWrite, clickWish };

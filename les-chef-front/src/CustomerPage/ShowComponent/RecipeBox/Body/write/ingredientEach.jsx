@@ -37,7 +37,7 @@ const IngredientEach = (props) => {
             <img 
                 onClick={() => ingreEachDel(sectionId, eachId)} 
                 className="cusIngreEachDel" 
-                src={`${serverUrl}/Image/CommonImage/delete.png`}/>
+                src={`${serverUrl}/Image/CommonImage/cancel.png`}/>
         </div>
     )
 }

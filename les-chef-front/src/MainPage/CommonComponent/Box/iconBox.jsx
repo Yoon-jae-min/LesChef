@@ -64,8 +64,7 @@ const MainIcon = (props) => {
                     navigate('/customerMain');
                 }).catch(err => console.log(err));
             }else{
-                alert("로그인을 해주세요");
-                toggleLoginModal();
+                alert("로그인이 필요합니다!!!");
             }
         }).catch((err) => {
             console.log(err);
@@ -85,31 +84,27 @@ const MainIcon = (props) => {
         }
 
     }, [menuModal]);
-
+    
     return (
         <div className='mainIconBox'>
-            <div onClick={handlerMenuModal} className='mainMenuButton'>
+            {/* <div onClick={handlerMenuModal} className='mainMenuButton'>
                 <hr/><hr/><hr/>
-            </div>
-            <div>
-                { !isLogin && 
-                    <img 
-                        onClick={handlerLoginModal} 
-                        className='mainLoginButton' 
-                        src={`${serverUrl}/Image/CommonImage/loginWhite.png`}/>}
-                { isLogin && 
-                    <img 
-                        onClick={clickLogout} 
-                        className='mainLogoutButton' 
-                        src={`${serverUrl}/Image/CommonImage/logoutWhite.png`}/>}
-            </div>
-            <div className='profileButtonBox'>
+            </div> */}
+            <img onClick={handlerMenuModal} className='mainMenuButton' src={`${serverUrl}/Image/CommonImage/menuIcon.png`}/>
+            { !isLogin && 
                 <img 
-                    onClick={clickProfile} 
-                    className='mainProfileButton' 
-                    src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
-            </div>
-            
+                    onClick={handlerLoginModal} 
+                    className='mainLoginButton' 
+                    src={`${serverUrl}/Image/CommonImage/loginIcon.png`}/>}
+            { isLogin && 
+                <img 
+                    onClick={clickLogout} 
+                    className='mainLogoutButton' 
+                    src={`${serverUrl}/Image/CommonImage/logoutIcon.png`}/>}
+            <img 
+                onClick={clickProfile} 
+                className='mainProfileButton' 
+                src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
         </div>
     )
 }

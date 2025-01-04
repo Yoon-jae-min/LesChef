@@ -8,6 +8,10 @@ const CommunityFooter = (props) => {
     const { goToWrite } = props;
     const {serverUrl} = useConfig();
 
+    const searchReset = () => {
+        document.querySelector(".searchInput").value = "";
+    }
+
     return(
         <div className="communityFooterBox">
             <div className="selectBox">
@@ -21,7 +25,7 @@ const CommunityFooter = (props) => {
             <div className="searchBox">
                 <img className="searchButtonImg" src={`${serverUrl}/Image/CommonImage/search.png`}/>
                 <input className="searchInput" type="text"/>
-                <img className="resetButtonImg" src={`${serverUrl}/Image/CommonImage/cancel.png`}/>
+                <img className="resetButtonImg" src={`${serverUrl}/Image/CommonImage/cancel.png`} onClick={searchReset}/>
             </div>
             <div className="footerButtonBox">
                 <img onClick={goToWrite} className="writeBoxVisible" src={`${serverUrl}/Image/CommunityImage/write.png`}/>

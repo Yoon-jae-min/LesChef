@@ -9,7 +9,7 @@ const MainFourth = () => {
 
     return (
         <section className='mainSection'>
-            <img src={`${serverUrl}/Image/MainImage/Background/mainFourthBg.png`} className='mainBgImg'/>
+            <img src={`${serverUrl}/Image/MainImage/Background/mainFourthBg.jpg`} className='mainBgImg'/>
         </section>
     )
 }

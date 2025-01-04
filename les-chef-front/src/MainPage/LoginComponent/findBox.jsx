@@ -12,7 +12,8 @@ import FindPw from "./findPw";
 const FindBox = (props) => {
     const { loginToFind, 
             toggleFindIdPw, 
-            idPwBox } = props;
+            idPwBox,
+            switchFindToLogin } = props;
     const { serverUrl } = useConfig();
 
     useEffect(() => {
@@ -47,10 +48,10 @@ const FindBox = (props) => {
             </div>
             {!idPwBox && 
                 <FindId 
-                    idPwBox={idPwBox}/>}
+                    idPwBox={idPwBox} switchFindToLogin={switchFindToLogin}/>}
             {idPwBox && 
                 <FindPw 
-                    idPwBox={idPwBox}/>}
+                    idPwBox={idPwBox} switchFindToLogin={switchFindToLogin}/>}
         </div>
     )
 }

@@ -60,8 +60,10 @@
 }
 
 .communityLeftIcon{
-    margin: 2vh 2vw;
-    width: 3vw;
+    margin: 2vh 1.5vw;
+    height: 4vw;
+    width: auto;
+    cursor: pointer;
 }
 
 .communityIconBox{
@@ -198,8 +200,8 @@
 }
 
 .searchButtonImg, .resetButtonImg{
-    height: 50%;
-    margin: 1% 1%;
+    height: 80%;
+    margin: 0.4% 1%;
     cursor: pointer;
 }
 

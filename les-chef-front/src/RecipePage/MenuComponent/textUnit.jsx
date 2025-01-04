@@ -11,7 +11,6 @@ const MenuTxtUnit = (props) => {
         setCategory(englishTxt);
         setInfoGoto(false);
         localStorage.setItem("selectedCategory", englishTxt);
-        console.log(localStorage.getItem("selectedCategory"));
     }
 
     return(

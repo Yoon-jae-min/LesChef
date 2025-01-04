@@ -34,7 +34,7 @@ const IngredientSection = (props) => {
                 <img 
                     onClick={() => ingreSectionDel(sectionId)} 
                     className="cusWrIngreSecHeadImg" 
-                    src={`${serverUrl}/Image/CommonImage/delete.png`}/>
+                    src={`${serverUrl}/Image/CommonImage/cancel.png`}/>
             </div>
             {Array.isArray(ingreSection.ingreEachs) &&
                 ingreSection.ingreEachs.map((each, index) => (
