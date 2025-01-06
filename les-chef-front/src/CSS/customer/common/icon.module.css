@@ -1,0 +1,14 @@
+.body{
+    position: absolute;
+    top: 5vh;
+    left: 3vw;
+    width: 24vw;
+    height: 10vh;
+}
+
+.unit{
+    margin: 0 0.5vw;
+    width: auto;
+    height: 4vw;
+    cursor: pointer;
+}

@@ -1,0 +1,12 @@
+.box{
+    width: 90%;
+    height: 93%;
+    margin: 2% 5% 0;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.body{
+    width: 70%;
+    height: 70%;
+    margin: 2% 15% 0 15%;
+}

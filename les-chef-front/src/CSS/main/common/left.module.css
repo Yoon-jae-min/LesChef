@@ -1,0 +1,49 @@
+.body{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 17vw;
+    height: 100vh;
+    z-index: 140;
+}
+
+.logo{
+    position: absolute;
+    top: 5vh;
+    left: 3vw;
+    z-index: 150;
+    width: 12vw;
+    cursor: pointer;
+}
+
+.iconBox{
+    position: absolute;
+    top: 89vh;
+    left: 2.3vw;
+    width: 11vw;
+    height: auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.menuBtn, .loginBtn, .profileBtn, .logoutBtn{
+    height: 4vw;
+    width: auto;
+    cursor: pointer;
+}
+
+.loginBtn{
+    margin-right: 7px;
+}
+
+.logoutBtn{
+    margin-left: 7px;
+}
+
+.profileBtn{
+    margin-left: 3px;
+}
+
+.hidden{
+    display: none;
+}

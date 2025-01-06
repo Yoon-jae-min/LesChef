@@ -1,0 +1,51 @@
+.body{
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 7px;
+    width: 80%;
+    height: 70%;
+    padding: 0 2.5%;
+    display: inline-block;
+    overflow: scroll;
+}
+
+.body::-webkit-scrollbar{
+    display: none;
+}
+
+.section{
+    margin: 10px auto;
+    width: 95%;
+}
+
+.sectionName{
+    margin: 0;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 2.7vh;
+
+    border-bottom: 1px solid rgb(163, 163, 163);
+}
+
+.unit{
+    display: flex;
+    justify-content: space-between;
+}
+
+.unitName, .unitCount, .unitPortion{
+    margin: 2px 0 0 0;
+}
+
+.unitName{
+    max-width: 65%;
+    height: 20px;
+    margin-left: 4%;
+}
+
+.unitName::-webkit-scrollbar{
+    display: none;
+}
+
+.unitAmount{
+    display: flex;
+}

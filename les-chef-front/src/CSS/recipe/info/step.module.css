@@ -1,0 +1,46 @@
+.body{
+    width: 90%;
+    margin: 5% 5% 0 5%;
+    padding-top: 5px;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 20px;
+}
+
+.unit{
+    margin: 2% 4%;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.532);
+    display: flex;
+    width: 92%;
+    height: 20vh;
+}
+
+.unitImg{
+    margin-bottom: 2%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 7px;
+}
+
+.textBox{
+    width: 69%;
+    height: 94%;
+}
+
+.num{
+    margin: 0 3%;
+    font-size: 3vh;
+    font-weight: bold;
+    height: 21%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.459);
+}
+
+.text{
+    margin: 5px 0 0 4%;
+    max-height: calc(76% - 5px);
+    overflow: scroll;
+}
+
+.text::-webkit-scrollbar{
+    display: none;
+}

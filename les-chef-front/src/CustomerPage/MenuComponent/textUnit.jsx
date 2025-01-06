@@ -1,6 +1,9 @@
 //기타
 import React from "react";
 
+//CSS
+import styles from "../../CSS/customer/menu/menu.module.css";
+
 const MenuTxtUnit = (props) => {
     const { koreanTxt, 
             englishTxt, 
@@ -13,9 +16,9 @@ const MenuTxtUnit = (props) => {
     }
 
     return(
-        <div className="customerMenuTxtUnit">
-            <span className="customerKoreanText" onClick={HandlerClick}>{koreanTxt}</span>
-            <span className="customerEnglishText">{englishTxt}</span>
+        <div className={styles.textUnit}>
+            <span className={styles.korean} onClick={HandlerClick}>{koreanTxt}</span>
+            <span className={styles.english}>{englishTxt}</span>
         </div>
     )
 }

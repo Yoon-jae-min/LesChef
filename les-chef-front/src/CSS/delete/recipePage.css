@@ -1,0 +1,473 @@
+/*Recipe 공통 -------------------------------------------------------------------------------------------*/
+/* .recipeBody{
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    
+}
+
+.recipeBgImg{
+    width: 100vw;
+    min-height: 100vh;
+    opacity: 0.85;
+} */
+
+
+/* .recipeLogo{
+    position: absolute;
+    bottom: 2vh;
+    left: 3vw;
+    width: 10vw;
+} */
+
+/* .recipeLeftIcon{
+    margin: 0 0.3vw;
+    width: auto;
+    cursor: pointer;
+    height: 4vw;
+}
+
+.reciToCommunityIcon{
+    margin-top: 3px;
+} */
+
+/*Menu 박스 -----------------------------------------------------------------------------------------------------*/
+/* .recipeMenuBox{
+    position: fixed;
+    top: 15vh;
+    left: 3vw;
+    width: 24vw;
+    height: 80vh;
+} */
+
+/* .recipeMenuText{
+    position: absolute;
+    top: 0;
+    left: 1vw;
+    width: 22vw;
+}
+
+.menuTxtUnit{
+    margin-bottom: 20px;
+} */
+
+/* .koreanText, .englishText{
+    color: white;
+    font-family: "Jua", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-shadow: 0px 0px 10px black;
+}
+
+.koreanText{
+    font-size: 6vh;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.koreanText:hover{
+    color: burlywood;
+}
+
+.englishText{
+    font-size: 4vh;
+} */
+
+/*Show 박스 -----------------------------------------------------------------------------------------------------*/
+/* .recipeShowBox{
+    position: fixed;
+    top: 5vh;
+    right: 7vw;
+    width: 63vw;
+    height: 90vh;
+    background-color: rgb(182, 182, 182);
+    z-index: 10;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px 2px black;
+} */
+
+/*Head*/
+/* .recipeShowHead{
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 100%;
+    height:15%;
+}
+
+.recipeHeadImg{
+    border-radius: 20px 20px 0 0;
+    width: calc(100% + 1px);
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    opacity: 0.5;
+}
+
+.recipeHeadText{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    color: white;
+    font-weight: bold;
+    font-size: 5vh;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-shadow: 0 0 10px black;
+} */
+
+/*Sub Head -----------------------------------------------------------------------------------------------------*/
+/* .showGpBox{
+    position: absolute;
+    top: 15%;
+    left: 0;
+    height: 10%;
+    width: 100%;
+} */
+
+/* .showGpBoxLeft{
+    position: absolute;
+    bottom: 10%;
+    left: 5%;
+}
+
+.showGpBoxLeft span{
+    margin-right: 20px;
+    font-size: 22px;
+    font-family: "Jua", sans-serif;
+    color: gray;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.showGpBoxLeft span.active{
+    color: black;
+} */
+
+/* .recipeShowBox hr{
+    position: absolute;
+    top: 25%;
+    width: 92%;
+    border: 1px solid rgba(128, 128, 128, 0.3);
+    margin: 0 4%;
+} */
+
+/* .showGpBoxRight{
+    position: absolute;
+    bottom: 10%;
+    right: 5%;
+    display: flex;
+}
+
+.orderButton{
+    background-color: rgba(93, 12, 12, 0.715);
+    border-radius: 10px;
+    margin-left: 20px;
+    padding: 5px 20px;
+    color: white;
+    font-family: "Jua", sans-serif;
+    font-size: 20px;
+    cursor: pointer;
+} */
+
+/*List --------------------------------------------------------------------------------------------------------*/
+/* .elementContainer{
+    position: absolute;
+    top: 25%;
+    height: calc(72% - 15px);
+    width: 90%;
+    margin: 0 5%;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-top: 15px;
+    max-width: 900px;
+} */
+
+/* .recipeElement{
+    border-radius: 10px;
+    box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.7);
+    height: 280px;
+    width: 31%;
+    margin: 0 calc(7% / 6) 20px;
+    min-width: 250px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.elementImg{
+    width: calc(90% - 2px);
+    height: 70%;
+    object-fit: cover;
+    overflow: hidden;
+    margin: 10px 5% 0;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.7);
+} */
+
+/* .elementInfoBox{
+    position: relative;
+    width: 100%;
+    height: calc(22% - 15px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.listRecipeTitle{
+    margin: 0;
+    width: 100%;
+    height: 8%;
+    font-size: 22px;
+    font-family: "Jua", sans-serif;
+    text-align: center;
+} */
+
+/* .reciShowCountBox{
+    display: flex;
+    margin-bottom: 5px;
+    margin-right: 10px;
+} */
+
+/* .reciNickNameBox{
+    font-size: 20px;
+    font-weight: 300;
+    font-style: oblique;
+    color: rgb(103, 108, 88);
+    width: auto;
+    max-width: 60%;
+    height: 20px;
+    margin-left: 10px;
+    margin-bottom: 7px;
+} */
+
+/* .reciShowCountImg{
+    margin-right: 2px;
+    height: 20px;
+}
+
+.showCountText{
+    font-size: 18px;
+    font-weight: 400;
+    font-style: oblique;
+    color: rgb(103, 108, 88);
+    height: 20px;
+    line-height: 20px;
+} */
+
+/*Info -------------------------------------------------------------------------------------------------------*/
+/* .recipeInfoName{
+    margin-right: 20px;
+    font-size: 28px;
+    font-family: "Jua", sans-serif;
+    text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.5);
+    color: black;
+} */
+
+/* .wishSelectImg{
+    width: 2.5vw;
+    cursor: pointer;
+} */
+
+/* .recipeIconBox{
+    position: absolute;
+    top: 5vh;
+    left: 3vw;
+    display: flex;
+    width: 24vw;
+    height: 10vh;
+} */
+
+/* .infoContainer{
+    height: calc(72% - 13px);
+    width: 94%;
+    position: absolute;
+    top: 25%;
+    margin: 0 3%;
+    padding-top: 15px;
+} */
+
+/* .infoMainImg{
+    border: 1px solid gray;
+    width: 80%;
+    margin: 0 calc((20% - 2px) / 2);
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+    border-radius: 5px;
+} */
+
+/* .infoLeft{
+    width: 60%;
+    display: inline-block;
+    height: calc(100% - 15px);
+    overflow: scroll;
+}
+
+.infoRight{
+    display: inline-block;
+    width: 40%;
+    position: absolute;
+    top: 15px;
+    left: 60%;
+    height: calc(100% - 30px);
+} */
+
+/*Step Box*/
+/* .infoStepBox{
+    width: 90%;
+    margin: 5% 5% 0 5%;
+    padding-top: 5px;
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 20px;
+}
+
+.infoStepEach{
+    margin: 2% 4%;
+    border-bottom: 1px dotted rgba(255, 255, 255, 0.532);
+    display: flex;
+    width: 92%;
+    height: 20vh;
+}
+
+.infoStepImg{
+    margin-bottom: 2%;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 7px;
+}
+
+.stepTextBox{
+    width: 69%;
+    height: 94%;
+}
+
+.stepNum{
+    margin: 0 3%;
+    font-size: 3vh;
+    font-weight: bold;
+    height: 21%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.459);
+}
+
+.stepText{
+    margin: 5px 0 0 4%;
+    max-height: calc(76% - 5px);
+    overflow: scroll;
+} */
+
+
+/*Ingredient Box*/
+/* .ingredientBox{
+    border-top: 1px solid gray;
+    border-bottom: 1px solid gray;
+    border-radius: 7px;
+    width: 80%;
+    height: 70%;
+    padding: 0 2.5%;
+    display: inline-block;
+    overflow: scroll;
+} */
+
+/* .infoIngredientSections{
+    width: 95%;
+    height: 100px;
+    margin: 5px auto 0;
+} */
+
+/* .infoIngredientSection{
+    margin: 10px auto;
+    width: 95%;
+}
+
+.sectionText{
+    margin: 0;
+    font-weight: bold;
+    font-style: italic;
+    font-size: 2.7vh;
+
+    border-bottom: 1px solid rgb(163, 163, 163);
+}
+
+.infoIngredientEach{
+    display: flex;
+    justify-content: space-between;
+}
+
+.ingredientName, .ingredientCount, .ingredientUnit{
+    margin: 2px 0 0 0;
+}
+
+.ingredientName{
+    max-width: 65%;
+    height: 20px;
+    margin-left: 4%;
+}
+
+.ingredientName::-webkit-scrollbar{
+    display: none;
+}
+
+.ingredientAmount{
+    display: flex;
+} */
+
+/*Icon Box*/
+/* .iconBox{
+    width: 80%;
+    height: 25%;
+    display: flex;
+}
+
+.infoIconBoxEach{
+    width: calc(100% / 3);
+}
+
+.infoIconImg{
+    width: 70%;
+    margin: 20% 15% 0;
+}
+
+.infoIconText{
+    margin: 0;
+    text-align: center;
+    font-size: 17px;
+} */
+
+/*가상 선택자*/
+/* .recipeShowBox hr:nth-of-type(1){
+    top: 25%;
+}
+
+.recipeShowBox hr:nth-of-type(2){
+    top: calc(97% + 2px);
+} */
+
+/* .orderButton:hover{
+    background-color: rgb(72, 12, 12);
+} */
+
+/* .elementContainer::-webkit-scrollbar{
+    display: none;
+} */
+
+/* .recipeElement:hover{
+    scale: 1.03;
+} */
+
+/* .infoLeft::-webkit-scrollbar {
+    display: none;
+} */
+
+/* .ingredientBox::-webkit-scrollbar{
+    display: none;
+} */
+
+/* .stepText::-webkit-scrollbar{
+    display: none;
+} */

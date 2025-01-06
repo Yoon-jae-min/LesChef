@@ -1,0 +1,150 @@
+.body{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.box{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 8vh;
+    left: 39vw;
+    height: 86vh;
+    width: 380px;
+    z-index: 160;
+    background-color: rgb(11, 86, 11);
+    border-radius: 20px;
+    transition: all 0.5s;
+}
+
+.logo{
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    cursor: pointer;
+}
+
+.inputBox{
+    position: absolute;
+    top: 190px;
+    width: 70%;
+}
+
+.loginBtn{
+    position: absolute;
+    top: 350px;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    border: none;
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.hrAndOr{
+    position: absolute;
+    top: 405px;
+    width: 80%;
+    display: flex;
+    color: white;
+}
+
+.or{
+    margin: 0;
+}
+
+.hr{
+    width: 35%;
+    border: none;
+    border-bottom: 1px solid white;
+}
+
+.findBtn{
+    position: absolute;
+    top: 300px;
+    right: 15%;
+    color: rgb(157, 157, 196);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.findBtn:hover{
+    text-decoration: underline;
+}
+
+.sns{
+    position: absolute;
+    top: 450px;
+    display: flex;
+    justify-content: space-between;
+    width: 74%;
+}
+
+.naver{
+    background-color: white;
+    height: 45px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+}
+
+.google{
+    display: inline-block;
+    background: white;
+    color: #444;
+    border-radius: 5px;
+    white-space: nowrap;
+    height: 45px;
+}
+
+.naver, .kakao, .google{
+    cursor: pointer;
+}
+
+.naverIcon{
+    width: 31px;
+    height: 31px;
+    border-radius: 5px;
+    margin-left: 3px;
+}
+
+.googleIcon{
+    background: url('https://developers.google.com/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 35px;
+    height: 45px;
+}
+
+.snsText{
+    display: inline-block;
+    vertical-align: middle;
+    padding-right: 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.joinBox{
+    position: absolute;
+    top: 510px;
+    width: 68%;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+}
+
+.joinBtn{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.joinBtn:hover{
+    text-decoration: underline;
+}

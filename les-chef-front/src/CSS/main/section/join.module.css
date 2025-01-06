@@ -1,0 +1,82 @@
+.body{
+    position: absolute;
+    top: 5vh;
+    right: 2vw;
+    height: 90vh;
+    width: 380px;
+    z-index: 200;
+    background-color: rgb(0, 51, 0);
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.logo{
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    cursor: pointer;
+}
+
+.input{
+    position: absolute;
+    top: 180px;
+    width: 70%;
+}
+
+.btn{
+    position: absolute;
+    bottom: 8vh;
+    width: 72%;
+    height: 6vh;
+    border-radius: 12px;
+    background-color: rgb(90, 166, 123);
+    color: white;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    border: none;
+}
+
+.loginBox{
+    position: absolute;
+    bottom: 4vh;
+    width: 50%;
+    display: flex;
+    justify-content: space-around;
+}
+
+.loginText, .loginBtn{
+    color: white;
+    font-size: 15px;
+}
+
+.loginBtn{
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.loginBtn:hover{
+    text-decoration: underline;
+}
+
+.diffCheck{
+    color: red;
+    margin: 0 0 0 10px;
+    font-size: 13px;
+}
+
+.dupliCheckBtn{
+    cursor: pointer;
+    font-weight: bold;
+    margin-left: 10px;
+    border-radius: 5px;
+    color: white;
+    background-color: rgb(90, 166, 123)
+}
+
+.idCheckedText{
+    font-size: 10px;
+    color: rgb(90, 166, 123);
+    margin: 0 0 0 10px;
+}

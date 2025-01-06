@@ -4,12 +4,12 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 
 //CSS
-import './CSS/index.css';
+import './CSS/common/index.css';
 
 //컴포넌트
-import MainPage from './MainPage/mainPage';
-import RecipePage from './RecipePage/recipePage';
-import CustomerPage from './CustomerPage/customerPage';
+import MainPage from './Main/common/page';
+import RecipePage from './Recipe/common/page';
+import CustomerPage from './CustomerPage/common/customerPage';
 import CommunityPage from './CommunityPage/communityPage';
 
 //컨텍스트

@@ -1,0 +1,90 @@
+.box{
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    top: 8vh;
+    left: 39vw;
+    height: 86vh;
+    width: 380px;
+    z-index: 160;
+    background-color: rgb(11, 86, 11);
+    border-radius: 20px;
+    transition: all 0.5s;
+}
+
+.logo{
+    position: absolute;
+    top: 30px;
+    width: 180px;
+    cursor: pointer;
+}
+
+.idPwBtnBox{
+    position: absolute;
+    top: 190px;
+    width: 200px;
+    display: flex;
+    justify-content: space-around;
+    color: white;
+    font-weight: bold;
+}
+
+.idBtn, .pwBtn{
+    width: 80px;
+    height: 40px;
+    border: 1px solid black;
+    background-color: rgb(0, 44, 0);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.click{
+    background-color: rgb(84, 150, 84);
+}
+
+.inputBox{
+    position: absolute;
+    top: 270px;
+    width: 70%;
+}
+
+.searchBtn{
+    position: absolute;
+    top: 125px;
+    width: 100%;
+    height: 6vh;
+    border: 1px solid black;
+    border-radius: 10px;
+    background-color: rgb(90, 166, 123);
+    cursor: pointer;
+    color: white;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 17px;
+}
+
+.pwSearchBtn{
+    top: 185px;
+}
+
+.loginText{
+    color: white;
+    margin-top: 60px;
+    display: flex;
+    justify-content: center;
+}
+
+.loginBtn{
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.loginBtn:hover{
+    text-decoration: underline;
+}

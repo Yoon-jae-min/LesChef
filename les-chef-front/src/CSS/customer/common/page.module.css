@@ -1,0 +1,14 @@
+.body{
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    
+}
+
+.bgImg{
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center center;
+    opacity: 0.85;
+}

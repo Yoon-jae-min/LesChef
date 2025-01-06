@@ -11,7 +11,7 @@ import { useConfig } from "../Context/configContext";
 //컴포넌트
 import CommunityBox from "./CommonElement/box";
 import IconBox from "./iconBox";
-import LoginModal from "../MainPage/ModalComponent/loginModal";
+import LoginModal from "../Main/modal/login/modal";
 
 
 const CommunityPage = () => {

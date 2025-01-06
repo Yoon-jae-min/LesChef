@@ -1,6 +1,9 @@
 //기타
 import React from "react";
 
+//CSS
+import styles from "../../CSS/customer/menu/menu.module.css";
+
 //컴포넌트
 import MenuTxtUnit from "./textUnit";
 
@@ -8,7 +11,7 @@ const MainMenuText = (props) => {
     const {setCategory, checkUser} = props;
 
     return(
-        <div className="customerMenuText">
+        <div className={styles.textBox}>
             <MenuTxtUnit 
                 koreanTxt="내 정보" 
                 englishTxt="My Info" 
