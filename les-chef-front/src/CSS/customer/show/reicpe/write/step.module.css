@@ -1,0 +1,74 @@
+.box{
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    width: 90%;
+    margin: 2% 5%;
+    border-radius: 10px;
+    padding: 2% 0;
+}
+
+.unit{
+    border: 1px solid black;
+    width: 95%;
+    margin: 0 calc((5% - 2px)/2) 5px;
+    height: 24vh;
+}
+
+.inner{
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid black;
+    display: flex;
+}
+
+.innerLeft{
+    width: 30%;
+    border-right: 1px solid black;
+}
+
+.fileInput{
+    width: 100%;
+}
+
+.img{
+    border: 1px solid gray;
+    width: 90%;
+    aspect-ratio: 1/1;
+    margin: 0 calc((10% - 2px)/2);
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 5px;
+}
+
+.innerRight{
+    width: 70%;
+}
+
+.order{
+    width: calc(100% - 5px);
+    height: 15%;
+    font-weight: bold;
+    padding-left: 5px;
+
+    border-bottom: 1px solid black;
+}
+
+.textArea{
+    border: none;
+    width: 95%;
+    height: 78%;
+    margin: 1% 2%;
+    background-color: rgb(182, 182, 182);
+    resize: none;
+}
+
+.delBox{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.delImg{
+    width: 25px;
+}

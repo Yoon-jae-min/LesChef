@@ -9,7 +9,7 @@ import './CSS/common/index.css';
 //컴포넌트
 import MainPage from './Main/common/page';
 import RecipePage from './Recipe/common/page';
-import CustomerPage from './CustomerPage/common/customerPage';
+import CustomerPage from './Customer/common/page';
 import CommunityPage from './CommunityPage/communityPage';
 
 //컨텍스트

@@ -1,0 +1,136 @@
+.left{
+    overflow: scroll;
+    width: 60%;
+    height: 100%;
+}
+
+.right{
+    width: 40%;
+    height: 95%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.left::-webkit-scrollbar, .right::-webkit-scrollbar{
+    display: none;
+}
+
+.recipeName{
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    width: 100%;
+    font-size: 2.5vh;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 0 10px;
+}
+
+.recipeName:focus{
+    outline: none;
+}
+
+.category{
+    margin-left: 10px;
+    height: 3.5vh;
+    border-radius: 5px;
+    background-color: rgb(182, 182, 182);
+}
+
+.mainImg{
+    border: 1px solid gray;
+
+    width: 70%;
+    margin: 2% calc((30% - 2px)/2);
+    aspect-ratio: 1/1;
+    object-fit: cover;
+    object-position: center center;
+    border-radius: 5px;
+}
+
+.extraBox{
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-radius: 5px;
+
+    margin: 3% auto 0;
+    width: 95%;
+    height: 12%;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.extraInput{
+    border: none;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+    border-radius: 5px;
+    background-color: rgb(182, 182, 182);
+}
+
+.extraUnit{
+    width: 33%;
+}
+
+.volumeBox{
+    width: 35%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+}
+
+.volume{
+    width: 40%;
+    height: 50%;
+}
+
+.time{
+    width: 25%;
+    height: 50%;
+}
+
+.level{
+    width: 20%;
+    height: 50%;
+    border-radius: 5px;
+
+    background-color: rgb(182, 182, 182);
+}
+
+.stPlusBox{
+    border: 1px solid black;
+
+    width: 95%;
+    margin: 0 calc((5% - 2px)/2);
+    height: 17vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ingrePlusBox{
+    width: 95%;
+    height: 17vh;
+    margin: 5px auto;
+
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.stPlusBtn, .ingrePlusBtn{
+    width: 100px;
+    cursor: pointer;
+    transition: 0.5s all;
+}
+
+.stPlusBtn:hover, .ingrePlusBtn:hover{
+    scale: 1.2;
+}
