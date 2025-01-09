@@ -1,15 +1,18 @@
 //기타
 import React, { useState } from "react";
 
+//CSS
+import styles from "../../../CSS/community/show/common/show.module.css";
+
 //컨텍스트
-import { WatchProvider } from "../../Context/watchContext";
+import { WatchProvider } from "../../../Context/watchContext";
 
 //컴포넌트
 import CommunityHeader from "./header";
-import CommunityBody from "../ListBox/body";
-import CommunityFooter from "../ListBox/footer";
-import CommunityWriteBox from "../WriteBox/writeBox";
-import CommunityWatchBox from "../WatchBox/watchBox";
+import CommunityBody from "../list/body";
+import CommunityFooter from "../list/footer";
+import CommunityWriteBox from "../write/box";
+import CommunityWatchBox from "../watch/common/box";
 
 const CommunityBox = () => {
     const [ writeBoxVisible, setWriteBoxVisible ] = useState(false);
@@ -45,7 +48,7 @@ const CommunityBox = () => {
 
     return(
         <WatchProvider>
-            <div className="communityBox">
+            <div className={styles.box}>
                 <CommunityHeader/>
                 { !writeBoxVisible && 
                     !watchBoxVisible && 

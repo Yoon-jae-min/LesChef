@@ -39,7 +39,7 @@ const MainPage = () => {
     const [loginToFind, setLoginToFind] = useState(false);
     const [idPwBox, setIdPwBox] = useState(false);
 
-    //회원 가입 관련련
+    //회원 가입 관련
     const [checkPwd, setCheckPwd] = useState("");
     const [diffCheck, setDiffCheck] = useState(false);
     const [dupliCheck, setDupliCheck] = useState(false);

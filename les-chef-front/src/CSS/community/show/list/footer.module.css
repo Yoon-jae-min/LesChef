@@ -1,0 +1,57 @@
+.box{
+    position: absolute;
+    top: 87%;
+    width: 90%;
+    height: 6%;
+    margin: 0 5%;
+    display: flex;
+}
+
+.searchBox, .selectInner{
+    border-radius: 5px;
+    background-color: rgb(194, 183, 168);
+    border: 2px solid rgb(109, 75, 75);
+}
+
+.selectBox{
+    width: 10%;
+}
+
+.searchBox{
+    width: 70%;
+    height: 74%;
+    margin: 0.3% 0;
+    display: flex;
+}
+
+.btnBox{
+    width: 20%;
+}
+
+.selectInner{
+    width: 90%;
+    height: 80%;
+    margin: 3.5% 0;
+}
+
+.searchBtn, .resetBtn{
+    height: 80%;
+    margin: 0.4% 1%;
+    cursor: pointer;
+}
+
+.searchInput{
+    width: 91%;
+    background-color: rgb(194, 183, 168);
+    border: none;
+}
+
+.searchInput:focus{
+    outline: none;
+}
+
+.write{
+    height: 100%;
+    float: right;
+    cursor: pointer;
+}

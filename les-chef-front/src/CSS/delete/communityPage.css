@@ -1,5 +1,5 @@
 /*Community 공통 ---------------------------------------------------------------------------------------------*/
-.communityMain{
+/* .communityMain{
     overflow-y: hidden;
     width: 100vw;
     height: 100vh;
@@ -11,9 +11,9 @@
     object-fit: cover;
     object-position: center center;
     opacity: 0.85;
-}
+} */
 
-.communityBox{
+/* .communityBox{
     position: fixed;
     top: 5vh;
     right: 7vw;
@@ -31,9 +31,9 @@
     left: -1px;
     width: 100%;
     height:15%;
-}
+} */
 
-.communityHeadImg{
+/* .communityHeadImg{
     border-radius: 20px 20px 0 0;
     width: calc(100% + 1px);
     height: 100%;
@@ -57,9 +57,9 @@
     align-items: center;
     text-shadow: 0 0 10px black;
     cursor: pointer;
-}
+} */
 
-.communityLeftIcon{
+/* .communityLeftIcon{
     margin: 2vh 1.5vw;
     height: 4vw;
     width: auto;
@@ -79,32 +79,32 @@
     justify-content: center;
     height: 7vh;
     margin-top: 1vh;
-}
+} */
+/* 
+.writeForm, .watchForm{
+    position: absolute;
+    top:15%;
+    width: 100%;
+    height: 85%;
+} */
 
-.communityBody{
+
+/*List -------------------------------------------------------------------------------------------------------------*/
+/* .communityBody{
     position: absolute;
     top: 20%;
     left: 0;
     width: 90%;
     margin: 0 5%;
     height: 65%;
-}
+} */
 
-.writeForm, .watchForm{
-    position: absolute;
-    top:15%;
-    width: 100%;
-    height: 85%;
-}
-
-
-/*List -------------------------------------------------------------------------------------------------------------*/
-.communityListBox{
+/* .communityListBox{
     width: 100%;
     height: 100%;
-}
+} */
 
-.communityListHead, .communityListLine{
+/* .communityListHead, .communityListLine{
     width: 100%;
     height: 9%;
     display: flex;
@@ -161,9 +161,9 @@
 .listTitleUnit.listLineUnit{
     width: 71%;
     padding-left: 2%;
-}
+} */
 
-.communityFooterBox{
+/* .communityFooterBox{
     position: absolute;
     top: 87%;
     width: 90%;
@@ -215,23 +215,23 @@
     height: 100%;
     float: right;
     cursor: pointer;
-}
+} */
 
 /*가상 선택자*/
-.communityListBody::-webkit-scrollbar{
+/* .communityListBody::-webkit-scrollbar{
     display: none;
 }
 
 .listTitleUnit:hover{
     text-decoration: underline solid gray 1px;
-}
+} */
 
-.searchInput:focus{
+/* .searchInput:focus{
     outline: none;
-}
+} */
 
 /*Write ------------------------------------------------------------------------------------------------------------*/
-.communityWriteBox{
+/* .communityWriteBox{
     position: absolute;
     top: 5%;
     left: 0;
@@ -331,29 +331,29 @@
     width: 70%;
     overflow: scroll;
     align-content: center;
-}
+}*/
 
 /*가상 선택자*/
-.writeTextarea:focus{
+/* .writeTextarea:focus{
     outline-style: none;
-}
+}  */
 
 /*Show -------------------------------------------------------------------------------------------------------------*/
-.communityWatchBox{
+/* .communityWatchBox{
     display: flex;
     flex-direction: row;
     position: absolute;
-    top: 5%;
+    top: 20%;
     left: 0;
     width: 80%;
     margin: 0 10%;
-    height: 75%;
+    height: 62%;
     border-radius: 10px;
     border-top: 1px solid black;
     border-bottom: 1px solid black;
-}
+} */
 
-.watchTextarea{
+/* .watchTextarea{
     width: 97%;
     height: 95%;
     background-color: rgb(213, 213, 213);
@@ -382,8 +382,6 @@
     flex-wrap: wrap;
     box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.564);
     background-color: rgb(213, 213, 213);
-
-    border: 1px solid black;
 }
 
 .watchNickName, .watchWriteDate{
@@ -451,9 +449,9 @@
 
 .watchLeftBox{
     width: 80%;
-}
+} */
 
-.watchRightBox{
+/* .watchRightBox{
     width: 20%;
     display: flex;
     flex-direction: column;
@@ -519,13 +517,13 @@
     width: 90%;
     margin: 0 auto 3%;
     overflow-wrap: break-word;
-}
+} */
 
-.watchButtonBox{
+/* .watchButtonBox{
     position: absolute;
-    top: 82%;
+    top: 85%;
     width: 80%;
-    height: 13%;
+    height: 11%;
     margin: 0 10%;
     display: flex;
     justify-content: center;
@@ -541,24 +539,24 @@
     background-color: rgb(213, 213, 213);
     border: none;
     box-shadow: 0 0 10px 3px gray;
-}
+} */
 
 /*가상 선택자*/
-.watchTitleUnit::-webkit-scrollbar, .nickNameUnit::-webkit-scrollbar{
+/* .watchTitleUnit::-webkit-scrollbar, .nickNameUnit::-webkit-scrollbar{
     display: none;
 }
 
 .watchContent::-webkit-scrollbar{
     display: none;
-}
+} */
 
-.commentWriteBox:focus{
+/* .commentWriteBox:focus{
     outline: none;
 }
 
 .commentListBox::-webkit-scrollbar{
     display: none;
-}
+} */
 
 
 

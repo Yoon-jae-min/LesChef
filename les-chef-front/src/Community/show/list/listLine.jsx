@@ -1,8 +1,11 @@
 //기타
 import React from "react";
 
+//CSS
+import styles from "../../../CSS/community/show/list/list.module.css";
+
 //컨텍스트
-import { useWatchContext } from "../../Context/watchContext";
+import { useWatchContext } from "../../../Context/watchContext";
 
 const CommunityListLine = (props) => {
     const { goToWatch } = props;
@@ -21,11 +24,11 @@ const CommunityListLine = (props) => {
     }
 
     return(
-        <div className="communityListLine">
-            <div onClick={clickTitle} className="listTitleUnit listLineUnit">제목</div>
-            <div className="listNameUnit listLineUnit lineCenter">닉네임</div>
-            <div className="listDateUnit listLineUnit lineCenter">작성일</div>
-            <div className="listWatchUnit listLineUnit lineCenter">조회수</div>
+        <div className={styles.line}>
+            <div onClick={clickTitle} className={`${styles.title} ${styles.lineTitle} ${styles.lineUnit}`}>제목</div>
+            <div className={`${styles.name} ${styles.lineUnit} ${styles.unitCenter}`}>닉네임</div>
+            <div className={`${styles.date} ${styles.lineUnit} ${styles.unitCenter}`}>작성일</div>
+            <div className={`${styles.watch} ${styles.lineUnit} ${styles.unitCenter}`}>조회수</div>
         </div>
     )
 }

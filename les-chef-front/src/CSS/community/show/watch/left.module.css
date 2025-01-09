@@ -1,0 +1,96 @@
+.box{
+    width: 80%;
+}
+
+.titleBox, .writeDate{
+    width: 98%;
+    height: 10%;
+    margin: 1% 0 0 1%;
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.564);
+    background-color: rgb(213, 213, 213);
+}
+
+.titleLabel{
+    margin: 0;
+    width: 7%;
+    padding: 0 1%;
+    height: 70%;
+    align-content: center;
+    text-align: center;
+    font-weight: bold;
+    border-right: 1px solid rgb(87, 87, 87);
+}
+
+.titleContent{
+    margin: 0 0 0 1%;
+    width: 89%;
+    overflow: scroll;
+    align-content: center;
+}
+
+.titleContent::-webkit-scrollbar{
+    display: none;
+}
+
+.userDateBox{
+    width: 100%;
+    height: 10%;
+    margin: 1% auto;
+    display: flex;
+    flex-direction: row;
+}
+
+.nickNameBox, .writeDateBox{
+    /* margin: 3% auto 0; */
+    width: 48%;
+    margin: 0 1% 0;
+    height: 100%;
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.564);
+    background-color: rgb(213, 213, 213);
+}
+
+.userDateLabel{
+    margin: 0;
+    width: 16%;
+    padding: 0 1%;
+    height: 70%;
+    align-content: center;
+    text-align: center;
+    font-weight: bold;
+    border-right: 1px solid rgb(87, 87, 87);
+}
+
+.nameValue, .dateValue{
+    margin: 0 0 0 2%;
+    width: 79%;
+    overflow: scroll;
+    align-content: center;
+}
+
+.content{
+    width: 98%;
+    height: 71%;
+    margin: 0 auto;
+    overflow: scroll;
+    border-top: 2px solid gray;
+}
+
+.content::-webkit-scrollbar{
+    display: none;
+}
+
+.contentInner{
+    width: 97%;
+    margin: 1% auto;
+    min-height: 89%;
+    padding: 1%;
+    box-shadow: 0 0 5px 1px rgba(0, 0, 0, 0.411);
+    background-color: rgb(213, 213, 213);
+    overflow-wrap: break-word;
+}

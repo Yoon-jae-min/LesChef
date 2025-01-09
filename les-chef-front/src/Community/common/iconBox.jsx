@@ -2,9 +2,12 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
+//CSS
+import styles from "../../CSS/community/common/icon.module.css";
+
 //컨텍스트
-import { useConfig } from "../Context/configContext";
-import { useAuthContext } from "../Context/authContext";
+import { useConfig } from "../../Context/configContext";
+import { useAuthContext } from "../../Context/authContext";
 
 const IconBox = (props) => {
     const { toggleLoginModal } = props;
@@ -55,17 +58,17 @@ const IconBox = (props) => {
     }
 
     return(
-        <div className="communityIconBox">
+        <div className={styles.box}>
             <Link to="/">
-                <img className="commuToHomeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
-            <img onClick={clickProfile} className="commuToCustomerIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
+                <img className={`commuToHomeIcon ${styles.icon}`} src={`${serverUrl}/Image/CommonImage/homeIcon.png`}/></Link>
+            <img onClick={clickProfile} className={`commuToCustomerIcon ${styles.icon}`} src={`${serverUrl}/Image/CommonImage/profileIcon.png`}/>
             <Link to="/recipeMain" state={{category: "korean"}}>
-                <img className="commuToRecipeIcon communityLeftIcon" src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
-            <div className="communityLoginBtn">
+                <img className={`commuToRecipeIcon ${styles.icon}`} src={`${serverUrl}/Image/CommonImage/recipeIcon.png`}/></Link>
+            <div className={styles.loginBtn}>
                 { !isLogin && 
-                    <img onClick={clickLogin} className='mainLoginButton' src={`${serverUrl}/Image/CommonImage/loginIcon.png`}/>}
+                    <img onClick={clickLogin} className={`${styles.icon}`} src={`${serverUrl}/Image/CommonImage/loginIcon.png`}/>}
                 { isLogin && 
-                    <img onClick={clickLogout} className='mainLogoutButton' src={`${serverUrl}/Image/CommonImage/logoutIcon.png`}/>}
+                    <img onClick={clickLogout} className={`${styles.icon}`} src={`${serverUrl}/Image/CommonImage/logoutIcon.png`}/>}
             </div>
         </div>
     )

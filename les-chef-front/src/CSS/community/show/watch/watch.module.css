@@ -1,0 +1,35 @@
+.box{
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: 20%;
+    left: 0;
+    width: 80%;
+    margin: 0 10%;
+    height: 62%;
+    border-radius: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+}
+
+.btnBox{
+    position: absolute;
+    top: 85%;
+    width: 80%;
+    height: 11%;
+    margin: 0 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.list, .reWrite{
+    border-radius: 50%;
+    width: 7%;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 2%;
+    cursor: pointer;
+    background-color: rgb(213, 213, 213);
+    border: none;
+    box-shadow: 0 0 10px 3px gray;
+}

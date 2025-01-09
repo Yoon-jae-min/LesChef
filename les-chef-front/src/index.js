@@ -10,7 +10,7 @@ import './CSS/common/index.css';
 import MainPage from './Main/common/page';
 import RecipePage from './Recipe/common/page';
 import CustomerPage from './Customer/common/page';
-import CommunityPage from './CommunityPage/communityPage';
+import CommunityPage from './Community/common/page';
 
 //컨텍스트
 import { BrowserRouter, Routes, Route } from 'react-router-dom';

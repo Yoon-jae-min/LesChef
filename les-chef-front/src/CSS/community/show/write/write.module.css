@@ -1,0 +1,108 @@
+.box{
+    position: absolute;
+    top: 20%;
+    left: 0;
+    width: 80%;
+    margin: 0 10%;
+    height: 62%;
+    border-radius: 10px;
+    border-top: 1px solid black;
+    border-bottom: 1px solid black;
+    display: flex;
+    flex-direction: column;
+}
+
+.label{
+    margin: 0;
+    width: 7%;
+    padding: 0 1%;
+    height: 70%;
+    align-content: center;
+    text-align: center;
+    font-weight: bold;
+    border-right: 1px solid rgb(87, 87, 87);
+}
+
+.title, .nickName, .content{
+    width: 80%;
+    height: 10%;
+    margin: 1% auto 0;
+    align-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    box-shadow: 0 0 3px 1px rgba(0, 0, 0, 0.564);
+    background-color: rgb(213, 213, 213);
+    border: 1px solid black;
+}
+
+.content{
+    height: 69%;
+    justify-content: center;
+}
+
+.textArea{
+    width: 97%;
+    height: 95%;
+    background-color: rgb(213, 213, 213);
+    font-size: 20px;
+    font-weight: 500;
+    border: none;
+    resize: none;
+}
+
+.textArea:focus{
+    outline-style: none;
+}
+
+.titleUnit, .nickNameUnit{
+    margin-left: 1%;
+    width: 40%;
+}
+
+.nickNameUnit{
+    margin-top: 0;
+    margin-bottom: 0;
+    align-content: center;
+}
+
+.nickNameUnit::-webkit-scrollbar{
+    display: none;
+}
+
+.titleUnit{
+    background-color: rgb(213, 213, 213);
+    border: none;
+    border-bottom: 1px solid rgb(61, 29, 29);
+}
+
+.btnBox{
+    position: absolute;
+    top: 85%;
+    height: 11%;
+
+    width: 80%;
+    margin: 0 10%;
+
+    display: flex;
+    justify-content: center;
+}
+
+.commonBtn, .submitBtn{
+    border-radius: 50%;
+    width: 7%;
+    font-size: 1rem;
+    font-weight: bold;
+    margin: 0 2%;
+    cursor: pointer;
+    background-color: rgb(213, 213, 213);
+    border: none;
+
+    box-shadow: 0 0 10px 3px gray;
+}
+
+.nickNameUnit{
+    margin: 0 0 0 1%;
+    width: 70%;
+    overflow: scroll;
+    align-content: center;
+}
