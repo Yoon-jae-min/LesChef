@@ -37,7 +37,7 @@ const Icon = (props) => {
     }
 
     const confirmAction = (message) => {
-        return window.confirm(message); // window.confirm을 사용
+        return window.confirm(message);
     };
 
     const clickLogout = () => {
@@ -48,6 +48,7 @@ const Icon = (props) => {
                 (response) => {
                     if(response){
                         setIsLogin(false);
+                        sessionStorage.removeItem('userData');
                         alert("로그아웃 되셨습니다.");
                     }
                 }

@@ -14,16 +14,16 @@ const Left =  () => {
         <div className={styles.box}>
             <div className={styles.titleBox}>
                 <p className={`${styles.titleLabel} titleText`}>제목</p>
-                <p class={styles.titleContent}>{watchValue.title}</p>
+                <p className={styles.titleContent}>{watchValue.title}</p>
             </div>
             <div className={styles.userDateBox}>
                 <div className={styles.nickNameBox}>
                     <p className={styles.userDateLabel}>작성자</p>
-                    <p class={styles.nameValue}>{watchValue.userName}</p>
+                    <p className={styles.nameValue}>{watchValue.userName}</p>
                 </div>
                 <div className={styles.writeDateBox}>
                     <p className={styles.userDateLabel}>작성일</p>
-                    <p class={styles.dateValue}>{watchValue.writeDate}</p>
+                    <p className={styles.dateValue}>{watchValue.writeDate}</p>
                 </div>
             </div>
             <div className={styles.content}>

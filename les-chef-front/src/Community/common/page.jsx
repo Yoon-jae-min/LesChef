@@ -8,6 +8,7 @@ import styles from "../../CSS/community/common/page.module.css";
 //컨텍스트
 import { useConfig } from "../../Context/configContext";
 import { useAuthContext } from "../../Context/authContext";
+import { BoardProvider } from "../../Context/board";
 
 //컴포넌트
 import CommunityBox from "../show/common/box";
@@ -62,19 +63,21 @@ const CommunityPage = () => {
     }
 
     return(
-        <div className={styles.body}>
-            <img src={`${serverUrl}/Image/CommunityImage/Background/communityBackground.jpg`} className={styles.bgImg}/>
-            <IconBox toggleLoginModal={toggleLoginModal}/>
-            <CommunityBox/>
-            <LoginModal 
-                toggleFindIdPw={toggleFindIdPw} 
-                idPwBox={idPwBox} 
-                loginToFind={loginToFind} 
-                loginModal={loginModal} 
-                toggleFindBox={toggleFindBox} 
-                toggleLoginModal={toggleLoginModal} 
-                goToJoinBox={goToJoinBox}/>
-        </div>
+        <BoardProvider>
+            <div className={styles.body}>
+                <img src={`${serverUrl}/Image/CommunityImage/Background/communityBackground.jpg`} className={styles.bgImg}/>
+                <IconBox toggleLoginModal={toggleLoginModal}/>
+                <CommunityBox/>
+                <LoginModal 
+                    toggleFindIdPw={toggleFindIdPw} 
+                    idPwBox={idPwBox} 
+                    loginToFind={loginToFind} 
+                    loginModal={loginModal} 
+                    toggleFindBox={toggleFindBox} 
+                    toggleLoginModal={toggleLoginModal} 
+                    goToJoinBox={goToJoinBox}/>
+            </div>
+        </BoardProvider>
     )
 }
 

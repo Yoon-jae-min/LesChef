@@ -7,6 +7,7 @@ import styles from "../../../CSS/main/modal/login.module.css";
 //컨텍스트
 import { useConfig } from '../../../Context/configContext.jsx';
 import { useAuthContext } from "../../../Context/authContext.jsx";
+import { useUserContext } from "../../../Context/userContext.jsx";
 
 //컴포넌트
 import LoginInput from "./inputBox.jsx";
@@ -22,6 +23,7 @@ const LoginBox = (props) => {
     const [ customerPwd, setCustomerPwd ] = useState("");
     const { serverUrl } = useConfig();
     const { setIsLogin } = useAuthContext();
+    const { setUserData } = useUserContext();
 
     const clickLogo = () => {
         goToTopSlide();
@@ -41,25 +43,34 @@ const LoginBox = (props) => {
                     customerPwd : customerPwd
                 }),
                 credentials: 'include'
-            }).then((response) => {
-                return response.text();
-            }).then((text) => {
-                if(text === "login Success"){
-                    fetch(`${serverUrl}/customer/auth`, {
-                        method: "GET",
-                        headers: { "Content-type": "application/json" },
-                        credentials: 'include'
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.loggedIn) {
-                            setIsLogin(true); 
-                            toggleLoginModal();
-                            alert("로그인 하셨습니다.");
-                        }
-                    });
+            }).then(response => response.json()).then((data) => {
+                if(data.text === "login Success"){
+                    const userData = {
+                        id: data.id,
+                        name: data.name,
+                        nickName: data.nickName,
+                        tel: data.tel
+                    };
+                    sessionStorage.setItem('userData', JSON.stringify(userData));
+                    setIsLogin(true); 
+                    toggleLoginModal();
+                    alert("로그인 하셨습니다.");
+
+                    // fetch(`${serverUrl}/customer/auth`, {
+                    //     method: "GET",
+                    //     headers: { "Content-type": "application/json" },
+                    //     credentials: 'include'
+                    // })
+                    // .then(response => response.json())
+                    // .then(data => {
+                    //     if (data.loggedIn) {
+                    //         setIsLogin(true); 
+                    //         toggleLoginModal();
+                    //         alert("로그인 하셨습니다.");
+                    //     }
+                    // });
                 }else{
-                    alert(text);
+                    alert("로그인 실패");
                 }
             }).catch((err) => {
                 console.log(err);

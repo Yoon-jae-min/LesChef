@@ -25,7 +25,13 @@ const postLogin = asyncHandler(async (req, res) => {
                 console.error("세션 저장 오류:", err);
                 return res.status(500).send("세션 저장 중 오류가 발생했습니다.");
             }
-            res.send("login Success");
+            res.send({
+                text: "login Success",
+                id: findUser.id,
+                name: findUser.name,
+                nickName: findUser.nickName,
+                tel: findUser.tel
+            });
         });
     } catch (error) {
         console.error("로그인 처리 중 오류:", error);

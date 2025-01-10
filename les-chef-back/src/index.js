@@ -5,9 +5,12 @@ const https = require('https');
 const fs = require('fs');
 const MongoStore = require('connect-mongo'); 
 const cors = require("cors");
+const dbConnect = require("./config/dbConnect");
+
+//라우터
 const customer = require("../src/routers/customer");
 const recipe = require("../src/routers/recipe");
-const dbConnect = require("./config/dbConnect");
+const board = require("../src/routers/board");
 
 require("dotenv").config();
 
@@ -59,6 +62,7 @@ app.use(express.static('public'));
 // 라우터 설정
 app.use("/customer", customer);
 app.use("/recipe", recipe);
+app.use("/board", board);
 
 // 404 핸들러
 app.use((req, res, next) => {

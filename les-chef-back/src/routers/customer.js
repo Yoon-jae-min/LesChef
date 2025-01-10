@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const {postLogin, getLogout, getAuth, getInfo, idCheck} = require("../controllers/loginController");
-const postJoin = require("../controllers/joinController");
+const {postLogin, getLogout, getAuth, getInfo, idCheck} = require("../controllers/login");
+const postJoin = require("../controllers/join");
 
 router
     .get("/logout", getLogout)

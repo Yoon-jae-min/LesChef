@@ -6,9 +6,10 @@ import styles from "../../../CSS/community/show/list/list.module.css";
 
 //컨텍스트
 import { useWatchContext } from "../../../Context/watchContext";
+import { useBoardContext } from "../../../Context/board";
 
 const CommunityListLine = (props) => {
-    const { goToWatch } = props;
+    const { goToWatch, board } = props;
     const { setWatchValue } = useWatchContext();
 
     const clickTitle = () => {
@@ -25,10 +26,10 @@ const CommunityListLine = (props) => {
 
     return(
         <div className={styles.line}>
-            <div onClick={clickTitle} className={`${styles.title} ${styles.lineTitle} ${styles.lineUnit}`}>제목</div>
-            <div className={`${styles.name} ${styles.lineUnit} ${styles.unitCenter}`}>닉네임</div>
-            <div className={`${styles.date} ${styles.lineUnit} ${styles.unitCenter}`}>작성일</div>
-            <div className={`${styles.watch} ${styles.lineUnit} ${styles.unitCenter}`}>조회수</div>
+            <div onClick={clickTitle} className={`${styles.title} ${styles.lineTitle} ${styles.lineUnit}`}>{board.title}</div>
+            <div className={`${styles.name} ${styles.lineUnit} ${styles.unitCenter}`}>{board.nickName}</div>
+            <div className={`${styles.date} ${styles.lineUnit} ${styles.unitCenter}`}>{new Date(board.createdAt).toISOString().split('T')[0]}</div>
+            <div className={`${styles.watch} ${styles.lineUnit} ${styles.unitCenter}`}>{board.viewCount}</div>
         </div>
     )
 }

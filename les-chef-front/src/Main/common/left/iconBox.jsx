@@ -39,6 +39,7 @@ const MainIcon = (props) => {
                 (response) => {
                     if(response){
                         setIsLogin(false);
+                        sessionStorage.removeItem('userData');
                         alert("로그아웃 되셨습니다.");
                     }
                 }

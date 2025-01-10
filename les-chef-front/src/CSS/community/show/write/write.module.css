@@ -100,6 +100,10 @@
     box-shadow: 0 0 10px 3px gray;
 }
 
+.commonBtn:hover, .submitBtn:hover{
+    background-color: rgb(137, 137, 137);
+}
+
 .nickNameUnit{
     margin: 0 0 0 1%;
     width: 70%;

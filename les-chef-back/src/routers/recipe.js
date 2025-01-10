@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const { recipeWrite, clickWish } = require("../controllers/recipeWriteController");
-const { koreanList, japaneseList, chineseList, westernList, shareList, myList, recipeInfo } = require("../controllers/recipeGetController");
+const { recipeWrite, clickWish } = require("../controllers/recipeWrite");
+const { koreanList, japaneseList, chineseList, westernList, shareList, myList, recipeInfo } = require("../controllers/recipeGet");
 const { upload } = require("../uploads/recipeImgUpload");
 
 router

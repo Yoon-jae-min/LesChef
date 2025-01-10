@@ -7,8 +7,12 @@ const BoardSchema = mongoose.Schema({
     nickName:{
         type: String
     },
+    userId: {
+        type: String
+    },
     viewCount:{
-        type: Number
+        type: Number,
+        default: 0
     },
     content:{
         type: String
