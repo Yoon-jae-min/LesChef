@@ -21,8 +21,6 @@ const LoginModal = (props) => {
 
     const HandlerLoginModal = (e) => {
         if(e.target.closest('.loginBox')){
-            
-            console.log('text');
             return;
         }
         if(loginModal){

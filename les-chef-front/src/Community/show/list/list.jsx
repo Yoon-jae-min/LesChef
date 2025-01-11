@@ -20,8 +20,8 @@ const CommunityList = (props) => {
     const { boardList, setBoardList } = useBoardContext();
 
     useEffect(() => {
+        setBoardList([]);
         getWrite();
-        console.log(boardList);
     }, []);
 
     const getWrite = () => {
@@ -31,7 +31,6 @@ const CommunityList = (props) => {
             if(data.length === 0){
                 setHasMoreData(false);
             }else{
-                console.log(data);
                 setBoardList((prev) => [...prev, ...data]);
                 setPageNum(prev => prev + 1);
             }

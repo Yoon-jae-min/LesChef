@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import styles from "../../../CSS/community/show/common/show.module.css";
 
 //컨텍스트
-import { WatchProvider } from "../../../Context/watchContext";
 import { useAuthContext } from "../../../Context/authContext";
 import { useConfig } from "../../../Context/configContext";
 
@@ -60,22 +59,20 @@ const CommunityBox = () => {
     }
 
     return(
-        <WatchProvider>
-            <div className={styles.box}>
-                <CommunityHeader/>
-                { !writeBoxVisible && 
-                    !watchBoxVisible && 
-                        <CommunityBody  goToWatch={goToWatch}/>}
-                { !writeBoxVisible && 
-                    !watchBoxVisible && 
-                        <CommunityFooter goToWrite={goToWrite}/>}
-                { (writeBoxVisible && !watchBoxVisible) && 
-                        <CommunityWriteBox goToList={goToList}/>}
-                { watchBoxVisible && 
-                    !writeBoxVisible && 
-                        <CommunityWatchBox goToList={goToList}/>}
-            </div>
-        </WatchProvider>
+        <div className={styles.box}>
+            <CommunityHeader/>
+            { !writeBoxVisible && 
+                !watchBoxVisible && 
+                    <CommunityBody  goToWatch={goToWatch}/>}
+            { !writeBoxVisible && 
+                !watchBoxVisible && 
+                    <CommunityFooter goToWrite={goToWrite}/>}
+            { (writeBoxVisible && !watchBoxVisible) && 
+                    <CommunityWriteBox goToList={goToList}/>}
+            { watchBoxVisible && 
+                !writeBoxVisible && 
+                    <CommunityWatchBox goToList={goToList}/>}
+        </div>
     )
 }
 

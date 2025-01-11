@@ -1,55 +1,66 @@
 //기타
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 //CSS
 import styles from "../../../../CSS/community/show/watch/right.module.css";
+
+//컨텍스트
+import { useBoardContext } from "../../../../Context/board";
+import { useConfig } from "../../../../Context/configContext";
+import { useAuthContext } from "../../../../Context/authContext";
 
 //컴포넌트
 import CommentUnit from "./comment";
 
 const Right = () => {
-    const [ comments, setComments ] = useState([]);
     const [ commentText, setCommentText ] = useState("");
+    const {commentList, selectedBoard, setCommentList} = useBoardContext();
+    const {serverUrl} = useConfig();
+    const {setIsLogin} = useAuthContext();
 
-    const getFormattedDateTime = () => {
-        const now = new Date();
-        const year = String(now.getFullYear()).slice(-2);
-        const month = String(now.getMonth() + 1).padStart(2, "0");
-        const day = String(now.getDate()).padStart(2, "0");
-        const hours = String(now.getHours()).padStart(2, "0");
-        const minutes = String(now.getMinutes()).padStart(2, "0");
-        const seconds = String(now.getSeconds()).padStart(2, "0");
-
-        return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-    };
-
-    const enterKeyDown= (event) => {
-        if(event.key === "Enter"){
-            event.preventDefault();
-            if (commentText.trim() !== "") {
-                setComments((prevComments) => [
-                    ...prevComments,
-                    { 
-                        content: commentText,
-                        dateTime: getFormattedDateTime()
-                    }
-                ]);   
+    const commentWrite = (event) => {
+        fetch(`${serverUrl}/customer/auth`,{
+            credentials: "include"
+        }).then(response => response.json()).then(data => {
+            if(data.loggedIn){
+                if((event.key === "Enter") && (commentText.trim() !== "")){
+                    event.preventDefault();
+                    const userData = JSON.parse(sessionStorage.getItem('userData'));
+                    fetch(`${serverUrl}/board/commentWrite`,{
+                        method: "POST",
+                        headers:{
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            boardId: selectedBoard.id,
+                            nickName: userData.nickName,
+                            userId: userData.id,
+                            content: commentText
+                        })
+                    }).then(response => response.json()).then(data => {
+                        setCommentList((prev) => [data, ...prev]);
+                    }).catch(err => console.log(err));
+                    setCommentText("");
+                }
+            }else{
+                alert('로그인 해주세요');
                 setCommentText("");
+                setIsLogin(false);
             }
-        }
+        })
+        
     }
 
     return(
         <div className={styles.box}>
             <textarea value={commentText} className={styles.writeBox} placeholder="댓글을 입력하세요.."
                 onChange={(e) => setCommentText(e.target.value)}
-                onKeyDown={enterKeyDown}></textarea>
+                onKeyDown={commentWrite}></textarea>
             <div className={styles.listBox}>
-                {comments.map((comment, index) => (
+                {(commentList || []).map((comment, index) => (
                     <CommentUnit 
                         key={index} 
-                        content={comment.content} 
-                        dateTime={comment.dateTime}/>
+                        comment={comment}/>
                 ))}
             </div>
         </div>

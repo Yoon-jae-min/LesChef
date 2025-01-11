@@ -8,6 +8,9 @@ const BoardCommentSchema = mongoose.Schema({
     nickName:{
         type: String
     },
+    userId: {
+        type: String
+    },
     content:{
         type: String
     },
