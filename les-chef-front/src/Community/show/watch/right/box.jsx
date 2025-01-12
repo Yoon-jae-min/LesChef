@@ -6,8 +6,8 @@ import styles from "../../../../CSS/community/show/watch/right.module.css";
 
 //컨텍스트
 import { useBoardContext } from "../../../../Context/board";
-import { useConfig } from "../../../../Context/configContext";
-import { useAuthContext } from "../../../../Context/authContext";
+import { useConfig } from "../../../../Context/config";
+import { useUserContext } from "../../../../Context/user";
 
 //컴포넌트
 import CommentUnit from "./comment";
@@ -16,7 +16,7 @@ const Right = () => {
     const [ commentText, setCommentText ] = useState("");
     const {commentList, selectedBoard, setCommentList} = useBoardContext();
     const {serverUrl} = useConfig();
-    const {setIsLogin} = useAuthContext();
+    const {setIsLogin} = useUserContext();
 
     const commentWrite = (event) => {
         fetch(`${serverUrl}/customer/auth`,{

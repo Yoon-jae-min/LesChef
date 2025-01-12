@@ -7,7 +7,7 @@ import info from "../../../../CSS/customer/show/reicpe/info/info.module.css";
 import write from "../../../../CSS/customer/show/reicpe/write/write.module.css";
 
 //컨텍스트
-import { useRecipeContext } from "../../../../Context/recipeContext";
+import { useRecipeContext } from "../../../../Context/recipe";
 
 const RecipeHeadSolt = (props) => {
     const { infoPage, listPage, writePage } = props;

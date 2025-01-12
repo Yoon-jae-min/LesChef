@@ -5,15 +5,15 @@ import React from "react";
 import styles from "../../../CSS/recipe/show/subHead.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../Context/configContext";
-import { useRecipeContext } from "../../../Context/recipeContext";
-import { useAuthContext } from "../../../Context/authContext";
+import { useConfig } from "../../../Context/config";
+import { useRecipeContext } from "../../../Context/recipe";
+import { useUserContext } from "../../../Context/user";
 
 const Right = (props) => {
     const {infoGoto} = props;
     const {serverUrl} = useConfig();
     const {recipeWish, selectedRecipe, setRecipeWish} = useRecipeContext();
-    const {setIsLogin} = useAuthContext();
+    const {setIsLogin} = useUserContext();
 
     const clickWish = () => {
         fetch(`${serverUrl}/customer/auth`,{

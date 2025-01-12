@@ -6,7 +6,7 @@ import section from "../../../CSS/main/section/section.module.css";
 import fifth from "../../../CSS/main/section/fifth.module.css";
 
 //컨텍스트
-import { useConfig } from '../../../Context/configContext';
+import { useConfig } from '../../../Context/config';
 
 //컴포넌트
 import JoinBox from './joinBox';
@@ -19,7 +19,8 @@ const MainFifth = (props) => {
                 diffCheck, 
                 setDiffCheck, 
                 dupliCheck, 
-                setDupliCheck} = props;
+                setDupliCheck,
+                currentPage } = props;
         const { serverUrl } = useConfig();
 
         return (
@@ -33,7 +34,8 @@ const MainFifth = (props) => {
                                 diffCheck={diffCheck} 
                                 setDiffCheck={setDiffCheck}
                                 dupliCheck={dupliCheck}
-                                setDupliCheck={setDupliCheck}/>
+                                setDupliCheck={setDupliCheck}
+                                currentPage={currentPage}/>
                 </section>
         )
 }

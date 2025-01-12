@@ -6,8 +6,7 @@ import styles from "../../CSS/main/common/input.module.css";
 import join from "../../CSS/main/section/join.module.css";
 
 //컨텍스트
-import { useUserContext } from "../../Context/userContext";
-import { useConfig } from "../../Context/configContext";
+import { useConfig } from "../../Context/config";
 
 const LabelInput = (props) => {
     const { labelText, 
@@ -18,8 +17,9 @@ const LabelInput = (props) => {
             diffCheck, 
             setDiffCheck, 
             dupliCheck, 
-            setDupliCheck } = props;
-    const { userInfo, setUserInfo } = useUserContext();
+            setDupliCheck,
+            saveInfo,
+            setSaveInfo } = props;
     const {serverUrl} = useConfig();
 
     const changeValue = (value) => {
@@ -58,7 +58,7 @@ const LabelInput = (props) => {
                     );
                 }
     
-                setUserInfo((prevInfo) => ({ ...prevInfo, [field]: formattedValue }));
+                setSaveInfo((prevInfo) => ({ ...prevInfo, [field]: formattedValue }));
             }
         }else if(boxType === "login"){
             inputValue(value);
@@ -66,7 +66,7 @@ const LabelInput = (props) => {
         
         if(labelText === "비밀번호 확인"){
             setCheckPwd(value);
-            setDiffCheck(userInfo.pwd !== value);
+            setDiffCheck(saveInfo.pwd !== value);
         }
     };
 

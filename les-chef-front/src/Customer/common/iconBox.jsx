@@ -6,13 +6,13 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "../../CSS/customer/common/icon.module.css";
 
 //컨텍스트
-import { useConfig } from "../../Context/configContext";
-import { useAuthContext } from "../../Context/authContext"; 
+import { useConfig } from "../../Context/config";
+import { useUserContext } from "../../Context/user";
 
 const IconBox = () => {
     const {serverUrl} = useConfig();
     const navigate = useNavigate();
-    const { setIsLogin } = useAuthContext();
+    const {setIsLogin} = useUserContext();
 
     const confirmAction = (message) => {
         return window.confirm(message);

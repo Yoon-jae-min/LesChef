@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../CSS/customer/show/common/show.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
 
 const CustomerShowHead = (props) => {
     const {category} = props;

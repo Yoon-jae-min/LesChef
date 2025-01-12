@@ -5,8 +5,8 @@ import React, { useState } from "react";
 import styles from "../../../CSS/community/show/common/show.module.css";
 
 //컨텍스트
-import { useAuthContext } from "../../../Context/authContext";
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
+import { useUserContext } from "../../../Context/user";
 
 //컴포넌트
 import CommunityHeader from "./header";
@@ -18,8 +18,7 @@ import CommunityWatchBox from "../watch/common/box";
 const CommunityBox = () => {
     const [ writeBoxVisible, setWriteBoxVisible ] = useState(false);
     const [ watchBoxVisible, setWatchBoxVisible ] = useState(false);
-
-    const {setIsLogin} = useAuthContext();
+    const {setIsLogin} = useUserContext();
     const {serverUrl} = useConfig();
 
     const goToWrite = () => {

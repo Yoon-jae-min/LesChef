@@ -25,8 +25,9 @@ const LoginModal = (props) => {
         }
         if(loginModal){
             toggleLoginModal();
-        }else if(loginToFind){
-            toggleFindBox();
+            if(loginToFind){
+                toggleFindBox();
+            }
         }
     }
 

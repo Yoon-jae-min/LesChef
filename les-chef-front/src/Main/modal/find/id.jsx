@@ -8,7 +8,7 @@ import styles from "../../../CSS/main/modal/find.module.css";
 import LabelInput from "../../common/labelInput";
 
 const FindId = (props) => {
-    const {switchFindToLogin, toggleFindBox} = props;
+    const {toggleFindBox} = props;
 
     const clickToLogin = () => {
         toggleFindBox();

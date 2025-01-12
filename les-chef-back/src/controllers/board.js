@@ -51,4 +51,11 @@ const writeComment = asyncHandler(async(req, res) => {
     res.send(comment.toObject());
 });
 
-module.exports = {getWriting, postWriting, getWatch, writeComment};
+const deleteBoard = asyncHandler(async(req, res) => {
+    await Comment.deleteMany({boardId: req.query.id});
+    await Board.deleteOne({_id: req.query.id});
+
+    res.send("ok");
+});
+
+module.exports = {getWriting, postWriting, getWatch, writeComment, deleteBoard};

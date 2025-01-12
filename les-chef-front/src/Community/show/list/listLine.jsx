@@ -6,7 +6,7 @@ import styles from "../../../CSS/community/show/list/list.module.css";
 
 //컨텍스트
 import { useBoardContext } from "../../../Context/board";
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
 
 const CommunityListLine = (props) => {
     const { goToWatch, board } = props;
@@ -23,6 +23,7 @@ const CommunityListLine = (props) => {
                 id: content._id,
                 title: board.title,
                 userName: board.nickName,
+                userId: board.userId,
                 writeDate: new Date(board.createdAt).toISOString().split('T')[0],
                 watchNum: content.viewCount,
                 content: content.content

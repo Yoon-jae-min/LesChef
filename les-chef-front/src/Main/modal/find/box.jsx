@@ -1,11 +1,11 @@
 //기타
 import React, { useEffect } from "react";
 
-//컨텍스트
-import { useConfig } from "../../../Context/configContext";
-
 //CSS
 import styles from "../../../CSS/main/modal/find.module.css";
+
+//컨텍스트
+import { useConfig } from "../../../Context/config";
 
 //컴포넌트
 import FindId from "./id";
@@ -28,26 +28,31 @@ const FindBox = (props) => {
         pwButton.classList.remove(`${styles.click}`);
     }, [])
 
-    const HandlerSwitch = () => {
+    const HandlerSwitch = (text) => {
         const idButton = document.querySelector('.idClick');
         const pwButton = document.querySelector('.pwClick');
 
-        if(idButton.classList.contains(`${styles.click}`)){
-            idButton.classList.remove(`${styles.click}`);
-            pwButton.classList.add(`${styles.click}`);
+        if(text === "아이디"){
+            if(pwButton.classList.contains(`${styles.click}`)){
+                idButton.classList.add(`${styles.click}`);
+                pwButton.classList.remove(`${styles.click}`);
+                toggleFindIdPw();
+            }
         }else{
-            idButton.classList.add(`${styles.click}`);
-            pwButton.classList.remove(`${styles.click}`);
+            if(idButton.classList.contains(`${styles.click}`)){
+                idButton.classList.remove(`${styles.click}`);
+                pwButton.classList.add(`${styles.click}`);
+                toggleFindIdPw();
+            }
         }
-        toggleFindIdPw();
     }
 
     return(
         <div className={`${styles.box} loginBox`} style={{opacity: loginToFind ? '1' : '0'}}>
             <img className={styles.logo} src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
             <div className={styles.idPwBtnBox}>
-                <div className={`${styles.idBtn} ${styles.click} idClick`} onClick={HandlerSwitch}>로그인</div>
-                <div className={`${styles.pwBtn} pwClick`} onClick={HandlerSwitch}>비밀번호</div>
+                <div className={`${styles.idBtn} ${styles.click} idClick`} onClick={(e) => HandlerSwitch(e.target.textContent)}>아이디</div>
+                <div className={`${styles.pwBtn} pwClick`} onClick={(e) => HandlerSwitch(e.target.textContent)}>비밀번호</div>
             </div>
             {!idPwBox && 
                 <FindId 

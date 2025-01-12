@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import styles from "../../CSS/customer/menu/menu.module.css";
 
 //컨텍스트
-import { useConfig } from "../../Context/configContext";
+import { useConfig } from "../../Context/config";
 
 //컴포넌트
 import MainMenuText from "./text";

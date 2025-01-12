@@ -7,8 +7,8 @@ import step from "../../../../CSS/customer/show/reicpe/write/step.module.css";
 import ingre from "../../../../CSS/customer/show/reicpe/write/ingre.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../../Context/configContext";
-import { useRecipeContext } from "../../../../Context/recipeContext";
+import { useConfig } from "../../../../Context/config";
+import { useRecipeContext } from "../../../../Context/recipe";
 
 //컴포넌트
 import StepBoxUnit from "./stepUnit";

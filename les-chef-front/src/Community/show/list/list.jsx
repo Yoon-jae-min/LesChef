@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../CSS/community/show/list/list.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
 import { useBoardContext } from "../../../Context/board";
 
 //컴포넌트

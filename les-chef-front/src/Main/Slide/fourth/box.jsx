@@ -5,7 +5,7 @@ import React from 'react';
 import styles from "../../../CSS/main/section/section.module.css"
 
 //컨텍스트
-import { useConfig } from '../../../Context/configContext';
+import { useConfig } from '../../../Context/config';
 
 const MainFourth = () => {
     const { serverUrl } = useConfig();

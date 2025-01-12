@@ -5,8 +5,8 @@ import React from "react";
 import styles from "../../../CSS/customer/show/info/main.module.css";
 
 //컨텍스트
-import { useUserContext } from "../../../Context/userContext";
-import { useConfig } from "../../../Context/configContext";
+import { useUserContext } from "../../../Context/user";
+import { useConfig } from "../../../Context/config";
 
 const Main = () => {
     const { serverUrl } = useConfig();

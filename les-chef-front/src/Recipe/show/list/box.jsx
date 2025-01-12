@@ -5,7 +5,7 @@ import React from "react";
 import styles from "../../../CSS/recipe/list/list.module.css";
 
 //컨텍스트
-import { useRecipeContext } from "../../../Context/recipeContext";
+import { useRecipeContext } from "../../../Context/recipe";
 
 //컴포넌트
 import Unit from "./unit";

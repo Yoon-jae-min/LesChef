@@ -6,9 +6,9 @@ import { useNavigate } from "react-router-dom";
 import styles from "../../CSS/community/common/page.module.css";
 
 //컨텍스트
-import { useConfig } from "../../Context/configContext";
-import { useAuthContext } from "../../Context/authContext";
+import { useConfig } from "../../Context/config";
 import { BoardProvider } from "../../Context/board";
+import { useUserContext } from "../../Context/user";
 
 //컴포넌트
 import CommunityBox from "../show/common/box";
@@ -17,7 +17,7 @@ import LoginModal from "../../Main/modal/login/modal";
 
 const CommunityPage = () => {
     const {serverUrl} = useConfig();
-    const { setIsLogin } = useAuthContext();
+    const { setIsLogin } = useUserContext();
 
     //로그인 관련
     const [idPwBox, setIdPwBox] = useState(false);

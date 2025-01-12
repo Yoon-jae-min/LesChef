@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import styles from "../../../CSS/recipe/show/show.module.css"
 
 //컨텍스트
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
 
 const Head = (props) => {
     const {category} = props;

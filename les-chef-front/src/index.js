@@ -14,14 +14,12 @@ import CommunityPage from './Community/common/page';
 
 //컨텍스트
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { ConfigProvider } from './Context/configContext';
-import { UserProvider } from './Context/userContext';
-import { AuthProvider } from './Context/authContext';
-import { RecipeProvider } from './Context/recipeContext';
+import { ConfigProvider } from './Context/config';
+import { UserProvider } from './Context/user';
+import { RecipeProvider } from './Context/recipe';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <AuthProvider>
     <ConfigProvider>
       <UserProvider>
         <RecipeProvider>
@@ -36,7 +34,6 @@ root.render(
         </RecipeProvider>
       </UserProvider>
     </ConfigProvider>
-  </AuthProvider>
 );
 
 reportWebVitals();

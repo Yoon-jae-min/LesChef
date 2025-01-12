@@ -5,8 +5,8 @@ import React from "react";
 import styles from "../../../../CSS/recipe/info/icon.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../../Context/configContext";
-import { useRecipeContext } from "../../../../Context/recipeContext";
+import { useConfig } from "../../../../Context/config";
+import { useRecipeContext } from "../../../../Context/recipe";
 
 //컴포넌트
 import Unit from "./unit";

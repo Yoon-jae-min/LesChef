@@ -3,8 +3,8 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 //컨텍스트
-import { useConfig } from "../../../../Context/configContext";
-import { useRecipeContext } from "../../../../Context/recipeContext";
+import { useConfig } from "../../../../Context/config";
+import { useRecipeContext } from "../../../../Context/recipe";
 
 //컴포넌트
 import RecipeListUnit from "./unit";

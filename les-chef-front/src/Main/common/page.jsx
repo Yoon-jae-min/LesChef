@@ -3,9 +3,8 @@ import React, {useEffect, useRef, useState} from 'react';
 import { useLocation, useNavigate } from "react-router-dom";
 
 //컨텍스트
-import { useUserContext } from "../../Context/userContext";
-import { useConfig } from "../../Context/configContext";
-import { useAuthContext } from "../../Context/authContext";
+import { useUserContext } from "../../Context/user";
+import { useConfig } from "../../Context/config";
 
 //컴포넌트
 import MainFirst from '../Slide/first/box';
@@ -44,9 +43,8 @@ const MainPage = () => {
     const [diffCheck, setDiffCheck] = useState(false);
     const [dupliCheck, setDupliCheck] = useState(false);
 
-    const { setUserInfo } = useUserContext();
+    const { setUserInfo, setIsLogin } = useUserContext();
     const { serverUrl } = useConfig();
-    const { setIsLogin } = useAuthContext();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
@@ -113,13 +111,13 @@ const MainPage = () => {
             behavior: "smooth",
         });
         setSlideCheck(currentPage < 4);
-        setUserInfo({
-            id: "",
-            name: "",
-            pwd: "",
-            nickName: "",
-            tel: ""
-        });
+        // setUserInfo({
+        //     id: "",
+        //     name: "",
+        //     pwd: "",
+        //     nickName: "",
+        //     tel: ""
+        // });
         setCheckPwd("");
         setDiffCheck(false);
         setDupliCheck(false);
@@ -193,6 +191,7 @@ const MainPage = () => {
 
     const toggleFindIdPw = () => {
         setIdPwBox((prev) => !prev);
+        console.log(loginModal);
     }
 
     const switchFindToLogin = () => {
@@ -214,7 +213,8 @@ const MainPage = () => {
                 diffCheck={diffCheck} 
                 setDiffCheck={setDiffCheck} 
                 dupliCheck={dupliCheck}
-                setDupliCheck={setDupliCheck}/>
+                setDupliCheck={setDupliCheck}
+                currentPage={currentPage}/>
             <LoginModal 
                 idPwBox={idPwBox} 
                 loginToFind={loginToFind}

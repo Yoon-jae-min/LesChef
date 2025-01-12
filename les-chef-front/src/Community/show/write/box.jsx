@@ -5,9 +5,9 @@ import React, { useEffect } from "react";
 import styles from "../../../CSS/community/show/write/write.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
 import { useBoardContext } from "../../../Context/board";
-import { useUserContext } from "../../../Context/userContext";
+import { useUserContext } from "../../../Context/user";
 
 const WriteBox = (props) => {
     const { goToList } = props;

@@ -5,7 +5,7 @@ import React from "react";
 import styles from "../../../CSS/community/show/list/footer.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../Context/configContext";
+import { useConfig } from "../../../Context/config";
 
 const CommunityFooter = (props) => {
     const { goToWrite } = props;

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import styles from "../../CSS/customer/common/page.module.css";
 
 //컨텍스트
-import { useConfig } from "../../Context/configContext";
+import { useConfig } from "../../Context/config";
 
 //컴포넌트
 import CustomerShowBox from "../show/common/box";

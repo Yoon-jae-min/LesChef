@@ -6,18 +6,16 @@ import { useNavigate } from 'react-router-dom';
 import styles from "../../../CSS/main/common/left.module.css";
 
 //컨텍스트
-import { useAuthContext } from '../../../Context/authContext';
-import { useConfig } from '../../../Context/configContext';
-import { useUserContext } from '../../../Context/userContext';
+import { useConfig } from '../../../Context/config';
+import { useUserContext } from '../../../Context/user';
 
 const MainIcon = (props) => {
     const navigate = useNavigate();
     const { toggleLoginModal, 
             toggleMenuModal, 
             menuModal} = props
-    const { isLogin, setIsLogin } = useAuthContext();
     const { serverUrl } = useConfig();
-    const { setUserData } = useUserContext();
+    const { isLogin, setIsLogin, setUserData } = useUserContext();
 
     const confirmAction = (message) => {
         return window.confirm(message);

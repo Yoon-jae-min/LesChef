@@ -5,8 +5,8 @@ import React from "react";
 import styles from "../../../../CSS/customer/show/reicpe/list/list.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../../Context/configContext";
-import { useRecipeContext } from "../../../../Context/recipeContext";
+import { useConfig } from "../../../../Context/config";
+import { useRecipeContext } from "../../../../Context/recipe";
 
 const RecipeListUnit = (props) => {
     const { setInfoPage, 

@@ -5,7 +5,7 @@ import React from "react";
 import styles from "../../../../CSS/customer/show/reicpe/write/ingre.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../../Context/configContext";
+import { useConfig } from "../../../../Context/config";
 
 //컴포넌트
 import IngredientEach from "./ingreUnit";

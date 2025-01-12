@@ -4,9 +4,6 @@ import React from "react";
 //CSS
 import styles from "../../../CSS/main/section/join.module.css";
 
-//컨텍스트
-import { useUserContext } from "../../../Context/userContext";
-
 //컴포넌트
 import LabelInput from "../../common/labelInput";
 
@@ -17,39 +14,52 @@ const JoinInput = (props) => {
             diffCheck, 
             setDiffCheck, 
             dupliCheck, 
-            setDupliCheck } = props;
-    const { userInfo } = useUserContext();
+            setDupliCheck,
+            saveInfo,
+            setSaveInfo } = props;
 
     return(
         <div className={styles.input}>
             <LabelInput 
                 boxType = "join" 
                 labelText = "이메일(아이디)" 
-                basicValue={userInfo.id}
+                basicValue={saveInfo.id}
                 dupliCheck={dupliCheck}
-                setDupliCheck={setDupliCheck}/>
+                setDupliCheck={setDupliCheck}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}/>
             <LabelInput 
                 boxType = "join" 
                 labelText = "이름" 
-                basicValue={userInfo.name}/>
+                basicValue={saveInfo.name}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}/>
             <LabelInput 
                 boxType = "join" 
                 labelText = "닉네임" 
-                basicValue={userInfo.nickName}/>
+                basicValue={saveInfo.nickName}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}/>
             <LabelInput 
                 boxType = "join" 
-                labelText = "전화번호" basicValue={userInfo.tel}/>
+                labelText = "전화번호" basicValue={saveInfo.tel}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}/>
             <LabelInput 
                 boxType = "join" 
                 labelText = "비밀번호" 
-                basicValue={userInfo.pwd}/>
+                basicValue={saveInfo.pwd}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}/>
             <LabelInput 
                 boxType = "join" 
                 labelText = "비밀번호 확인" 
                 basicValue={checkPwd} 
                 setCheckPwd={setCheckPwd} 
                 diffCheck={diffCheck} 
-                setDiffCheck={setDiffCheck}/>
+                setDiffCheck={setDiffCheck}
+                saveInfo={saveInfo}
+                setSaveInfo={setSaveInfo}/>
         </div>
     )
 }

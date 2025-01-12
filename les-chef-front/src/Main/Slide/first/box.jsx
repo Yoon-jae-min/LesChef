@@ -6,7 +6,7 @@ import section from "../../../CSS/main/section/section.module.css";
 import first from "../../../CSS/main/section/first.module.css";
 
 //컨텍스트
-import { useConfig } from '../../../Context/configContext';
+import { useConfig } from '../../../Context/config';
 
 const MainFirst = (props) => {
     const { serverUrl } = useConfig();
