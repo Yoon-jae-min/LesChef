@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 //컨텍스트
 import { useConfig } from "../../../../Context/config";
 import { useRecipeContext } from "../../../../Context/recipe";
+import { useUserContext } from "../../../../Context/user";
 
 //컴포넌트
 import RecipeListUnit from "./unit";
@@ -14,28 +15,27 @@ const ListBox = (props) => {
     const navigate = useNavigate();
     const {serverUrl} = useConfig();
     const {recipeList, setRecipeList} = useRecipeContext();
+    const {authCheck} = useUserContext();
 
     useEffect(() => {
-        fetch(`${serverUrl}/customer/auth`, {
-            credentials: 'include'
-        }).then(response => response.json()).then((data) => {
-            if(data.loggedIn){
-                fetch(`${serverUrl}/recipe/myList`,{
-                    method: "GET",
-                    headers:{
-                        "Content-Type" : "application/json"
-                    },
-                    credentials: "include"
-                }).then((response) => {if(response) return response.json()}).then((data) => {
-                    setRecipeList(data);
-                }).catch(err => console.log(err));
-            }else{
-                alert('다시 로그인 해주세요!!');
-                navigate('/');
-            }
-        }).catch(err => console.log(err));
+        const userCheck = async() => {
+            return await authCheck(); 
+        }
 
-        
+        if(userCheck()){
+            fetch(`${serverUrl}/recipe/myList`,{
+                method: "GET",
+                headers:{
+                    "Content-Type" : "application/json"
+                },
+                credentials: "include"
+            }).then((response) => {if(response) return response.json()}).then((data) => {
+                setRecipeList(data);
+            }).catch(err => console.log(err));
+        }else{
+            alert('다시 로그인 해주세요!!');
+            navigate('/');
+        }
     }, [])
 
     return(

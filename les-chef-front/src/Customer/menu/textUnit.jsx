@@ -1,5 +1,9 @@
 //기타
 import React from "react";
+import { useNavigate } from "react-router-dom";
+
+//컨텍스트
+import { useUserContext } from "../../Context/user";
 
 //CSS
 import styles from "../../CSS/customer/menu/menu.module.css";
@@ -7,12 +11,18 @@ import styles from "../../CSS/customer/menu/menu.module.css";
 const MenuTxtUnit = (props) => {
     const { koreanTxt, 
             englishTxt, 
-            setCategory, 
-            checkUser } = props;
+            setCategory } = props;
+    const {authCheck} = useUserContext();
+    const navigate = useNavigate();
 
-    const HandlerClick = () => {
-        checkUser();
-        setCategory(englishTxt);
+    const HandlerClick = async() => {
+        if(await authCheck()){
+            setCategory(englishTxt);
+        }else{
+            alert("다시 로그인 해주세요!!!");
+            navigate("/");
+        }
+        
     }
 
     return(

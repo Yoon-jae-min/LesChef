@@ -1,5 +1,6 @@
 //기타
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //CSS
 import recipe from "../../../../CSS/customer/show/reicpe/common/recipe.module.css";
@@ -8,11 +9,14 @@ import write from "../../../../CSS/customer/show/reicpe/write/write.module.css";
 
 //컨텍스트
 import { useRecipeContext } from "../../../../Context/recipe";
+import { useUserContext } from "../../../../Context/user";
 
 const RecipeHeadSolt = (props) => {
     const { infoPage, listPage, writePage } = props;
     const { setWrRecipeInfo, selectedRecipe } = useRecipeContext();
     const [options, setOptions] = useState([]);
+    const {authCheck} = useUserContext();
+    const navigate = useNavigate();
 
     const categories = ["한식", "일식", "중식", "양식", "기타"];
     const subcategories = {
@@ -23,21 +27,42 @@ const RecipeHeadSolt = (props) => {
         기타: ["면", "밥", "국", "기타"]
     };
 
+    const userCheck = async() => {
+        return await authCheck();
+    }
+
+    const loginMessage = () => {
+        alert('다시 로그인 해주세요');
+        navigate('/');
+    }
+
     const changeRecipeName = (recipeName) => {
-        setWrRecipeInfo((preInfo) => ({...preInfo, recipeName: recipeName}));
+        if(userCheck()){
+            setWrRecipeInfo((preInfo) => ({...preInfo, recipeName: recipeName}));
+        }else{
+            loginMessage();
+        }
     }
 
     const changeMajorCategory = (majorCategory) => {
-        setOptions(subcategories[majorCategory]);
-        setWrRecipeInfo((preInfo) => (
-            {...preInfo, majorCategory: majorCategory}
-        ));
+        if(userCheck()){
+            setOptions(subcategories[majorCategory]);
+            setWrRecipeInfo((preInfo) => (
+                {...preInfo, majorCategory: majorCategory}
+            ));
+        }else{
+            loginMessage();
+        }
     }
 
     const changeSubCategory = (subCategory) => {
-        setWrRecipeInfo((preInfo) => (
-            {...preInfo, subCategory: subCategory}
-        ))
+        if(userCheck()){
+            setWrRecipeInfo((preInfo) => (
+                {...preInfo, subCategory: subCategory}
+            ))
+        }else{
+            loginMessage();
+        }
     }
 
     return(

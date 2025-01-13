@@ -15,7 +15,7 @@ const MainIcon = (props) => {
             toggleMenuModal, 
             menuModal} = props
     const { serverUrl } = useConfig();
-    const { isLogin, setIsLogin, setUserData } = useUserContext();
+    const { isLogin, setIsLogin, authCheck } = useUserContext();
 
     const confirmAction = (message) => {
         return window.confirm(message);
@@ -29,48 +29,32 @@ const MainIcon = (props) => {
         toggleLoginModal();
     }
 
-    const clickLogout = () => {
-        if(confirmAction("로그아웃 하시겠습니까?")){
-            fetch(`${serverUrl}/customer/logout`,{
-                credentials: 'include'
-            }).then(
-                (response) => {
-                    if(response){
-                        setIsLogin(false);
-                        sessionStorage.removeItem('userData');
-                        alert("로그아웃 되셨습니다.");
+    const clickLogout = async() => {
+        if(await authCheck()){
+            if(confirmAction("로그아웃 하시겠습니까?")){
+                fetch(`${serverUrl}/customer/logout`,{
+                    credentials: 'include'
+                }).then(
+                    (response) => {
+                        if(response){
+                            setIsLogin(false);
+                            sessionStorage.removeItem('userData');
+                            alert("로그아웃 되셨습니다.");
+                        }
                     }
-                }
-            ).catch((err) => {
-                console.log(err);
-            });
+                ).catch((err) => {
+                    console.log(err);
+                });
+            }
         }
     }
 
-    const clickProfile = () => {
-        fetch(`${serverUrl}/customer/auth`,{
-            credentials: "include"
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            if(data.loggedIn){
-                fetch(`${serverUrl}/customer/info`,{
-                    credentials: "include"
-                }).then(response => response.json()).then((data) => {
-                    setUserData({
-                        id: data.id,
-                        nickName: data.nickName,
-                        name: data.name,
-                        tel: data.tel
-                    });
-                    navigate('/customerMain');
-                }).catch(err => console.log(err));
-            }else{
-                alert("로그인이 필요합니다!!!");
-            }
-        }).catch((err) => {
-            console.log(err);
-        });
+    const clickProfile = async() => {
+        if(await authCheck()){
+            navigate('/customerMain');
+        }else{
+            alert("로그인이 필요합니다!!!");
+        }
     }
 
     useEffect(() => {

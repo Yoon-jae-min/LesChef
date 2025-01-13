@@ -1,6 +1,5 @@
 //기타
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 //CSS
 import styles from "../../CSS/customer/common/page.module.css";
@@ -17,29 +16,15 @@ import IconBox from "./iconBox";
 const CustomerPage = () => {
     const [category, setCategory] = useState('My Info');
     const { serverUrl } = useConfig();
-    const navigate = useNavigate();
-
-    const checkUser = () => {
-        fetch(`${serverUrl}/customer/auth`,{
-            credentials: 'include'
-        }).then((response) => response.json()).then((data) => {
-            if(!data.loggedIn){
-                alert("다시 로그인 해주세요!!!");
-                navigate("/");
-            }
-        }).catch((err) => console.log(err));
-    }
 
     return (
         <div className={styles.body}>
             <img className={styles.bgImg} src={`${serverUrl}/Image/CustomerImage/Background/CustomerBackground.jpg`}/>
             <IconBox/>
             <CustomerShowBox 
-                category={category} 
-                checkUser={checkUser}/>
+                category={category}/>
             <CustomerMenuBox 
-                setCategory={setCategory} 
-                checkUser={checkUser}/>
+                setCategory={setCategory}/>
         </div>
     )
 }

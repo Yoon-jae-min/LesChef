@@ -24,27 +24,20 @@ const CommunityPage = () => {
     const [loginToFind, setLoginToFind] = useState(false);
     const [loginModal, setLoginModal] = useState(false);
     const navigate = useNavigate();
+    const {authCheck} = useUserContext();
 
     useEffect(() => {
-        fetch(`${serverUrl}/customer/auth`,{
-            method: "GET",
-            headers: { "Content-type": "application/json" },
-            credentials: 'include'
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            if(data.loggedIn){
-                setIsLogin(true);
-            }else{
-                setIsLogin(false);
-            }
-        }).catch((err) => {
-            console.log(err);
-        })
+        const userCheck = async() => {
+            await authCheck();
+        }
+
+        userCheck();
     },[]);
 
-    const toggleLoginModal = () => {
-        setLoginModal((prev) => !prev);
+    const toggleLoginModal = async() => {
+        if(!await authCheck()){
+            setLoginModal((prev) => !prev);
+        }
     }
 
     const toggleFindBox = () => {

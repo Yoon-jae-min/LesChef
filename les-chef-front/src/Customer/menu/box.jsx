@@ -12,7 +12,7 @@ import { useConfig } from "../../Context/config";
 import MainMenuText from "./text";
 
 const CustomerMenuBox = (props) => {
-    const {setCategory, checkUser} = props;
+    const {setCategory} = props;
     const {serverUrl} = useConfig();
 
     return(
@@ -20,8 +20,7 @@ const CustomerMenuBox = (props) => {
             <Link to="/">
                 <img className={styles.logo} src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/></Link>
             <MainMenuText 
-                setCategory={setCategory} 
-                checkUser={checkUser}/>
+                setCategory={setCategory}/>
         </div>
     )
 }

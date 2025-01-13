@@ -17,28 +17,22 @@ const CommunityWatchBox = (props) => {
     const { goToList } = props;
     const {serverUrl} = useConfig();
     const {selectedBoard} = useBoardContext();
-    const {setIsLogin} = useUserContext();
+    const {authCheck} = useUserContext();
 
-    const deleteBoard = () => {
-        fetch(`${serverUrl}/customer/auth`,{
-            credentials: "include"
-        }).then(response => response.json()).then(data => {
-            if(data.loggedIn){
-                if(selectedBoard.userId === JSON.parse(sessionStorage.getItem('userData')).id){
-                    fetch(`${serverUrl}/board/delete?id=${selectedBoard.id}`,{
-                        method: "GET"
-                    }).then(response => {
-                        goToList();
-                    }).catch(err => console.log(err));
-                }else{
-                    alert('작성자만 삭제할 수 있습니다');
-                }
+    const deleteBoard = async() => {
+        if(await authCheck()){
+            if(selectedBoard.userId === JSON.parse(sessionStorage.getItem('userData')).id){
+                fetch(`${serverUrl}/board/delete?id=${selectedBoard.id}`,{
+                    method: "GET"
+                }).then(response => {
+                    goToList();
+                }).catch(err => console.log(err));
             }else{
-                sessionStorage.removeItem('userData');
-                setIsLogin(false);
-                alert('로그인이 필요합니다');
+                alert('작성자만 삭제할 수 있습니다');
             }
-        })
+        }else{
+            alert('로그인이 필요합니다');
+        }
     }
 
     return(

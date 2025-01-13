@@ -8,6 +8,7 @@ import styles from "../../CSS/recipe/common/page.module.css";
 //컨텍스트
 import { useConfig } from "../../Context/config";
 import { useRecipeContext } from "../../Context/recipe";
+import { useUserContext } from "../../Context/user";
 
 //컴포넌트
 import Show from "../show/common/box";
@@ -21,11 +22,17 @@ const RecipePage = () => {
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
     const { setRecipeList } = useRecipeContext();
+    const {authCheck} = useUserContext();
 
     useEffect(() => {
-        setRecipeList([]);
-        const recipeListUrl = selectRecipeListUrl(category);
-        recipeListSearch(recipeListUrl);
+        const asyncMethod = async () => {
+            setRecipeList([]);  // 상태 초기화
+            const recipeListUrl = selectRecipeListUrl(category);
+            recipeListSearch(recipeListUrl);
+            await authCheck();
+        };
+    
+        asyncMethod(); 
     },[]);
 
     useEffect(() => {
@@ -66,8 +73,10 @@ const RecipePage = () => {
     const [loginToFind, setLoginToFind] = useState(false);
     const [loginModal, setLoginModal] = useState(false);
 
-    const toggleLoginModal = () => {
-        setLoginModal((prev) => !prev);
+    const toggleLoginModal = async() => {
+        if(!await authCheck()){
+            setLoginModal((prev) => !prev);
+        }
     }
 
     const toggleFindBox = () => {

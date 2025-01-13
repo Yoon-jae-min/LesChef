@@ -1,8 +1,12 @@
 //기타
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //CSS
 import styles from "../../../CSS/customer/show/info/btnBox.module.css";
+
+//컨텍스트
+import { useUserContext } from "../../../Context/user";
 
 const Btn = (props) => {
     const [ changeInfo, setChangeInfo ] = useState(false);
@@ -12,33 +16,68 @@ const Btn = (props) => {
             setPwdChange,
             setCheckedPwd,
             setDeleteInfo } = props;
+    const {authCheck} = useUserContext();
+    const navigate = useNavigate();
+
+    const userCheck = async() => {
+        return await authCheck();
+    }
+
+    const loginMessage = () => {
+        alert('다시 로그인 해주세요');
+        navigate('/');
+    }
 
     const changeInfoClick = () => {
-        setChangeInfo(true);
-        setPwdChange(false);
+        if(userCheck()){
+            setChangeInfo(true);
+            setPwdChange(false);
+        }else{
+            loginMessage();
+        }
     }
 
     const changeInfoCancel = () => {
-        setChangeInfo(false);
+        if(userCheck()){
+            setChangeInfo(false);
+        }else{
+            loginMessage();
+        }
     }
 
     const changePwdClick = () => {
-        setPwdChange(true);
-        setChangeInfo(false);
+        if(userCheck()){
+            setPwdChange(true);
+            setChangeInfo(false);
+        }else{
+            loginMessage();
+        }
     }
 
     const changePwdCancel = () => {
-        setPwdChange(false);
-        setCheckedPwd(false);
+        if(userCheck()){
+            setPwdChange(false);
+            setCheckedPwd(false);
+        }else{
+            loginMessage();
+        }
     }
 
     const deleteInfoClick = () => {
-        setDeleteInfo(true);
+        if(userCheck()){
+            setDeleteInfo(true);
+        }else{
+            loginMessage();
+        }
     }
 
     const deleteInfoCancel = () => {
-        setDeleteInfo(false);
-        setCheckedPwd(false);
+        if(userCheck()){
+            setDeleteInfo(false);
+            setCheckedPwd(false);
+        }else{
+            loginMessage();
+        }
     }
 
     return(

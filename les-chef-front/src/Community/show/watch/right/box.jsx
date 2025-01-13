@@ -1,5 +1,5 @@
 //기타
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 //CSS
 import styles from "../../../../CSS/community/show/watch/right.module.css";
@@ -16,39 +16,33 @@ const Right = () => {
     const [ commentText, setCommentText ] = useState("");
     const {commentList, selectedBoard, setCommentList} = useBoardContext();
     const {serverUrl} = useConfig();
-    const {setIsLogin} = useUserContext();
+    const {authCheck} = useUserContext();
 
-    const commentWrite = (event) => {
-        fetch(`${serverUrl}/customer/auth`,{
-            credentials: "include"
-        }).then(response => response.json()).then(data => {
-            if(data.loggedIn){
-                if((event.key === "Enter") && (commentText.trim() !== "")){
-                    event.preventDefault();
-                    const userData = JSON.parse(sessionStorage.getItem('userData'));
-                    fetch(`${serverUrl}/board/commentWrite`,{
-                        method: "POST",
-                        headers:{
-                            "Content-Type": "application/json"
-                        },
-                        body: JSON.stringify({
-                            boardId: selectedBoard.id,
-                            nickName: userData.nickName,
-                            userId: userData.id,
-                            content: commentText
-                        })
-                    }).then(response => response.json()).then(data => {
-                        setCommentList((prev) => [data, ...prev]);
-                    }).catch(err => console.log(err));
-                    setCommentText("");
-                }
-            }else{
-                alert('로그인 해주세요');
+    const commentWrite = async(event) => {
+        if(await authCheck()){
+            if((event.key === "Enter") && (commentText.trim() !== "")){
+                event.preventDefault();
+                const userData = JSON.parse(sessionStorage.getItem('userData'));
+                fetch(`${serverUrl}/board/commentWrite`,{
+                    method: "POST",
+                    headers:{
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        boardId: selectedBoard.id,
+                        nickName: userData.nickName,
+                        userId: userData.id,
+                        content: commentText
+                    })
+                }).then(response => response.json()).then(data => {
+                    setCommentList((prev) => [data, ...prev]);
+                }).catch(err => console.log(err));
                 setCommentText("");
-                setIsLogin(false);
             }
-        })
-        
+        }else{
+            alert('로그인 해주세요');
+            setCommentText("");
+        }
     }
 
     return(

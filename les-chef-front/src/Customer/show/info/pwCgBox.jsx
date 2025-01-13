@@ -1,8 +1,12 @@
 //기타
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //CSS
 import styles from "../../../CSS/customer/show/info/pwCg.module.css";
+
+//컨텍스트
+import { useUserContext } from "../../../Context/user";
 
 const PwCg = (props) => {
     const [ checkInputText, setCheckInputText ] = useState("");
@@ -12,21 +16,26 @@ const PwCg = (props) => {
             setPwdChange,
             setDeleteInfo,
             setCheckedPwd } = props;
+    const {authCheck} = useUserContext();
+    const navigate = useNavigate();
 
     const checkInputUpdate = (e) => {
         setCheckInputText(e.target.value);
     }
 
-    const checkBtnClick = () => {
-        if(checkInputText === "1234"){
-            setCheckedPwd(true);
-            setPwdChange(false);
-            setDeleteInfo(false);
+    const checkBtnClick = async() => {
+        if(await authCheck()){
+            if(checkInputText === "1234"){
+                setCheckedPwd(true);
+                setPwdChange(false);
+                setDeleteInfo(false);
+            }else{
+                alert("비밀번호가 틀렸습니다.");
+            }
+            setCheckInputText("");
         }else{
-            alert("비밀번호가 틀렸습니다.");
+            navigate('/');
         }
-
-        setCheckInputText("");
     }
 
     return(

@@ -8,6 +8,7 @@ import styles from "../../../../CSS/customer/show/reicpe/common/recipe.module.cs
 //컨텍스트
 import { useConfig } from "../../../../Context/config";
 import { useRecipeContext } from "../../../../Context/recipe";
+import { useUserContext } from "../../../../Context/user";
 
 //컴포넌트
 import RecipeHeadSolt from "./headSolt";
@@ -26,17 +27,31 @@ const RecipeHead = (props) => {
             wrRecipeImg,
             wrStepImgs } = useRecipeContext();
     const navigate = useNavigate();
+    const {authCheck} = useUserContext();
+
+    const loginMessage = () => {
+        alert('다시 로그인 해주세요');
+        navigate('/');
+    }
     
 
-    const clickGoList = () => {
-        setListPage(true);
-        setWritePage(false);
-        setInfoPage(false);
+    const clickGoList = async() => {
+        if(await authCheck()){
+            setListPage(true);
+            setWritePage(false);
+            setInfoPage(false);
+        }else{
+            loginMessage();
+        }
     }
 
-    const addRecipe = () => {
-        setWritePage(true);
-        setListPage(false);
+    const addRecipe = async() => {
+        if(await authCheck()){
+            setWritePage(true);
+            setListPage(false);
+        }else{
+            loginMessage();
+        }
     }
 
     //등록 메소드
@@ -62,44 +77,41 @@ const RecipeHead = (props) => {
                 checkWrReciepeIngres) ? true : false;
     }
 
-    const enrollRecipe = () => {
-        if(checkEnroll()){
-            const formData = new FormData();
+    const enrollRecipe = async() => {
+        if(await authCheck()){
+            if(checkEnroll()){
+                const formData = new FormData();
+    
+                formData.append("recipeInfo", JSON.stringify(wrRecipeInfo));
+                formData.append("recipeIngredients", JSON.stringify(wrRecipeIngres)); 
+                formData.append("recipeSteps", JSON.stringify(wrRecipeSteps));
+                formData.append("recipeImgFile", wrRecipeImg);
+                wrStepImgs.forEach((stepImg) => {
+                    formData.append("recipeStepImgFiles", stepImg);
+                });
+    
+                console.log("FormData Contents:");
+                formData.forEach((value, key) => {
+                    console.log(key, value);
+                });
 
-            formData.append("recipeInfo", JSON.stringify(wrRecipeInfo));
-            formData.append("recipeIngredients", JSON.stringify(wrRecipeIngres)); 
-            formData.append("recipeSteps", JSON.stringify(wrRecipeSteps));
-            formData.append("recipeImgFile", wrRecipeImg);
-            wrStepImgs.forEach((stepImg) => {
-                formData.append("recipeStepImgFiles", stepImg);
-            });
-
-            console.log("FormData Contents:");
-            formData.forEach((value, key) => {
-                console.log(key, value);
-            });
-
-            fetch(`${serverUrl}/customer/auth`,{
-                credentials: "include"
-            }).then(response => response.json()).then((data) => {
-                if(data.loggedIn){
-                    fetch(`${serverUrl}/recipe/write`, {
-                        method: "POST",
-                        body: formData,
-                        credentials: "include"
-                    }).then(response => {
-                        setListPage(true);
-                        setWritePage(false);
-                        setInfoPage(false);
-                    }).catch(err => console.log(err));
-                }else{
-                    alert("다시 로그인 해주세요!!!");
-                    navigate('/');
-                }
-            }).catch(err => console.log(err));
+                fetch(`${serverUrl}/recipe/write`, {
+                    method: "POST",
+                    body: formData,
+                    credentials: "include"
+                }).then(response => {
+                    setListPage(true);
+                    setWritePage(false);
+                    setInfoPage(false);
+                }).catch(err => console.log(err));
+            }else{
+                alert("모든 항목을 채워주세요!!!!");
+            }
         }else{
-            alert("모든 항목을 채워주세요!!!!");
+            alert("다시 로그인 해주세요!!!");
+            navigate('/');
         }
+        
     }
 
     return(

@@ -30,26 +30,8 @@ const WriteBox = () => {
         setWrStepImgs([]);
     }, [])
 
-    // const categoryTrans = (category) => {
-    //     switch (category) {
-    //         case '한식':
-    //             return 'korean';
-    //         case '일식':
-    //             return 'japanese';
-    //         case '중식':
-    //             return 'chinese';
-    //         case '양식':
-    //             return 'western';
-    //         case '기타':
-    //             return 'other';
-    //         default:
-    //             return '';
-    //     }
-    // }
-
     const preImgFile = () => {
         const file = imgRef.current.files[0];
-        // const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
 
         if (!imgRef.current || !imgRef.current.files || imgRef.current.files.length === 0 || !file) {
             setImgFile("");

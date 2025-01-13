@@ -13,22 +13,14 @@ const IconBox = (props) => {
     const { toggleLoginModal } = props;
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
-    const { isLogin, setIsLogin } = useUserContext();
+    const { isLogin, setIsLogin, authCheck } = useUserContext();
 
-    const clickProfile = () => {
-        fetch(`${serverUrl}/customer/auth`, {
-            credentials: "include"
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            if(data.loggedIn){
-                navigate('/customerMain');
-            }else{
-                alert("로그인이 필요합니다!!!");
-            }
-        }).catch((err) => {
-            console.log(err);
-        });
+    const clickProfile = async() => {
+        if(await authCheck()){
+            navigate('/customerMain');
+        }else{
+            alert("로그인이 필요합니다!!!");
+        }
     }
 
     const clickLogin = () => {
@@ -40,22 +32,24 @@ const IconBox = (props) => {
         return window.confirm(message);
     };
 
-    const clickLogout = () => {
-        if(confirmAction("로그아웃 하시겠습니까?")){
-            fetch(`${serverUrl}/customer/logout`,{
-                credentials: 'include'
-            }).then(
-                (response) => {
-                    if(response){
-                        setIsLogin(false);
-                        sessionStorage.removeItem('userData');
-                        alert("로그아웃 되셨습니다.");
-                        window.history.go(0);
+    const clickLogout = async() => {
+        if(await authCheck()){
+            if(confirmAction("로그아웃 하시겠습니까?")){
+                fetch(`${serverUrl}/customer/logout`,{
+                    credentials: 'include'
+                }).then(
+                    (response) => {
+                        if(response){
+                            setIsLogin(false);
+                            sessionStorage.removeItem('userData');
+                            alert("로그아웃 되셨습니다.");
+                            window.history.go(0);
+                        }
                     }
-                }
-            ).catch((err) => {
-                console.log(err);
-            });
+                ).catch((err) => {
+                    console.log(err);
+                });
+            }
         }
     }
 

@@ -10,34 +10,39 @@ import { useBoardContext } from "../../../Context/board";
 import { useUserContext } from "../../../Context/user";
 
 const WriteBox = (props) => {
-    const { goToList } = props;
+    const { goToList, setWriteBoxVisible, setWatchBoxVisible } = props;
     const {serverUrl} = useConfig();
-    const {userData, setUserData} = useUserContext();
     const {writeContent, setWriteContent} = useBoardContext();
+    const {authCheck} = useUserContext();
+    const userData = JSON.parse(sessionStorage.getItem('userData'));
 
     useEffect(() => {
-        const userData = JSON.parse(sessionStorage.getItem('userData'));
         setWriteContent((prev) => ({...prev, id: userData.id, nickName: userData.nickName}));
-        setUserData(userData);
     }, [])
 
-    const enrollWrite = () => {
-        if(writeContent.title === ""){
-            alert("제목을 입력해주세요");
+    const enrollWrite = async() => {
+        if(await authCheck()){
+            if(writeContent.title === ""){
+                alert("제목을 입력해주세요");
+            }else{
+                fetch(`${serverUrl}/board/write`,{
+                    method: "POST",
+                    headers: {
+                        "Content-Type":"application/json"
+                    },
+                    body: JSON.stringify({
+                        title: writeContent.title,
+                        id: userData.id,
+                        nickName: userData.nickName,
+                        content: writeContent.content
+                    }),
+                    credentials: "include"
+                }).then(response => window.history.go(0)).catch(err => console.log(err));
+            }
         }else{
-            fetch(`${serverUrl}/board/write`,{
-                method: "POST",
-                headers: {
-                    "Content-Type":"application/json"
-                },
-                body: JSON.stringify({
-                    title: writeContent.title,
-                    id: userData.id,
-                    nickName: userData.nickName,
-                    content: writeContent.content
-                }),
-                credentials: "include"
-            }).then(response => window.history.go(0)).catch(err => console.log(err));
+            alert('로그인 후 이용해주세요');
+            setWatchBoxVisible(false);
+            setWriteBoxVisible(false);
         }
     }
 

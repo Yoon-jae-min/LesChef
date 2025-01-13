@@ -13,23 +13,15 @@ const Icon = (props) => {
     const { toggleLoginModal } = props;
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
-    const { isLogin, setIsLogin } = useUserContext();
+    const { isLogin, setIsLogin, authCheck } = useUserContext();
 
-    const clickProfile = () => {
-        fetch(`${serverUrl}/customer/auth`, {
-            credentials: "include"
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            if(data.loggedIn){
-                categoryStateReset();
-                navigate('/customerMain');
-            }else{
-                alert("로그인이 필요합니다!!!");
-            }
-        }).catch((err) => {
-            console.log(err);
-        });
+    const clickProfile = async () => {
+        if(await authCheck()){
+            categoryStateReset();
+            navigate('/customerMain');
+        }else{
+            alert("로그인이 필요합니다!!!");
+        }
     }
 
     const clickLogin = () => {

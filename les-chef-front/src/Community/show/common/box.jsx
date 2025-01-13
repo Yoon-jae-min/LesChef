@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import styles from "../../../CSS/community/show/common/show.module.css";
 
 //컨텍스트
-import { useConfig } from "../../../Context/config";
 import { useUserContext } from "../../../Context/user";
 
 //컴포넌트
@@ -18,28 +17,23 @@ import CommunityWatchBox from "../watch/common/box";
 const CommunityBox = () => {
     const [ writeBoxVisible, setWriteBoxVisible ] = useState(false);
     const [ watchBoxVisible, setWatchBoxVisible ] = useState(false);
-    const {setIsLogin} = useUserContext();
-    const {serverUrl} = useConfig();
+    const {authCheck} = useUserContext();
 
-    const goToWrite = () => {
-        fetch(`${serverUrl}/customer/auth`, {
-            credentials: "include"
-        }).then(response => response.json()).then((data) => {
-            if(!data.loggedIn){
-                setIsLogin(false);
-                sessionStorage.removeItem('userData');
-                alert('로그인이 필요합니다');
+    const goToWrite = async() => {
+        if(await authCheck()){
+            if(!writeBoxVisible){
+                setWriteBoxVisible(true);
             }else{
-                if(!writeBoxVisible){
-                    setWriteBoxVisible(true);
-                }else{
-                    setWatchBoxVisible(false);
-                }
+                setWatchBoxVisible(false);
             }
-        })
+        }else{
+            alert('로그인이 필요합니다');
+        }
     }
 
-    const goToWatch = () => {
+    const goToWatch = async() => {
+        await authCheck();
+
         if(!watchBoxVisible){
             setWatchBoxVisible(true);
         }
@@ -48,7 +42,9 @@ const CommunityBox = () => {
         }
     }
 
-    const goToList = () => {
+    const goToList = async() => {
+        await authCheck();
+
         if(writeBoxVisible){
             setWriteBoxVisible(false);
         }
@@ -67,7 +63,7 @@ const CommunityBox = () => {
                 !watchBoxVisible && 
                     <CommunityFooter goToWrite={goToWrite}/>}
             { (writeBoxVisible && !watchBoxVisible) && 
-                    <CommunityWriteBox goToList={goToList}/>}
+                    <CommunityWriteBox goToList={goToList} setWriteBoxVisible={setWriteBoxVisible} setWatchBoxVisible={setWatchBoxVisible}/>}
             { watchBoxVisible && 
                 !writeBoxVisible && 
                     <CommunityWatchBox goToList={goToList}/>}

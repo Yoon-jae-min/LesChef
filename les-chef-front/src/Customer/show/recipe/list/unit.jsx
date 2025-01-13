@@ -1,5 +1,6 @@
 //기타
 import React from "react";
+import {useNavigate} from "react-router-dom";
 
 //CSS
 import styles from "../../../../CSS/customer/show/reicpe/list/list.module.css";
@@ -7,6 +8,7 @@ import styles from "../../../../CSS/customer/show/reicpe/list/list.module.css";
 //컨텍스트
 import { useConfig } from "../../../../Context/config";
 import { useRecipeContext } from "../../../../Context/recipe";
+import {useUserContext} from "../../../../Context/user";
 
 const RecipeListUnit = (props) => {
     const { setInfoPage, 
@@ -19,9 +21,12 @@ const RecipeListUnit = (props) => {
     const { setRecipeIngres, 
             setRecipeSteps, 
             setSelectedRecipe } = useRecipeContext();
+    const {authCheck} = useUserContext();
+    const navigate = useNavigate();
 
-    const clickUnit = () => {
-        fetch(`${serverUrl}/recipe/info?recipeName=${recipeName}`)
+    const clickUnit = async() => {
+        if(await authCheck()){
+            fetch(`${serverUrl}/recipe/info?recipeName=${recipeName}`)
             .then(response => response.json())
             .then((data) => {
                 setRecipeIngres(data.recipeIngres);
@@ -30,6 +35,10 @@ const RecipeListUnit = (props) => {
                 setInfoPage(true);
                 setListPage(false);
             }).catch(err => console.log(err));
+        }else{
+            alert('다시 로그인 해주세요');
+            navigate('/');
+        }
     }
 
     return(

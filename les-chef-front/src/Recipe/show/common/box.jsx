@@ -18,7 +18,7 @@ const Show = (props) => {
     return(
         <div className={show.container}>
             <Head 
-                category={category}/>
+                category={category} setInfoGoto={setInfoGoto}/>
             <SubHead 
                 category={category} 
                 infoGoto={infoGoto}/>

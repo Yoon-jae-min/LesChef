@@ -12,28 +12,32 @@ import { useUserContext } from "../../Context/user";
 const IconBox = () => {
     const {serverUrl} = useConfig();
     const navigate = useNavigate();
-    const {setIsLogin} = useUserContext();
+    const {setIsLogin, authCheck} = useUserContext();
 
     const confirmAction = (message) => {
         return window.confirm(message);
     };
     
-    const clickLogout = () => {
-        if(confirmAction("로그아웃 하시겠습니까?")){
-            fetch(`${serverUrl}/customer/logout`,{
-                credentials: 'include'
-            }).then(
-                (response) => {
-                    if(response){
-                        setIsLogin(false);
-                        sessionStorage.removeItem('userData');
-                        alert("로그아웃 되셨습니다.");
-                        navigate('/');
+    const clickLogout = async() => {
+        if(await authCheck){
+            if(confirmAction("로그아웃 하시겠습니까?")){
+                fetch(`${serverUrl}/customer/logout`,{
+                    credentials: 'include'
+                }).then(
+                    (response) => {
+                        if(response){
+                            setIsLogin(false);
+                            sessionStorage.removeItem('userData');
+                            alert("로그아웃 되셨습니다.");
+                            navigate('/');
+                        }
                     }
-                }
-            ).catch((err) => {
-                console.log(err);
-            });
+                ).catch((err) => {
+                    console.log(err);
+                });
+            }
+        }else{
+            navigate('/');
         }
     }
 

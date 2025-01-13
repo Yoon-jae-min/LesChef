@@ -6,10 +6,12 @@ import styles from "../../../CSS/recipe/show/show.module.css"
 
 //컨텍스트
 import { useConfig } from "../../../Context/config";
+import { useUserContext } from "../../../Context/user";
 
 const Head = (props) => {
-    const {category} = props;
+    const {category, setInfoGoto} = props;
     const { serverUrl } = useConfig();
+    const {authCheck} = useUserContext();
     const [headImgUrl, setHeadImgUrl] = useState(`${serverUrl}/Image/RecipeImage/Background/listHeaderKorean.png`);
     const [headText, setHeadText] = useState("Korean");
 
@@ -35,10 +37,15 @@ const Head = (props) => {
         }
     }, [category]);
 
+    const clickText = async() => {
+        setInfoGoto(false);
+        await authCheck();
+    }
+
     return(
         <div className={styles.head}>
             <img src={headImgUrl} className={styles.headImg}/>
-            <p className={styles.headText}>{headText}</p>
+            <p onClick={clickText} className={styles.headText}>{headText}</p>
         </div>
     )
 }

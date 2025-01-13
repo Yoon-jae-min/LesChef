@@ -43,13 +43,12 @@ const LoginBox = (props) => {
                 credentials: 'include'
             }).then(response => response.json()).then((data) => {
                 if(data.text === "login Success"){
-                    const userData = {
+                    sessionStorage.setItem('userData', JSON.stringify({
                         id: data.id,
                         name: data.name,
                         nickName: data.nickName,
                         tel: data.tel
-                    };
-                    sessionStorage.setItem('userData', JSON.stringify(userData));
+                    }));
                     setIsLogin(true); 
                     toggleLoginModal();
                     alert("로그인 하셨습니다.");

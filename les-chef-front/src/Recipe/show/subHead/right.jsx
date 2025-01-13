@@ -13,31 +13,50 @@ const Right = (props) => {
     const {infoGoto} = props;
     const {serverUrl} = useConfig();
     const {recipeWish, selectedRecipe, setRecipeWish} = useRecipeContext();
-    const {setIsLogin} = useUserContext();
+    const {authCheck} = useUserContext();
 
-    const clickWish = () => {
-        fetch(`${serverUrl}/customer/auth`,{
-            credentials: "include"
-        }).then(response => response.json()).then((data) => {
-            if(data.loggedIn){
-                fetch(`${serverUrl}/recipe/clickWish`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type":"application/json"
-                    },
-                    body: JSON.stringify({
-                        recipeId: selectedRecipe._id
-                    }),
-                    credentials: "include"
-                }).then(response => response.json()).then((data) => {
-                    setRecipeWish(data.recipeWish);
-                    console.log(data.recipeWish);
-                }).catch(err => console.log(err));
-            }else{
-                alert("로그인이 필요합니다!!!");
-                setIsLogin(false);
-            }
-        }).catch(err => console.log(err));
+    const clickWish = async () => {
+        if(await authCheck()){
+            fetch(`${serverUrl}/recipe/clickWish`, {
+                method: "POST",
+                headers: {
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    recipeId: selectedRecipe._id
+                }),
+                credentials: "include"
+            }).then(response => response.json()).then((data) => {
+                setRecipeWish(data.recipeWish);
+                console.log(data.recipeWish);
+            }).catch(err => console.log(err));
+        }else{
+            alert("로그인이 필요합니다!!!");
+        }
+
+
+        // fetch(`${serverUrl}/customer/auth`,{
+        //     credentials: "include"
+        // }).then(response => response.json()).then((data) => {
+        //     if(data.loggedIn){
+        //         fetch(`${serverUrl}/recipe/clickWish`, {
+        //             method: "POST",
+        //             headers: {
+        //                 "Content-Type":"application/json"
+        //             },
+        //             body: JSON.stringify({
+        //                 recipeId: selectedRecipe._id
+        //             }),
+        //             credentials: "include"
+        //         }).then(response => response.json()).then((data) => {
+        //             setRecipeWish(data.recipeWish);
+        //             console.log(data.recipeWish);
+        //         }).catch(err => console.log(err));
+        //     }else{
+        //         alert("로그인이 필요합니다!!!");
+        //         setIsLogin(false);
+        //     }
+        // }).catch(err => console.log(err));
     }
 
     return(

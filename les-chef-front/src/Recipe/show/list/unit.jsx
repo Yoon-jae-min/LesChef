@@ -7,6 +7,7 @@ import styles from "../../../CSS/recipe/list/list.module.css"
 //컨텍스트
 import { useConfig } from "../../../Context/config";
 import { useRecipeContext } from "../../../Context/recipe";
+import { useUserContext } from "../../../Context/user";
 
 const Unit = (props) => {
     const { setInfoGoto, 
@@ -20,8 +21,10 @@ const Unit = (props) => {
             setRecipeSteps, 
             setSelectedRecipe,
             setRecipeWish } = useRecipeContext();
+    const {authCheck} = useUserContext();
 
-    const handleClick = () => {
+    const handleClick = async() => {
+        await authCheck();
         fetch(`${serverUrl}/recipe/info?recipeName=${encodeURIComponent(recipeName)}`,{
             method: "GET",
             headers: {

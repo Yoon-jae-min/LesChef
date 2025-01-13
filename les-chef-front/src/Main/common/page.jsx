@@ -43,27 +43,17 @@ const MainPage = () => {
     const [diffCheck, setDiffCheck] = useState(false);
     const [dupliCheck, setDupliCheck] = useState(false);
 
-    const { setUserInfo, setIsLogin } = useUserContext();
+    const { setUserInfo, setIsLogin, authCheck } = useUserContext();
     const { serverUrl } = useConfig();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
     useEffect(() => {
-        fetch(`${serverUrl}/customer/auth`,{
-            method: "GET",
-            headers: { "Content-type": "application/json" },
-            credentials: 'include'
-        }).then((response) => {
-            return response.json();
-        }).then((data) => {
-            if(data.loggedIn){
-                setIsLogin(true);
-            }else{
-                setIsLogin(false);
-            }
-        }).catch((err) => {
-            console.log(err);
-        })
+        const userAuth = async () => {
+            await authCheck();
+        }
+
+        userAuth();
     },[])
 
     useEffect(() => {
@@ -111,13 +101,6 @@ const MainPage = () => {
             behavior: "smooth",
         });
         setSlideCheck(currentPage < 4);
-        // setUserInfo({
-        //     id: "",
-        //     name: "",
-        //     pwd: "",
-        //     nickName: "",
-        //     tel: ""
-        // });
         setCheckPwd("");
         setDiffCheck(false);
         setDupliCheck(false);
@@ -181,8 +164,10 @@ const MainPage = () => {
     }
 
     //로그인 모달 관련
-    const toggleLoginModal = () => {
-        setLoginModal((prev) => !prev);
+    const toggleLoginModal = async() => {
+        if(!await authCheck()){
+            setLoginModal((prev) => !prev);
+        }
     }
 
     const toggleFindBox = () => {
