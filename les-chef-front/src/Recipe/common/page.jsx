@@ -7,7 +7,6 @@ import styles from "../../CSS/recipe/common/page.module.css";
 
 //컨텍스트
 import { useConfig } from "../../Context/config";
-import { useRecipeContext } from "../../Context/recipe";
 import { useUserContext } from "../../Context/user";
 
 //컴포넌트
@@ -21,52 +20,15 @@ const RecipePage = () => {
     const [infoGoto, setInfoGoto] = useState(false);
     const navigate = useNavigate();
     const { serverUrl } = useConfig();
-    const { setRecipeList } = useRecipeContext();
     const {authCheck} = useUserContext();
 
     useEffect(() => {
         const asyncMethod = async () => {
-            setRecipeList([]);  // 상태 초기화
-            const recipeListUrl = selectRecipeListUrl(category);
-            recipeListSearch(recipeListUrl);
             await authCheck();
         };
     
         asyncMethod(); 
     },[]);
-
-    useEffect(() => {
-        setRecipeList([]);
-        const recipeListUrl = selectRecipeListUrl(category);
-        recipeListSearch(recipeListUrl);
-    }, [category, infoGoto])
-
-    //레시피 리스트 조회
-    const recipeListSearch = (recipeListUrl) => {
-        fetch(`${serverUrl}/recipe${recipeListUrl}`).then((response) => {
-            return response.json();
-        }).then((data) => {
-            setRecipeList(data);
-        }).catch(err => console.log(err));
-    }
-
-    //레시피 리스트 카테고리 URL 선택
-    const selectRecipeListUrl = (category) => {
-        switch (category) {
-            case 'korean':
-                return '/koreanList';
-            case 'japanese':
-                return '/japaneseList';
-            case 'chinese':
-                return '/chineseList';
-            case 'western':
-                return '/westernList';
-            case 'other':
-                return '/otherList';
-            case 'share':
-                return '/shareList';
-        }
-    }
 
     //로그인 관련
     const [idPwBox, setIdPwBox] = useState(false);

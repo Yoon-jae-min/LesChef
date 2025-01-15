@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 //컨텍스트
 import { useUserContext } from "../../Context/user";
-import { useConfig } from "../../Context/config";
+import { useRecipeContext } from '../../Context/recipe';
 
 //컴포넌트
 import MainFirst from '../Slide/first/box';
@@ -23,6 +23,7 @@ const MainPage = () => {
     const outerDivRef = useRef();
     const location = useLocation();
     const navigate = useNavigate();
+    const {setRecipeList} = useRecipeContext();
 
     //페이지 관련
     const [currentPage, setCurrentPage] = useState(0);
@@ -43,8 +44,7 @@ const MainPage = () => {
     const [diffCheck, setDiffCheck] = useState(false);
     const [dupliCheck, setDupliCheck] = useState(false);
 
-    const { setUserInfo, setIsLogin, authCheck } = useUserContext();
-    const { serverUrl } = useConfig();
+    const { authCheck } = useUserContext();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
@@ -204,6 +204,7 @@ const MainPage = () => {
                 idPwBox={idPwBox} 
                 loginToFind={loginToFind}
                 loginModal={loginModal} 
+                setLoginModal={setLoginModal}
                 toggleLoginModal={toggleLoginModal}
                 toggleFindIdPw={toggleFindIdPw} 
                 toggleFindBox={toggleFindBox} 

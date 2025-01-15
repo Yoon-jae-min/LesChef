@@ -44,11 +44,39 @@ const myList = asyncHandler(async(req, res) => {
         }else{
             recipeList = await Recipe.find({userId: req.session.user.id}).lean();
         }
-        res.send(recipeList);
+
+        if(recipeList === null){
+            recipeList = [];
+        }
+
+        if(recipeList.length === 0){
+            res.send({
+                list: []
+            });
+        }else{
+            res.send({
+                list: recipeList
+            });
+        }
     }else{
         res.send(null);
     }
-    
+})
+
+const wishList = asyncHandler(async(req, res) => {
+    const user = await User.findOne({id: req.session.user.id}).lean();
+    const preWishList = await RecipeWishList.findOne({userId: user._id}).populate('wishList.recipeId').lean();
+    const wishList = preWishList ? preWishList.wishList.map(item => item.recipeId) : [];
+
+    if(wishList.length === 0){
+        res.send({
+            wishList: []
+        });
+    }else{
+        res.send({
+            wishList: wishList
+        });
+    }
 })
 
 const recipeInfo = asyncHandler(async(req, res) => {
@@ -56,15 +84,13 @@ const recipeInfo = asyncHandler(async(req, res) => {
     await Recipe.updateOne({recipeName: req.query.recipeName}, {$inc: {viewCount: 1}});
     const recipe = await Recipe.findOne({recipeName: req.query.recipeName});
     const recipeIngres = await RecipeIngredient.find({recipeId: recipe._id}).lean();
-    const recipeSteps = await RecipeStep.find({recipeId: recipe._id}).lean();
+    const recipeSteps = await RecipeStep.find({recipeId: recipe._id}).sort({stepNum: 1}).lean();
 
 
     if(req.session.user){
         const user = await User.findOne({id: req.session.user.id});
 
         const recipeWishList = await RecipeWishList.findOne({userId: user._id});
-
-        console.log(recipeWishList);
 
         if(recipeWishList){
             recipeWishList.wishList.map((wish) => {
@@ -85,4 +111,4 @@ const recipeInfo = asyncHandler(async(req, res) => {
     res.send(recipeInfo)
 });
 
-module.exports = { koreanList, japaneseList, chineseList, westernList, shareList, myList, recipeInfo };
+module.exports = { koreanList, japaneseList, chineseList, westernList, shareList, myList, wishList, recipeInfo };

@@ -25,7 +25,7 @@ const Show = (props) => {
             <hr/>
             { !infoGoto && 
                 <List
-                    setInfoGoto={setInfoGoto}/> }
+                    setInfoGoto={setInfoGoto} category={category}/> }
             { infoGoto && 
                 <Info/> }
             <hr/>

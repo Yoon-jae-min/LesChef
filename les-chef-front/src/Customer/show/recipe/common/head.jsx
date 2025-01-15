@@ -56,6 +56,16 @@ const RecipeHead = (props) => {
 
     //등록 메소드
     const checkEnroll = () => {
+        if(!wrRecipeImg){
+            wrRecipeInfo.recipeImg = "/Image/CommonImage/preImg.png";
+        }
+
+        wrRecipeSteps.map((step) => {
+            if(!step.stepImg){
+                step.stepImg = "/Image/CommonImage/preImg.png";
+            }
+        })
+
         const checkWrRecipeInfo = (wrRecipeInfo.recipeName && 
                                     wrRecipeInfo.cookTime &&
                                     wrRecipeInfo.portion &&
@@ -63,16 +73,13 @@ const RecipeHead = (props) => {
                                     wrRecipeInfo.cookLevel && 
                                     wrRecipeInfo.majorCategory &&
                                     wrRecipeInfo.subCategory) ? true : false;
-        const checkWrRecipeImg = (wrRecipeImg) ? true : false;
-        const checkWrStepImgs = ((wrStepImgs.length === 0) || (wrStepImgs.every(stepImg => Boolean(stepImg)))) ? true : false;
+        // const checkWrStepImgs = ((wrStepImgs.length === 0) || (wrStepImgs.every(stepImg => Boolean(stepImg)))) ? true : false;
         const checkWrRecipeSteps = ((wrRecipeSteps.length === 0) || (wrRecipeSteps.every(step => Boolean(step.stepWay)))) ? true : false;
         const checkWrReciepeIngres = ((wrRecipeIngres.length === 0) || ((wrRecipeIngres.every(ingre => Boolean(ingre.sortType))) &&
                                         (wrRecipeIngres.every(ingre => 
                                             ingre.ingredientUnit.every(unit => Boolean(unit.ingredientName) && Boolean(unit.unit)))))) ? true : false;
 
         return (checkWrRecipeInfo && 
-                checkWrRecipeImg && 
-                checkWrStepImgs && 
                 checkWrRecipeSteps && 
                 checkWrReciepeIngres) ? true : false;
     }
@@ -89,8 +96,6 @@ const RecipeHead = (props) => {
                 wrStepImgs.forEach((stepImg) => {
                     formData.append("recipeStepImgFiles", stepImg);
                 });
-    
-                console.log("FormData Contents:");
                 formData.forEach((value, key) => {
                     console.log(key, value);
                 });

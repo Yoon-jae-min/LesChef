@@ -55,6 +55,13 @@
     cursor: pointer;
 }
 
+.wishBtn{
+    height: 80%;
+    margin-top: 0.8%;
+    cursor: pointer;
+    float: right;
+}
+
 .enrollBtn{
     margin-right: 5px;
 }

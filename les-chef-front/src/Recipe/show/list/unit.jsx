@@ -39,7 +39,6 @@ const Unit = (props) => {
             setSelectedRecipe(data.selectedRecipe);
             setRecipeWish(data.recipeWish);
             setInfoGoto(true);
-            console.log(data.recipeWish);
         }).catch(err => console.log(err));
     }
 

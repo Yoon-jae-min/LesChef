@@ -53,7 +53,13 @@ const upload = multer({
 
             cb(null, uniqueName);
         }
-    })
+    }),
+    fileFilter: function (req, file, cb) {
+        if (!file) {
+            return cb(null, false);
+        }
+        cb(null, true);
+    }
 }).fields([
     { name: 'recipeImgFile', maxCount: 1 },
     { name: 'recipeStepImgFiles', maxCount: 10 }

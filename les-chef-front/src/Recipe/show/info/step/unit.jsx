@@ -15,9 +15,9 @@ const Unit = (props) => {
             <div className={styles.textBox}>
                 <p className={styles.num}>Step {stepNum}.</p>
                 <p className={styles.text}>
-                    {stepText.split('\n').map((line) => {
+                    {stepText.split('\n').map((line, index) => {
                         return(
-                            <React.Fragment>
+                            <React.Fragment key={index}>
                                 {line}
                                 <br/>
                             </React.Fragment>

@@ -17,7 +17,8 @@ const LoginModal = (props) => {
             goToJoinBox, 
             goToTopSlide,
             loginToFind,
-            switchFindToLogin } = props;
+            switchFindToLogin,
+            setLoginModal } = props;
 
     const HandlerLoginModal = (e) => {
         if(e.target.closest('.loginBox')){
@@ -41,7 +42,8 @@ const LoginModal = (props) => {
                     goToJoinBox={goToJoinBox} 
                     goToTopSlide={goToTopSlide}
                     toggleFindBox={toggleFindBox} 
-                    toggleLoginModal={toggleLoginModal}/>}
+                    toggleLoginModal={toggleLoginModal}
+                    setLoginModal={setLoginModal}/>}
             {loginToFind && 
                 <FindBox 
                     toggleFindIdPw={toggleFindIdPw} 

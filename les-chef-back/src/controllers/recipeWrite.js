@@ -17,10 +17,12 @@ const recipeWrite = asyncHandler(async(req, res) => {
         isShare = false;
     }
 
-    parsedRecipeInfo.recipeImg = req.files.recipeImgFile[0].newPath;
+    if(recipeInfo.recipeImg === ""){
+        parsedRecipeInfo.recipeImg = req.files.recipeImgFile[0].newPath;
+    }
     const uploadedFiles = req.files.recipeStepImgFiles; 
     parsedRecipeSteps.map((step, index) => {
-        if (uploadedFiles[index]) {
+        if ((step.stepImg === "") && uploadedFiles[index]) {
             step.stepImg = uploadedFiles[index].newPath; 
         }
     });

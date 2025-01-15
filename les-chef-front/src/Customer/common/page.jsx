@@ -1,5 +1,5 @@
 //기타
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //CSS
 import styles from "../../CSS/customer/common/page.module.css";

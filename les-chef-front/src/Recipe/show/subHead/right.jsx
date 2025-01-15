@@ -28,7 +28,6 @@ const Right = (props) => {
                 credentials: "include"
             }).then(response => response.json()).then((data) => {
                 setRecipeWish(data.recipeWish);
-                console.log(data.recipeWish);
             }).catch(err => console.log(err));
         }else{
             alert("로그인이 필요합니다!!!");

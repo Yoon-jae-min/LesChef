@@ -17,7 +17,8 @@ const LoginBox = (props) => {
             goToJoinBox,
             goToTopSlide, 
             toggleFindBox, 
-            toggleLoginModal } = props;
+            toggleLoginModal,
+            setLoginModal } = props;
     const [ customerId, setCustomerId ] = useState("");
     const [ customerPwd, setCustomerPwd ] = useState("");
     const { serverUrl } = useConfig();
@@ -50,7 +51,7 @@ const LoginBox = (props) => {
                         tel: data.tel
                     }));
                     setIsLogin(true); 
-                    toggleLoginModal();
+                    setLoginModal(false);
                     alert("로그인 하셨습니다.");
                 }else{
                     alert("로그인 실패");
