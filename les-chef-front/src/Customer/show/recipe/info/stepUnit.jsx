@@ -16,9 +16,9 @@ const InfoStepEach = (props) => {
             <div className={step.textBox}>
                 <p className={step.num}>Step {stepNum}.</p>
                 <p className={step.text}>
-                    {stepText.split('\n').map((line) => {
+                    {stepText.split('\n').map((line, index) => {
                         return (
-                            <React.Fragment>
+                            <React.Fragment key={index}>
                                 {line}<br/>
                             </React.Fragment>
                         )

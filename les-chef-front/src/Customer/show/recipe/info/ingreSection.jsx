@@ -16,9 +16,10 @@ const IngredientSection = (props) => {
                 return(
                     <React.Fragment>
                         <p className={styles.sectionName}>{recipeIngre.sortType}</p>
-                        {recipeIngre.ingredientUnit.map((ingre) => {
+                        {recipeIngre.ingredientUnit.map((ingre, index) => {
                             return(
                                 <IngredientEach 
+                                    key={index}
                                     ingredientName={ingre.ingredientName}
                                     ingredientCount={ingre.volume}
                                     ingredientUnit={ingre.unit}/>

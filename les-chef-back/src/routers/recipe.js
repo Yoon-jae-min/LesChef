@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { recipeWrite, clickWish } = require("../controllers/recipeWrite");
+const { recipeWrite, clickWish, deleteRecipe } = require("../controllers/recipeWrite");
 const { koreanList, japaneseList, chineseList, westernList, shareList, myList, wishList, recipeInfo } = require("../controllers/recipeGet");
 const { upload } = require("../uploads/recipeImgUpload");
 
@@ -14,7 +14,8 @@ router
     .get("/myList", myList)
     .get("/wishList", wishList)
     .post("/write", upload, recipeWrite)
-    .post("/clickwish", clickWish);
+    .post("/clickwish", clickWish)
+    .post("/delete", deleteRecipe);
 
 
 module.exports = router;

@@ -79,12 +79,6 @@ const WriteBox = () => {
                 )
             );
     
-            // setWrRecipeSteps((preSteps) => 
-            //     preSteps.map((step, index) => 
-            //         index + 1 === id ? {...step, stepImg: updatedData.stepImgUrl} : step
-            //     )
-            // );
-    
             setWrStepImgs((stepImgs) =>
                 stepImgs.map((stepImg, index) => 
                     index + 1 === id ? (stepImg = updatedData.sendStepImgFile) : stepImg

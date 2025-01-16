@@ -13,6 +13,10 @@ import { useUserContext } from "../../../../Context/user";
 //컴포넌트
 import RecipeHeadSolt from "./headSolt";
 
+const deleteCheck = () => {
+    return window.confirm("정말 삭제하시겠습니까?");
+}
+
 const RecipeHead = (props) => {
     const { listPage, 
             setListPage, 
@@ -25,7 +29,8 @@ const RecipeHead = (props) => {
             wrRecipeIngres, 
             wrRecipeSteps,
             wrRecipeImg,
-            wrStepImgs } = useRecipeContext();
+            wrStepImgs,
+            selectedRecipe } = useRecipeContext();
     const navigate = useNavigate();
     const {authCheck} = useUserContext();
 
@@ -60,9 +65,9 @@ const RecipeHead = (props) => {
             wrRecipeInfo.recipeImg = "/Image/CommonImage/preImg.png";
         }
 
-        wrRecipeSteps.map((step) => {
-            if(!step.stepImg){
-                step.stepImg = "/Image/CommonImage/preImg.png";
+        wrStepImgs.map((step, index) => {
+            if(!step){
+                wrRecipeSteps[index].stepImg = "/Image/CommonImage/preImg.png";
             }
         })
 
@@ -73,12 +78,10 @@ const RecipeHead = (props) => {
                                     wrRecipeInfo.cookLevel && 
                                     wrRecipeInfo.majorCategory &&
                                     wrRecipeInfo.subCategory) ? true : false;
-        // const checkWrStepImgs = ((wrStepImgs.length === 0) || (wrStepImgs.every(stepImg => Boolean(stepImg)))) ? true : false;
         const checkWrRecipeSteps = ((wrRecipeSteps.length === 0) || (wrRecipeSteps.every(step => Boolean(step.stepWay)))) ? true : false;
         const checkWrReciepeIngres = ((wrRecipeIngres.length === 0) || ((wrRecipeIngres.every(ingre => Boolean(ingre.sortType))) &&
                                         (wrRecipeIngres.every(ingre => 
                                             ingre.ingredientUnit.every(unit => Boolean(unit.ingredientName) && Boolean(unit.unit)))))) ? true : false;
-
         return (checkWrRecipeInfo && 
                 checkWrRecipeSteps && 
                 checkWrReciepeIngres) ? true : false;
@@ -95,9 +98,6 @@ const RecipeHead = (props) => {
                 formData.append("recipeImgFile", wrRecipeImg);
                 wrStepImgs.forEach((stepImg) => {
                     formData.append("recipeStepImgFiles", stepImg);
-                });
-                formData.forEach((value, key) => {
-                    console.log(key, value);
                 });
 
                 fetch(`${serverUrl}/recipe/write`, {
@@ -116,7 +116,30 @@ const RecipeHead = (props) => {
             alert("다시 로그인 해주세요!!!");
             navigate('/');
         }
-        
+    }
+
+    const deleteRecipe = async() => {
+        if(!await authCheck()){
+            alert("다시 로그인 해주세요");
+            navigate('/');
+            return;
+        }
+
+        if(deleteCheck()){
+            fetch(`${serverUrl}/recipe/delete`, {
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recipeId: selectedRecipe._id
+                }),
+                credentials: "include"
+            }).then(response => response.json()).then(data => {
+                setInfoPage(false);
+                setListPage(true);
+            }).catch(err => console.log(err));
+        }
     }
 
     return(
@@ -128,7 +151,9 @@ const RecipeHead = (props) => {
             {listPage && 
                 <img onClick={addRecipe} className={styles.writeBtn} src={`${serverUrl}/Image/CommonImage/add.png`}/>}
             {(!listPage && (writePage || infoPage)) && 
-                <img onClick={clickGoList} className={styles.listBtn} src={`${serverUrl}/Image/CommonImage/goToBack.png`}/> }
+                <img onClick={clickGoList} className={styles.listBtn} src={`${serverUrl}/Image/CommonImage/goToBack.png`}/>}
+            { infoPage && 
+                <img onClick={deleteRecipe} className={styles.listBtn} src={`${serverUrl}/Image/CommonImage/delete.png`}/>}
             {writePage &&
                 <img onClick={enrollRecipe} className={styles.enrollBtn} src={`${serverUrl}/Image/CommonImage/enroll.png`}/>}
         </div>

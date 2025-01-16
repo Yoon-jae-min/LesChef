@@ -1,9 +1,13 @@
 const asyncHandler = require("express-async-handler");
+const fs = require('fs');
+const path = require('path');
+const mongoose = require("mongoose");
 const User = require("../models/userModel");
 const Recipe = require("../models/recipeModel");
 const RecipeIngredient = require("../models/recipeIngredientsModel");
 const RecipeStep = require("../models/recipeStepModel");
 const RecipeWishList = require("../models/recipeWishListModel");
+require("dotenv").config();
 
 const recipeWrite = asyncHandler(async(req, res) => {
     const { recipeInfo, recipeIngredients, recipeSteps} = req.body;
@@ -17,13 +21,15 @@ const recipeWrite = asyncHandler(async(req, res) => {
         isShare = false;
     }
 
-    if(recipeInfo.recipeImg === ""){
+    if(parsedRecipeInfo.recipeImg === ""){
         parsedRecipeInfo.recipeImg = req.files.recipeImgFile[0].newPath;
     }
     const uploadedFiles = req.files.recipeStepImgFiles; 
-    parsedRecipeSteps.map((step, index) => {
-        if ((step.stepImg === "") && uploadedFiles[index]) {
-            step.stepImg = uploadedFiles[index].newPath; 
+    let count = 0;
+    parsedRecipeSteps.map((step) => {
+        if (step.stepImg === "") {
+            step.stepImg = uploadedFiles[count].newPath; 
+            count++;
         }
     });
 
@@ -89,5 +95,121 @@ const clickWish = asyncHandler(async(req, res) => {
     res.send({recipeWish: recipeWish});
 });
 
+const deleteRecipe = asyncHandler(async(req, res) => {
+    const recipeInfo = await Recipe.findOne({_id: req.body.recipeId}).lean();
+    const recipeSteps = await RecipeStep.find({recipeId: req.body.recipeId}).lean();
+    const recipeIngres = await RecipeIngredient.find({recipeId: req.body.recipeId}).lean();
 
-module.exports = { recipeWrite, clickWish };
+    let deleteMain = null;
+    let deleteStep = [];
+
+    const session = await mongoose.startSession();
+    session.startTransaction();
+
+    try{
+        if(recipeIngres){
+            await RecipeIngredient.deleteMany({recipeId: req.body.recipeId});
+        }
+    
+        if(recipeSteps){
+            for(const step of recipeSteps){
+                if(step.stepImg !== process.env.NO_IMAGE_URL){
+                    const stepImg = path.join(__dirname, "..", "..", 'public', step.stepImg.slice(1));
+
+                    await new Promise((resolve, reject) => {
+                        fs.readFile(stepImg, (readErr, content) => {
+                            if(readErr){
+                                reject(new Error(`Step 파일 읽기 오류: ${readErr.message}`));
+                                return;
+                            }
+
+                            fs.unlink(stepImg, (deleteErr) => {
+                                if(deleteErr){
+                                    reject(new Error(`Step 파일 삭제 오류: ${deleteErr.message}`));
+                                }else {
+                                    deleteStep.push({path: path.dirname(stepImg), content});
+                                    resolve();
+                                }
+                            });
+                        });
+                    });
+                }
+            }
+            await RecipeStep.deleteMany({recipeId: req.body.recipeId});
+        }
+    
+        if(recipeInfo){
+            if(recipeInfo.recipeImg !== process.env.NO_IMAGE_URL){
+                const mainImg = path.join(__dirname, "..", "..", 'public', recipeInfo.recipeImg.slice(1));
+
+                await new Promise((resolve, reject) => {
+                    fs.readFile(mainImg, (readErr, content) => {
+                        if(readErr){
+                            reject(new Error(`Main 파일 읽기 오류: ${readErr.message}`));
+                            return;
+                        }
+
+                        fs.unlink(mainImg, (deleteErr) => {
+                            if(deleteErr){
+                                reject(new Error(`Main 파일 삭제 오류: ${deleteErr.message}`));
+                            }else {
+                                deleteMain = {
+                                    path: path.dirname(mainImg),
+                                    content
+                                }
+                                resolve();
+                            }
+                        });
+                    });
+                });
+            }
+            await Recipe.deleteOne({_id: req.body.recipeId});
+        }
+
+        await session.commitTransaction();
+        res.status(200).send({
+            text: "success"
+        });
+    }catch (err){
+        if(!err.message.includes('Step 파일 읽기') && (deleteStep.length !== 0)){
+            for(const step of deleteStep){
+                await new Promise((resolve, reject) => {
+                    fs.writeFile(step.path, step.content, (err) => {
+                        if(err) {
+                            console.error("step 다시 쓰기 실패", err);
+                            reject(err);
+                        }else{
+                            console.log("step 다시 쓰기 성공");
+                            resolve();
+                        }
+                    });
+                });
+            }
+        }
+
+        if(err.message.includes('Main 파일 삭제') || deleteMain){
+            await new Promise((resolve, reject) => {
+                fs.writeFile(deleteMain.path, deleteMain.content, (err) => {
+                    if(err) {
+                        console.error("main 다시 쓰기 실패", err);
+                        reject(err);
+                    }else{
+                        console.log("main 다시 쓰기 성공");
+                        resolve();
+                    }
+                });
+            });
+        }
+
+        await session.abortTransaction();
+        console.error("오류 발생: ", err);
+        res.status(500).send({
+            text: "fail"
+        });
+    } finally{
+        session.endSession();
+    }
+})
+
+
+module.exports = { recipeWrite, clickWish, deleteRecipe };
