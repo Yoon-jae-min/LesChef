@@ -210,7 +210,8 @@ const MainPage = () => {
                 toggleFindBox={toggleFindBox} 
                 goToJoinBox={goToJoinBox}
                 goToTopSlide={goToTopSlide}
-                switchFindToLogin={switchFindToLogin}/>
+                switchFindToLogin={switchFindToLogin}
+                pageInfo="main"/>
             <MenuModal menuModal={menuModal}/>
             {slideCheck  && 
                 <MainLeft  

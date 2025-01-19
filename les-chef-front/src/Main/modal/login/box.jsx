@@ -1,5 +1,6 @@
 //기타
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //CSS
 import styles from "../../../CSS/main/modal/login.module.css";
@@ -18,14 +19,21 @@ const LoginBox = (props) => {
             goToTopSlide, 
             toggleFindBox, 
             toggleLoginModal,
-            setLoginModal } = props;
+            setLoginModal,
+            pageInfo } = props;
     const [ customerId, setCustomerId ] = useState("");
     const [ customerPwd, setCustomerPwd ] = useState("");
     const { serverUrl } = useConfig();
     const { setIsLogin } = useUserContext();
+    const navigate = useNavigate();
 
     const clickLogo = () => {
-        goToTopSlide();
+        console.log(pageInfo);
+        if(pageInfo === "main"){
+            goToTopSlide();
+        }else{
+            navigate('/');
+        }
     }
 
     const clickLogin = () => {

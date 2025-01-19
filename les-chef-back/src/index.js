@@ -11,6 +11,7 @@ const dbConnect = require("./config/dbConnect");
 const customer = require("../src/routers/customer");
 const recipe = require("../src/routers/recipe");
 const board = require("../src/routers/board");
+const foods = require("../src/routers/foods");
 
 require("dotenv").config();
 
@@ -63,6 +64,7 @@ app.use(express.static('public'));
 app.use("/customer", customer);
 app.use("/recipe", recipe);
 app.use("/board", board);
+app.use("/foods", foods);
 
 // 404 핸들러
 app.use((req, res, next) => {

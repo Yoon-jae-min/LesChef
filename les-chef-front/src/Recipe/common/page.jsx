@@ -56,6 +56,11 @@ const RecipePage = () => {
         navigate("/", { state: { currentPage: 4 } });
     }
 
+    const switchFindToLogin = () => {
+        setLoginToFind((prev) => !prev);
+        setLoginModal(true);
+    }
+
     return(
         <div className={styles.body}>
             <img 
@@ -77,7 +82,10 @@ const RecipePage = () => {
                 loginModal={loginModal} 
                 toggleFindBox={toggleFindBox} 
                 toggleLoginModal={toggleLoginModal} 
-                goToJoinBox={goToJoinBox}/>
+                goToJoinBox={goToJoinBox}
+                setLoginModal={setLoginModal}
+                switchFindToLogin={switchFindToLogin}
+                pageInfo="recipe"/>
         </div>
     )
 }

@@ -17,7 +17,6 @@ import LoginModal from "../../Main/modal/login/modal";
 
 const CommunityPage = () => {
     const {serverUrl} = useConfig();
-    const { setIsLogin } = useUserContext();
 
     //로그인 관련
     const [idPwBox, setIdPwBox] = useState(false);
@@ -55,6 +54,11 @@ const CommunityPage = () => {
         navigate("/", { state: { currentPage: 4 } });
     }
 
+    const switchFindToLogin = () => {
+        setLoginToFind((prev) => !prev);
+        setLoginModal(true);
+    }
+
     return(
         <BoardProvider>
             <div className={styles.body}>
@@ -68,7 +72,10 @@ const CommunityPage = () => {
                     loginModal={loginModal} 
                     toggleFindBox={toggleFindBox} 
                     toggleLoginModal={toggleLoginModal} 
-                    goToJoinBox={goToJoinBox}/>
+                    goToJoinBox={goToJoinBox}
+                    setLoginModal={setLoginModal}
+                    switchFindToLogin={switchFindToLogin}
+                    pageInfo="community"/>
             </div>
         </BoardProvider>
     )
