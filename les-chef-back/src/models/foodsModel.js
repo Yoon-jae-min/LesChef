@@ -4,20 +4,27 @@ const FoodsSchema = mongoose.Schema({
     userId: {
         type: String
     },
-    foodList: [
+    place: [
         {
-            name:{
+            name: {
                 type: String
             },
-            volume:{
-                type: Number
-            },
-            unit: {
-                type: String
-            },
-            expirate: {
-                type: Date
-            }
+            foodList: [
+                {
+                    name:{
+                        type: String
+                    },
+                    volume:{
+                        type: Number
+                    },
+                    unit: {
+                        type: String
+                    },
+                    expirate: {
+                        type: Date
+                    }
+                }
+            ]
         }
     ],
     createAt: {

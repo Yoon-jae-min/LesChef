@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const {getContents} = require("../controllers/foods");
+const {getContents, addPlace, updatePlace, deletePlace} = require("../controllers/foods");
 
 router
-    .get("/contents", getContents);
+    .get("/contents", getContents)
+    .post("/place", addPlace)
+    .patch("/place", updatePlace)
+    .delete("/place", deletePlace);
 
 module.exports = router;

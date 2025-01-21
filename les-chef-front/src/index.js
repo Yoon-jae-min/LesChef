@@ -17,20 +17,23 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ConfigProvider } from './Context/config';
 import { UserProvider } from './Context/user';
 import { RecipeProvider } from './Context/recipe';
+import { FoodsProvider } from './Context/foods';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
     <ConfigProvider>
       <UserProvider>
         <RecipeProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path='/' element={<MainPage/>}/>
-              <Route path='/recipeMain' element={<RecipePage/>}/>
-              <Route path='/customerMain' element={<CustomerPage/>}/>
-              <Route path='/communityMain' element={<CommunityPage/>}/>
-            </Routes>
-          </BrowserRouter>
+          <FoodsProvider>
+            <BrowserRouter>
+              <Routes>
+                <Route path='/' element={<MainPage/>}/>
+                <Route path='/recipeMain' element={<RecipePage/>}/>
+                <Route path='/customerMain' element={<CustomerPage/>}/>
+                <Route path='/communityMain' element={<CommunityPage/>}/>
+              </Routes>
+            </BrowserRouter>
+          </FoodsProvider>
         </RecipeProvider>
       </UserProvider>
     </ConfigProvider>
