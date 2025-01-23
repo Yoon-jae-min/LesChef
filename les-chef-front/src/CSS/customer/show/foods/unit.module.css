@@ -1,4 +1,5 @@
 .box{
+    position: relative;
     box-shadow: 0 0 2px 1px gray;
     border-radius: 5px;
     width: 30%;
@@ -33,18 +34,82 @@
     cursor: pointer;
 }
 
-.menu{
-    
-}
-
 .amountBox, .dateBox{
+    padding-top: 4%;
     width: 92%;
     height: 24%;
-    margin: 3% auto 0;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between;
 }
 
 .date, .dateLabel{
     margin: 0;
+}
+
+.menuBox{
+    z-index: 10;
+    background-color: rgb(183, 174, 174);
+    border-radius: 5px;
+    position: absolute;
+    top: 28%;
+    right: -2%;
+    border: 1px solid gray;
+    width: 70px;
+    height: 30px;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.editBtn, .deleteBtn{
+    height: 100%;
+    cursor: pointer;
+}
+
+.editName{
+    border: none;
+    border-left: 1px solid gray;
+    border-right: 1px solid gray;
+    background-color: rgb(182, 182, 182);
+    border-radius: 5px;
+    width: 72%;
+    height: 80%;
+}
+
+.editName:focus, .editVol:focus, .editUnit:focus{
+    outline: none;
+}
+
+.editBtnBox{
+    width: 28%;
+    height: 100%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.editOkBtn, .editCancelBtn{
+    cursor: pointer;
+}
+
+.editVol{
+    border: 1px solid gray;
+    border-radius: 5px;
+    background-color: rgb(182, 182, 182);
+    width: 77%;
+    height: 90%;
+    text-align: center;
+}
+
+.editUnit{
+    border: none;
+    border-bottom: 1px solid gray;
+    background-color: rgb(182, 182, 182);
+    width: 15%;
+}
+
+.editDate{
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 100%;
+    background-color: rgb(182, 182, 182);
 }

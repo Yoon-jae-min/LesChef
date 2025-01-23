@@ -1,11 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const {getContents, addPlace, updatePlace, deletePlace} = require("../controllers/foods");
+const {getPlace, addPlace, updatePlace, deletePlace, addContent, deleteContent} = require("../controllers/foods");
 
 router
-    .get("/contents", getContents)
+    .get("/place", getPlace)
     .post("/place", addPlace)
     .patch("/place", updatePlace)
-    .delete("/place", deletePlace);
+    .delete("/place", deletePlace)
+    .post("/content", addContent)
+    .delete("/content", deleteContent);
 
 module.exports = router;

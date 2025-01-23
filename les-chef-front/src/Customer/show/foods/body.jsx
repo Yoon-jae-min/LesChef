@@ -47,7 +47,6 @@ const Body = () => {
                     alert("중복된 장소입니다.");
                     sectionInput();
                 }else{
-                    console.log(data.sectionList);
                     setSectionList(data.sectionList);
                     sectionInput();
                 }

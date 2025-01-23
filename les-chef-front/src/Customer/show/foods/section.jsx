@@ -17,17 +17,31 @@ const Section = (props) => {
     const {name, foodList} = props;
     const {serverUrl} = useConfig();
     const {authCheck} = useUserContext();
-    const {setSectionList} = useFoods();
+    const {sectionList, setSectionList} = useFoods();
     const [nameChange, setNameChange] = useState(false);
     const [unitAdd, setUnitAdd] = useState(false);
     const navigate = useNavigate();
 
+    const checkAuth = () => {
+        if(!authCheck()){
+            alert("다시 로그인해 주세요");
+            navigate("/");
+            return false;
+        }else{
+            return true;
+        }
+    }
+
     const changeSwitch = () => {
-        setNameChange((prev) => (!prev));
+        if(checkAuth()){
+            setNameChange((prev) => (!prev));
+        }
     }
 
     const addSwitch = () => {
-        setUnitAdd((prev) => (!prev));
+        if(checkAuth()){
+            setUnitAdd((prev) => (!prev));
+        }
     }
 
     const confirmResult = (text) => {
@@ -44,19 +58,23 @@ const Section = (props) => {
         if(changeName === name){
             alert('현재와 동일한 이름입니다');
             return;
+        }else if(sectionList.some(place => place.name === changeName)){
+            alert('이미 존재하는 장소 입니다');
+            return;
         }else if(!confirmResult("update")){
             changeSwitch();
             return;
         }
 
-        if(authCheck()){
+        if(checkAuth()){
             fetch(`${serverUrl}/foods/place`,{
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    placeName: changeName
+                    placeName: name,
+                    changeName: changeName
                 }),
                 credentials: "include"
             }).then(response => {
@@ -65,15 +83,21 @@ const Section = (props) => {
                 }
                 return response.json();
             }).then(data => {
-
+                if(data.same){
+                    alert('현재와 동일한 이름입니다');
+                    return;
+                }
+                if(data.exist){
+                    alert('이미 존재하는 장소입니다');
+                    return;
+                }
+                setSectionList(data.sectionList);
+                changeSwitch();
             }).catch(err => {
                 alert("수정을 실패했습니다. 잠시후 다시 시도해주세요");
                 window.location.reload();
                 console.log(err)
-            })
-        }else{
-            alert("다시 로그인해 주세요");
-            navigate("/");
+            });
         }
     }
 
@@ -82,7 +106,7 @@ const Section = (props) => {
             return;
         }
 
-        if(authCheck()){
+        if(checkAuth()){
             fetch(`${serverUrl}/foods/place`,{
                 method: "DELETE",
                 headers:{
@@ -104,9 +128,38 @@ const Section = (props) => {
                 window.location.reload();
                 console.log(err)
             });
-        }else{
-            alert("다시 로그인해 주세요");
-            navigate("/");
+        }
+    }
+
+    const addUnit = () => {
+        const unitName = document.querySelector('.foodUnitName').value;
+        const unitVol = document.querySelector('.foodUnitVol').value;
+        const unitUnit = document.querySelector('.foodUnitUnit').value;
+        const unitDate = document.querySelector('.foodUnitDate').value;
+
+        if(!unitName){
+            alert('재료명을 입력해주세요');
+            return;
+        }
+
+        if(checkAuth()){
+            fetch(`${serverUrl}/foods/content`,{
+                method: "POST",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: JSON.stringify({
+                    placeName: name,
+                    unitName: unitName,
+                    unitVol: unitVol,
+                    unitUnit: unitUnit,
+                    unitDate: unitDate
+                }),
+                credentials: "include"
+            }).then(response => response.json()).then(data => {
+                setSectionList(data.sectionList);
+                addSwitch();
+            }).catch(err => console.log(err));
         }
     }
 
@@ -124,6 +177,7 @@ const Section = (props) => {
                 {(foodList ? foodList : []).map((food, index) => 
                     <Unit
                         key={index}
+                        place={name}
                         food={food}/>
                 )}
                 <div className={styles.plusBox}>
@@ -131,17 +185,17 @@ const Section = (props) => {
                     {unitAdd && 
                         <div className={styles.addBox}>
                             <div className={styles.addHead}>
-                                <input type="text" className={styles.addName} placeholder="재료명을 입력해주세요"/>
+                                <input type="text" className={`${styles.addName} foodUnitName`} placeholder="재료명을 입력해주세요"/>
                                 <div className={styles.addBtnBox}>
-                                    <img className={styles.addBtn} src={`${serverUrl}/Image/CommonImage/ok.png`}/>
+                                    <img onClick={addUnit} className={styles.addBtn} src={`${serverUrl}/Image/CommonImage/ok.png`}/>
                                     <img onClick={addSwitch} className={styles.addCancel} src={`${serverUrl}/Image/CommonImage/cancelRed.png`}/>    
                                 </div>  
                             </div>
                             <div className={styles.amountBox}>
-                                <input type="number" step={0.25} className={styles.addVolume}/>
-                                <input type="text" className={styles.addUnit} placeholder="단위"/>
+                                <input type="number" step={0.25} className={`${styles.addVolume} foodUnitVol`}/>
+                                <input type="text" className={`${styles.addUnit} foodUnitUnit`} placeholder="단위"/>
                             </div>
-                            <input type="date" className={styles.addDate}/>  
+                            <input type="date" className={`${styles.addDate} foodUnitDate`}/>  
                         </div>}
                 </div>
             </div>
