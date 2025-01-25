@@ -26,8 +26,9 @@ const IngredientEach = (props) => {
                 value={ingreName}
                 onChange={(e) => ingreEachUpD(sectionId, eachId, {ingreName: e.target.value}, {ingredientName: e.target.value})}/>
             <input 
-                type="text" 
+                type="number" 
                 placeholder="수량" 
+                step={0.25}
                 className={`cusIngreEachInput ${styles.unitVolume}`}
                 value={ingreVolume}
                 onChange={(e) => ingreEachUpD(sectionId, eachId, {ingreVolume: e.target.value}, {volume: e.target.value})}/>

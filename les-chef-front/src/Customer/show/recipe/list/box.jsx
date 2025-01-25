@@ -14,12 +14,11 @@ import { useRecipeContext } from "../../../../Context/recipe";
 import RecipeListUnit from "./unit";
 
 const ListBox = (props) => {
-    const { setInfoPage, setListPage } = props; 
-    // const [myList, setMyList] = useState([]);
+    const { setInfoPage, setListPage } = props;
     const navigate = useNavigate();
     const {serverUrl} = useConfig();
     const {authCheck} = useUserContext();
-    const {recipeList, setRecipeList} = useRecipeContext();
+    const {recipeList, setRecipeList, soltText} = useRecipeContext();
 
     useEffect(() => {
         const userCheck = async() => {
@@ -53,17 +52,33 @@ const ListBox = (props) => {
     return(
         <React.Fragment>
             {((recipeList ? recipeList : []).length !== 0) ? (recipeList?.map((recipe, index) => {
-                return(
-                    <RecipeListUnit
-                        key={index}
-                        setInfoPage={setInfoPage} 
-                        setListPage={setListPage}
-                        recipeName={recipe.recipeName}
-                        recipeNickName={recipe.userNickName}
-                        recipeWatch={recipe.viewCount}
-                        recipeImgUrl={recipe.recipeImg}
-                    />
-                )
+                if(soltText === "전체"){
+                    return(
+                        <RecipeListUnit
+                            key={index}
+                            setInfoPage={setInfoPage} 
+                            setListPage={setListPage}
+                            recipeName={recipe.recipeName}
+                            recipeNickName={recipe.userNickName}
+                            recipeWatch={recipe.viewCount}
+                            recipeImgUrl={recipe.recipeImg}
+                        />
+                    )
+                }else{
+                    if(soltText === recipe.majorCategory){
+                        return(
+                            <RecipeListUnit
+                                key={index}
+                                setInfoPage={setInfoPage} 
+                                setListPage={setListPage}
+                                recipeName={recipe.recipeName}
+                                recipeNickName={recipe.userNickName}
+                                recipeWatch={recipe.viewCount}
+                                recipeImgUrl={recipe.recipeImg}
+                            />
+                        )
+                    }
+                }
             })) : <div className={styles.empty}>레시피가 없습니다</div>}
         </React.Fragment>
     )

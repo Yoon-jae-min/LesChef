@@ -12,7 +12,7 @@ import { useUserContext } from "../../../Context/user";
 const Right = (props) => {
     const {infoGoto} = props;
     const {serverUrl} = useConfig();
-    const {recipeWish, selectedRecipe, setRecipeWish} = useRecipeContext();
+    const {recipeWish, selectedRecipe, setRecipeWish, recipeList, setRecipeList} = useRecipeContext();
     const {authCheck} = useUserContext();
 
     const clickWish = async () => {
@@ -32,30 +32,28 @@ const Right = (props) => {
         }else{
             alert("로그인이 필요합니다!!!");
         }
+    }
 
+    const orderCreate = () => {
+        setRecipeList((prev) => 
+            [...prev].sort((a, b) => {
+                if(new Date(b.createdAt) - new Date(a.createdAt)){
+                    return new Date(b.createdAt) - new Date(a.createdAt);
+                }
+                return a.recipeName.localeCompare(b.recipeName);
+            })
+        );
+    }
 
-        // fetch(`${serverUrl}/customer/auth`,{
-        //     credentials: "include"
-        // }).then(response => response.json()).then((data) => {
-        //     if(data.loggedIn){
-        //         fetch(`${serverUrl}/recipe/clickWish`, {
-        //             method: "POST",
-        //             headers: {
-        //                 "Content-Type":"application/json"
-        //             },
-        //             body: JSON.stringify({
-        //                 recipeId: selectedRecipe._id
-        //             }),
-        //             credentials: "include"
-        //         }).then(response => response.json()).then((data) => {
-        //             setRecipeWish(data.recipeWish);
-        //             console.log(data.recipeWish);
-        //         }).catch(err => console.log(err));
-        //     }else{
-        //         alert("로그인이 필요합니다!!!");
-        //         setIsLogin(false);
-        //     }
-        // }).catch(err => console.log(err));
+    const orderView = () => {
+        setRecipeList((prev) => 
+            [...prev].sort((a, b) => {
+                if (b.viewCount !== a.viewCount) {
+                    return b.viewCount - a.viewCount;
+                }
+                return a.recipeName.localeCompare(b.recipeName);
+            })
+        );
     }
 
     return(
@@ -70,8 +68,8 @@ const Right = (props) => {
             }
             {!infoGoto && 
                 <React.Fragment>
-                    <div className={styles.orderBtn}>최신순</div>
-                    <div className={styles.orderBtn}>조회순</div></React.Fragment>
+                    <div onClick={orderCreate} className={styles.orderBtn}>최신순</div>
+                    <div onClick={orderView} className={styles.orderBtn}>조회순</div></React.Fragment>
             }
         </div>
     )

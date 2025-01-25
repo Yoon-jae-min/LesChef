@@ -4,6 +4,7 @@ const RecipeContext = createContext();
 
 export const RecipeProvider = ({children}) => {
     const [recipeList, setRecipeList] = useState([]);
+    const [soltText, setSoltText] = useState("전체");
     const [recipeIngres, setRecipeIngres] = useState([]);
     const [recipeSteps, setRecipeSteps] = useState([]);
     const [selectedRecipe, setSelectedRecipe] = useState(null);
@@ -18,7 +19,8 @@ export const RecipeProvider = ({children}) => {
 
     return(
         <RecipeContext.Provider 
-            value={{recipeList, setRecipeList, 
+            value={{recipeList, setRecipeList,
+                    soltText, setSoltText,
                     recipeIngres, setRecipeIngres, 
                     recipeSteps, setRecipeSteps, 
                     selectedRecipe, setSelectedRecipe,

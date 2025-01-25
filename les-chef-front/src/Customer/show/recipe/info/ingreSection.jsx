@@ -12,9 +12,9 @@ const IngredientSection = (props) => {
 
     return(
         <div className={styles.section}>
-            {recipeIngres.map((recipeIngre) => {
+            {recipeIngres.map((recipeIngre, index) => {
                 return(
-                    <React.Fragment>
+                    <React.Fragment key={index}>
                         <p className={styles.sectionName}>{recipeIngre.sortType}</p>
                         {recipeIngre.ingredientUnit.map((ingre, index) => {
                             return(

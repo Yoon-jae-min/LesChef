@@ -13,7 +13,7 @@ import Unit from "./unit";
 
 const List = (props) => {
     const {setInfoGoto, category} = props;
-    const {recipeList, setRecipeList} = useRecipeContext();
+    const {recipeList, setRecipeList, soltText} = useRecipeContext();
     const {serverUrl} = useConfig();
 
     useEffect(() => {
@@ -55,15 +55,29 @@ const List = (props) => {
     return(
         <div className={styles.body}>
             {(recipeList ? recipeList : []).map((recipe, index) => {
-                return (<Unit 
-                    key={index} 
-                    setInfoGoto={setInfoGoto} 
-                    recipeImg={recipe.recipeImg}
-                    recipeName={recipe.recipeName}
-                    recipeNickName={recipe.userNickName}
-                    recipeWatch={recipe.viewCount}
-                    isShare={recipe.isShare}/>
-                );
+                if(soltText === "전체"){
+                    return (<Unit 
+                        key={index} 
+                        setInfoGoto={setInfoGoto} 
+                        recipeImg={recipe.recipeImg}
+                        recipeName={recipe.recipeName}
+                        recipeNickName={recipe.userNickName}
+                        recipeWatch={recipe.viewCount}
+                        isShare={recipe.isShare}/>
+                    );
+                }else{
+                    if(soltText === recipe.subCategory){
+                        return (<Unit 
+                            key={index} 
+                            setInfoGoto={setInfoGoto} 
+                            recipeImg={recipe.recipeImg}
+                            recipeName={recipe.recipeName}
+                            recipeNickName={recipe.userNickName}
+                            recipeWatch={recipe.viewCount}
+                            isShare={recipe.isShare}/>
+                        );
+                    }
+                }
             })}
         </div>
     )

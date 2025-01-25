@@ -13,10 +13,11 @@ import { useUserContext } from "../../../../Context/user";
 
 const RecipeHeadSolt = (props) => {
     const { infoPage, listPage, writePage } = props;
-    const { setWrRecipeInfo, selectedRecipe } = useRecipeContext();
+    const { setWrRecipeInfo, selectedRecipe, setSoltText } = useRecipeContext();
     const [options, setOptions] = useState([]);
     const {authCheck} = useUserContext();
     const navigate = useNavigate();
+    const [activeIndex, setActiveIndex] = useState(0);
 
     const categories = ["한식", "일식", "중식", "양식", "기타"];
     const subcategories = {
@@ -65,15 +66,30 @@ const RecipeHeadSolt = (props) => {
         }
     }
 
+    const soltClick = (text, index) => {
+        setSoltText(text);
+        setActiveIndex(index);
+    }
+
     return(
         <div className={recipe.soltBox}>
             { listPage && 
                 <React.Fragment>
-                    <span className={`${recipe.soltUnit} ${recipe.active}`}>전체</span>
-                    <span className={recipe.soltUnit}>한식</span>
-                    <span className={recipe.soltUnit}>일식</span>
-                    <span className={recipe.soltUnit}>중식</span>
-                    <span className={recipe.soltUnit}>양식</span>
+                    <span 
+                        onClick={(e) => soltClick(e.target.innerHTML, 0)} 
+                        className={`${recipe.soltUnit} ${activeIndex === 0 ? recipe.active : ""}`}>전체</span>
+                    <span 
+                        onClick={(e) => soltClick(e.target.innerHTML, 1)} 
+                        className={`${recipe.soltUnit} ${activeIndex === 1 ? recipe.active : ""}`}>한식</span>
+                    <span 
+                        onClick={(e) => soltClick(e.target.innerHTML, 2)} 
+                        className={`${recipe.soltUnit} ${activeIndex === 2 ? recipe.active : ""}`}>일식</span>
+                    <span 
+                        onClick={(e) => soltClick(e.target.innerHTML, 3)} 
+                        className={`${recipe.soltUnit} ${activeIndex === 3 ? recipe.active : ""}`}>중식</span>
+                    <span 
+                        onClick={(e) => soltClick(e.target.innerHTML, 4)} 
+                        className={`${recipe.soltUnit} ${activeIndex === 4 ? recipe.active : ""}`}>양식</span>
                 </React.Fragment> }
             { infoPage && 
                 <span className={info.recipeName}>{selectedRecipe.recipeName}</span> }

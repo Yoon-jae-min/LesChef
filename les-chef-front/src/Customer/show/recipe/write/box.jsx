@@ -341,9 +341,9 @@ const WriteBox = () => {
                     </div>
                 </div>
                 <div className={write.extraBox}>
-                    <input onChange={(e) => changeCookTime(e.target.value)} type="text" className={`${write.time} ${write.extraInput}`} placeholder="조리시간(분)"/>
+                    <input onChange={(e) => changeCookTime(e.target.value)} type="number" step={1} className={`${write.time} ${write.extraInput}`} placeholder="조리시간(분)"/>
                     <div className={write.volumeBox}>
-                        <input onChange={(e) => changePortion(e.target.value)} type="text" className={`${write.volume} ${write.extraInput}`} placeholder="수량"/>
+                        <input onChange={(e) => changePortion(e.target.value)} type="number" step={0.5} className={`${write.volume} ${write.extraInput}`} placeholder="수량"/>
                         <input onChange={(e) => changePortionUnit(e.target.value)} type="text" className={`${write.volume} ${write.extraInput}`} placeholder="단위"/>
                     </div>
                     <select onChange={(e) => changeCookLevel(e.target.value)} className={write.level}>

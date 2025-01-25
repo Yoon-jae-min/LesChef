@@ -14,7 +14,7 @@ const RecipeIngredientSchema = mongoose.Schema({
                 type: String
             },
             volume:{
-                type: String
+                type: Number
             },
             unit:{
                 type: String
