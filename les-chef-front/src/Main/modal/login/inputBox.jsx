@@ -8,7 +8,7 @@ import styles from "../../../CSS/main/modal/login.module.css";
 import LabelInput from "../../common/labelInput";
 
 const LoginInput = (props) => {
-    const { inputId, inputPwd, idValue, pwdValue } = props;
+    const { inputId, inputPwd, idValue, pwdValue, clickLogin } = props;
 
     return (
         <div className={styles.inputBox}>
@@ -21,7 +21,8 @@ const LoginInput = (props) => {
                 boxType = "login" 
                 labelText = "비밀번호" 
                 inputValue={inputPwd} 
-                basicValue={pwdValue}/>
+                basicValue={pwdValue}
+                clickLogin={clickLogin}/>
         </div>
     )
 }

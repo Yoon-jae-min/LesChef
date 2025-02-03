@@ -22,8 +22,8 @@ const Section = (props) => {
     const [unitAdd, setUnitAdd] = useState(false);
     const navigate = useNavigate();
 
-    const checkAuth = () => {
-        if(!authCheck()){
+    const checkAuth = async() => {
+        if(!await authCheck()){
             alert("다시 로그인해 주세요");
             navigate("/");
             return false;

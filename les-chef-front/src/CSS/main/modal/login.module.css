@@ -5,15 +5,16 @@
     width: 100vw;
     height: 100vh;
     background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .box{
     display: flex;
     justify-content: center;
     position: absolute;
-    top: 8vh;
-    left: 39vw;
-    height: 86vh;
+    height: 86%;
     width: 380px;
     z-index: 160;
     background-color: rgb(11, 86, 11);
@@ -23,20 +24,20 @@
 
 .logo{
     position: absolute;
-    top: 30px;
+    top: 7%;
     width: 180px;
     cursor: pointer;
 }
 
 .inputBox{
     position: absolute;
-    top: 190px;
+    top: 33%;
     width: 70%;
 }
 
 .loginBtn{
     position: absolute;
-    top: 350px;
+    top: 58%;
     width: 72%;
     height: 6vh;
     border-radius: 12px;
@@ -50,7 +51,7 @@
 
 .hrAndOr{
     position: absolute;
-    top: 405px;
+    top: 67%;
     width: 80%;
     display: flex;
     color: white;
@@ -68,7 +69,7 @@
 
 .findBtn{
     position: absolute;
-    top: 300px;
+    top: 49%;
     right: 15%;
     color: rgb(157, 157, 196);
     font-weight: bold;
@@ -81,7 +82,7 @@
 
 .sns{
     position: absolute;
-    top: 450px;
+    top: 74%;
     display: flex;
     justify-content: space-between;
     width: 74%;
@@ -133,7 +134,7 @@
 
 .joinBox{
     position: absolute;
-    top: 510px;
+    top: 84%;
     width: 68%;
     display: flex;
     justify-content: space-around;

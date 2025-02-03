@@ -1,0 +1,58 @@
+.body{
+    height: 80%;
+}
+
+.checkBox{
+    box-sizing: border-box;
+    width: 100%;
+    height: 85%;
+    padding: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.chkLabel{
+    font-weight: bold;
+    margin-right: 10px;
+    font-size: 110%;
+}
+
+.chkInput{
+    font-size: 110%;
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-bottom: 1px solid gray;
+}
+
+.chkInput:focus{
+    outline: none;
+}
+
+.btnBox{
+    width: 35%;
+    height: 10%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.checkOk, .checkCancel{
+    width: 40%;
+    height: 70%;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 90%;
+    color: white;
+    cursor: pointer;
+}
+
+.checkOk{
+    background-color: rgb(136, 77, 77);
+}
+
+.checkCancel{
+    background-color: gray;
+}

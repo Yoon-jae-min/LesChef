@@ -29,8 +29,8 @@ const Unit = (props) => {
         return window.confirm("정말 삭제하시겠습니까?");
     }
 
-    const menuSwitch = () => {
-        if(!authCheck()){
+    const menuSwitch = async() => {
+        if(!await authCheck()){
             alert("다시 로그인해 주세요");
             navigate("/");
             return;
@@ -38,8 +38,8 @@ const Unit = (props) => {
         setMenuShow((prev) => (!prev));
     }
 
-    const editSwitch = () => {
-        if(!authCheck()){
+    const editSwitch = async() => {
+        if(!await authCheck()){
             alert("다시 로그인해 주세요");
             navigate("/");
             return;
@@ -66,8 +66,8 @@ const Unit = (props) => {
 
     }
 
-    const deleteClick = () => {
-        if(!authCheck()){
+    const deleteClick = async() => {
+        if(!await authCheck()){
             alert("다시 로그인해 주세요");
             navigate("/");
             return;

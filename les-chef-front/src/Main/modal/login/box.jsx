@@ -92,7 +92,8 @@ const LoginBox = (props) => {
                 inputId={inputId} 
                 inputPwd={inputPwd} 
                 idValue={customerId} 
-                pwdValue={customerPwd}/>
+                pwdValue={customerPwd}
+                clickLogin={clickLogin}/>
             <p className={styles.findBtn} onClick={toggleFindBox}>아이디/비밀번호 찾기</p>
             <button className={styles.loginBtn} onClick={clickLogin}>로그인</button>
             <div className={styles.hrAndOr}>

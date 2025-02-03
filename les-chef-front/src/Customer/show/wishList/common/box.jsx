@@ -11,7 +11,6 @@ import Body from "./body";
 const CustomerWishListBox = (props) => {
     const {category} = props;
     const [listPage, setListPage] = useState(true);
-    // const [wishSelect, setWishSelect] = useState(false);
 
     return(
         <div className={styles.box}>

@@ -24,7 +24,7 @@ const Body = () => {
         setPlaceInput((prev) => (!prev));
     }
 
-    const addSection = () => {
+    const addSection = async() => {
         const name = document.querySelector(".foodsPlaceName").value
 
         if(!name){
@@ -32,7 +32,7 @@ const Body = () => {
             return;
         }
 
-        if(authCheck()){
+        if(await authCheck()){
             fetch(`${serverUrl}/foods/place`,{
                 method: "POST",
                 headers: {

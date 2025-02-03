@@ -19,7 +19,8 @@ const LabelInput = (props) => {
             dupliCheck, 
             setDupliCheck,
             saveInfo,
-            setSaveInfo } = props;
+            setSaveInfo,
+            clickLogin } = props;
     const {serverUrl} = useConfig();
 
     const changeValue = (value) => {
@@ -73,7 +74,7 @@ const LabelInput = (props) => {
     const clickDupliCheck = () => {
         const idValue = document.querySelector('.emailInput').value;
         if(idValue){
-            fetch(`${serverUrl}/customer/idCheck?id=${idValue}`)
+            fetch(`${serverUrl}/customer/check?id=${idValue}`)
             .then(response => response.text())
             .then((data) => {
                 console.log(data);
@@ -86,7 +87,12 @@ const LabelInput = (props) => {
         }else{
             alert("아이디를 입력해주세요");
         }
-        
+    }
+
+    const enterLogin = (e) => {
+        if(e.key === 'Enter' && labelText === "비밀번호"){
+            clickLogin();
+        }
     }
 
     return(
@@ -106,6 +112,7 @@ const LabelInput = (props) => {
             <input 
                 type={labelText.includes("비밀번호") ? "password" : "text"} 
                 value={basicValue} onChange={(e) => {changeValue(e.target.value)}} 
+                onKeyDown={(e) => enterLogin(e)}
                 className={`${styles.input} ${labelText === "이메일(아이디)" ? "emailInput" : ""}`}></input>
         </React.Fragment>
     )

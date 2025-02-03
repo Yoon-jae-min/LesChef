@@ -26,10 +26,8 @@ const StepBoxUnit = (props) => {
             reader.readAsDataURL(file);
             reader.onloadend = () => {
                 const result = reader.result;
-                // const category = categoryTrans(document.querySelector('.cusWrCategorySelect').value);
                 updateStep(index, 
                     {stepImgFile: result, 
-                    // stepImgUrl: `/Image/RecipeImage/InfoImg/step/${category}/${file.name}`, 
                     sendStepImgFile: file}, "image");
             };
         }

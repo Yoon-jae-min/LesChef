@@ -92,4 +92,35 @@ const idCheck = asyncHandler(async(req, res) => {
     }
 });
 
-module.exports = {postLogin, getLogout, getAuth, getInfo, idCheck};
+//패스워드 변경
+const pwdChg = asyncHandler(async(req, res) => {
+
+});
+
+//패스워드 체크
+const pwCheck = asyncHandler(async(req, res) => {
+    const userId = req.session?.user?.id;
+    if(!userId){
+        res.status(401).send({error: true, message: "session error"});
+        return;
+    }
+    const {password} = req.body;
+    if(!password){
+        res.status(400).send({error: true, message: "password Null"});
+        return;
+    }
+    const user = await User.findOne({id: userId}).lean();
+    if(!user){
+        res.status(404).send({error: true, message: "not found user"});
+        return;
+    }
+
+    const result = await bcrypt.compare(password, user.pwd);
+    res.status(200).send({
+        error: false,
+        message: "success",
+        result: result
+    });
+});
+
+module.exports = {postLogin, getLogout, getAuth, getInfo, idCheck, pwdChg, pwCheck};

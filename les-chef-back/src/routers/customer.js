@@ -1,14 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const {postLogin, getLogout, getAuth, getInfo, idCheck} = require("../controllers/login");
-const postJoin = require("../controllers/join");
+const {postLogin, getLogout, getAuth, getInfo, idCheck, pwdChg, pwCheck} = require("../controllers/login");
+const {postJoin, delInfo} = require("../controllers/join");
 
 router
     .get("/logout", getLogout)
     .get("/auth", getAuth)
     .get("/info", getInfo)
-    .get("/idCheck", idCheck)
+    .get("/check", idCheck)
+    .post("/pwdChg", pwdChg)
+    .post("/check", pwCheck)
     .post("/login", postLogin)
-    .post("/join", postJoin);
+    .post("/join", postJoin)
+    .delete("/delete", delInfo);
 
 module.exports = router;

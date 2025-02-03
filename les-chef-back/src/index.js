@@ -28,7 +28,7 @@ const options = {
 // 세션 설정
 const mongoStore = MongoStore.create({
     mongoUrl: process.env.DB_CONNECT, 
-    ttl: 86400, 
+    ttl: 3600, 
     collectionName: 'sessions'
 });
 app.use(session({

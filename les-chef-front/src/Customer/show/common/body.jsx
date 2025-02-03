@@ -5,7 +5,7 @@ import React from "react";
 import styles from "../../../CSS/customer/show/common/show.module.css";
 
 //컴포넌트
-import CustomerInfoBox from "../info/box";
+import CustomerInfoBox from "../info/common/box";
 import CustomerRecipeBox from "../recipe/common/box";
 import CustomerFoodsBox from "../foods/box";
 import CustomerWishListBox from "../wishList/common/box";
