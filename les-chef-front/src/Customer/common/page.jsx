@@ -17,6 +17,14 @@ const CustomerPage = () => {
     const [category, setCategory] = useState('My Info');
     const { serverUrl } = useConfig();
 
+    useEffect(() => {
+        const savedCategory = sessionStorage.getItem("category");
+        sessionStorage.removeItem("category");
+        if(savedCategory){
+            setCategory(savedCategory);
+        }
+    }, []);
+
     return (
         <div className={styles.body}>
             <img className={styles.bgImg} src={`${serverUrl}/Image/CustomerImage/Background/CustomerBackground.jpg`}/>
@@ -24,6 +32,7 @@ const CustomerPage = () => {
             <CustomerShowBox 
                 category={category}/>
             <CustomerMenuBox 
+                category={category}
                 setCategory={setCategory}/>
         </div>
     )

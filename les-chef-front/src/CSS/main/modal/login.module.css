@@ -31,13 +31,13 @@
 
 .inputBox{
     position: absolute;
-    top: 33%;
+    top: 32%;
     width: 70%;
 }
 
 .loginBtn{
     position: absolute;
-    top: 58%;
+    top: 60%;
     width: 72%;
     height: 6vh;
     border-radius: 12px;
@@ -51,7 +51,7 @@
 
 .hrAndOr{
     position: absolute;
-    top: 67%;
+    top: 69%;
     width: 80%;
     display: flex;
     color: white;
@@ -69,7 +69,7 @@
 
 .findBtn{
     position: absolute;
-    top: 49%;
+    top: 51%;
     right: 15%;
     color: rgb(157, 157, 196);
     font-weight: bold;
@@ -82,7 +82,7 @@
 
 .sns{
     position: absolute;
-    top: 74%;
+    top: 76%;
     display: flex;
     justify-content: space-between;
     width: 74%;
@@ -134,7 +134,7 @@
 
 .joinBox{
     position: absolute;
-    top: 84%;
+    top: 86%;
     width: 68%;
     display: flex;
     justify-content: space-around;

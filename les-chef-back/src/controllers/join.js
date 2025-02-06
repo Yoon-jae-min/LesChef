@@ -34,6 +34,7 @@ const delInfo = asyncHandler(async(req, res) => {
                 {$set: {userId: null}}
             )
         }
+        res.clearCookie('connect.sid');
         res.status(200).send({
             result: true
         })

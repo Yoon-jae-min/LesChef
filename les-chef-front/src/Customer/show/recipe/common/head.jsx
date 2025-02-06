@@ -18,19 +18,12 @@ const deleteCheck = () => {
 }
 
 const RecipeHead = (props) => {
-    const { listPage, 
-            setListPage, 
-            writePage, 
-            setWritePage, 
-            infoPage, 
-            setInfoPage } = props;
+    const { listPage, writePage, infoPage, isEdit,
+            setListPage, setWritePage, setInfoPage, setIsEdit } = props;
     const {serverUrl} = useConfig();
-    const { wrRecipeInfo, 
-            wrRecipeIngres, 
-            wrRecipeSteps,
-            wrRecipeImg,
-            wrStepImgs,
-            selectedRecipe } = useRecipeContext();
+    const { wrRecipeInfo, wrRecipeIngres, wrRecipeSteps, wrRecipeImg, wrStepImgs,
+            setWrRecipeInfo, setWrRecipeIngres, setWrRecipeSteps, setWrRecipeImg, setWrStepImgs, setSelectedRecipe,
+            selectedRecipe, recipeIngres, recipeSteps } = useRecipeContext();
     const navigate = useNavigate();
     const {authCheck} = useUserContext();
 
@@ -39,10 +32,10 @@ const RecipeHead = (props) => {
         navigate('/');
     }
     
-
     const clickGoList = async() => {
         if(await authCheck()){
             setListPage(true);
+            setIsEdit(false);
             setWritePage(false);
             setInfoPage(false);
         }else{
@@ -52,6 +45,11 @@ const RecipeHead = (props) => {
 
     const addRecipe = async() => {
         if(await authCheck()){
+            setWrRecipeInfo(null);
+            setWrRecipeIngres([]);
+            setWrRecipeSteps([]);
+            setWrRecipeImg(null);
+            setWrStepImgs([]);
             setWritePage(true);
             setListPage(false);
         }else{
@@ -61,12 +59,12 @@ const RecipeHead = (props) => {
 
     //등록 메소드
     const checkEnroll = () => {
-        if(!wrRecipeImg){
+        if(!wrRecipeImg && !wrRecipeInfo.recipeImg){
             wrRecipeInfo.recipeImg = "/Image/CommonImage/preImg.png";
         }
 
         wrStepImgs.map((step, index) => {
-            if(!step){
+            if(!step && !wrRecipeSteps[index].stepImg){
                 wrRecipeSteps[index].stepImg = "/Image/CommonImage/preImg.png";
             }
         })
@@ -82,6 +80,11 @@ const RecipeHead = (props) => {
         const checkWrReciepeIngres = ((wrRecipeIngres.length === 0) || ((wrRecipeIngres.every(ingre => Boolean(ingre.sortType))) &&
                                         (wrRecipeIngres.every(ingre => 
                                             ingre.ingredientUnit.every(unit => Boolean(unit.ingredientName) && Boolean(unit.unit)))))) ? true : false;
+
+        console.log(wrRecipeInfo);
+        console.log(wrRecipeImg);
+        console.log(wrRecipeIngres);
+        console.log(wrRecipeSteps);
         return (checkWrRecipeInfo && 
                 checkWrRecipeSteps && 
                 checkWrReciepeIngres) ? true : false;
@@ -96,6 +99,7 @@ const RecipeHead = (props) => {
                 formData.append("recipeIngredients", JSON.stringify(wrRecipeIngres)); 
                 formData.append("recipeSteps", JSON.stringify(wrRecipeSteps));
                 formData.append("recipeImgFile", wrRecipeImg);
+                formData.append("isEdit", isEdit);
                 wrStepImgs.forEach((stepImg) => {
                     formData.append("recipeStepImgFiles", stepImg);
                 });
@@ -105,6 +109,12 @@ const RecipeHead = (props) => {
                     body: formData,
                     credentials: "include"
                 }).then(response => {
+                    setWrRecipeInfo(null);
+                    setWrRecipeIngres([]);
+                    setWrRecipeSteps([]);
+                    setWrRecipeImg(null);
+                    setWrStepImgs([]);
+                    setSelectedRecipe(null);
                     setListPage(true);
                     setWritePage(false);
                     setInfoPage(false);
@@ -116,6 +126,22 @@ const RecipeHead = (props) => {
             alert("다시 로그인 해주세요!!!");
             navigate('/');
         }
+    }
+
+    const goEditRecipe = async() => {
+        if(!await authCheck()){
+            alert("다시 로그인 해주세요");
+            navigate('/');
+            return;
+        }
+        setWrRecipeInfo(selectedRecipe);
+        setWrRecipeIngres(recipeIngres);
+        setWrRecipeSteps(recipeSteps);
+        setWrRecipeImg(null);
+        setWrStepImgs([]);
+        setIsEdit(true);
+        setInfoPage(false);
+        setWritePage(true);
     }
 
     const deleteRecipe = async() => {
@@ -147,13 +173,17 @@ const RecipeHead = (props) => {
             <RecipeHeadSolt 
                 listPage={listPage} 
                 infoPage={infoPage} 
-                writePage={writePage}/>
+                writePage={writePage}
+                isEdit={isEdit}/>
             {listPage && 
                 <img onClick={addRecipe} className={styles.writeBtn} src={`${serverUrl}/Image/CommonImage/add.png`}/>}
             {(!listPage && (writePage || infoPage)) && 
                 <img onClick={clickGoList} className={styles.listBtn} src={`${serverUrl}/Image/CommonImage/goToBack.png`}/>}
             { infoPage && 
-                <img onClick={deleteRecipe} className={styles.listBtn} src={`${serverUrl}/Image/CommonImage/delete.png`}/>}
+                <React.Fragment>
+                    <img onClick={deleteRecipe} className={styles.deleteBtn} src={`${serverUrl}/Image/CommonImage/delete.png`}/>
+                    <img onClick={goEditRecipe} className={styles.editBtn} src={`${serverUrl}/Image/CommonImage/edit.png`}/>
+                </React.Fragment>}
             {writePage &&
                 <img onClick={enrollRecipe} className={styles.enrollBtn} src={`${serverUrl}/Image/CommonImage/enroll.png`}/>}
         </div>

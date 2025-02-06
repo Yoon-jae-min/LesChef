@@ -9,7 +9,7 @@
 
 .mainImg{
     width: 80%;
-    margin: 0 calc((20% - 2px) / 2);
+    margin: 5px calc((20% - 2px) / 2);
     aspect-ratio: 1 / 1;
     object-fit: contain;
     border-radius: 5px;

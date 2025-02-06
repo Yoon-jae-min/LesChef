@@ -11,13 +11,19 @@ import styles from "../../CSS/customer/menu/menu.module.css";
 const MenuTxtUnit = (props) => {
     const { koreanTxt, 
             englishTxt, 
-            setCategory } = props;
+            setCategory,
+            category } = props;
     const {authCheck} = useUserContext();
     const navigate = useNavigate();
 
     const HandlerClick = async() => {
         if(await authCheck()){
-            setCategory(englishTxt);
+            if(category === englishTxt){
+                sessionStorage.setItem("category", englishTxt);
+                window.location.reload();
+            }else{
+                setCategory(englishTxt);
+            }
         }else{
             alert("다시 로그인 해주세요!!!");
             navigate("/");

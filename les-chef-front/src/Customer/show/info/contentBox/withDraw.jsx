@@ -15,7 +15,16 @@ const WithDraw = (props) => {
     const {authCheck} = useUserContext();
     const navigate = useNavigate();
 
+    const confirmWd = () => {
+        return window.confirm("정말 탈퇴하시겠습니까?");
+    }
+
     const clickWd = async() => {
+        if(!confirmWd()){
+            setWdBox((prev) => (!prev));
+            return;
+        }
+
         if(await authCheck()){
             fetch(`${serverUrl}/customer/delete`, {
                 method: "DELETE",

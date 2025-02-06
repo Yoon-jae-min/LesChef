@@ -12,6 +12,7 @@ const CustomerRecipeBox = () => {
     const [listPage, setListPage] = useState(true);
     const [writePage, setWritePage] = useState(false);
     const [infoPage, setInfoPage] = useState(false);
+    const [isEdit, setIsEdit] = useState(false);
 
     return(
         <div className={styles.box}>
@@ -21,14 +22,17 @@ const CustomerRecipeBox = () => {
                 writePage={writePage} 
                 setWritePage={setWritePage} 
                 infoPage={infoPage} 
-                setInfoPage={setInfoPage}/>
+                setInfoPage={setInfoPage}
+                isEdit={isEdit}
+                setIsEdit={setIsEdit}/>
             <RecipeBody 
                 listPage={listPage} 
                 setListPage={setListPage} 
                 writePage={writePage} 
                 setWritePage={setWritePage} 
                 infoPage={infoPage} 
-                setInfoPage={setInfoPage}/>
+                setInfoPage={setInfoPage}
+                isEdit={isEdit}/>
         </div>
     )
 }

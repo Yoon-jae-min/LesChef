@@ -15,7 +15,8 @@ const RecipeBody = (props) => {
             setListPage, 
             infoPage, 
             setInfoPage, 
-            writePage } = props;
+            writePage,
+            isEdit } = props;
 
     return(
         <div className={styles.body}>
@@ -24,7 +25,7 @@ const RecipeBody = (props) => {
             { infoPage && 
                 <InfoBox/>}
             { writePage && 
-                <WriteBox/>}
+                <WriteBox isEdit={isEdit}/>}
         </div>
     )
 }

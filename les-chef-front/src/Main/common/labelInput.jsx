@@ -26,7 +26,7 @@ const LabelInput = (props) => {
     const changeValue = (value) => {
         if(boxType === "join"){
             const fieldMapping = {
-                "이메일(아이디)": "id",
+                // "이메일(아이디)": "id",
                 "비밀번호": "pwd",
                 "이름": "name",
                 "닉네임": "nickName",
@@ -67,12 +67,30 @@ const LabelInput = (props) => {
         
         if(labelText === "비밀번호 확인"){
             setCheckPwd(value);
-            setDiffCheck(saveInfo.pwd !== value);
+            if(!value){
+                setDiffCheck(false);
+            }else{
+                setDiffCheck(saveInfo.pwd !== value);
+            }
         }
     };
 
+    const chgIdValue = () => {
+        const first = document.querySelector('.emailInputOne').value;
+        const second = document.querySelector('.emailInputTwo').value;
+        
+        setDupliCheck(false);
+        setSaveInfo((prevInfo) => ({...prevInfo, id: first + "@" + second}));
+    }
+
     const clickDupliCheck = () => {
-        const idValue = document.querySelector('.emailInput').value;
+        const first = document.querySelector('.emailInputOne').value;
+        const second = document.querySelector('.emailInputTwo').value;
+        if(!first || !second){
+            alert('아이디를 입력해주세요');
+            return;
+        }
+        const idValue =  first + "@" + second;
         if(idValue){
             fetch(`${serverUrl}/customer/check?id=${idValue}`)
             .then(response => response.text())
@@ -90,30 +108,62 @@ const LabelInput = (props) => {
     }
 
     const enterLogin = (e) => {
-        if(e.key === 'Enter' && labelText === "비밀번호"){
+        if(e.key === 'Enter' && (boxType === "login") && (labelText === "비밀번호")){
             clickLogin();
         }
     }
 
     return(
         <React.Fragment>
-            <label className={styles.label}>
-                {labelText}
-                { ( diffCheck && (labelText === "비밀번호 확인")) && 
-                    <p className={join.diffCheck}> ※ 비밀번호가 다릅니다</p>
-                }
-                { ( !dupliCheck && (labelText === "이메일(아이디)") && (boxType === "join")) && 
-                    <button onClick={clickDupliCheck} type="button" className={join.dupliCheckBtn}>중복확인</button>
-                }
-                { ( dupliCheck && (labelText === "이메일(아이디)")) && 
-                    <p className={join.idCheckedText}>확인 되었습니다</p>
-                }
-            </label>
-            <input 
-                type={labelText.includes("비밀번호") ? "password" : "text"} 
-                value={basicValue} onChange={(e) => {changeValue(e.target.value)}} 
-                onKeyDown={(e) => enterLogin(e)}
-                className={`${styles.input} ${labelText === "이메일(아이디)" ? "emailInput" : ""}`}></input>
+            {(labelText !== "이메일(아이디)") ? 
+                <React.Fragment>
+                    <label className={styles.label}>
+                        {labelText}
+                        {(diffCheck && (labelText === "비밀번호 확인")) && <p className={join.diffCheck}> ※ 비밀번호가 다릅니다</p>}
+                        {/* { ( !dupliCheck && (labelText === "이메일(아이디)") && (boxType === "join")) && 
+                            <button onClick={clickDupliCheck} type="button" className={join.dupliCheckBtn}>중복확인</button>
+                        }
+                        { ( dupliCheck && (labelText === "이메일(아이디)")) && 
+                            <p className={join.idCheckedText}>확인 되었습니다</p>
+                        } */}
+                    </label>
+                    <input 
+                        type={labelText.includes("비밀번호") ? "password" : "text"} 
+                        value={basicValue} onChange={(e) => {changeValue(e.target.value)}} 
+                        onKeyDown={(e) => enterLogin(e)}
+                        className={`${styles.input} ${labelText === "이메일(아이디)" ? "emailInput" : ""}`}></input>
+                </React.Fragment> :
+                <React.Fragment>
+                    <label className={styles.label}>
+                        {labelText}
+                        {(!dupliCheck && (boxType === "join")) && <button onClick={clickDupliCheck} type="button" className={join.dupliCheckBtn}>중복확인</button>}
+                        {dupliCheck && <p className={join.idCheckedText}>확인 되었습니다</p>}
+                    </label>
+                    {(boxType === "join") ? 
+                        <React.Fragment>
+                            <input 
+                                type="text" 
+                                value={basicValue.substring(0, basicValue.indexOf("@"))} onChange={chgIdValue}
+                                onKeyDown={(e) => enterLogin(e)}
+                                className={`${styles.inputId} emailInputOne`}></input>
+                            <p className={styles.idBetween}>@</p>
+                            <input 
+                                type="text" 
+                                value={basicValue.substring(basicValue.indexOf("@") + 1)} onChange={chgIdValue} 
+                                onKeyDown={(e) => enterLogin(e)}
+                                className={`${styles.inputId} emailInputTwo`}></input>
+                        </React.Fragment> :
+                        <React.Fragment>
+                            <input 
+                                type="text"
+                                value={basicValue} onChange={(e) => {changeValue(e.target.value)}} 
+                                onKeyDown={(e) => enterLogin(e)}
+                                className={`${styles.input} emailInput`}></input>
+                        </React.Fragment>
+                    }
+                    
+                </React.Fragment>
+            }
         </React.Fragment>
     )
 }

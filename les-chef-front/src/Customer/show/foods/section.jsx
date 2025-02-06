@@ -14,7 +14,7 @@ import { useFoods } from "../../../Context/foods";
 import Unit from "./unit";
 
 const Section = (props) => {
-    const {name, foodList} = props;
+    const {placeName, foodList} = props;
     const {serverUrl} = useConfig();
     const {authCheck} = useUserContext();
     const {sectionList, setSectionList} = useFoods();
@@ -55,7 +55,7 @@ const Section = (props) => {
     const updateSection = () => {
         const changeName = document.querySelector('.foodChangeName').value;
 
-        if(changeName === name){
+        if(changeName === placeName){
             alert('현재와 동일한 이름입니다');
             return;
         }else if(sectionList.some(place => place.name === changeName)){
@@ -73,7 +73,7 @@ const Section = (props) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    placeName: name,
+                    placeName: placeName,
                     changeName: changeName
                 }),
                 credentials: "include"
@@ -113,7 +113,7 @@ const Section = (props) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    placeName: name
+                    placeName: placeName
                 }),
                 credentials: "include"
             }).then(response => {
@@ -149,7 +149,7 @@ const Section = (props) => {
                     "Content-Type":"application/json"
                 },
                 body: JSON.stringify({
-                    placeName: name,
+                    placeName: placeName,
                     unitName: unitName,
                     unitVol: unitVol,
                     unitUnit: unitUnit,
@@ -166,7 +166,7 @@ const Section = (props) => {
     return(
         <div className={styles.box}>
             <div className={styles.head}>
-                <p className={styles.nameBox}>{name}</p>
+                <p className={styles.nameBox}>{placeName}</p>
                 <div className={styles.btnBox}>
                     <img onClick={changeSwitch} className={styles.editBtn} src={`${serverUrl}/Image/CommonImage/edit.png`}/>
                     <img onClick={deleteSection} className={styles.deleteBtn} src={`${serverUrl}/Image/CommonImage/cancel.png`}/>
@@ -177,7 +177,7 @@ const Section = (props) => {
                 {(foodList ? foodList : []).map((food, index) => 
                     <Unit
                         key={index}
-                        place={name}
+                        placeName={placeName}
                         food={food}/>
                 )}
                 <div className={styles.plusBox}>

@@ -55,6 +55,7 @@ const getAuth = (req, res) => {
             loggedIn: true,
         });
     } else {
+        res.clearCookie('connect.sid');
         res.json({
             loggedIn: false
         });
@@ -77,6 +78,33 @@ const getInfo = asyncHandler(async(req, res) => {
     }else{
         res.json({
             text: false
+        });
+    }
+});
+
+//유저 정보 변경
+const infoChg = asyncHandler(async(req, res) => {
+    const userId = req.session.user.id;
+    const {nickName, tel} = req.body;
+
+    const result = await User.updateOne({id: userId},
+        {$set: {
+            nickName,
+            tel
+        }}
+    );
+
+    if(result.modifiedCount === 0){
+        res.status(400).send({
+            error: true,
+            message: "update fail",
+            result: false
+        });
+    }else{
+        res.status(200).send({
+            error: false,
+            message: "success",
+            result: true
         });
     }
 });
@@ -123,4 +151,4 @@ const pwCheck = asyncHandler(async(req, res) => {
     });
 });
 
-module.exports = {postLogin, getLogout, getAuth, getInfo, idCheck, pwdChg, pwCheck};
+module.exports = {postLogin, getLogout, getAuth, getInfo, infoChg, idCheck, pwdChg, pwCheck};

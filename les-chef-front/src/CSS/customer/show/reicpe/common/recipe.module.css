@@ -49,10 +49,14 @@
     display: none;
 }
 
-.listBtn, .writeBtn, .enrollBtn{
-    height: 100%;
+.listBtn, .writeBtn, .enrollBtn, .editBtn, .deleteBtn{
+    height: 90%;
     float: right;
     cursor: pointer;
+}
+
+.editBtn, .deleteBtn{
+    margin-right: 5px;
 }
 
 .wishBtn{

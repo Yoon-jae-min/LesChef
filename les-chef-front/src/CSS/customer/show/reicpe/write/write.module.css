@@ -1,4 +1,5 @@
 .left{
+    position: relative;
     overflow: scroll;
     width: 60%;
     height: 100%;
@@ -41,13 +42,32 @@
 
 .mainImg{
     border: 1px solid gray;
-
     width: 70%;
     margin: 2% calc((30% - 2px)/2);
     aspect-ratio: 1/1;
     object-fit: cover;
     object-position: center center;
     border-radius: 5px;
+}
+
+.mainImgInput{
+    display: none;
+}
+
+.mainImgBtn{
+    cursor: pointer;
+    position: absolute;
+    border-radius: 50%;
+    box-shadow: 0 0 8px 1px gray;
+    top: 4%;
+    right: 17%;
+    width: 10%;
+    background-color: rgb(161, 161, 161);
+    transition: 0.5s all;
+}
+
+.mainImgBtn:hover{
+    scale: 1.1;
 }
 
 .extraBox{
@@ -70,6 +90,10 @@
     border-right: 2px solid black;
     border-radius: 5px;
     background-color: rgb(182, 182, 182);
+}
+
+.extraNum{
+    text-align: center;
 }
 
 .extraUnit{

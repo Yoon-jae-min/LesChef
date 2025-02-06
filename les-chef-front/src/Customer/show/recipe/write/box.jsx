@@ -14,20 +14,28 @@ import { useRecipeContext } from "../../../../Context/recipe";
 import StepBoxUnit from "./stepUnit";
 import IngredientSection from "./ingreSection";
 
-const WriteBox = () => {
+const WriteBox = (props) => {
+    const {isEdit} = props;
     const {serverUrl} = useConfig();
-    const {setWrRecipeInfo, setWrRecipeImg, setWrRecipeSteps, setWrStepImgs, setWrRecipeIngres} = useRecipeContext();
+    const { wrRecipeInfo, setWrRecipeInfo, setWrRecipeImg, wrRecipeSteps, setWrRecipeSteps, setWrStepImgs, wrRecipeIngres, setWrRecipeIngres} = useRecipeContext();
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
     const [ingreSections, setIngreSections] = useState([]);
     const imgRef = useRef();
 
     useEffect(() => {
-        setWrRecipeInfo({});
-        setWrRecipeIngres([]);
-        setWrRecipeSteps([]);
-        setWrRecipeImg(null);
-        setWrStepImgs([]);
+        if(isEdit){
+            setSteps(wrRecipeSteps);
+            setIngreSections(wrRecipeIngres.map((section, index) => ({
+                    ...section, 
+                    id: index + 1,
+                    ingredientUnit: section.ingredientUnit.map((unit, index) => ({
+                        ...unit,
+                        id: index + 1
+                    }))
+                })
+            ));
+        }
     }, [])
 
     const preImgFile = () => {
@@ -49,7 +57,6 @@ const WriteBox = () => {
         };
 
         setWrRecipeInfo((preInfo) => (
-            // {...preInfo, recipeImg: `/Image/RecipeImage/ListImg/${category}/${file.name}`}
             {...preInfo, recipeImg: ""}
         ))
         setWrRecipeImg(file);
@@ -59,7 +66,7 @@ const WriteBox = () => {
     const stepAdd = () => {
         setSteps((prevSteps) => [
             ...prevSteps,
-            { id: prevSteps.length + 1, stepImgFile: "", content: ""},
+            { stepNum: prevSteps.length + 1, stepImgFile: "", stepWay: ""},
         ]);
 
         setWrRecipeSteps((preSteps) => [
@@ -75,9 +82,15 @@ const WriteBox = () => {
         if(select === "image"){
             setSteps((prevSteps) =>
                 prevSteps.map((step) =>
-                    step.id === id ? { ...step, stepImgFile: updatedData.stepImgFile } : step
+                    step.stepNum === id ? { ...step, stepImgFile: updatedData.stepImgFile } : step
                 )
             );
+
+            setWrRecipeSteps((steps) => 
+                steps.map((step) => 
+                    step.stepNum === id ? {...step, stepImg: ""} : step
+                )
+            )
     
             setWrStepImgs((stepImgs) =>
                 stepImgs.map((stepImg, index) => 
@@ -87,13 +100,13 @@ const WriteBox = () => {
         }else if(select === "content"){
             setSteps((prevSteps) =>
                 prevSteps.map((step) =>
-                    step.id === id ? { ...step, ...updatedData } : step
+                    step.stepNum === id ? { ...step, ...updatedData } : step
                 )
             );
 
             setWrRecipeSteps((preSteps) => 
                 preSteps.map((step, index) => 
-                    index + 1 === id ? {...step, stepWay: updatedData.content} : step
+                    index + 1 === id ? {...step, ...updatedData} : step
                 )
             );
         }
@@ -102,11 +115,11 @@ const WriteBox = () => {
 
     const stepDelete = (id) => {
         setSteps((prevSteps) =>
-            prevSteps.filter((step) => step.id !== id).map((step, index) => ({
+            prevSteps.filter((step) => step.stepNum !== id).map((step, index) => ({
                 ...step,
-                id: index + 1,
+                stepNum: index + 1,
                 stepImgFile: step.stepImgFile,
-                content: step.content
+                stepWay: step.stepWay
             }))
         );
 
@@ -131,7 +144,7 @@ const WriteBox = () => {
     //ingredientSection 메소드
     const ingreSectionAdd = () => {
         setIngreSections((preSections) => [
-            ...preSections, {id: preSections.length + 1, sectionName: "", ingreEachs: []}
+            ...preSections, {id: preSections.length + 1, sortType: "", ingredientUnit: []}
         ]);
 
         setWrRecipeIngres((preIngres) => [
@@ -148,7 +161,7 @@ const WriteBox = () => {
 
         setWrRecipeIngres((ingres) => 
             ingres.map((ingre, index) => 
-                index + 1 === sectionId ? {...ingre, sortType: updateData.sectionName} : ingre
+                index + 1 === sectionId ? {...ingre, ...updateData} : ingre
             )
         );
     }
@@ -158,8 +171,8 @@ const WriteBox = () => {
             preSections.filter((section) => section.id !== sectionId).map((section, index) => ({
                 ...section,
                 id: index + 1,
-                sectionName: section.sectionName,
-                ingreEachs: section.ingreEachs
+                sortType: section.sortType,
+                ingredientUnit: section.ingredientUnit
             }))
         );
 
@@ -178,13 +191,13 @@ const WriteBox = () => {
             preSections.map((section) => 
                 section.id === sectionId ? {
                     ...section,
-                    ingreEachs: [
-                        ...section.ingreEachs,
+                    ingredientUnit: [
+                        ...section.ingredientUnit,
                         {
-                            id: section.ingreEachs.length + 1,
-                            ingreName: "",
-                            ingreVolume: "",
-                            ingreUnit: ""
+                            id: section.ingredientUnit.length + 1,
+                            ingredientName: "",
+                            volume: "",
+                            unit: ""
                         }
                     ]
                 } : section
@@ -208,12 +221,12 @@ const WriteBox = () => {
         );
     }
 
-    const ingreEachUpD = (sectionId, eachId, updateData, sendData) => {
+    const ingreEachUpD = (sectionId, eachId, updateData) => {
         setIngreSections((preSections) => 
             preSections.map((section) => 
                 section.id === sectionId ? {
                     ...section,
-                    ingreEachs: section.ingreEachs.map((each) =>
+                    ingredientUnit: section.ingredientUnit.map((each) =>
                         each.id === eachId ? {
                             ...each,
                             ...updateData
@@ -230,7 +243,7 @@ const WriteBox = () => {
                     ingredientUnit: ingre.ingredientUnit.map((ingreEach, index) =>
                         index + 1 === eachId ? {
                             ...ingreEach,
-                            ...sendData
+                            ...updateData
                         } : ingreEach
                     )
                 } : ingre
@@ -243,14 +256,14 @@ const WriteBox = () => {
             prevSections.map((section) =>
                 section.id === sectionId ? {
                     ...section,
-                    ingreEachs: section.ingreEachs
+                    ingredientUnit: section.ingredientUnit
                         .filter((each) => each.id !== eachId)
                         .map((each, index) => ({
                             ...each,
                             id: index + 1,
-                            ingreName: each.ingreName,
-                            ingreVolume: each.ingreVolume,
-                            ingreUnit: each.ingreUnit
+                            ingredientName: each.ingredientName,
+                            volume: each.volume,
+                            unit: each.unit
                         })),
                 } : section
             )
@@ -299,19 +312,25 @@ const WriteBox = () => {
         ))
     }
 
+    const mainImgBtnClick = () => {
+        const mainImgInput = document.getElementById("mainImgInput");
+        mainImgInput.click();
+    }
+
     return(
         <>
             <div className={write.left}>
-                <input name="recipeImgFile" className="recipeInputImg" accept="image/*" type="file" onChange={preImgFile} ref={imgRef}/>
-                <img className={write.mainImg} src={imgFile ? imgFile : `${serverUrl}/Image/CommonImage/preImg.png`}/>
+                <input id="mainImgInput" name="recipeImgFile" className={write.mainImgInput} accept="image/*" type="file" onChange={preImgFile} ref={imgRef}/>
+                <img onClick={mainImgBtnClick} className={write.mainImgBtn} src={`${serverUrl}/Image/CommonImage/add.png`}/>
+                <img className={write.mainImg} src={imgFile ? imgFile : wrRecipeInfo?.recipeImg ? `${serverUrl}${wrRecipeInfo?.recipeImg}` : `${serverUrl}/Image/CommonImage/preImg.png`}/>
                 <div className={step.box}>
                     {steps.map((step, index) => (
                         <StepBoxUnit
                             key={index}
-                            index={step.id}
-                            // categoryTrans={categoryTrans}
+                            index={step.stepNum}
+                            step={step}
                             saveStepImgFile={step.stepImgFile}
-                            saveStepContent={step.content}
+                            saveStepContent={step.stepWay}
                             stepDelete={stepDelete}
                             updateStep={updateStep}
                         />
@@ -328,7 +347,6 @@ const WriteBox = () => {
                             key={index}
                             sectionId={ingreSection.id}
                             ingreSection={ingreSection}
-                            sectionName={ingreSection.sectionName}
                             ingreSectionDel={ingreSectionDel}
                             ingreSectionUpD={ingreSectionUpD}
                             ingreEachAdd={ingreEachAdd}
@@ -341,12 +359,12 @@ const WriteBox = () => {
                     </div>
                 </div>
                 <div className={write.extraBox}>
-                    <input onChange={(e) => changeCookTime(e.target.value)} type="number" step={1} className={`${write.time} ${write.extraInput}`} placeholder="조리시간(분)"/>
+                    <input value={wrRecipeInfo?.cookTime} onChange={(e) => changeCookTime(e.target.value)} type="number" step={1} className={`${write.time} ${write.extraInput} ${write.extraNum}`} placeholder="조리시간(분)"/>
                     <div className={write.volumeBox}>
-                        <input onChange={(e) => changePortion(e.target.value)} type="number" step={0.5} className={`${write.volume} ${write.extraInput}`} placeholder="수량"/>
-                        <input onChange={(e) => changePortionUnit(e.target.value)} type="text" className={`${write.volume} ${write.extraInput}`} placeholder="단위"/>
+                        <input value={wrRecipeInfo?.portion} onChange={(e) => changePortion(e.target.value)} type="number" step={0.5} className={`${write.volume} ${write.extraInput} ${write.extraNum}`} placeholder="수량"/>
+                        <input value={wrRecipeInfo?.portionUnit} onChange={(e) => changePortionUnit(e.target.value)} type="text" className={`${write.volume} ${write.extraInput}`} placeholder="단위"/>
                     </div>
-                    <select onChange={(e) => changeCookLevel(e.target.value)} className={write.level}>
+                    <select onChange={(e) => changeCookLevel(e.target.value)} className={write.level} value={wrRecipeInfo?.cookLevel}>
                         <option value="">선택하세요</option>
                         <option value="쉬움">쉬움</option>
                         <option value="중간">중간</option>

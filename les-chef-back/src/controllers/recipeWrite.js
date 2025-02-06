@@ -10,12 +10,14 @@ const RecipeWishList = require("../models/recipeWishListModel");
 require("dotenv").config();
 
 const recipeWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps} = req.body;
+    const { recipeInfo, recipeIngredients, recipeSteps, isEdit} = req.body;
     const parsedRecipeInfo = JSON.parse(recipeInfo);
     const parsedRecipeIngredients = JSON.parse(recipeIngredients);
     const parsedRecipeSteps = JSON.parse(recipeSteps);
-    const userInfo = await User.findOne({id: req.session.user.id});
+    const parsedIsEdit = JSON.parse(isEdit);
+    const userInfo = await User.findOne({id: req.session.user.id}).lean();
     let isShare = true;
+    let recipeId = null;
 
     if(userInfo.checkAdmin){
         isShare = false;
@@ -33,36 +35,59 @@ const recipeWrite = asyncHandler(async(req, res) => {
         }
     });
 
-    const infoAdd = await Recipe.create({
-        recipeName: parsedRecipeInfo.recipeName,
-        cookTime: parsedRecipeInfo.cookTime, 
-        portion: parsedRecipeInfo.portion, 
-        portionUnit: parsedRecipeInfo.portionUnit, 
-        cookLevel: parsedRecipeInfo.cookLevel,
-        userId: userInfo.id,
-        userNickName: userInfo.nickName, 
-        majorCategory: parsedRecipeInfo.majorCategory, 
-        subCategory: parsedRecipeInfo.subCategory, 
-        recipeImg: parsedRecipeInfo.recipeImg, 
-        viewCount: parsedRecipeInfo.viewCount,  
-        isShare: isShare
-    });
+    if(!parsedIsEdit){
+        const infoAdd = await Recipe.create({
+            recipeName: parsedRecipeInfo.recipeName,
+            cookTime: parsedRecipeInfo.cookTime, 
+            portion: parsedRecipeInfo.portion, 
+            portionUnit: parsedRecipeInfo.portionUnit, 
+            cookLevel: parsedRecipeInfo.cookLevel,
+            userId: userInfo.id,
+            userNickName: userInfo.nickName, 
+            majorCategory: parsedRecipeInfo.majorCategory, 
+            subCategory: parsedRecipeInfo.subCategory, 
+            recipeImg: parsedRecipeInfo.recipeImg, 
+            viewCount: parsedRecipeInfo.viewCount,  
+            isShare: isShare
+        });
+        recipeId = infoAdd._id;
+    }else{
+        
+        await Recipe.updateOne({userId: userInfo.id, _id: parsedRecipeInfo._id},
+            {$set: {
+                recipeName: parsedRecipeInfo.recipeName,
+                cookTime: parsedRecipeInfo.cookTime, 
+                portion: parsedRecipeInfo.portion, 
+                portionUnit: parsedRecipeInfo.portionUnit, 
+                cookLevel: parsedRecipeInfo.cookLevel,
+                majorCategory: parsedRecipeInfo.majorCategory, 
+                subCategory: parsedRecipeInfo.subCategory, 
+                recipeImg: parsedRecipeInfo.recipeImg,
+            }}
+        )
+        await RecipeStep.deleteMany({recipeId: recipeInfo._id});
+        await RecipeIngredient.deleteMany({recipeId: recipeInfo._id});
+        recipeId = recipeInfo._id;
+    }
 
     const ingredientsData = parsedRecipeIngredients.map((item) => ({
-        recipeId: infoAdd._id,
+        recipeId: recipeId,
         sortType: item.sortType,
-        ingredientUnit: item.ingredientUnit
+        ingredientUnit: item.ingredientUnit.map((unit) => ({
+            ingredientName: unit.ingredientName,
+            volume: unit.volume,
+            unit: unit.unit,
+        }))
     }));
 
     const stepsData = parsedRecipeSteps.map((item) => ({
-        recipeId: infoAdd._id,
+        recipeId: recipeId,
         stepNum: item.stepNum,
         stepWay: item.stepWay,
         stepImg: item.stepImg
     }));
 
     await RecipeIngredient.insertMany(ingredientsData);
-
     await RecipeStep.insertMany(stepsData);
 
     res.status(200).send("success");

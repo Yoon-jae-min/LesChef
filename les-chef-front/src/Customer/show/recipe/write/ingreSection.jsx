@@ -12,8 +12,7 @@ import IngredientEach from "./ingreUnit";
 
 const IngredientSection = (props) => {
     const { sectionId, 
-            ingreSection, 
-            sectionName, 
+            ingreSection,
             ingreSectionDel, 
             ingreSectionUpD, 
             ingreEachAdd, 
@@ -21,8 +20,8 @@ const IngredientSection = (props) => {
             ingreEachUpD } = props;
     const {serverUrl} = useConfig();
 
-    const changeSecName = (sectionName) => {
-        ingreSectionUpD(sectionId, { sectionName: sectionName });
+    const changeSecName = (sortType) => {
+        ingreSectionUpD(sectionId, { sortType: sortType });
     }
 
     return(
@@ -30,7 +29,7 @@ const IngredientSection = (props) => {
             <div className={styles.sectionHead}>
                 <input 
                     onChange={(e) => changeSecName(e.target.value)} 
-                    value={sectionName} 
+                    value={ingreSection.sortType} 
                     type="text" 
                     className={styles.secHeadName} 
                     placeholder="재료 section name"/>
@@ -39,15 +38,15 @@ const IngredientSection = (props) => {
                     className={styles.secDelImg} 
                     src={`${serverUrl}/Image/CommonImage/cancel.png`}/>
             </div>
-            {Array.isArray(ingreSection.ingreEachs) &&
-                ingreSection.ingreEachs.map((each, index) => (
+            {Array.isArray(ingreSection.ingredientUnit) &&
+                ingreSection.ingredientUnit.map((each, index) => (
                     <IngredientEach 
                         key={index}
                         eachId={each.id}  
                         sectionId={sectionId}
-                        ingreName={each.ingreName}
-                        ingreVolume={each.ingreVolume}
-                        ingreUnit={each.ingreUnit}
+                        ingreName={each.ingredientName}
+                        ingreVolume={each.volume}
+                        ingreUnit={each.unit}
                         ingreEachDel={ingreEachDel}
                         ingreEachUpD={ingreEachUpD}
                     />

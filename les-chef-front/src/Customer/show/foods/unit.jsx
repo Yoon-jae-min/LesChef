@@ -11,7 +11,7 @@ import { useUserContext } from "../../../Context/user";
 import { useFoods } from "../../../Context/foods";
 
 const Unit = (props) => {
-    const {food, place} = props;
+    const {food, placeName} = props;
     const {serverUrl} = useConfig();
     const {authCheck} = useUserContext();
     const {setSectionList} = useFoods();
@@ -62,8 +62,39 @@ const Unit = (props) => {
         setEditUnit((prev) => ({...prev, ...updateData}))
     }
 
-    const editClick = () => {
+    const editClick = async() => {
+        if(!await authCheck()){
+            alert("다시 로그인해 주세요");
+            navigate("/");
+            return;
+        }
 
+        fetch(`${serverUrl}/foods/content`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                ...editUnit,
+                placeName: placeName,
+                contentId: food._id
+            }),
+            credentials: "include"
+        }).then(response => {
+            if(!response.ok){
+                throw new Error("error");
+            }
+            return response.json();
+        }).then(data => {
+            if(data.result){
+                setSectionList(data.sectionList);
+                editSwitch();
+            }
+        }).catch(err => {
+            console.log(err);
+            alert("다시 시도해주세요");
+            window.location.reload();
+        });
     }
 
     const deleteClick = async() => {
@@ -80,7 +111,7 @@ const Unit = (props) => {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    place: place,
+                    place: placeName,
                     food: food.name
                 }),
                 credentials: "include"
@@ -114,7 +145,7 @@ const Unit = (props) => {
                             className={styles.editName} 
                             onChange={(e) => editValue({name: e.target.value})}/>
                         <div className={styles.editBtnBox}>
-                            <img className={styles.editOkBtn} src={`${serverUrl}/Image/CommonImage/ok.png`}/>
+                            <img onClick={editClick} className={styles.editOkBtn} src={`${serverUrl}/Image/CommonImage/ok.png`}/>
                             <img onClick={editSwitch} className={styles.editCancelBtn} src={`${serverUrl}/Image/CommonImage/cancelRed.png`}/>
                         </div>    
                     </React.Fragment>}

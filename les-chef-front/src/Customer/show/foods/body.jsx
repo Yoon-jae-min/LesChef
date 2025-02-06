@@ -66,7 +66,7 @@ const Body = () => {
             {(sectionList ? sectionList : []).map((section, index) => 
                 <Section
                     key={index}
-                    name={section.name}
+                    placeName={section.name}
                     foodList={section.foodList}/>
             )}
             <div className={styles.plus}>

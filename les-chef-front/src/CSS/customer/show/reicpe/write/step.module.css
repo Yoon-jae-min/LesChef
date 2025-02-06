@@ -9,35 +9,53 @@
 
 .unit{
     border: 1px solid black;
+    border-radius: 5px;
     width: 95%;
     margin: 0 calc((5% - 2px)/2) 5px;
     height: 24vh;
+    max-height: 195px;
 }
 
 .inner{
     width: 100%;
     height: 100%;
-    border-bottom: 1px solid black;
     display: flex;
 }
 
 .innerLeft{
+    position: relative;
     width: 30%;
     border-right: 1px solid black;
 }
 
 .fileInput{
-    width: 100%;
+    display: none;
 }
 
 .img{
     border: 1px solid gray;
     width: 90%;
     aspect-ratio: 1/1;
-    margin: 0 calc((10% - 2px)/2);
+    margin: calc((10% - 2px)/2);
     object-fit: cover;
     object-position: center center;
     border-radius: 5px;
+}
+
+.imgBtn{
+    cursor: pointer;
+    position: absolute;
+    background-color: rgb(161, 161, 161);
+    border-radius: 50%;
+    box-shadow: 0 0 8px 1px gray;
+    top: 8%;
+    right: 10%;
+    width: 18%;
+    transition: 0.5s all;
+}
+
+.imgBtn:hover{
+    scale: 1.1;
 }
 
 .innerRight{

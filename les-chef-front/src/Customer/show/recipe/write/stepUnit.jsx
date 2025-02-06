@@ -9,6 +9,7 @@ import { useConfig } from "../../../../Context/config";
 
 const StepBoxUnit = (props) => {
     const { index, 
+            step,
             stepDelete, 
             updateStep, 
             saveStepImgFile, 
@@ -33,23 +34,28 @@ const StepBoxUnit = (props) => {
         }
     };
 
+    const imgBtnClick = () => {
+        const imgInput = document.getElementById(`stepImgInput-${step.stepNum}`);
+        imgInput.click();
+    }
 
     return(
         <div className={`${styles.unit}-${index} ${styles.unit}`}>
             <div className={styles.inner}>
                 <div className={styles.innerLeft}>
-                    <input name="recipeStepImgFiles" className={styles.fileInput} type="file" onChange={(e) => preStepImgFile(e)}/>
+                    <input id={`stepImgInput-${step.stepNum}`} name="recipeStepImgFiles" className={styles.fileInput} type="file" onChange={(e) => preStepImgFile(e)}/>
+                    <img onClick={imgBtnClick} className={styles.imgBtn} src={`${serverUrl}/Image/CommonImage/add.png`}/>
                     <img className={styles.img} src={saveStepImgFile || `${serverUrl}/Image/CommonImage/preImg.png`}/>
                     <div className={styles.delBox}>
                         <img className={styles.delImg} src="/Image/CommonImage/cancel.png" onClick={() => stepDelete(index)}/>
                     </div>
                 </div>
                 <div className={styles.innerRight}>
-                    <div className={styles.order}>{`Step.${index}`}</div>
+                    <div className={styles.order}>{`Step.${step.stepNum}`}</div>
                     <textarea 
                         className={styles.textArea} 
                         value={saveStepContent || ""} 
-                        onChange={(e) => updateStep(index, {content: e.target.value}, "content")}></textarea>
+                        onChange={(e) => updateStep(index, {stepWay: e.target.value}, "content")}></textarea>
                 </div>
             </div>
             

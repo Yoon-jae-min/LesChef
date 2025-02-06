@@ -13,22 +13,22 @@
 
 .logo{
     position: absolute;
-    top: 30px;
-    width: 180px;
+    top: 3%;
+    height: 18%;
     cursor: pointer;
 }
 
 .input{
     position: absolute;
-    top: 180px;
+    top: 24%;
     width: 70%;
 }
 
 .btn{
     position: absolute;
-    bottom: 8vh;
+    top: 88%;
     width: 72%;
-    height: 6vh;
+    height: 6%;
     border-radius: 12px;
     background-color: rgb(90, 166, 123);
     color: white;
@@ -40,7 +40,7 @@
 
 .loginBox{
     position: absolute;
-    bottom: 4vh;
+    top: 95%;
     width: 50%;
     display: flex;
     justify-content: space-around;

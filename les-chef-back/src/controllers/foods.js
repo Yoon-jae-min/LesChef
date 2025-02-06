@@ -172,4 +172,40 @@ const deleteContent = asyncHandler(async(req, res) => {
     }
 });
 
-module.exports = { getPlace, addPlace, updatePlace, deletePlace, addContent, deleteContent };
+const updateContent = asyncHandler(async(req, res) => {
+    const {name, vol, unit, date, placeName, contentId} = req.body;
+    const userId = req.session.user.id;
+
+    const result = await Foods.updateOne({userId, "place.name": placeName},
+        {
+            $set: {
+                "place.$.foodList.$[food].name": name,
+                "place.$.foodList.$[food].volume": vol,
+                "place.$.foodList.$[food].unit": unit,
+                "place.$.foodList.$[food].expirate": date,
+            }
+        },
+        {
+            arrayFilters: [{"food._id": contentId}]
+        }
+    )
+
+    const sectionList = await Foods.findOne({userId}).lean();
+
+    if(result.modifiedCount === 0){
+        res.status(500).send({
+            error: true,
+            result: false,
+            message: "update fail"
+        })
+    }else{
+        res.status(200).send({
+            error: false,
+            result: true,
+            message: "success",
+            sectionList: sectionList.place 
+        })
+    }
+});
+
+module.exports = { getPlace, addPlace, updatePlace, deletePlace, addContent, deleteContent, updateContent };

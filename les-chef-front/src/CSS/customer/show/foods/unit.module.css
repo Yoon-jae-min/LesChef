@@ -7,6 +7,9 @@
     height: 100px;
     margin-left: calc((10% - 2px) / 4);
     margin-bottom: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 
 .nameBox{
@@ -35,7 +38,7 @@
 }
 
 .amountBox, .dateBox{
-    padding-top: 4%;
+    /* padding-top: 4%; */
     width: 92%;
     height: 24%;
     margin: 0 auto;

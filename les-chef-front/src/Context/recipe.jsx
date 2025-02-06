@@ -11,7 +11,18 @@ export const RecipeProvider = ({children}) => {
     const [recipeWish, setRecipeWish] = useState(false);
 
     //레시피 등록 정보
-    const [wrRecipeInfo, setWrRecipeInfo] = useState({});
+    // const [wrRecipeInfo, setWrRecipeInfo] = useState({
+    //     cookLevel: "",
+    //     cookTime: 0,
+    //     createdAt: "",
+    //     majorCategory: "",
+    //     portion: 0,
+    //     portionUnit: "",
+    //     recipeImg: "/Image/CommonImage/preImg.png",
+    //     recipeName: "",
+    //     subCategory: "",
+    // });
+    const [wrRecipeInfo, setWrRecipeInfo] = useState(null);
     const [wrRecipeIngres, setWrRecipeIngres] = useState([]);
     const [wrRecipeSteps, setWrRecipeSteps] = useState([]);
     const [wrRecipeImg, setWrRecipeImg] = useState(null);

@@ -5,13 +5,35 @@
     font-weight: bold;
 }
 
-.input{
-    width: 99%;
+.input, .inputId{
     background-color: rgba(255, 255, 255, 0);
     border: none;
     border-bottom: 1px solid white;
-    height: 30px;
     margin-bottom: 5px;
     color: white;
     outline: none;
+    font-size: 90%;
+}
+
+.input{
+    height: 37px;
+    line-height: 37px;
+    width: 99%;
+}
+
+.inputId{
+    height: 40px;
+    line-height: 40px;
+    width: 44%;
+}
+
+.idBetween{
+    font-size: 100%;
+    margin: 0;
+    width: 9%;
+    height: 40px;
+    color: white;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
 }

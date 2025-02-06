@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 //컨텍스트
 import { useUserContext } from "../../Context/user";
-import { useRecipeContext } from '../../Context/recipe';
+// import { useRecipeContext } from '../../Context/recipe';
 
 //컴포넌트
 import MainFirst from '../Slide/first/box';
@@ -23,7 +23,7 @@ const MainPage = () => {
     const outerDivRef = useRef();
     const location = useLocation();
     const navigate = useNavigate();
-    const {setRecipeList} = useRecipeContext();
+    // const {setRecipeList} = useRecipeContext();
 
     //페이지 관련
     const [currentPage, setCurrentPage] = useState(0);
@@ -144,11 +144,13 @@ const MainPage = () => {
     }, [menuModal, loginModal]);
     
     //페이지 이동 관련
-    const goToTopSlide = () => {
+    const goToTopSlide = async() => {
+        await authCheck();
+
         if(loginModal){
             setLoginModal((prev) => !prev);
         }
-        setCurrentPage(0)
+        setCurrentPage(0);
     }
 
     const goToJoinBox = () => {
