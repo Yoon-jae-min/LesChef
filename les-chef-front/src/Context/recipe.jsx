@@ -27,6 +27,7 @@ export const RecipeProvider = ({children}) => {
     const [wrRecipeSteps, setWrRecipeSteps] = useState([]);
     const [wrRecipeImg, setWrRecipeImg] = useState(null);
     const [wrStepImgs, setWrStepImgs] = useState([]);
+    const [deleteImgs, setDeleteImgs] = useState([]);
 
     return(
         <RecipeContext.Provider 
@@ -40,7 +41,8 @@ export const RecipeProvider = ({children}) => {
                     wrRecipeIngres, setWrRecipeIngres,
                     wrRecipeSteps, setWrRecipeSteps,
                     wrRecipeImg, setWrRecipeImg,
-                    wrStepImgs, setWrStepImgs}}>
+                    wrStepImgs, setWrStepImgs,
+                    deleteImgs, setDeleteImgs}}>
             {children}
         </RecipeContext.Provider>
     )

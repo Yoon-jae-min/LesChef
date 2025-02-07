@@ -21,8 +21,8 @@ const RecipeHead = (props) => {
     const { listPage, writePage, infoPage, isEdit,
             setListPage, setWritePage, setInfoPage, setIsEdit } = props;
     const {serverUrl} = useConfig();
-    const { wrRecipeInfo, wrRecipeIngres, wrRecipeSteps, wrRecipeImg, wrStepImgs,
-            setWrRecipeInfo, setWrRecipeIngres, setWrRecipeSteps, setWrRecipeImg, setWrStepImgs, setSelectedRecipe,
+    const { wrRecipeInfo, wrRecipeIngres, wrRecipeSteps, wrRecipeImg, wrStepImgs, deleteImgs,
+            setWrRecipeInfo, setWrRecipeIngres, setWrRecipeSteps, setWrRecipeImg, setWrStepImgs, setSelectedRecipe, setDeleteImgs,
             selectedRecipe, recipeIngres, recipeSteps } = useRecipeContext();
     const navigate = useNavigate();
     const {authCheck} = useUserContext();
@@ -50,6 +50,7 @@ const RecipeHead = (props) => {
             setWrRecipeSteps([]);
             setWrRecipeImg(null);
             setWrStepImgs([]);
+            setDeleteImgs([]);
             setWritePage(true);
             setListPage(false);
         }else{
@@ -100,6 +101,7 @@ const RecipeHead = (props) => {
                 formData.append("recipeSteps", JSON.stringify(wrRecipeSteps));
                 formData.append("recipeImgFile", wrRecipeImg);
                 formData.append("isEdit", isEdit);
+                formData.append("deleteImgs", deleteImgs);
                 wrStepImgs.forEach((stepImg) => {
                     formData.append("recipeStepImgFiles", stepImg);
                 });
@@ -114,6 +116,7 @@ const RecipeHead = (props) => {
                     setWrRecipeSteps([]);
                     setWrRecipeImg(null);
                     setWrStepImgs([]);
+                    setDeleteImgs([]);
                     setSelectedRecipe(null);
                     setListPage(true);
                     setWritePage(false);
@@ -139,6 +142,7 @@ const RecipeHead = (props) => {
         setWrRecipeSteps(recipeSteps);
         setWrRecipeImg(null);
         setWrStepImgs([]);
+        setDeleteImgs([]);
         setIsEdit(true);
         setInfoPage(false);
         setWritePage(true);

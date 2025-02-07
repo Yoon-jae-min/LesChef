@@ -17,7 +17,8 @@ import IngredientSection from "./ingreSection";
 const WriteBox = (props) => {
     const {isEdit} = props;
     const {serverUrl} = useConfig();
-    const { wrRecipeInfo, setWrRecipeInfo, setWrRecipeImg, wrRecipeSteps, setWrRecipeSteps, setWrStepImgs, wrRecipeIngres, setWrRecipeIngres} = useRecipeContext();
+    const { wrRecipeInfo, wrRecipeSteps, wrRecipeIngres, 
+            setWrRecipeSteps, setWrStepImgs, setWrRecipeInfo, setWrRecipeImg, setWrRecipeIngres, setDeleteImgs} = useRecipeContext();
     const [imgFile, setImgFile] = useState("");
     const [steps, setSteps] = useState([]);
     const [ingreSections, setIngreSections] = useState([]);
@@ -35,6 +36,13 @@ const WriteBox = (props) => {
                     }))
                 })
             ));
+            setWrStepImgs((prev) => {
+                const newArray = [];
+                for(let i = 0; i < wrRecipeSteps.length; i++){
+                    newArray.push("");
+                }
+                return [...prev, ...newArray];
+            });
         }
     }, [])
 
@@ -55,6 +63,10 @@ const WriteBox = (props) => {
         reader.onloadend = () => {
             setImgFile(reader.result);
         };
+
+        if(wrRecipeInfo.recipeImg !== "" && wrRecipeInfo.recipeImg !== "/Image/CommonImage/preImg.png"){
+            setDeleteImgs((prev) => [...prev, wrRecipeInfo.recipeImg]);
+        }
 
         setWrRecipeInfo((preInfo) => (
             {...preInfo, recipeImg: ""}
@@ -85,13 +97,23 @@ const WriteBox = (props) => {
                     step.stepNum === id ? { ...step, stepImgFile: updatedData.stepImgFile } : step
                 )
             );
-
-            setWrRecipeSteps((steps) => 
-                steps.map((step) => 
-                    step.stepNum === id ? {...step, stepImg: ""} : step
-                )
-            )
-    
+            setWrRecipeSteps((steps) => {
+                const newDeleteImgs = [];
+                const updatedSteps = steps.map((step) => {
+                    if(step.stepNum === id) {
+                        if(step.stepImg !== "" && step.stepImg !== "/Image/CommonImage/preImg.png"){
+                            newDeleteImgs.push(step.stepImg);
+                        }
+                        return {...step, stepImg: ""}
+                    }else{
+                        return step;
+                    }
+                });
+                if(newDeleteImgs.length > 0){
+                    setDeleteImgs((prev) => [...prev, ...newDeleteImgs]);
+                }
+                return updatedSteps;
+            });
             setWrStepImgs((stepImgs) =>
                 stepImgs.map((stepImg, index) => 
                     index + 1 === id ? (stepImg = updatedData.sendStepImgFile) : stepImg
@@ -103,7 +125,6 @@ const WriteBox = (props) => {
                     step.stepNum === id ? { ...step, ...updatedData } : step
                 )
             );
-
             setWrRecipeSteps((preSteps) => 
                 preSteps.map((step, index) => 
                     index + 1 === id ? {...step, ...updatedData} : step
@@ -123,14 +144,35 @@ const WriteBox = (props) => {
             }))
         );
 
-        setWrRecipeSteps((preSteps) => 
-            preSteps.filter((step) => step.stepNum !== id).map((step, index) => ({
-                ...step,
-                stepNum: index + 1,
-                stepWay: step.stepWay,
-                stepImg: step.stepImg
-            }))
-        );
+        setWrRecipeSteps((preSteps) => {
+            const newDeleteImgs = [];
+
+            const updatedSteps = preSteps.reduce((acc, step) => {
+                if(step.stepNum === id){
+                    if(step.stepImg !== "" && step.stepImg !== "/Image/CommonImage/preImg.png"){
+                        newDeleteImgs.push(step.stepImg);
+                    }
+                }else{
+                    acc.push({
+                        ...step,
+                        stepNum: acc.length + 1,
+                        stepWay: step.stepWay,
+                        stepImg: step.stepImg
+                    });
+                }
+                return acc;
+            },[]);
+            if (newDeleteImgs.length > 0) {
+                setDeleteImgs((preImgs) => [...preImgs, ...newDeleteImgs]);
+            }
+            return updatedSteps;
+            // preSteps.filter((step) => step.stepNum !== id).map((step, index) => ({
+            //     ...step,
+            //     stepNum: index + 1,
+            //     stepWay: step.stepWay,
+            //     stepImg: step.stepImg
+            // }))
+        });
 
         setWrStepImgs((preStepImgs) => {
             const newStepImgs = [...preStepImgs];
@@ -329,7 +371,7 @@ const WriteBox = (props) => {
                             key={index}
                             index={step.stepNum}
                             step={step}
-                            saveStepImgFile={step.stepImgFile}
+                            saveStepImgFile={step.stepImg}
                             saveStepContent={step.stepWay}
                             stepDelete={stepDelete}
                             updateStep={updateStep}

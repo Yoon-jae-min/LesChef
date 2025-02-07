@@ -10,11 +10,12 @@ const RecipeWishList = require("../models/recipeWishListModel");
 require("dotenv").config();
 
 const recipeWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps, isEdit} = req.body;
+    const { recipeInfo, recipeIngredients, recipeSteps, isEdit, deleteImgs} = req.body;
     const parsedRecipeInfo = JSON.parse(recipeInfo);
     const parsedRecipeIngredients = JSON.parse(recipeIngredients);
     const parsedRecipeSteps = JSON.parse(recipeSteps);
     const parsedIsEdit = JSON.parse(isEdit);
+    const deleteImgsArray = Array.isArray(deleteImgs) ? deleteImgs : [deleteImgs];
     const userInfo = await User.findOne({id: req.session.user.id}).lean();
     let isShare = true;
     let recipeId = null;
@@ -52,6 +53,24 @@ const recipeWrite = asyncHandler(async(req, res) => {
         });
         recipeId = infoAdd._id;
     }else{
+        for(const imgUrl of deleteImgsArray){
+            if(imgUrl){
+                const stepImg = path.join(__dirname, "..", "..", 'public', imgUrl.slice(1));
+                console.log(stepImg);
+
+                await new Promise((resolve, reject) => {
+                    fs.unlink(stepImg, (err) => {
+                        if(err) {
+                            console.log(err);
+                            reject(err);
+                            return;
+                        }
+                        console.log('파일 삭제 성공');
+                        resolve();
+                    });
+                })
+            }
+        }
         
         await Recipe.updateOne({userId: userInfo.id, _id: parsedRecipeInfo._id},
             {$set: {
@@ -65,13 +84,13 @@ const recipeWrite = asyncHandler(async(req, res) => {
                 recipeImg: parsedRecipeInfo.recipeImg,
             }}
         )
-        await RecipeStep.deleteMany({recipeId: recipeInfo._id});
-        await RecipeIngredient.deleteMany({recipeId: recipeInfo._id});
+        await RecipeStep.deleteMany({recipeId: parsedRecipeInfo._id});
+        await RecipeIngredient.deleteMany({recipeId: parsedRecipeInfo._id});
         recipeId = recipeInfo._id;
     }
 
     const ingredientsData = parsedRecipeIngredients.map((item) => ({
-        recipeId: recipeId,
+        recipeId: item.recipeId,
         sortType: item.sortType,
         ingredientUnit: item.ingredientUnit.map((unit) => ({
             ingredientName: unit.ingredientName,
@@ -81,7 +100,7 @@ const recipeWrite = asyncHandler(async(req, res) => {
     }));
 
     const stepsData = parsedRecipeSteps.map((item) => ({
-        recipeId: recipeId,
+        recipeId: parsedRecipeInfo._id,
         stepNum: item.stepNum,
         stepWay: item.stepWay,
         stepImg: item.stepImg
