@@ -21,8 +21,10 @@ const app = express();
 
 // SSL 인증서 파일 경로
 const options = {
-    key: fs.readFileSync('./src/certs/private-key.pem'), // 비밀키 파일 경로
-    cert: fs.readFileSync('./src/certs/certificate.pem') // 인증서 파일 경로
+    key: fs.readFileSync(process.env.SSL_KEY_PATH), // 비밀키 파일 경로
+    cert: fs.readFileSync(process.env.SSL_CERT_PATH) // 인증서 파일 경로
+    // key: fs.readFileSync('./src/certs/private-key.pem'), // 비밀키 파일 경로
+    // cert: fs.readFileSync('./src/certs/certificate.pem') // 인증서 파일 경로
 };
 
 // 세션 설정
@@ -47,7 +49,8 @@ app.use(session({
 
 // CORS 설정 (세션 이후에 위치)
 app.use(cors({
-    origin: ['https://localhost:3000', 'https://172.30.1.93:3000'], 
+    // origin: ['https://localhost:3000', 'https://172.30.1.93:3000'], 
+    origin: process.env.CORS_ORIGIN.split(','), 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
