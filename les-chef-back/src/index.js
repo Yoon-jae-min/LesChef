@@ -85,5 +85,5 @@ app.use((req, res, next) => {
 });
 
 https.createServer(options, app).listen(443, "0.0.0.0", () => {
-    console.log('HTTPS 서버가 실행 중입니다. https://158.180.94.75
+    console.log('HTTPS 서버가 실행 중입니다. https://158.180.94.75');
 });
