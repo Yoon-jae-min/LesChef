@@ -62,14 +62,22 @@ app.use(cors({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-//정적 파일 경로 설정
-app.use(express.static('public'));
+// 정적 파일 경로 설정 (이미지 폴더 서빙)
+app.use('/Image', express.static(path.join(__dirname, 'public', 'Image')));
+
+// React 빌드 파일 서빙 (빌드된 React 앱의 정적 파일들)
+app.use(express.static(path.join(__dirname, 'public', 'build')));
 
 // 라우터 설정
 app.use("/customer", customer);
 app.use("/recipe", recipe);
 app.use("/board", board);
 app.use("/foods", foods);
+
+// 모든 요청에 대해 index.html 반환 (SPA 지원)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'build', 'index.html'));
+});
 
 // 404 핸들러
 app.use((req, res, next) => {
