@@ -64,6 +64,7 @@ app.use(express.json());
 
 // 정적 파일 경로 설정 (이미지 폴더 서빙)
 app.use('/Image', express.static(path.join(__dirname, '..', 'public', 'Image')));
+app.use('/Video', express.static(path.join(__dirname, '..', 'public', 'Video')));
 
 // React 빌드 파일 서빙 (빌드된 React 앱의 정적 파일들)
 app.use(express.static(path.join(__dirname, '..', 'public', 'build')));
