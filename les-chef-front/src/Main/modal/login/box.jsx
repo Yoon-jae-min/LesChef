@@ -103,15 +103,14 @@ const LoginBox = (props) => {
             </div>
             <div className={styles.sns}>
                 <div className={styles.kakao}>
-                    <img src={`${serverUrl}/Image/MainImage/kakaoLoginButton.png`}></img>
+                    <img className={styles.kakaoIcon} src={`${serverUrl}/Image/MainImage/kakaoLoginButton.png`}></img>
                 </div>
                 <div className={`${styles.google} customGPlusSignIn`}>
-                    <span className={styles.googleIcon}></span>
-                    <span className={styles.snsText}>로그인</span>
+                    <img className={styles.googleIcon} src="https://developers.google.com/identity/sign-in/g-normal.png"/>
                 </div>
+                
                 <div className={styles.naver}>
                     <img className={styles.naverIcon} src={`${serverUrl}/Image/MainImage/naverIcon.png`}></img>
-                    <span className={styles.snsText}>로그인</span>
                 </div>
             </div>
             <div className={styles.joinBox}>

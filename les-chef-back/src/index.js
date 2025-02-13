@@ -15,7 +15,9 @@ const foods = require("../src/routers/foods");
 
 require("dotenv").config();
 
-dbConnect();
+dbConnect().catch(error => {
+    console.error('DB connection error:', error);
+});
 
 const app = express();
 
@@ -74,6 +76,6 @@ app.use((req, res, next) => {
     res.status(404).send('Not Found');
 });
 
-https.createServer(options, app).listen(5000, () => {
-    console.log('HTTPS 서버가 실행 중입니다. https://localhost:5000');
+https.createServer(options, app).listen(443, () => {
+    console.log('HTTPS 서버가 실행 중입니다. https://localhost');
 });

@@ -12,10 +12,10 @@
 
 .box{
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    position: absolute;
-    height: 86%;
-    width: 380px;
+    align-items: center;
+    width: 23%;
     z-index: 160;
     background-color: rgb(11, 86, 11);
     border-radius: 20px;
@@ -23,23 +23,19 @@
 }
 
 .logo{
-    position: absolute;
-    top: 7%;
-    width: 180px;
+    width: 45%;
     cursor: pointer;
+    margin: 10% 0;
 }
 
 .inputBox{
-    position: absolute;
-    top: 32%;
     width: 70%;
+    height: 20%;
 }
 
 .loginBtn{
-    position: absolute;
-    top: 60%;
     width: 72%;
-    height: 6vh;
+    height: 45px;
     border-radius: 12px;
     background-color: rgb(90, 166, 123);
     border: none;
@@ -47,11 +43,10 @@
     font-weight: bold;
     font-size: 15px;
     cursor: pointer;
+    margin: 4% 0;
 }
 
 .hrAndOr{
-    position: absolute;
-    top: 69%;
     width: 80%;
     display: flex;
     color: white;
@@ -68,12 +63,13 @@
 }
 
 .findBtn{
-    position: absolute;
-    top: 51%;
-    right: 15%;
     color: rgb(157, 157, 196);
     font-weight: bold;
     cursor: pointer;
+    margin: 0;
+    width: 70%;
+    text-align: end;
+    margin-bottom: 1%;
 }
 
 .findBtn:hover{
@@ -81,69 +77,49 @@
 }
 
 .sns{
-    position: absolute;
-    top: 76%;
-    display: flex;
-    justify-content: space-between;
-    width: 74%;
-}
-
-.naver{
-    background-color: white;
-    height: 45px;
-    border-radius: 5px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 67%;
+    margin: 5% 0;
 }
 
-.google{
-    display: inline-block;
-    background: white;
-    color: #444;
-    border-radius: 5px;
-    white-space: nowrap;
-    height: 45px;
-}
-
-.naver, .kakao, .google{
+.google, .naver, .kakao{
+    height: 100%;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
     cursor: pointer;
+    width: 20%;
 }
 
-.naverIcon{
-    width: 31px;
-    height: 31px;
-    border-radius: 5px;
-    margin-left: 3px;
+.kakao{
+    background-color: yellow;
 }
 
-.googleIcon{
-    background: url('https://developers.google.com/identity/sign-in/g-normal.png') transparent 5px 50% no-repeat;
-    display: inline-block;
-    vertical-align: middle;
-    width: 35px;
-    height: 45px;
+.naverIcon, .googleIcon, .kakaoIcon{
+    height: 100%;
+    border-radius: 50%;
 }
 
-.snsText{
-    display: inline-block;
-    vertical-align: middle;
-    padding-right: 10px;
-    font-size: 14px;
-    font-weight: bold;
+.kakaoIcon{
+    height: 80%;
 }
 
 .joinBox{
-    position: absolute;
-    top: 86%;
-    width: 68%;
+    width: 75%;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     color: white;
+    margin: 3% 0 10%;
 }
 
 .joinBtn{
     cursor: pointer;
     font-weight: bold;
+    margin-left: 10px;
 }
 
 .joinBtn:hover{
