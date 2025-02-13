@@ -15,14 +15,16 @@ const FindId = (props) => {
     }
 
     return(
-        <div className={styles.inputBox}>
-            <LabelInput 
-                labelText="이름"/>
-            <LabelInput 
-                labelText="휴대폰"/>
+        <React.Fragment>
+            <div className={styles.inputBox}>
+                <LabelInput 
+                    labelText="이름"/>
+                <LabelInput 
+                    labelText="휴대폰"/>
+            </div>
             <div className={styles.searchBtn}>아이디 찾기</div>
             <p className={styles.loginText}>로그인 하시겠습니까?<span onClick={clickToLogin} className={styles.loginBtn}>로그인</span></p>
-        </div>
+        </React.Fragment>
     )
 }
 
