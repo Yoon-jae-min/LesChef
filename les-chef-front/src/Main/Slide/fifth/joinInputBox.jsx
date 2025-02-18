@@ -22,7 +22,7 @@ const JoinInput = (props) => {
         <div className={styles.input}>
             <LabelInput 
                 boxType = "join" 
-                labelText = "이메일(아이디)" 
+                labelText = "아이디" 
                 basicValue={saveInfo.id}
                 dupliCheck={dupliCheck}
                 setDupliCheck={setDupliCheck}

@@ -23,7 +23,7 @@ const LoginBox = (props) => {
             pageInfo } = props;
     const [ customerId, setCustomerId ] = useState("");
     const [ customerPwd, setCustomerPwd ] = useState("");
-    const { serverUrl } = useConfig();
+    const { serverUrl, kakaoApiKey } = useConfig();
     const { setIsLogin } = useUserContext();
     const navigate = useNavigate();
 
@@ -85,6 +85,18 @@ const LoginBox = (props) => {
         }
     }, [loginModal]);
 
+    const googleLogin = () => {
+
+    }
+
+    const kakaoLogin = () => {
+        window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${kakaoApiKey}&redirect_uri=${serverUrl}/customer/kakaoLogin&response_type=code`;
+    }
+
+    const naverLogin = () => {
+
+    }
+
     return(
         <div className={`${styles.box} loginBox`} style={{opacity: loginModal ? '1' : '0'}}>
             <img onClick={clickLogo} className={styles.logo} src={`${serverUrl}/Image/CommonImage/LogoWhite.png`}/>
@@ -103,14 +115,14 @@ const LoginBox = (props) => {
             </div>
             <div className={styles.sns}>
                 <div className={styles.kakao}>
-                    <img className={styles.kakaoIcon} src={`${serverUrl}/Image/MainImage/kakaoLoginButton.png`}></img>
+                    <img className={styles.kakaoIcon} src={`${serverUrl}/Image/MainImage/kakaoLoginButton.png`} onClick={kakaoLogin}/>
                 </div>
                 <div className={`${styles.google} customGPlusSignIn`}>
-                    <img className={styles.googleIcon} src="https://developers.google.com/identity/sign-in/g-normal.png"/>
+                    <img className={styles.googleIcon} src="https://developers.google.com/identity/sign-in/g-normal.png" onClick={googleLogin}/>
                 </div>
                 
                 <div className={styles.naver}>
-                    <img className={styles.naverIcon} src={`${serverUrl}/Image/MainImage/naverIcon.png`}></img>
+                    <img className={styles.naverIcon} src={`${serverUrl}/Image/MainImage/naverIcon.png`} onClick={naverLogin}/>
                 </div>
             </div>
             <div className={styles.joinBox}>

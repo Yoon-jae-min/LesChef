@@ -10,7 +10,7 @@ import { useConfig } from "../../../../Context/config";
 import { useUserContext } from "../../../../Context/user";
 
 const WithDraw = (props) => {
-    const {setWdBox} = props;
+    const {setWdBox, setNotice} = props;
     const {serverUrl} = useConfig();
     const {authCheck} = useUserContext();
     const navigate = useNavigate();
@@ -22,6 +22,7 @@ const WithDraw = (props) => {
     const clickWd = async() => {
         if(!confirmWd()){
             setWdBox((prev) => (!prev));
+            setNotice((prev) => (!prev));
             return;
         }
 
@@ -54,6 +55,7 @@ const WithDraw = (props) => {
     const clickWdCancel = async() => {
         if(await authCheck()){
             setWdBox((prev) => (!prev));
+            setNotice((prev) => (!prev));
         }else{
             alert("다시 로그인해 주세요");
             navigate("/");

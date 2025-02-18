@@ -10,7 +10,7 @@ import { useUserContext } from "../../../../Context/user";
 import { useConfig } from "../../../../Context/config";
 
 const CheckBox = (props) => {
-    const {setCheckPwd, setWdBox, setChgPwdBox, setChgInfoBox, checkContent} = props
+    const {setCheckPwd, setWdBox, setChgPwdBox, setChgInfoBox, setNotice, checkContent} = props
     const {authCheck} = useUserContext();
     const {serverUrl} = useConfig();
     const navigate = useNavigate();
@@ -75,6 +75,7 @@ const CheckBox = (props) => {
 
     const checkCancel = () => {
         setCheckPwd((prev) => (!prev));
+        setNotice((prev) => (!prev));
     }
 
     const pwdValueChg = (pwd) => {

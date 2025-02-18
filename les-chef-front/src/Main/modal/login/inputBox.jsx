@@ -14,7 +14,7 @@ const LoginInput = (props) => {
         <div className={styles.inputBox}>
             <LabelInput 
                 boxType = "login" 
-                labelText = "이메일(아이디)" 
+                labelText = "아이디" 
                 inputValue={inputId} 
                 basicValue={idValue}/>
             <LabelInput 

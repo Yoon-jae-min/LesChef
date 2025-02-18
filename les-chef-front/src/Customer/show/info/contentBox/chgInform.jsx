@@ -10,7 +10,7 @@ import { useUserContext } from "../../../../Context/user";
 import {useConfig} from "../../../../Context/config";
 
 const ChgInform = (props) => {
-    const {setChgInfoBox, userData} = props;
+    const {setChgInfoBox, setNotice, userData} = props;
     const navigate = useNavigate();
     const {authCheck} = useUserContext();
     const {serverUrl} = useConfig();
@@ -51,11 +51,13 @@ const ChgInform = (props) => {
                         sessionStorage.setItem("userData", JSON.stringify(userData));
                     }
                 }
-                window.location.reload();
+                setChgInfoBox((prev) => (!prev));
+                setNotice((prev) => (!prev));
             }).catch(err => {
                 console.log(err);
                 alert("다시 시도해 주세요");
-                window.location.reload();
+                setChgInfoBox((prev) => (!prev));
+                setNotice((prev) => (!prev));
             })
         }else{
             alert("다시 로그인해 주세요");
@@ -66,6 +68,7 @@ const ChgInform = (props) => {
     const clickCancel = async() => {
         if(await authCheck()){
             setChgInfoBox((prev) => (!prev));
+            setNotice((prev) => (!prev));
         }else{
             alert("다시 로그인해 주세요");
             navigate("/");

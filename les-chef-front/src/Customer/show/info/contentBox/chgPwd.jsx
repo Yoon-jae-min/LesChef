@@ -9,7 +9,7 @@ import styles from "../../../../CSS/customer/show/info/contentBox/chgPwd.module.
 import { useUserContext } from "../../../../Context/user";
 
 const ChgPwd = (props) => {
-    const {setChgPwdBox} = props;
+    const {setChgPwdBox, setNotice} = props;
     const {authCheck} = useUserContext();
     const navigate = useNavigate();
 
@@ -20,6 +20,7 @@ const ChgPwd = (props) => {
     const clickCancel = async() => {
         if(await authCheck()){
             setChgPwdBox((prev) => (!prev));
+            setNotice((prev) => (!prev));
         }else{
             alert("다시 로그인해 주세요");
             navigate("/");

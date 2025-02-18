@@ -44,16 +44,28 @@ const MainPage = () => {
     const [diffCheck, setDiffCheck] = useState(false);
     const [dupliCheck, setDupliCheck] = useState(false);
 
-    const { authCheck } = useUserContext();
+    const { authCheck, setIsLogin } = useUserContext();
     const scrollEventFlag = useRef(false);
     const pageHeight = window.innerHeight;
 
-    useEffect(() => {
-        const userAuth = async () => {
-            await authCheck();
-        }
+    const userAuth = async () => {
+        await authCheck();
+    }
 
-        userAuth();
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        if(params.toString().length > 0){
+            console.log(params.get('nickName'));
+            sessionStorage.setItem('userData', JSON.stringify({
+                id: params.get('userId'),
+                name: params.get('name'),
+                nickName: params.get('nickName'),
+                tel: params.get('tel')
+            }));
+            setIsLogin(true);
+        }else{
+            userAuth();
+        }
     },[])
 
     useEffect(() => {

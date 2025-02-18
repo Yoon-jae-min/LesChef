@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const {postLogin, getLogout, getAuth, getInfo, infoChg, idCheck, pwdChg, pwCheck} = require("../controllers/login");
-const {postJoin, delInfo} = require("../controllers/join");
+const {postJoin, delUser} = require("../controllers/join");
+const {kakaoLogin} = require("../controllers/snsLogin");
 
 router
     .get("/logout", getLogout)
@@ -13,6 +14,7 @@ router
     .post("/check", pwCheck)
     .post("/login", postLogin)
     .post("/join", postJoin)
-    .delete("/delete", delInfo);
+    .delete("/delete", delUser)
+    .get("/kakaoLogin", kakaoLogin);
 
 module.exports = router;

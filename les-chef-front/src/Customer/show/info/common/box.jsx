@@ -12,6 +12,7 @@ import WithDraw from "../contentBox/withDraw";
 import CheckBox from "../contentBox/checkBox";
 import ChgPwd from "../contentBox/chgPwd";
 import ChgInform from "../contentBox/chgInform";
+import Notice from "../contentBox/notice";
 
 const CustomerInfoBox = () => {
     const { serverUrl } = useConfig();
@@ -21,22 +22,29 @@ const CustomerInfoBox = () => {
     const [menuBox, setMenuBox] = useState(false);
     const [chgPwdBox, setChgPwdBox] = useState(false);
     const [chgInfoBox, setChgInfoBox] = useState(false);
+    const [notice, setNotice] = useState(true);
     const [checkContent, setCheckContent] = useState("");
 
     const clickWd = () => {
-        if(!checkPwd){
+        if(notice && !checkPwd){
             setCheckPwd((prev) => (!prev));
             setCheckContent("withDraw");
+            setNotice((prev) => (!prev));
         }
     }
 
     const clickChgMenu = () => {
-        setMenuBox((prev) => (!prev));
+        if(notice){
+            setMenuBox((prev) => (!prev));
+        }
     }
 
     const clickChgInfo = () => {
         if(!checkPwd){
             setCheckPwd((prev) => (!prev));
+        }
+        if(notice){
+            setNotice((prev) => (!prev));
         }
         setMenuBox((prev) => (!prev));
         setCheckContent("inform");
@@ -45,6 +53,9 @@ const CustomerInfoBox = () => {
     const clickChgPwd = () => {
         if(!checkPwd){
             setCheckPwd((prev) => (!prev));
+        }
+        if(notice){
+            setNotice((prev) => (!prev));
         }
         setMenuBox((prev) => (!prev));
         setCheckContent("password");
@@ -82,10 +93,11 @@ const CustomerInfoBox = () => {
                         <div onClick={clickChgInfo} className={styles.chgInfo}>개인정보</div>
                         <div onClick={clickChgPwd} className={styles.chgPwd}>패스워드</div>
                     </div>}
-                {wdBox && <WithDraw setWdBox={setWdBox}/>}
-                {checkPwd && <CheckBox setCheckPwd={setCheckPwd} setWdBox={setWdBox} setChgPwdBox={setChgPwdBox} setChgInfoBox={setChgInfoBox} checkContent={checkContent}/>}
-                {chgPwdBox && <ChgPwd setChgPwdBox={setChgPwdBox}/>}
-                {chgInfoBox && <ChgInform setChgInfoBox={setChgInfoBox} userData={userData}/>}
+                {notice && <Notice/>}
+                {wdBox && <WithDraw setWdBox={setWdBox} setNotice={setNotice}/>}
+                {checkPwd && <CheckBox setCheckPwd={setCheckPwd} setWdBox={setWdBox} setChgPwdBox={setChgPwdBox} setChgInfoBox={setChgInfoBox} setNotice={setNotice} checkContent={checkContent}/>}
+                {chgPwdBox && <ChgPwd setChgPwdBox={setChgPwdBox} setNotice={setNotice}/>}
+                {chgInfoBox && <ChgInform setChgInfoBox={setChgInfoBox} setNotice={setNotice} userData={userData}/>}
             </div>
         </div>
     )

@@ -77,7 +77,7 @@ app.use("/foods", foods);
 
 // 모든 요청에 대해 index.html 반환 (SPA 지원)
 app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'public', 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, '..', 'public', 'build', 'index.html'));
 });
 
 // 404 핸들러
@@ -88,3 +88,7 @@ app.use((req, res, next) => {
 https.createServer(options, app).listen(443, "0.0.0.0", () => {
     console.log('HTTPS 서버가 실행 중입니다. https://158.180.94.75');
 });
+
+// https.createServer(options, app).listen(5000, "0.0.0.0", () => {
+//     console.log('HTTPS 서버가 실행 중입니다. https://localhost:5000');
+// });

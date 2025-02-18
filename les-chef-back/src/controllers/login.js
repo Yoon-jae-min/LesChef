@@ -13,10 +13,10 @@ const postLogin = asyncHandler(async (req, res) => {
             return res.status(401).send("아이디/비밀번호가 일치하지 않습니다.");
         }
 
-        // 세션에 사용자 정보 저장
         req.session.user = {
             id: findUser.id,
-            nickName: findUser.nickName
+            nickName: findUser.nickName,
+            userType: "common"
         };
 
         // 세션 저장 후 응답

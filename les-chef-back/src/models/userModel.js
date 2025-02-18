@@ -11,14 +11,15 @@ const userSchema = new mongoose.Schema({
     },
     name:{
         type: String,
-        required: [true, "이름을 입력해주세요."]
+        default: "user"
     },
     nickName:{
         type: String,
-        required: [true, "닉네임을 입력해주세요."]
+        default: "nickName"
     },
     tel:{
-        type: String
+        type: String,
+        default: ""
     },
     profileImg:{
         type: String,
@@ -27,6 +28,10 @@ const userSchema = new mongoose.Schema({
     checkAdmin:{
         type: Boolean,
         default: false
+    },
+    userType:{
+        type: String,
+        default: "common"
     },
     createdAt:{ 
         type: Date,

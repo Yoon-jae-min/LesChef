@@ -25,7 +25,7 @@ const MainFifth = (props) => {
 
         return (
                 <section className={`${section.section} ${fifth.section}`}>
-                        <img src={`${serverUrl}/Image/MainImage/Background/mainFifthBg.png`} className={section.bgImg}/>
+                        <img src={`${serverUrl}/Image/MainImage/Background/mainFifthBg.png`} className={`${section.bgImg} ${fifth.bgImg}`}/>
                         <JoinBox 
                                 toggleLoginModal={toggleLoginModal} 
                                 goToTopSlide={goToTopSlide} 

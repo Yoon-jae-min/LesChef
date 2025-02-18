@@ -6,7 +6,8 @@ const ConfigContext = createContext();
 // Provider 컴포넌트
 export const ConfigProvider = ({ children }) => {
     const config = {
-        serverUrl : process.env.REACT_APP_Server_IP // .env 파일에서 가져온 API URL
+        serverUrl : process.env.REACT_APP_Server_IP,
+        kakaoApiKey : process.env.REACT_APP_KAKAO_API_KEY
     };
 
     return (
