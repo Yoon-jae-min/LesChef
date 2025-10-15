@@ -7,7 +7,7 @@ function Home() {
       <Top />
       
       {/* 메인 콘텐츠 */}
-      <main className="max-w-5xl mx-auto px-8 py-16">
+      <main className="max-w-6xl mx-auto px-8 py-16">
         <div className="space-y-12">
           {/* 뉴스/소식 영역 */}
           <div className="w-full border border-black rounded-none p-16 min-h-[280px] flex items-center justify-center bg-white">

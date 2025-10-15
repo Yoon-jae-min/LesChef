@@ -7,29 +7,29 @@ function Top(): React.JSX.Element {
         <header className="w-full bg-white border-b border-gray-200 py-2 sticky top-0 z-50">
             <div className="flex items-center max-w-6xl mx-auto h-14 px-8">
                 {/* 로고 */}
-                <div className="flex items-center h-full">
+                <div className="flex items-center h-full -translate-x-8">
                     <Link href="/" className="flex items-center h-full">
                         <Image 
                             src="/LesChef_Logo.png" 
                             alt="LesChef Logo" 
-                            width={260}
-                            height={78}
-                            className="h-14 w-auto cursor-pointer hover:opacity-80 transition-opacity"
+                            width={320}
+                            height={96}
+                            className="h-16 w-auto cursor-pointer hover:opacity-80 transition-opacity"
                             priority
                         />
                     </Link>
                 </div>
 
                 {/* 아이콘들 */}
-                <div className="flex items-center space-x-8 ml-16">
+                <div className="flex items-center space-x-8 ml-16 -translate-x-8">
                     {/* 요리 아이콘 (냄비/볼) */}
-                    <div className="w-5 h-5 flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity">
+                    <Link href="/recipe" className="w-5 h-5 flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity" aria-label="레시피 페이지로 이동">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 text-gray-800">
                             <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                             <path d="M2 17l10 5 10-5"/>
                             <path d="M2 12l10 5 10-5"/>
                         </svg>
-                    </div>
+                    </Link>
 
                     {/* 프로필 아이콘 */}
                     <div className="w-5 h-5 flex items-center justify-center cursor-pointer hover:opacity-70 transition-opacity">
@@ -50,7 +50,7 @@ function Top(): React.JSX.Element {
                 </div>
 
                 {/* 검색바 */}
-                <div className="flex items-center ml-auto">
+                <div className="flex items-center ml-auto translate-x-8">
                     <div className="relative">
                         <input 
                             type="text" 
