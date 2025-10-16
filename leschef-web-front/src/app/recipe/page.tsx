@@ -18,7 +18,7 @@ function RecipePage() {
   const [activeCuisine, setActiveCuisine] = useState<(typeof CUISINE_TABS)[number]>("한식");
   const [activeSub, setActiveSub] = useState<string>("전체");
 
-  const placeholderCards = Array.from({ length: 15 }).map((_, idx) => ({ id: idx + 1 }));
+  const placeholderCards = Array.from({ length: 13 }).map((_, idx) => ({ id: idx + 1 }));
   const subFiltersForActive = CUISINE_TO_SUBFILTERS[activeCuisine];
 
   return (
@@ -26,7 +26,7 @@ function RecipePage() {
       <Top />
       <main className="max-w-6xl mx-auto px-8 py-10">
         {/* 상단 카테고리 탭 */}
-        <div className="flex items-center justify-center space-x-16 mb-6">
+        <div className="flex items-center justify-center space-x-8 sm:space-x-12 md:space-x-16 mb-6">
           {CUISINE_TABS.map((tab) => (
             <button
               key={tab}
@@ -36,7 +36,7 @@ function RecipePage() {
                 setActiveSub(next[0] ?? "");
               }}
               className={
-                `text-2xl font-semibold transition-colors ${
+                `text-lg sm:text-xl md:text-2xl font-semibold transition-colors whitespace-nowrap ${
                   activeCuisine === tab ? "text-black" : "text-gray-400 hover:text-gray-700"
                 }`
               }
@@ -49,13 +49,13 @@ function RecipePage() {
 
         {/* 서브 필터 pill */}
         {subFiltersForActive.length > 0 ? (
-          <div className="flex items-center justify-center space-x-4 mb-8">
+          <div className="flex items-center justify-center space-x-2 sm:space-x-3 md:space-x-4 mb-8 flex-wrap gap-y-2">
             {subFiltersForActive.map((filter) => (
               <button
                 key={filter}
                 onClick={() => setActiveSub(filter)}
                 className={
-                  `px-4 py-2 rounded-full border transition-colors text-sm ${
+                  `px-3 py-1.5 sm:px-4 sm:py-2 rounded-full border transition-colors text-xs sm:text-sm whitespace-nowrap ${
                     activeSub === filter
                       ? "bg-black text-white border-black"
                       : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
