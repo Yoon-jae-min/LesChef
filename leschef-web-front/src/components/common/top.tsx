@@ -19,7 +19,7 @@ function Top(): React.JSX.Element {
                         onClick={() => sessionStorage.setItem('fromLogoClick', 'true')}
                     >
                         <Image 
-                            src="/LesChef_Logo.png" 
+                            src="/icon/LesChef_Logo.png" 
                             alt="LesChef Logo" 
                             width={320}
                             height={96}

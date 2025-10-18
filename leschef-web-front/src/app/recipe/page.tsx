@@ -77,7 +77,7 @@ function RecipePage() {
           {placeholderCards.map((card) => (
             <Link
               key={card.id}
-              href={`/recipe/${card.id}`}
+              href="/recipe/detail"
               className="flex flex-col group focus:outline-none focus:ring-2 focus:ring-black rounded-sm"
               aria-label={`레시피 ${card.id} 상세로 이동`}
             >

@@ -4,17 +4,8 @@ import Top from "@/components/common/top";
 import { useState, useEffect } from "react";
 
 function Home() {
-  const [isLoading, setIsLoading] = useState(() => {
-    // 클라이언트 사이드에서만 체크
-    if (typeof window === 'undefined') return true;
-    
-    // 로고 클릭으로 온 경우 바로 false로 설정
-    const urlParams = new URLSearchParams(window.location.search);
-    const fromLogo = urlParams.get('fromLogo') === 'true' || 
-                     sessionStorage.getItem('fromLogoClick') === 'true';
-    
-    return !fromLogo;
-  });
+  // Always start with true to ensure server and client initial render match
+  const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
