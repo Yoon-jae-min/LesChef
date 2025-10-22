@@ -33,18 +33,39 @@ function Top(): React.JSX.Element {
                 <div className="flex items-center space-x-8 ml-16 -translate-x-8">
                     {/* 요리 아이콘 */}
                     <Link href="/recipe" className="w-6 h-6 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity" aria-label="레시피 페이지로 이동">
-                        <img src="/icon/recipe_DG.png" alt="레시피" className="w-6 h-6" />
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 text-gray-600">
+                            {/* 네모 몸체 - 아래 두 모서리만 라운드 처리 */}
+                            <path d="M4 13h14v6c0 1-1 2-2 2H6c-1 0-2-1-2-2v-6z" strokeLinecap="round"/>
+                            {/* 오른쪽 선분 위로 연장 후 오른쪽 위로 늘림 */}
+                            <path d="M18 13v-2l20-4" strokeLinecap="round" strokeLinejoin="round"/>
+                            {/* 수증기 - 물결표를 90도로 돌린 모양, 거리 띄움 */}
+                            <path d="M6 9c1-1 1-2 1-3c1-1 1-2 1-3" strokeLinecap="round"/>
+                            <path d="M10 9c1-1 1-2 1-3c1-1 1-2 1-3" strokeLinecap="round"/>
+                            <path d="M14 9c1-1 1-2 1-3c1-1 1-2 1-3" strokeLinecap="round"/>
+                        </svg>
                     </Link>
 
                     {/* 마이페이지 아이콘 */}
                     <div className="w-6 h-6 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
-                        <img src="/icon/myPage_DG.png" alt="마이페이지" className="w-6 h-6" />
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 text-gray-600">
+                            {/* 외부 원 */}
+                            <circle cx="12" cy="12" r="10"/>
+                            {/* 내부 원 (머리) */}
+                            <circle cx="12" cy="9" r="3"/>
+                            {/* 어깨선 */}
+                            <path d="M7 20c2.5-2.5 7.5-2.5 10 0" strokeLinecap="round"/>
+                        </svg>
                     </div>
 
                     {/* 게시판 아이콘 */}
-                    <div className="w-6 h-6 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
-                        <img src="/icon/board_DG.png" alt="게시판" className="w-6 h-6" />
-                    </div>
+                    <Link href="/board" className="w-6 h-6 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 text-gray-600">
+                            {/* 문서 외곽선 */}
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            {/* 텍스트 라인들 */}
+                            <path d="M7 8h10M7 12h8M7 16h6" strokeLinecap="round"/>
+                        </svg>
+                    </Link>
                 </div>
 
                 {/* 검색바 - 데스크톱에서만 표시 */}
