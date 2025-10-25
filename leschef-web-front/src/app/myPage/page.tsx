@@ -3,12 +3,12 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function RecipePage() {
+export default function MyPageDefault() {
   const router = useRouter();
 
   useEffect(() => {
-    // Redirect to korean (한식) as default
-    router.replace("/recipe/korean");
+    // Redirect to info page as default
+    router.replace("/myPage/info");
   }, [router]);
 
   return (
@@ -17,5 +17,3 @@ export default function RecipePage() {
     </div>
   );
 }
-
-
