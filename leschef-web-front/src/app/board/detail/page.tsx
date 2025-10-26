@@ -1,6 +1,7 @@
 "use client";
 
 import Top from "@/components/common/top";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -183,6 +184,7 @@ function BoardDetailPage() {
           </div>
         </div>
       </main>
+      <ScrollToTop />
     </div>
   );
 }

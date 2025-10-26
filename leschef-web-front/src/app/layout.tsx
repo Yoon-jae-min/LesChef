@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import ScrollToTop from "@/components/common/ScrollToTop";
 
 export const metadata: Metadata = {
   title: "LesChef - 요리와 식재료의 모든 것",
@@ -11,6 +12,7 @@ function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
     <html lang="ko">
       <body className="min-h-screen bg-white text-black antialiased">
         {children}
+        <ScrollToTop />
       </body>
     </html>
   );

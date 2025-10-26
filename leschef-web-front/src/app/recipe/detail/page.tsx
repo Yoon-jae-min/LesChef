@@ -1,6 +1,7 @@
 "use client";
 
 import Top from "@/components/common/top";
+import ScrollToTop from "@/components/common/ScrollToTop";
 import { useState } from "react";
 import Image from "next/image";
 
@@ -40,7 +41,7 @@ function RecipeDetailPage() {
   };
 
   return (
-    <div className="h-screen bg-white overflow-hidden">
+    <div className="min-h-screen bg-white">
       <style jsx global>{`
         /* 스크롤바 스타일링 */
         ::-webkit-scrollbar {
@@ -232,6 +233,7 @@ function RecipeDetailPage() {
           </div>
         </div>
       </main>
+      <ScrollToTop />
     </div>
   );
 }
