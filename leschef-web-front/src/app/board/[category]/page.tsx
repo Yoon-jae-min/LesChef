@@ -3,38 +3,55 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
+const SAMPLE_POSTS = Array.from({ length: 12 }, (_, index) => ({
+  id: index + 1,
+  title: "커뮤니티 글 제목 예시",
+  excerpt: "레시피 공유, 보관함 관리 꿀팁 등 자유롭게 이야기를 나누어 보세요.",
+  date: "2025-01-25",
+  time: "14:20",
+  author: "user_leschef",
+  highlight: index % 2 === 0 ? "from-orange-100 to-rose-100" : "from-yellow-100 to-amber-100",
+  tag: index % 2 === 0 ? "공지" : "자유",
+}));
+
 export default function BoardCategoryPage() {
   const pathname = usePathname();
   const currentCategory = pathname.split("/").pop() || "notice";
 
   return (
-    <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {Array.from({ length: 15 }, (_, index) => (
+    <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      {SAMPLE_POSTS.map((post) => (
         <Link
-          key={index}
+          key={post.id}
           href={`/board/detail?type=${currentCategory}`}
-          className="border border-gray-200 p-4 bg-white hover:shadow-md transition-shadow rounded-lg block"
+          className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
         >
-          {/* 제목과 날짜 */}
-          <div className="flex justify-between items-start mb-2">
-            <h3 className="text-sm font-medium text-black">---제목---</h3>
-            <span className="text-xs text-gray-400">날짜&시간</span>
-          </div>
-
-          {/* 내용과 이미지 영역 */}
-          <div className="flex justify-between items-start mb-3">
-            <p className="text-sm text-black flex-1 mr-2">---내용---</p>
-            <div className="w-16 h-16 bg-gray-100 flex items-center justify-center">
-              <span className="text-xs text-gray-400 text-center">
-                이미지 영역<br />(존재시)
+          <div
+            className={`relative mb-4 rounded-[24px] border border-gray-200 bg-gradient-to-r ${post.highlight} px-5 py-4`}
+          >
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-semibold uppercase tracking-[0.4em] text-gray-600">
+                Board
+              </span>
+              <span className="rounded-full border border-gray-200 px-3 py-1 text-[11px] font-semibold text-gray-900">
+                {post.tag}
               </span>
             </div>
+            <p className="mt-3 text-xl font-semibold text-gray-900">{post.title}</p>
+            <p className="mt-1 text-sm text-gray-600">{post.excerpt}</p>
+            <div className="absolute inset-0 rounded-[24px] border border-gray-200/10" />
           </div>
 
-          {/* 사용자 아이디 */}
-          <div className="flex items-center">
-            <div className="w-4 h-4 bg-gray-300 rounded-full mr-2"></div>
-            <span className="text-xs text-gray-400">아이디</span>
+          <div className="flex items-center justify-between text-xs text-gray-500">
+            <span className="font-medium text-gray-900">{post.author}</span>
+            <span>
+              {post.date} · {post.time}
+            </span>
+          </div>
+
+          <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
+            <span>게시글 상세 보기</span>
+            <span className="font-semibold text-gray-800">→</span>
           </div>
         </Link>
       ))}

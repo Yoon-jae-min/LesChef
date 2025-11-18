@@ -52,12 +52,6 @@ export default function MyRecipesCategoryLayout({
 
   return (
     <>
-      {/* 구분선 */}
-      <div className="flex justify-center mb-3">
-        <div className="w-full max-w-2xl border-b border-gray-200"></div>
-      </div>
-
-      {/* 상단 카테고리 탭 */}
       <div className="mb-6">
         <TabNavigation
           tabs={[...CUISINE_TABS]}
@@ -66,21 +60,23 @@ export default function MyRecipesCategoryLayout({
         />
       </div>
 
-      {/* 서브 필터 pill */}
-      {subFiltersForActive.length > 0 ? (
-        <div className="mb-6">
-          <FilterTabs
-            items={[...subFiltersForActive]}
-            activeItem={activeSub}
-            onItemChange={setActiveSub}
-            variant="default"
-          />
-        </div>
-      ) : (
-        <div className="h-4" />
-      )}
+      <div className="mb-6 rounded-3xl border border-gray-200 bg-gray-50 px-4 py-4">
+        <FilterTabs
+          items={[...subFiltersForActive]}
+          activeItem={activeSub}
+          onItemChange={setActiveSub}
+          variant="default"
+        />
+      </div>
 
-      {/* 카테고리별 컨텐츠 */}
+      <div className="mb-6 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+        <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">My Recipes</p>
+        <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <h2 className="text-2xl font-semibold text-gray-900">나의 레시피</h2>
+          <span className="text-xs text-gray-500">직접 작성한 레시피를 목록으로 확인해요.</span>
+        </div>
+      </div>
+
       {children}
     </>
   );

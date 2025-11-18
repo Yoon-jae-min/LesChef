@@ -2,15 +2,34 @@
 
 import Link from "next/link";
 import Top from "@/components/common/top";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [saveSession, setSaveSession] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [fromMyPage, setFromMyPage] = useState(false);
+
+  useEffect(() => {
+    const fromParam = searchParams.get("from");
+    const backParam = searchParams.get("back");
+
+    const savedReturn = sessionStorage.getItem("leschef_return_to");
+    const savedFrom = sessionStorage.getItem("leschef_from_source");
+
+    if (fromParam === "mypage" || savedFrom === "mypage") {
+      setFromMyPage(true);
+      sessionStorage.setItem("leschef_from_source", "mypage");
+    }
+
+    if (backParam) {
+      sessionStorage.setItem("leschef_return_to", backParam);
+    }
+  }, [searchParams]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -18,7 +37,14 @@ export default function LoginPage() {
     if (email === "admin@admin.com" && password === "1234") {
       localStorage.setItem("leschef_is_logged_in", "true");
       setError(null);
-      router.push("/myPage");
+
+      const storedReturn = sessionStorage.getItem("leschef_return_to");
+      const target = fromMyPage ? "/myPage" : storedReturn || "/";
+
+      sessionStorage.removeItem("leschef_return_to");
+      sessionStorage.removeItem("leschef_from_source");
+
+      router.push(target);
       return;
     }
 
@@ -32,7 +58,7 @@ export default function LoginPage() {
       <main className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* 브랜드 메시지 */}
-          <section className="relative overflow-hidden rounded-[32px] border border-black bg-white px-10 py-12 lg:px-14 lg:py-16 shadow-[10px_10px_0_0_rgba(0,0,0,0.08)]">
+          <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 lg:px-14 lg:py-16 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-orange-200 to-red-200 opacity-70 blur-3xl pointer-events-none" />
             <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-orange-200 opacity-60 blur-2xl pointer-events-none" />
 
@@ -74,7 +100,7 @@ export default function LoginPage() {
           </section>
 
           {/* 로그인 폼 */}
-          <section className="bg-white border border-black rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[10px_10px_0_0_rgba(0,0,0,0.08)]">
+          <section className="bg-white border border-gray-200 rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-gray-900">
                 계정으로 로그인
@@ -94,7 +120,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-black focus:ring-0"
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
                   required
                 />
               </div>
@@ -108,7 +134,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="비밀번호를 입력해주세요"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-black focus:ring-0"
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
                   required
                 />
               </div>
@@ -158,7 +184,7 @@ export default function LoginPage() {
                 <button
                   key={provider}
                   type="button"
-                  className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-black hover:text-black transition"
+                  className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
                 >
                   {provider}
                 </button>

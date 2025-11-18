@@ -199,15 +199,98 @@ function Home() {
       {/* 메인 콘텐츠 */}
       <main className="max-w-6xl mx-auto px-8 py-16">
         <div className="space-y-12">
+          {/* 히어로 섹션 */}
+          <section className="rounded-[32px] border border-gray-200 bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 p-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+            <div className="text-center space-y-6">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
+                나만의 요리 여정을 시작하세요
+              </h1>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                냉장고 속 재료로 만들 수 있는 레시피를 찾고, 유통기한을 관리하며, 
+                요리의 모든 것을 LesChef와 함께하세요.
+              </p>
+              <div className="flex flex-wrap justify-center gap-4 pt-4">
+                <a
+                  href="/recipe/korean"
+                  className="rounded-2xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+                >
+                  레시피 둘러보기 →
+                </a>
+                <a
+                  href="/myPage/storage"
+                  className="rounded-2xl border border-gray-300 bg-white px-6 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition-colors"
+                >
+                  내 냉장고 관리 →
+                </a>
+              </div>
+            </div>
+          </section>
+
           {/* 뉴스/소식 영역 */}
-          <div className="w-full border border-black rounded-none p-16 min-h-[280px] flex items-center justify-center bg-white">
-            <h2 className="text-xl font-medium text-black">뉴스 / 소식 영역</h2>
-          </div>
+          <section className="rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">뉴스 / 소식</h2>
+              <p className="text-sm text-gray-500">LesChef의 최신 소식과 업데이트를 확인하세요</p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {[1, 2].map((item) => (
+                <div
+                  key={item}
+                  className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-white p-6 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex items-start justify-between mb-3">
+                    <h3 className="text-lg font-semibold text-gray-900">소식 제목 {item}</h3>
+                    <span className="text-xs text-gray-400">2024.01.01</span>
+                  </div>
+                  <p className="text-sm text-gray-600 line-clamp-2">
+                    소식 내용이 여기에 표시됩니다. LesChef의 새로운 기능이나 업데이트 정보를 확인할 수 있어요.
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
           
           {/* 식재료 물가 관련 영역 */}
-          <div className="w-full border border-black rounded-none p-16 min-h-[280px] flex items-center justify-center bg-white">
-            <h2 className="text-xl font-medium text-black">식재료 물가 관련 영역</h2>
-          </div>
+          <section className="rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">식재료 물가 정보</h2>
+              <p className="text-sm text-gray-500">최신 식재료 가격 정보를 확인하세요</p>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {["쌀", "돼지고기", "닭고기", "계란"].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-gray-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-5 text-center"
+                >
+                  <div className="text-2xl mb-2">🥘</div>
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1">{item}</h3>
+                  <p className="text-xs text-gray-600">가격 정보</p>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          {/* 빠른 링크 */}
+          <section className="rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6">빠른 링크</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { name: "한식 레시피", href: "/recipe/korean", emoji: "🍲" },
+                { name: "일식 레시피", href: "/recipe/japanese", emoji: "🍱" },
+                { name: "중식 레시피", href: "/recipe/chinese", emoji: "🥟" },
+                { name: "양식 레시피", href: "/recipe/western", emoji: "🍝" },
+              ].map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white to-gray-50 p-6 text-center hover:shadow-md transition-all hover:-translate-y-1"
+                >
+                  <div className="text-3xl mb-2">{link.emoji}</div>
+                  <p className="text-sm font-semibold text-gray-900">{link.name}</p>
+                </a>
+              ))}
+            </div>
+          </section>
         </div>
       </main>
     </div>

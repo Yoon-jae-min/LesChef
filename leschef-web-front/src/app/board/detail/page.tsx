@@ -76,39 +76,34 @@ function BoardDetailPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:h-full">
           {/* 왼쪽: 게시글 메인 정보 */}
           <div className="space-y-6 lg:overflow-y-auto lg:pr-2">
-            {/* 카테고리 */}
-            <div className="text-base font-medium text-gray-500">
-              {category}
-            </div>
-            
-            {/* 제목과 좋아요 버튼 */}
-            <div className="flex items-center justify-between mb-3">
-              <h1 className="text-4xl font-bold text-black">Title</h1>
-              
-              {/* 좋아요 버튼 */}
-              <button
-                onClick={() => setIsLiked(!isLiked)}
-                className={`w-8 h-8 flex items-center justify-center transition-colors ${
-                  isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
-                }`}
-              >
-                <svg 
-                  viewBox="0 0 24 24" 
-                  fill="none"
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  className="w-6 h-6"
+            {/* 제목 영역 */}
+            <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+              <div className="flex items-center justify-between mb-4">
+                <span className="text-sm font-medium text-gray-500 px-3 py-1 rounded-full bg-gray-100">
+                  {category}
+                </span>
+                <button
+                  onClick={() => setIsLiked(!isLiked)}
+                  className={`w-8 h-8 flex items-center justify-center transition-colors ${
+                    isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                  }`}
                 >
-                  <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                </svg>
-              </button>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill={isLiked ? 'currentColor' : 'none'}
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    className="w-6 h-6"
+                  >
+                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                  </svg>
+                </button>
+              </div>
+              <h1 className="text-4xl font-bold text-black">Title</h1>
             </div>
-            
-            {/* 구분선 */}
-            <div className="w-full border-b border-gray-400 mt-0.5"></div>
             
             {/* 게시글 내용 */}
-            <div className="space-y-4 mt-6">
+            <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
               <div className="text-base text-gray-800 leading-relaxed">
                 <p className="mb-4">
                   안녕하세요. LesChef 공지사항입니다.
@@ -134,9 +129,9 @@ function BoardDetailPage() {
           {/* 오른쪽: 댓글 섹션 */}
           <div className="space-y-8 lg:overflow-y-auto lg:pr-2">
             {/* 댓글 섹션 */}
-            <div>
-              <h2 className="text-2xl font-bold text-black pb-1 mb-2 text-center">
-                <span className="border-b border-gray-300 px-1">Comment</span>
+            <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+              <h2 className="text-2xl font-bold text-black pb-1 mb-4 text-center">
+                <span className="border-b-2 border-gray-300 px-1">Comment</span>
               </h2>
               
               {/* 댓글 입력 */}
@@ -147,22 +142,22 @@ function BoardDetailPage() {
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   onKeyPress={(e) => e.key === 'Enter' && handleAddComment()}
-                  className="w-full px-4 py-4 border border-gray-300 rounded-lg focus:outline-none focus:border-gray-400 text-base text-black placeholder-gray-400"
+                  className="w-full px-4 py-4 border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-gray-300 text-base"
                 />
               </div>
 
               {/* 댓글 목록 */}
               <div className="space-y-4">
                 {comments.map((comment) => (
-                  <div key={comment.id} className="bg-gray-50 border border-gray-200 rounded-lg p-5">
+                  <div key={comment.id} className="bg-gradient-to-br from-gray-50 to-white border border-gray-200 rounded-2xl p-5">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center space-x-3 mb-3">
-                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                        <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center border border-gray-400">
                           <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5 text-gray-600">
                             <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
                           </svg>
                         </div>
-                        <span className="text-base font-medium text-gray-700">{comment.username}</span>
+                        <span className="text-base font-medium text-gray-900">{comment.username}</span>
                         <span className="text-base text-gray-500">-{comment.time}-</span>
                       </div>
                       <button
@@ -174,8 +169,8 @@ function BoardDetailPage() {
                         </svg>
                       </button>
                     </div>
-                    <div className="w-full h-8 border-2 border-dashed border-gray-300 rounded flex items-center px-4">
-                      <span className="text-gray-500 text-base">-{comment.content}-</span>
+                    <div className="w-full min-h-[40px] border-2 border-dashed border-gray-300 rounded-xl flex items-center px-4 bg-white">
+                      <span className="text-gray-700 text-base">-{comment.content}-</span>
                     </div>
                   </div>
                 ))}

@@ -49,9 +49,14 @@ export default function ClientMyPageLayout({
       localStorage.getItem("leschef_is_logged_in") === "true";
 
     if (!loggedIn) {
+      if (typeof window !== "undefined") {
+        const attemptedPath = window.location.pathname + window.location.search;
+        sessionStorage.setItem("leschef_from_source", "mypage");
+        sessionStorage.setItem("leschef_return_to", attemptedPath);
+      }
       setIsAuthorized(false);
       setIsCheckingAuth(false);
-      router.replace("/login");
+      router.replace("/login?from=mypage");
       return;
     }
 
@@ -66,35 +71,21 @@ export default function ClientMyPageLayout({
     }
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("leschef_is_logged_in");
-    router.push("/login");
-  };
-
-  const showOverlay = isCheckingAuth || !isAuthorized;
-
   return (
     <div className="relative min-h-screen bg-white">
       <Top />
       <main className="max-w-6xl mx-auto px-8 py-8">
-        <div className={`flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between ${marginBottom}`}>
+        <div className={`flex flex-col gap-4 ${marginBottom}`}>
           <TabNavigation
             tabs={tabs.map((t) => t.label)}
             activeTab={activeTab}
             onTabChange={handleTabChange}
           />
-          <button
-            type="button"
-            onClick={handleLogout}
-            className="self-start rounded-2xl border border-black px-6 py-2 text-sm font-medium text-gray-900 transition hover:-translate-y-0.5 hover:bg-black hover:text-white"
-          >
-            로그아웃
-          </button>
         </div>
         {children}
       </main>
 
-      {showOverlay && (
+      {(isCheckingAuth || !isAuthorized) && (
         <div className="fixed inset-0 z-50 bg-white/95 backdrop-blur-sm flex flex-col items-center justify-center gap-2">
           <div className="h-12 w-12 animate-spin rounded-full border-4 border-gray-200 border-t-gray-600" />
           <p className="text-sm text-gray-500">로그인 상태 확인 중...</p>

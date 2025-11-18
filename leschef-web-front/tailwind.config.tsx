@@ -7,7 +7,24 @@ const config: Config = {
         "./components/**/*.{js,ts,jsx,tsx}" // 컴포넌트 폴더
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                sans: [
+                    '"Pretendard Variable"',
+                    'Pretendard',
+                    '-apple-system',
+                    'BlinkMacSystemFont',
+                    'system-ui',
+                    'Roboto',
+                    '"Helvetica Neue"',
+                    '"Segoe UI"',
+                    '"Apple SD Gothic Neo"',
+                    '"Noto Sans KR"',
+                    '"Malgun Gothic"',
+                    'sans-serif',
+                ],
+            },
+        },
     },
     plugins: [],
 }
