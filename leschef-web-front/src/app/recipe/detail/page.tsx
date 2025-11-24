@@ -2,11 +2,18 @@
 
 import Top from "@/components/common/top";
 import ScrollToTop from "@/components/common/ScrollToTop";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 function RecipeDetailPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const recipeId = searchParams.get("id") || "1"; // TODO: 실제 레시피 ID 가져오기
   const [isLiked, setIsLiked] = useState(false);
   const [comment, setComment] = useState("");
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthor, setIsAuthor] = useState(false);
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -39,6 +46,37 @@ function RecipeDetailPage() {
     setComments(comments.filter(c => c.id !== id));
   };
 
+  // 로그인 상태 및 작성자 확인
+  useEffect(() => {
+    const checkLogin = () => {
+      const loggedIn = typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true";
+      setIsLoggedIn(loggedIn);
+    };
+
+    checkLogin();
+    window.addEventListener("storage", checkLogin);
+    
+    // TODO: API 연동 - 실제 레시피 데이터에서 작성자 정보 가져오기
+    // 현재는 mock 데이터로 작성자 확인
+    // const fetchRecipeData = async () => {
+    //   const response = await fetch(`/api/recipes/${recipeId}`);
+    //   const data = await response.json();
+    //   const currentUserId = localStorage.getItem("leschef_user_id"); // TODO: 실제 사용자 ID 저장 방식
+    //   setIsAuthor(data.authorId === currentUserId);
+    // };
+    // fetchRecipeData();
+    
+    // Mock: 로그인한 경우 작성자로 간주 (실제로는 API에서 확인)
+    if (typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true") {
+      // TODO: 실제 작성자 확인 로직으로 교체
+      setIsAuthor(true);
+    }
+
+    return () => window.removeEventListener("storage", checkLogin);
+  }, [recipeId]);
+
+  const canEdit = isLoggedIn && isAuthor;
+
   return (
     <div className="min-h-screen bg-white">
       <style jsx global>{`
@@ -67,23 +105,35 @@ function RecipeDetailPage() {
             <div className="flex items-center justify-between rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
               <h1 className="text-4xl font-bold text-black">Example</h1>
               
-              {/* 좋아요 버튼 */}
-              <button
-                onClick={() => setIsLiked(!isLiked)}
-                className={`w-8 h-8 flex items-center justify-center transition-colors ${
-                  isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
-                }`}
-              >
-                <svg 
-                  viewBox="0 0 24 24" 
-                  fill={isLiked ? 'currentColor' : 'none'} 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  className="w-6 h-6"
+              <div className="flex items-center gap-3">
+                {/* 편집 버튼 - 로그인하고 작성자인 경우에만 표시 */}
+                {canEdit && (
+                  <Link
+                    href={`/myPage/recipes/edit?id=${recipeId}`}
+                    className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                  >
+                    편집
+                  </Link>
+                )}
+                
+                {/* 좋아요 버튼 */}
+                <button
+                  onClick={() => setIsLiked(!isLiked)}
+                  className={`w-8 h-8 flex items-center justify-center transition-colors ${
+                    isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                  }`}
                 >
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-                </svg>
-              </button>
+                  <svg 
+                    viewBox="0 0 24 24" 
+                    fill={isLiked ? 'currentColor' : 'none'} 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    className="w-6 h-6"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                </button>
+              </div>
             </div>
             
             {/* 레시피 이미지 */}

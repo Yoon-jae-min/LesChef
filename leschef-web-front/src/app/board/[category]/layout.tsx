@@ -3,6 +3,7 @@
 import Top from "@/components/common/top";
 import TabNavigation from "@/components/common/TabNavigation";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
 
 const BOARD_TABS = ["공지사항", "자유게시판"] as const;
 
@@ -49,11 +50,19 @@ export default function BoardCategoryLayout({
 
         <div className="mb-8 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
           <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">Community</p>
-          <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className="text-2xl font-semibold text-gray-900">LesChef 보드</h2>
-            <span className="text-xs text-gray-500">
-              공지와 자유게시판 모두 동일한 스타일로 정보를 확인할 수 있어요.
-            </span>
+          <div className="mt-1 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-900">LesChef 보드</h2>
+              <span className="text-xs text-gray-500">
+                공지와 자유게시판 모두 동일한 스타일로 정보를 확인할 수 있어요.
+              </span>
+            </div>
+            <Link
+              href={`/board/write?type=${currentCategory}`}
+              className="inline-flex items-center justify-center rounded-2xl border border-gray-200 bg-white px-5 py-2.5 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition"
+            >
+              글쓰기
+            </Link>
           </div>
         </div>
 

@@ -4,12 +4,14 @@ import Top from "@/components/common/top";
 import ScrollToTop from "@/components/common/ScrollToTop";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 function BoardDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
   const [comment, setComment] = useState("");
   const [category, setCategory] = useState("공지사항");
   const searchParams = useSearchParams();
+  const postId = searchParams.get("id") || "1"; // TODO: 실제 게시글 ID 가져오기
   
   const [comments, setComments] = useState([
     {
@@ -82,22 +84,33 @@ function BoardDetailPage() {
                 <span className="text-sm font-medium text-gray-500 px-3 py-1 rounded-full bg-gray-100">
                   {category}
                 </span>
-                <button
-                  onClick={() => setIsLiked(!isLiked)}
-                  className={`w-8 h-8 flex items-center justify-center transition-colors ${
-                    isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
-                  }`}
-                >
-                  <svg 
-                    viewBox="0 0 24 24" 
-                    fill={isLiked ? 'currentColor' : 'none'}
-                    stroke="currentColor" 
-                    strokeWidth="2" 
-                    className="w-6 h-6"
+                <div className="flex items-center gap-3">
+                  {/* 편집 버튼 */}
+                  <Link
+                    href={`/board/edit?id=${postId}&type=${searchParams.get('type') || 'notice'}`}
+                    className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
                   >
-                    <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
-                  </svg>
-                </button>
+                    편집
+                  </Link>
+                  
+                  {/* 좋아요 버튼 */}
+                  <button
+                    onClick={() => setIsLiked(!isLiked)}
+                    className={`w-8 h-8 flex items-center justify-center transition-colors ${
+                      isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                    }`}
+                  >
+                    <svg 
+                      viewBox="0 0 24 24" 
+                      fill={isLiked ? 'currentColor' : 'none'}
+                      stroke="currentColor" 
+                      strokeWidth="2" 
+                      className="w-6 h-6"
+                    >
+                      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                    </svg>
+                  </button>
+                </div>
               </div>
               <h1 className="text-4xl font-bold text-black">Title</h1>
             </div>

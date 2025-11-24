@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const MY_RECIPES = Array.from({ length: 9 }).map((_, idx) => ({
   id: idx + 1,
@@ -21,6 +22,14 @@ const MY_RECIPES = Array.from({ length: 9 }).map((_, idx) => ({
 }));
 
 export default function MyRecipesCategoryPage() {
+  const router = useRouter();
+
+  const handleEditClick = (e: React.MouseEvent, recipeId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/myPage/recipes/edit?id=${recipeId}`);
+  };
+
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {MY_RECIPES.map((card) => (
@@ -66,9 +75,17 @@ export default function MyRecipesCategoryPage() {
             </span>
           </div>
 
-          <div className="mt-4 flex items-center justify-between text-[11px] text-gray-500">
-            <span>레시피 상세 보기</span>
-            <span className="font-semibold text-gray-800">→</span>
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => handleEditClick(e, card.id)}
+                className="rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+              >
+                편집
+              </button>
+              <span className="text-[11px] text-gray-500">레시피 상세 보기</span>
+            </div>
+            <span className="font-semibold text-gray-800 text-[11px]">→</span>
           </div>
         </Link>
       ))}

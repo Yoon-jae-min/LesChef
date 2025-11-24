@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const SAMPLE_POSTS = Array.from({ length: 12 }, (_, index) => ({
   id: index + 1,
@@ -16,14 +16,21 @@ const SAMPLE_POSTS = Array.from({ length: 12 }, (_, index) => ({
 
 export default function BoardCategoryPage() {
   const pathname = usePathname();
+  const router = useRouter();
   const currentCategory = pathname.split("/").pop() || "notice";
+
+  const handleEditClick = (e: React.MouseEvent, postId: number) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/board/edit?id=${postId}&type=${currentCategory}`);
+  };
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
       {SAMPLE_POSTS.map((post) => (
         <Link
           key={post.id}
-          href={`/board/detail?type=${currentCategory}`}
+          href={`/board/detail?type=${currentCategory}&id=${post.id}`}
           className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
         >
           <div
@@ -49,9 +56,17 @@ export default function BoardCategoryPage() {
             </span>
           </div>
 
-          <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-            <span>게시글 상세 보기</span>
-            <span className="font-semibold text-gray-800">→</span>
+          <div className="mt-4 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <button
+                onClick={(e) => handleEditClick(e, post.id)}
+                className="rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+              >
+                편집
+              </button>
+              <span className="text-xs text-gray-500">게시글 상세 보기</span>
+            </div>
+            <span className="font-semibold text-gray-800 text-xs">→</span>
           </div>
         </Link>
       ))}
