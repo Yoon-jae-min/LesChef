@@ -2,92 +2,85 @@
 
 import Link from "next/link";
 import Top from "@/components/common/top";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage() {
+export default function SignupPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [saveSession, setSaveSession] = useState(true);
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [fromMyPage, setFromMyPage] = useState(false);
-
-  useEffect(() => {
-    const fromParam = searchParams.get("from");
-    const backParam = searchParams.get("back");
-
-    const savedReturn = sessionStorage.getItem("leschef_return_to");
-    const savedFrom = sessionStorage.getItem("leschef_from_source");
-
-    if (fromParam === "mypage" || savedFrom === "mypage") {
-      setFromMyPage(true);
-      sessionStorage.setItem("leschef_from_source", "mypage");
-    }
-
-    if (backParam) {
-      sessionStorage.setItem("leschef_return_to", backParam);
-    }
-  }, [searchParams]);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(null);
 
-    // TODO: API 연동 - 실제 서버로 인증 요청
-    // const response = await fetch("/api/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ email, password }),
-    // });
-    
-    // Mock: localStorage에서 사용자 정보 확인
-    // 실제 서버에서는 서버의 데이터베이스에서 확인해야 합니다
-    const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
-    
-    // // 기존 하드코딩된 admin 계정도 지원 (하위 호환성)
-    // if (email === "admin@admin.com" && password === "1234") {
-    //   localStorage.setItem("leschef_is_logged_in", "true");
-    //   localStorage.setItem("leschef_current_user", JSON.stringify({
-    //     id: "admin",
-    //     email: "admin@admin.com",
-    //     nickname: "관리자",
-    //   }));
-    //   setError(null);
-
-    //   const storedReturn = sessionStorage.getItem("leschef_return_to");
-    //   const target = fromMyPage ? "/myPage" : storedReturn || "/";
-
-    //   sessionStorage.removeItem("leschef_return_to");
-    //   sessionStorage.removeItem("leschef_from_source");
-
-    //   router.push(target);
-    //   return;
-    // }
-    
-    // 회원가입한 사용자 확인
-    const user = users.find((u: any) => u.email === email && u.password === password);
-    
-    if (user) {
-      localStorage.setItem("leschef_is_logged_in", "true");
-      localStorage.setItem("leschef_current_user", JSON.stringify({
-        id: user.id,
-        email: user.email,
-        nickname: user.nickname,
-      }));
-      setError(null);
-
-      const storedReturn = sessionStorage.getItem("leschef_return_to");
-      const target = fromMyPage ? "/myPage" : storedReturn || "/";
-
-      sessionStorage.removeItem("leschef_return_to");
-      sessionStorage.removeItem("leschef_from_source");
-
-      router.push(target);
+    // 유효성 검사
+    if (password !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
       return;
     }
 
-    setError("아이디 또는 비밀번호가 올바르지 않습니다.");
+    if (password.length < 6) {
+      setError("비밀번호는 최소 6자 이상이어야 합니다.");
+      return;
+    }
+
+    if (!agreeToTerms) {
+      setError("이용약관에 동의해주세요.");
+      return;
+    }
+
+    // TODO: API 연동 - 실제 서버로 데이터 전송
+    // const response = await fetch("/api/signup", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ email, password, nickname }),
+    // });
+    
+    // Mock: localStorage에 사용자 정보 저장
+    // 실제 서버에서는 이렇게 하지 않고, 서버의 데이터베이스에 저장해야 합니다
+    const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
+    
+    // 이메일 중복 체크
+    if (users.find((user: any) => user.email === email)) {
+      setError("이미 등록된 이메일입니다.");
+      return;
+    }
+    
+    // 새 사용자 추가
+    const newUser = {
+      id: Date.now().toString(), // 임시 ID
+      email,
+      password, // 실제로는 해시화된 비밀번호를 저장해야 함
+      nickname,
+      createdAt: new Date().toISOString(),
+    };
+    
+    users.push(newUser);
+    localStorage.setItem("leschef_mock_users", JSON.stringify(users));
+    
+    // 회원가입 성공 시 자동 로그인 처리
+    localStorage.setItem("leschef_is_logged_in", "true");
+    localStorage.setItem("leschef_current_user", JSON.stringify({
+      id: newUser.id,
+      email: newUser.email,
+      nickname: newUser.nickname,
+    }));
+    
+    console.log("회원가입 완료 (Mock):", newUser);
+    console.log("저장된 모든 사용자:", users);
+    
+    // 회원가입 후 리다이렉트
+    const returnTo = searchParams.get("back") || sessionStorage.getItem("leschef_return_to") || "/";
+    sessionStorage.removeItem("leschef_return_to");
+    
+    alert("회원가입이 완료되었습니다!");
+    router.push(returnTo);
   };
 
   return (
@@ -102,30 +95,30 @@ export default function LoginPage() {
             <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-orange-200 opacity-60 blur-2xl pointer-events-none" />
 
             <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
-              Welcome back
+              Join us
             </p>
             <h1 className="mt-4 text-4xl lg:text-5xl font-semibold text-gray-900 leading-tight">
-              나만의 요리 여정,
+              새로운 요리 여정,
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-400 to-yellow-400">
                 LesChef{" "}
               </span>
               와{" "}
               <span className="underline decoration-4 decoration-orange-300">
-                계속
+                시작
               </span>
             </h1>
 
             <p className="mt-6 text-base text-gray-600 leading-relaxed">
-              즐겨찾기, 식재료 관리, 맞춤 레시피 추천까지. 로그인하면
-              나에게 딱 맞춘 LesChef의 서비스를 온전히 경험할 수 있어요.
+              냉장고 재료 관리부터 맞춤 레시피 추천까지. 지금 가입하고
+              나만의 요리 여정을 시작해보세요.
             </p>
 
             <div className="mt-10 space-y-4">
               {[
-                "내 냉장고를 기반으로 한 레시피 추천",
-                "게시판 글쓰기 및 커뮤니티 참여",
-                "마이페이지에서 즐겨찾기와 저장함 관리",
+                "냉장고 재료 기반 레시피 추천",
+                "커뮤니티에서 레시피 공유",
+                "즐겨찾기와 보관함 관리",
               ].map((item) => (
                 <div
                   key={item}
@@ -138,14 +131,14 @@ export default function LoginPage() {
             </div>
           </section>
 
-          {/* 로그인 폼 */}
+          {/* 회원가입 폼 */}
           <section className="bg-white border border-gray-200 rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-gray-900">
-                계정으로 로그인
+                회원가입
               </h2>
               <p className="text-sm text-gray-500">
-                LesChef 서비스 이용을 위해 로그인해 주세요.
+                LesChef와 함께 요리 여정을 시작해보세요.
               </p>
             </div>
 
@@ -166,38 +159,74 @@ export default function LoginPage() {
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
+                  닉네임
+                </label>
+                <input
+                  type="text"
+                  value={nickname}
+                  onChange={(e) => setNickname(e.target.value)}
+                  placeholder="닉네임을 입력해주세요"
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
                   비밀번호
                 </label>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요"
+                  placeholder="비밀번호를 입력해주세요 (최소 6자)"
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
                   required
+                  minLength={6}
                 />
               </div>
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="inline-flex items-center gap-2 text-gray-600">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">
+                  비밀번호 확인
+                </label>
+                <input
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="비밀번호를 다시 입력해주세요"
+                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                  required
+                  minLength={6}
+                />
+              </div>
+
+              <div className="space-y-3">
+                <label className="inline-flex items-start gap-2 text-sm text-gray-600">
                   <input
                     type="checkbox"
-                    checked={saveSession}
-                    onChange={() => setSaveSession((prev) => !prev)}
-                    className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                    checked={agreeToTerms}
+                    onChange={(e) => setAgreeToTerms(e.target.checked)}
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                    required
                   />
-                  로그인 상태 유지
+                  <span>
+                    <Link
+                      href="/terms"
+                      className="text-black underline-offset-4 hover:underline"
+                    >
+                      이용약관
+                    </Link>
+                    및{" "}
+                    <Link
+                      href="/privacy"
+                      className="text-black underline-offset-4 hover:underline"
+                    >
+                      개인정보처리방침
+                    </Link>
+                    에 동의합니다.
+                  </span>
                 </label>
-
-                <div className="flex items-center gap-3 text-gray-500">
-                  <Link href="/find-id" className="hover:text-black transition">
-                    아이디 찾기
-                  </Link>
-                  <span className="text-gray-300">|</span>
-                  <Link href="/find-password" className="hover:text-black transition">
-                    비밀번호 찾기
-                  </Link>
-                </div>
               </div>
 
               {error && (
@@ -208,7 +237,7 @@ export default function LoginPage() {
                 type="submit"
                 className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
               >
-                로그인하기
+                회원가입하기
               </button>
             </form>
 
@@ -232,14 +261,14 @@ export default function LoginPage() {
 
             <div className="mt-8 rounded-2xl bg-gray-50 px-5 py-4 text-sm text-gray-600">
               <p>
-                아직 회원이 아니신가요?{" "}
+                이미 회원이신가요?{" "}
                 <Link
-                  href="/signup"
+                  href="/login"
                   className="font-semibold text-black underline-offset-4 hover:underline"
                 >
-                  회원가입
+                  로그인
                 </Link>
-                으로 간편하게 시작해 보세요.
+                하러 가기
               </p>
             </div>
           </section>

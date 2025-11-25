@@ -51,23 +51,23 @@ function Top(): React.JSX.Element {
     return (
         <>
         <header className="w-full bg-white border-b border-gray-200 py-2 sticky top-0 z-50 shadow-sm">
-            <div className="flex items-center max-w-6xl mx-auto h-14 px-8">
+            <div className="flex items-center max-w-6xl mx-auto h-14 px-4 lg:px-8">
                 {/* 로고 */}
-                <div className="flex items-center h-full -translate-x-8">
+                <div className="flex items-center h-full lg:-translate-x-8">
                     <Link 
                         href="/" 
                         className="flex items-center h-full group"
                         onClick={() => sessionStorage.setItem('fromLogoClick', 'true')}
                     >
                         {/* LesChef 텍스트 로고 */}
-                        <span className="text-3xl font-bold tracking-normal leading-none text-gray-900 group-hover:text-orange-500 transition-colors duration-200">
+                        <span className="text-3xl font-bold tracking-normal leading-none text-gray-900 group-hover:text-orange-500 transition-colors duration-200 ml-3 mr-3">
                             LesChef
                         </span>
                     </Link>
                 </div>
 
                 {/* 아이콘들 */}
-                <div className="flex items-center space-x-8 ml-16 -translate-x-8">
+                <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-8 ml-4 md:ml-8 lg:ml-16 lg:-translate-x-8">
                     {/* 요리 아이콘 */}
                     <Link href="/recipe/korean" className="w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-xl transition-all" aria-label="레시피 페이지로 이동">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-6 h-6 text-gray-600">
@@ -129,12 +129,12 @@ function Top(): React.JSX.Element {
                 </div>
 
                 {/* 검색바 - 데스크톱에서만 표시 */}
-                <div className="hidden lg:flex items-center ml-auto translate-x-8">
+                <div className="hidden md:flex items-center ml-auto md:ml-4 lg:ml-auto lg:translate-x-8 mr-3">
                     <div className="relative">
                         <input 
                             type="text" 
                             placeholder="검색..." 
-                            className="w-72 px-4 py-2 pl-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-900 placeholder:text-gray-500"
+                            className="w-48 md:w-56 lg:w-72 px-4 py-2 pl-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-900 placeholder:text-gray-500"
                         />
                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-4 h-4 text-gray-400">
@@ -148,7 +148,7 @@ function Top(): React.JSX.Element {
                 {/* 검색 아이콘 - 모바일에서만 표시 */}
                 <button 
                     onClick={() => setIsSearchExpanded(!isSearchExpanded)}
-                    className="lg:hidden flex items-center ml-auto mr-4 translate-x-4 w-8 h-8 justify-center hover:bg-gray-100 rounded-xl transition-all"
+                    className="lg:hidden flex items-center ml-auto w-8 h-8 justify-center hover:bg-gray-100 rounded-xl transition-all"
                     aria-label="검색"
                 >
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-5 h-5 text-gray-600">
