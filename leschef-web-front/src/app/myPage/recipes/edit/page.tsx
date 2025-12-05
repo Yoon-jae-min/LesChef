@@ -3,6 +3,7 @@
 import Top from "@/components/common/top";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { updateRecipe } from "@/utils/recipeApi";
 
 type Ingredient = {
   ingredientName: string;
@@ -170,9 +171,68 @@ export default function RecipeEditPage() {
     }
   };
 
+  // 삭제할 이미지 URL 추적 (기존 이미지에서 새 이미지로 변경된 경우)
+  const [deletedStepImages, setDeletedStepImages] = useState<string[]>([]);
+
+  // 레시피 수정 함수 (나중에 버튼에 연결할 때 사용)
+  const handleUpdateRecipe = async () => {
+    if (!recipeId) {
+      alert("레시피 ID가 없습니다.");
+      return;
+    }
+
+    try {
+      // 기존 이미지 URL 중에서 새 파일로 교체된 것들을 찾아서 삭제 목록에 추가
+      const deleteImgs: string[] = [...deletedStepImages];
+      
+      // 대표 이미지가 새로 업로드된 경우 기존 이미지 URL을 삭제 목록에 추가
+      // (실제로는 서버에서 기존 이미지 URL을 받아와야 함)
+      // if (recipeImg && originalRecipeImg) {
+      //   deleteImgs.push(originalRecipeImg);
+      // }
+
+      const response = await updateRecipe({
+        recipeInfo: {
+          recipeName,
+          cookTime,
+          portion,
+          portionUnit,
+          cookLevel,
+          majorCategory,
+          subCategory,
+          recipeImg: recipeImgPreview || "", // 기존 이미지가 있으면 URL, 새로 업로드한 경우 빈 문자열
+          _id: recipeId,
+        },
+        ingredientGroups,
+        steps,
+        recipeImgFile: recipeImg,
+        recipeId: recipeId,
+        deleteImgs: deleteImgs.length > 0 ? deleteImgs : undefined,
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        if (result === "success") {
+          // 성공 시 처리 (예: 레시피 상세 페이지로 이동)
+          router.push(`/recipe/detail?id=${recipeId}`);
+        } else {
+          throw new Error("서버 응답 오류");
+        }
+      } else {
+        throw new Error(`서버 오류: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("레시피 수정 실패:", error);
+      alert("레시피 수정에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 연동
+    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleUpdateRecipe() 호출
+    // await handleUpdateRecipe();
+    
+    // 현재는 테스트용으로만 사용
     console.log("레시피 수정:", { recipeId, recipeName, cookTime, portion, portionUnit, cookLevel, majorCategory, subCategory, ingredientGroups, steps });
     alert("레시피 수정 기능은 서버 연동 후 구현됩니다.");
   };

@@ -3,6 +3,7 @@
 import Top from "@/components/common/top";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { createBoard } from "@/utils/boardApi";
 
 export default function BoardWritePage() {
   const router = useRouter();
@@ -14,9 +15,37 @@ export default function BoardWritePage() {
 
   const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
 
+  // 게시글 제출 함수 (나중에 버튼에 연결할 때 사용)
+  const handleSubmitBoard = async () => {
+    try {
+      const response = await createBoard({
+        title,
+        content,
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        if (result === "ok") {
+          // 성공 시 처리 (예: 게시판 목록으로 이동)
+          router.push(`/board/${boardType}`);
+        } else {
+          throw new Error("서버 응답 오류");
+        }
+      } else {
+        throw new Error(`서버 오류: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("게시글 작성 실패:", error);
+      alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 연동
+    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleSubmitBoard() 호출
+    // await handleSubmitBoard();
+    
+    // 현재는 테스트용으로만 사용
     console.log("게시글 작성:", { title, content, boardType });
     alert("게시글 작성 기능은 서버 연동 후 구현됩니다.");
   };

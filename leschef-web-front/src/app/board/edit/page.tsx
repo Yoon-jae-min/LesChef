@@ -3,6 +3,7 @@
 import Top from "@/components/common/top";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { updateBoard } from "@/utils/boardApi";
 
 export default function BoardEditPage() {
   const router = useRouter();
@@ -51,9 +52,48 @@ export default function BoardEditPage() {
     loadPostData();
   }, [postId, boardType, router]);
 
+  // 게시글 수정 함수 (나중에 버튼에 연결할 때 사용)
+  const handleUpdateBoard = async () => {
+    if (!postId) {
+      alert("게시글 ID가 없습니다.");
+      return;
+    }
+
+    try {
+      const response = await updateBoard({
+        postId,
+        title,
+        content,
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        if (result === "ok") {
+          // 성공 시 처리 (예: 게시글 상세 페이지로 이동)
+          router.push(`/board/detail?id=${postId}&type=${boardType}`);
+        } else {
+          throw new Error("서버 응답 오류");
+        }
+      } else {
+        throw new Error(`서버 오류: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("게시글 수정 실패:", error);
+      // 백엔드 API가 아직 없는 경우를 위한 안내 메시지
+      if (error instanceof Error && error.message.includes("구현되지 않았습니다")) {
+        alert("게시글 수정 기능은 백엔드 API 구현 후 사용할 수 있습니다.");
+      } else {
+        alert("게시글 수정에 실패했습니다. 다시 시도해주세요.");
+      }
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 연동
+    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleUpdateBoard() 호출
+    // await handleUpdateBoard();
+    
+    // 현재는 테스트용으로만 사용
     console.log("게시글 수정:", { postId, title, content, boardType });
     alert("게시글 수정 기능은 서버 연동 후 구현됩니다.");
   };

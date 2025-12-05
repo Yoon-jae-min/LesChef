@@ -4,6 +4,7 @@ import Link from "next/link";
 import Top from "@/components/common/top";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { signup } from "@/utils/authApi";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -15,8 +16,8 @@ export default function SignupPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // 회원가입 제출 함수 (나중에 버튼에 연결할 때 사용)
+  const handleSignup = async () => {
     setError(null);
 
     // 유효성 검사
@@ -35,15 +36,62 @@ export default function SignupPage() {
       return;
     }
 
-    // TODO: API 연동 - 실제 서버로 데이터 전송
-    // const response = await fetch("/api/signup", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ email, password, nickname }),
-    // });
+    try {
+      const response = await signup({
+        id: email, // 이메일을 아이디로 사용
+        pwd: password,
+        nickName: nickname,
+        // name과 tel은 선택사항이므로 필요시 추가
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        if (result === "ok") {
+          // 회원가입 성공 시 처리
+          const returnTo = searchParams.get("back") || sessionStorage.getItem("leschef_return_to") || "/";
+          sessionStorage.removeItem("leschef_return_to");
+          
+          alert("회원가입이 완료되었습니다!");
+          router.push(returnTo);
+        } else {
+          throw new Error("서버 응답 오류");
+        }
+      } else {
+        const errorText = await response.text();
+        throw new Error(errorText || `회원가입 실패: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("회원가입 실패:", error);
+      setError(error instanceof Error ? error.message : "회원가입에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     
+    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleSignup() 호출
+    // await handleSignup();
+    
+    // 현재는 테스트용으로만 사용
+    setError(null);
+
+    // 유효성 검사
+    if (password !== confirmPassword) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("비밀번호는 최소 6자 이상이어야 합니다.");
+      return;
+    }
+
+    if (!agreeToTerms) {
+      setError("이용약관에 동의해주세요.");
+      return;
+    }
+
     // Mock: localStorage에 사용자 정보 저장
-    // 실제 서버에서는 이렇게 하지 않고, 서버의 데이터베이스에 저장해야 합니다
     const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
     
     // 이메일 중복 체크
@@ -54,9 +102,9 @@ export default function SignupPage() {
     
     // 새 사용자 추가
     const newUser = {
-      id: Date.now().toString(), // 임시 ID
+      id: Date.now().toString(),
       email,
-      password, // 실제로는 해시화된 비밀번호를 저장해야 함
+      password,
       nickname,
       createdAt: new Date().toISOString(),
     };
@@ -73,7 +121,6 @@ export default function SignupPage() {
     }));
     
     console.log("회원가입 완료 (Mock):", newUser);
-    console.log("저장된 모든 사용자:", users);
     
     // 회원가입 후 리다이렉트
     const returnTo = searchParams.get("back") || sessionStorage.getItem("leschef_return_to") || "/";

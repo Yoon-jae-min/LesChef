@@ -4,6 +4,7 @@ import Link from "next/link";
 import Top from "@/components/common/top";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { login } from "@/utils/authApi";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -31,39 +32,55 @@ export default function LoginPage() {
     }
   }, [searchParams]);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  // 로그인 제출 함수 (나중에 버튼에 연결할 때 사용)
+  const handleLogin = async () => {
+    setError(null);
+
+    try {
+      const result = await login({
+        customerId: email, // 이메일을 customerId로 사용
+        customerPwd: password,
+      });
+
+      if (result.text === "login Success") {
+        // 로그인 성공 시 처리
+        // 세션 쿠키가 자동으로 설정되므로 별도로 저장할 필요 없음
+        // 필요시 사용자 정보를 클라이언트에 저장할 수 있음
+        localStorage.setItem("leschef_is_logged_in", "true");
+        localStorage.setItem("leschef_current_user", JSON.stringify({
+          id: result.id,
+          name: result.name,
+          nickName: result.nickName,
+          tel: result.tel,
+        }));
+
+        setError(null);
+
+        const storedReturn = sessionStorage.getItem("leschef_return_to");
+        const target = fromMyPage ? "/myPage" : storedReturn || "/";
+
+        sessionStorage.removeItem("leschef_return_to");
+        sessionStorage.removeItem("leschef_from_source");
+
+        router.push(target);
+      } else {
+        throw new Error("로그인에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error("로그인 실패:", error);
+      setError(error instanceof Error ? error.message : "아이디 또는 비밀번호가 올바르지 않습니다.");
+    }
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    // TODO: API 연동 - 실제 서버로 인증 요청
-    // const response = await fetch("/api/login", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ email, password }),
-    // });
+    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleLogin() 호출
+    // await handleLogin();
     
+    // 현재는 테스트용으로만 사용
     // Mock: localStorage에서 사용자 정보 확인
-    // 실제 서버에서는 서버의 데이터베이스에서 확인해야 합니다
     const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
-    
-    // // 기존 하드코딩된 admin 계정도 지원 (하위 호환성)
-    // if (email === "admin@admin.com" && password === "1234") {
-    //   localStorage.setItem("leschef_is_logged_in", "true");
-    //   localStorage.setItem("leschef_current_user", JSON.stringify({
-    //     id: "admin",
-    //     email: "admin@admin.com",
-    //     nickname: "관리자",
-    //   }));
-    //   setError(null);
-
-    //   const storedReturn = sessionStorage.getItem("leschef_return_to");
-    //   const target = fromMyPage ? "/myPage" : storedReturn || "/";
-
-    //   sessionStorage.removeItem("leschef_return_to");
-    //   sessionStorage.removeItem("leschef_from_source");
-
-    //   router.push(target);
-    //   return;
-    // }
     
     // 회원가입한 사용자 확인
     const user = users.find((u: any) => u.email === email && u.password === password);

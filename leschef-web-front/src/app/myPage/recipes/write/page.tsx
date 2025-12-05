@@ -3,6 +3,7 @@
 import Top from "@/components/common/top";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { createRecipe } from "@/utils/recipeApi";
 
 type Ingredient = {
   ingredientName: string;
@@ -95,9 +96,48 @@ export default function RecipeWritePage() {
     }
   };
 
+  // 레시피 제출 함수 (나중에 버튼에 연결할 때 사용)
+  const handleSubmitRecipe = async () => {
+    try {
+      const response = await createRecipe({
+        recipeInfo: {
+          recipeName,
+          cookTime,
+          portion,
+          portionUnit,
+          cookLevel,
+          majorCategory,
+          subCategory,
+          recipeImg: recipeImgPreview || "", // 기존 이미지가 있으면 URL, 없으면 빈 문자열
+        },
+        ingredientGroups,
+        steps,
+        recipeImgFile: recipeImg,
+      });
+
+      if (response.ok) {
+        const result = await response.text();
+        if (result === "success") {
+          // 성공 시 처리 (예: 레시피 목록으로 이동)
+          router.push("/myPage/recipes");
+        } else {
+          throw new Error("서버 응답 오류");
+        }
+      } else {
+        throw new Error(`서버 오류: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("레시피 작성 실패:", error);
+      alert("레시피 작성에 실패했습니다. 다시 시도해주세요.");
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: API 연동
+    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleSubmitRecipe() 호출
+    // await handleSubmitRecipe();
+    
+    // 현재는 테스트용으로만 사용
     console.log("레시피 작성:", { recipeName, cookTime, portion, portionUnit, cookLevel, majorCategory, subCategory, ingredientGroups, steps });
     alert("레시피 작성 기능은 서버 연동 후 구현됩니다.");
   };
