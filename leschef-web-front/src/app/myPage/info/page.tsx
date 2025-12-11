@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { fetchUserInfo, type UserInfoResponse } from "@/utils/authApi";
 
 export default function InfoPage() {
   const router = useRouter();
@@ -12,36 +13,38 @@ export default function InfoPage() {
   const [customReason, setCustomReason] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [nickname, setNickname] = useState("user");
+  const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // localStorage에서 현재 사용자 정보 가져오기
-    if (typeof window !== "undefined") {
-      const currentUser = JSON.parse(localStorage.getItem("leschef_current_user") || "{}");
-      if (currentUser.nickname) {
-        setNickname(currentUser.nickname);
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const data = await fetchUserInfo();
+        if (!data?.text) {
+          throw new Error("로그인이 필요합니다.");
+        }
+        setUserInfo(data);
+        if (data.nickName) {
+          setNickname(data.nickName);
+        }
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "사용자 정보를 불러오지 못했습니다.");
+      } finally {
+        setLoading(false);
       }
-    }
+    };
+    load();
   }, []);
 
   const handlePasswordCheck = () => {
     setPasswordError("");
     
-    // TODO: API 연동 - 실제 서버로 비밀번호 확인
-    // const response = await fetch("/api/user/verify-password", {
-    //   method: "POST",
-    //   body: JSON.stringify({ password }),
-    // });
-    
-    // Mock: localStorage에서 비밀번호 확인
-    const currentUser = JSON.parse(localStorage.getItem("leschef_current_user") || "{}");
-    const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
-    const user = users.find((u: any) => u.id === currentUser.id);
-    
-    if (!user || user.password !== password) {
-      setPasswordError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-    
+    // TODO: API 연동 - 비밀번호 확인 엔드포인트 연결
+    // 성공 시:
     setDeleteStep("reason");
   };
 
@@ -53,32 +56,8 @@ export default function InfoPage() {
   };
 
   const handleDeleteAccount = () => {
-    // TODO: API 연동 - 실제 서버로 탈퇴 요청
-    // const response = await fetch("/api/user/delete", {
-    //   method: "DELETE",
-    //   headers: { "Authorization": `Bearer ${token}` },
-    // });
-    
-    // Mock: localStorage에서 사용자 정보 삭제
-    const currentUser = JSON.parse(localStorage.getItem("leschef_current_user") || "{}");
-    const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
-    
-    // 사용자 목록에서 제거
-    const updatedUsers = users.filter((user: any) => user.id !== currentUser.id);
-    localStorage.setItem("leschef_mock_users", JSON.stringify(updatedUsers));
-    
-    // 로그인 상태 및 사용자 정보 삭제
-    localStorage.removeItem("leschef_is_logged_in");
-    localStorage.removeItem("leschef_current_user");
-    
-    alert("회원 탈퇴가 완료되었습니다.");
-    // 상태 초기화
-    setShowDeleteConfirm(false);
-    setDeleteStep("warning");
-    setPassword("");
-    setDeleteReason("");
-    setCustomReason("");
-    router.push("/");
+    // TODO: API 연동 - 실제 서버로 탈퇴 요청 (/customer/delete)
+    alert("회원 탈퇴 API 연동 후 처리됩니다.");
   };
 
   const handleCloseModal = () => {
@@ -100,6 +79,16 @@ export default function InfoPage() {
 
   return (
     <div className="grid gap-6 md:grid-cols-[320px,1fr]">
+      {loading && (
+        <div className="md:col-span-2 rounded-2xl border border-gray-200 bg-white px-4 py-6 text-sm text-gray-500">
+          정보를 불러오는 중입니다...
+        </div>
+      )}
+      {error && !loading && (
+        <div className="md:col-span-2 rounded-2xl border border-red-200 bg-red-50 px-4 py-6 text-sm text-red-700">
+          {error}
+        </div>
+      )}
       <section className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
         <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gradient-to-br from-orange-100 via-rose-100 to-yellow-100 px-6 py-8">
           <div className="flex items-center gap-4">

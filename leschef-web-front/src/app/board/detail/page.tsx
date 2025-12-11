@@ -5,39 +5,36 @@ import ScrollToTop from "@/components/common/ScrollToTop";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { fetchBoardDetail, createBoardComment, toggleBoardLike, type BoardDetailResponse } from "@/utils/boardApi";
 
 function BoardDetailPage() {
   const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState<number>(0);
   const [comment, setComment] = useState("");
   const [category, setCategory] = useState("공지사항");
   const searchParams = useSearchParams();
-  const postId = searchParams.get("id") || "1"; // TODO: 실제 게시글 ID 가져오기
-  
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      username: "아이디",
-      time: "시간",
-      content: "댓글 내용",
-    },
-    {
-      id: 2,
-      username: "아이디",
-      time: "시간", 
-      content: "댓글 내용",
-    }
-  ]);
+  const postId = searchParams.get("id") || "";
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [detail, setDetail] = useState<BoardDetailResponse | null>(null);
+  const [comments, setComments] = useState<BoardDetailResponse["comments"]>([]);
 
-  const handleAddComment = () => {
-    if (comment.trim()) {
-      const newComment = {
-        id: comments.length + 1,
-        username: "아이디",
-        time: "시간",
+  const handleAddComment = async () => {
+    if (!comment.trim() || !postId) return;
+    try {
+      const response = await createBoardComment({
+        boardId: postId,
         content: comment.trim(),
-      };
-      setComments([...comments, newComment]);
+      });
+      if (!response.ok) {
+        throw new Error(await response.text());
+      }
+      // 성공 시 다시 불러오기
       setComment("");
+      await loadDetail();
+    } catch (err) {
+      console.error(err);
+      alert("댓글 작성에 실패했습니다.");
     }
   };
 
@@ -53,6 +50,48 @@ function BoardDetailPage() {
       setCategory("공지사항");
     }
   }, [searchParams]);
+
+  const loadDetail = async () => {
+    if (!postId) {
+      setError("게시글 ID가 없습니다.");
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await fetchBoardDetail(postId);
+      setDetail(data);
+      setComments(data.comments || []);
+      setIsLiked(!!data.liked);
+      setLikeCount(data.likeCount || 0);
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : "게시글을 불러오지 못했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleToggleLike = async () => {
+    if (!postId) {
+      alert("게시글 ID가 없습니다.");
+      return;
+    }
+    try {
+      const result = await toggleBoardLike(postId);
+      setIsLiked(result.liked);
+      setLikeCount(result.likeCount);
+    } catch (err) {
+      console.error(err);
+      alert("좋아요 처리에 실패했습니다. 로그인 상태를 확인해주세요.");
+    }
+  };
+
+  useEffect(() => {
+    loadDetail();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [postId]);
 
   return (
     <div className="min-h-screen lg:h-screen bg-white lg:overflow-hidden">
@@ -73,6 +112,15 @@ function BoardDetailPage() {
         }
       `}</style>
       <Top />
+
+      {loading && (
+        <div className="max-w-4xl mx-auto px-6 py-8 text-sm text-gray-500">게시글을 불러오는 중입니다...</div>
+      )}
+      {error && !loading && (
+        <div className="max-w-4xl mx-auto px-6 py-8 text-sm text-red-600 bg-red-50 border border-red-200 rounded-2xl">
+          {error}
+        </div>
+      )}
       
       <main className="max-w-2xl lg:max-w-6xl mx-auto px-8 py-8 lg:h-[calc(100vh-80px)] lg:overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:h-full">
@@ -95,9 +143,9 @@ function BoardDetailPage() {
                   
                   {/* 좋아요 버튼 */}
                   <button
-                    onClick={() => setIsLiked(!isLiked)}
-                    className={`w-8 h-8 flex items-center justify-center transition-colors ${
-                      isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
+                    onClick={handleToggleLike}
+                    className={`w-9 h-9 flex items-center justify-center gap-1 rounded-full border transition-colors ${
+                      isLiked ? 'text-red-500 border-red-200 bg-red-50' : 'text-gray-400 border-gray-200 hover:text-red-500 hover:border-red-200'
                     }`}
                   >
                     <svg 
@@ -105,36 +153,21 @@ function BoardDetailPage() {
                       fill={isLiked ? 'currentColor' : 'none'}
                       stroke="currentColor" 
                       strokeWidth="2" 
-                      className="w-6 h-6"
+                      className="w-5 h-5"
                     >
-                      <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/>
+                      <path d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.18L12 21z"/>
                     </svg>
+                    <span className="text-xs font-semibold">{likeCount}</span>
                   </button>
                 </div>
               </div>
-              <h1 className="text-4xl font-bold text-black">Title</h1>
+              <h1 className="text-4xl font-bold text-black">{detail?.content?.title || "게시글"}</h1>
             </div>
             
             {/* 게시글 내용 */}
             <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-              <div className="text-base text-gray-800 leading-relaxed">
-                <p className="mb-4">
-                  안녕하세요. LesChef 공지사항입니다.
-                </p>
-                <p className="mb-4">
-                  새로운 기능이 추가되었습니다. 레시피 검색 기능이 개선되어 더욱 정확하고 빠른 검색이 가능해졌습니다. 
-                  또한 사용자 피드백을 반영하여 UI/UX가 업데이트되었습니다.
-                </p>
-                <p className="mb-4">
-                  앞으로도 더 나은 서비스를 제공하기 위해 지속적으로 개선해나가겠습니다. 
-                  여러분의 소중한 의견과 피드백을 항상 환영합니다.
-                </p>
-                <p className="mb-4">
-                  감사합니다.
-                </p>
-                <p className="text-sm text-gray-500">
-                  - LesChef 개발팀 -
-                </p>
+              <div className="text-base text-gray-800 leading-relaxed whitespace-pre-wrap">
+                {detail?.content?.content || "내용이 없습니다."}
               </div>
             </div>
           </div>

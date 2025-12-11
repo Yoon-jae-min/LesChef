@@ -5,15 +5,20 @@ import ScrollToTop from "@/components/common/ScrollToTop";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { fetchRecipeDetail, toggleRecipeWish, type RecipeDetailResponse } from "@/utils/recipeApi";
 
 function RecipeDetailPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const recipeId = searchParams.get("id") || "1"; // TODO: 실제 레시피 ID 가져오기
+  const recipeId = searchParams.get("id") || "";
+  const recipeNameParam = searchParams.get("recipeName") || "";
   const [isLiked, setIsLiked] = useState(false);
   const [comment, setComment] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthor, setIsAuthor] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [detail, setDetail] = useState<RecipeDetailResponse | null>(null);
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -46,34 +51,71 @@ function RecipeDetailPage() {
     setComments(comments.filter(c => c.id !== id));
   };
 
-  // 로그인 상태 및 작성자 확인
+  const recipeObjectId = detail?.selectedRecipe?._id || recipeId || "";
+
+  const handleToggleWish = async () => {
+    if (!recipeObjectId) {
+      alert("레시피 ID가 없습니다.");
+      return;
+    }
+    try {
+      const result = await toggleRecipeWish(recipeObjectId);
+      setIsLiked(result.recipeWish);
+    } catch (err) {
+      console.error(err);
+      alert("찜하기에 실패했습니다. 로그인 상태를 확인해주세요.");
+    }
+  };
+
+  // 로그인 상태 및 상세 데이터 로드
   useEffect(() => {
     const checkLogin = () => {
-      const loggedIn = typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true";
+      const loggedIn =
+        typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true";
       setIsLoggedIn(loggedIn);
+      return loggedIn;
     };
 
-    checkLogin();
-    window.addEventListener("storage", checkLogin);
-    
-    // TODO: API 연동 - 실제 레시피 데이터에서 작성자 정보 가져오기
-    // 현재는 mock 데이터로 작성자 확인
-    // const fetchRecipeData = async () => {
-    //   const response = await fetch(`/api/recipes/${recipeId}`);
-    //   const data = await response.json();
-    //   const currentUserId = localStorage.getItem("leschef_user_id"); // TODO: 실제 사용자 ID 저장 방식
-    //   setIsAuthor(data.authorId === currentUserId);
-    // };
-    // fetchRecipeData();
-    
-    // Mock: 로그인한 경우 작성자로 간주 (실제로는 API에서 확인)
-    if (typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true") {
-      // TODO: 실제 작성자 확인 로직으로 교체
-      setIsAuthor(true);
-    }
+    const load = async () => {
+      setLoading(true);
+      setError(null);
+      const loggedIn = checkLogin();
+      try {
+        const targetName = recipeNameParam || "";
+        if (!targetName) {
+          throw new Error("레시피 이름이 없습니다.");
+        }
+        const data = await fetchRecipeDetail(targetName);
+        setDetail(data);
 
-    return () => window.removeEventListener("storage", checkLogin);
-  }, [recipeId]);
+        const currentUserId =
+          typeof window !== "undefined"
+            ? JSON.parse(localStorage.getItem("leschef_current_user") || "{}")?.id
+            : null;
+        if (loggedIn && currentUserId && data.selectedRecipe?.userId) {
+          setIsAuthor(data.selectedRecipe.userId === currentUserId);
+        } else {
+          setIsAuthor(false);
+        }
+        setIsLiked(data.recipeWish || false);
+      } catch (err) {
+        console.error(err);
+        setError(err instanceof Error ? err.message : "레시피를 불러오지 못했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    load();
+
+    const onStorage = () => checkLogin();
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, [recipeNameParam]);
+
+  const recipeMeta = detail?.selectedRecipe;
+  const ingredients = detail?.recipeIngres || [];
+  const steps = detail?.recipeSteps || [];
 
   const canEdit = isLoggedIn && isAuthor;
 
@@ -96,20 +138,33 @@ function RecipeDetailPage() {
         }
       `}</style>
       <Top />
-      
+
+      {loading && (
+        <div className="max-w-4xl mx-auto px-6 py-8 text-sm text-gray-500">레시피를 불러오는 중입니다...</div>
+      )}
+      {error && !loading && (
+        <div className="max-w-4xl mx-auto px-6 py-8 text-sm text-red-600 bg-red-50 border border-red-200 rounded-2xl">
+          {error}
+        </div>
+      )}
+
       <main className="max-w-2xl lg:max-w-6xl mx-auto px-8 py-8 lg:h-[calc(100vh-80px)] lg:overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:h-full">
           {/* 왼쪽: 레시피 메인 정보 */}
           <div className="space-y-6 lg:overflow-y-auto lg:pr-2">
             {/* 레시피 제목 */}
             <div className="flex items-center justify-between rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-              <h1 className="text-4xl font-bold text-black">Example</h1>
+              <h1 className="text-4xl font-bold text-black">
+                {recipeMeta?.recipeName || "레시피"}
+              </h1>
               
               <div className="flex items-center gap-3">
                 {/* 편집 버튼 - 로그인하고 작성자인 경우에만 표시 */}
-                {canEdit && (
+                {canEdit && recipeMeta?.recipeName && (
                   <Link
-                    href={`/myPage/recipes/edit?id=${recipeId}`}
+                    href={`/myPage/recipes/edit?id=${recipeId}&recipeName=${encodeURIComponent(
+                      recipeMeta.recipeName
+                    )}`}
                     className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
                   >
                     편집
@@ -118,7 +173,7 @@ function RecipeDetailPage() {
                 
                 {/* 좋아요 버튼 */}
                 <button
-                  onClick={() => setIsLiked(!isLiked)}
+                  onClick={handleToggleWish}
                   className={`w-8 h-8 flex items-center justify-center transition-colors ${
                     isLiked ? 'text-red-500' : 'text-gray-400 hover:text-red-500'
                   }`}
@@ -130,7 +185,7 @@ function RecipeDetailPage() {
                     strokeWidth="2" 
                     className="w-6 h-6"
                   >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                    <path d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.18L12 21z"/>
                   </svg>
                 </button>
               </div>
@@ -138,20 +193,35 @@ function RecipeDetailPage() {
             
             {/* 레시피 이미지 */}
             <div className="w-full aspect-square relative rounded-[32px] border border-gray-200 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden shadow-[6px_6px_0_rgba(0,0,0,0.05)] flex items-center justify-center">
-              <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
-                <span className="text-5xl">📷</span>
-                <span className="text-sm">레시피 이미지</span>
-              </div>
+              {recipeMeta?.recipeImg ? (
+                <img
+                  src={recipeMeta.recipeImg}
+                  alt={recipeMeta.recipeName}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
+                  <span className="text-5xl">📷</span>
+                  <span className="text-sm">레시피 이미지</span>
+                </div>
+              )}
             </div>
             
             {/* 레시피 메타데이터 */}
             <div className="w-full flex items-center justify-center py-4 rounded-[32px] border border-gray-200 bg-gradient-to-br from-orange-50 to-yellow-50 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
               <div className="flex items-center space-x-6 sm:space-x-10 lg:space-x-12 text-base sm:text-lg lg:text-xl font-bold text-black">
-                <span>한식 &gt; 국</span>
+                <span>
+                  {(recipeMeta?.majorCategory || "카테고리") +
+                    (recipeMeta?.subCategory ? ` > ${recipeMeta.subCategory}` : "")}
+                </span>
                 <div className="h-8 sm:h-10 lg:h-12 border-l border-gray-300"></div>
-                <span>2인분</span>
+                <span>
+                  {recipeMeta?.portion
+                    ? `${recipeMeta.portion}${recipeMeta.portionUnit || "인분"}`
+                    : "분량 정보 없음"}
+                </span>
                 <div className="h-8 sm:h-10 lg:h-12 border-l border-gray-300"></div>
-                <span>25분</span>
+                <span>{recipeMeta?.cookTime ? `${recipeMeta.cookTime}분` : "시간 정보 없음"}</span>
               </div>
             </div>
           </div>
@@ -164,39 +234,31 @@ function RecipeDetailPage() {
                 <span className="border-b-2 border-gray-300 px-1">Ingredient</span>
               </h2>
               
-              {/* 기본재료 */}
-              <div className="mb-6">
-                <button className="px-4 py-2 text-gray-700 rounded-2xl text-base font-medium mb-4 border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
-                  기본재료
-                </button>
-                <div className="space-y-3 pl-4">
-                  {[1, 2].map((item) => (
-                    <div key={item} className="flex items-center justify-between text-base rounded-xl border border-gray-200 bg-gray-50 px-4 py-2">
-                      <div className="text-gray-900 font-medium">재료</div>
-                      <div className="flex items-center space-x-6">
-                        <div className="text-gray-900 font-medium">양</div>
-                        <div className="text-gray-900 font-medium">단위</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* 국물재료 */}
-              <div>
-                <button className="px-4 py-2 text-gray-700 rounded-2xl text-base font-medium mb-4 border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
-                  국물재료
-                </button>
-                <div className="space-y-3 pl-4">
-                  <div className="flex items-center justify-between text-base rounded-xl border border-gray-200 bg-gray-50 px-4 py-2">
-                    <div className="text-gray-900 font-medium">재료</div>
-                    <div className="flex items-center space-x-6">
-                      <div className="text-gray-900 font-medium">양</div>
-                      <div className="text-gray-900 font-medium">단위</div>
+              {ingredients.length === 0 ? (
+                <div className="text-center text-sm text-gray-500 py-4">재료 정보가 없습니다.</div>
+              ) : (
+                ingredients.map((group, idx) => (
+                  <div key={`${group.sortType}-${idx}`} className="mb-6 last:mb-0">
+                    <button className="px-4 py-2 text-gray-700 rounded-2xl text-base font-medium mb-4 border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
+                      {group.sortType || "재료"}
+                    </button>
+                    <div className="space-y-3 pl-4">
+                      {group.ingredientUnit.map((item, i) => (
+                        <div
+                          key={`${item.ingredientName}-${i}`}
+                          className="flex items-center justify-between text-base rounded-xl border border-gray-200 bg-gray-50 px-4 py-2"
+                        >
+                          <div className="text-gray-900 font-medium">{item.ingredientName}</div>
+                          <div className="flex items-center space-x-6">
+                            <div className="text-gray-900 font-medium">{item.volume}</div>
+                            <div className="text-gray-900 font-medium">{item.unit}</div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
-                </div>
-              </div>
+                ))
+              )}
             </div>
 
             {/* 단계 섹션 */}
@@ -205,23 +267,31 @@ function RecipeDetailPage() {
                 <span className="border-b-2 border-gray-300 px-1">Step</span>
               </h2>
               
-              <div className="space-y-4">
-                {[1, 2, 3].map((step) => (
-                  <div key={step} className="border border-gray-200 rounded-2xl p-4 bg-gradient-to-br from-gray-50 to-white">
-                    <div className="flex items-start space-x-6">
-                      <div className="w-24 h-24 relative flex-shrink-0 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                        <span className="text-2xl text-gray-400">📷</span>
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-lg font-semibold text-black mb-3">Step. {step}</h3>
-                        <div className="w-full min-h-[60px] border-2 border-dashed border-gray-300 rounded-xl flex items-center px-4 bg-white">
-                          <span className="text-gray-500 text-base">내용</span>
+              {steps.length === 0 ? (
+                <div className="text-center text-sm text-gray-500 py-4">조리 단계가 없습니다.</div>
+              ) : (
+                <div className="space-y-4">
+                  {steps.map((step) => (
+                    <div key={step.stepNum} className="border border-gray-200 rounded-2xl p-4 bg-gradient-to-br from-gray-50 to-white">
+                      <div className="flex items-start space-x-6">
+                        <div className="w-24 h-24 relative flex-shrink-0 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                          {step.stepImg && step.stepImg !== "" ? (
+                            <img src={step.stepImg} alt={`step-${step.stepNum}`} className="h-full w-full object-cover" />
+                          ) : (
+                            <span className="text-2xl text-gray-400">📷</span>
+                          )}
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-semibold text-black mb-3">Step. {step.stepNum}</h3>
+                          <div className="w-full min-h-[60px] border-2 border-dashed border-gray-300 rounded-xl flex items-center px-4 bg-white">
+                            <span className="text-gray-700 text-base">{step.stepWay || "내용"}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* 댓글 섹션 */}

@@ -54,68 +54,32 @@ export default function RecipeEditPage() {
       return;
     }
 
-    // TODO: API 연동 - 실제 서버에서 레시피 데이터 가져오기
-    // 현재는 mock 데이터 사용
-    const loadRecipeData = async () => {
-      setIsLoading(true);
-      try {
-        // const response = await fetch(`/api/recipes/${recipeId}`);
-        // const data = await response.json();
-        
-        // Mock 데이터
-        const mockData = {
-          recipeName: "김치볶음밥",
-          cookTime: 20,
-          portion: 2,
-          portionUnit: "인분",
-          cookLevel: "쉬움",
-          majorCategory: "한식",
-          subCategory: "볶음",
-          recipeImg: "",
-          ingredientGroups: [
-            {
-              sortType: "주재료",
-              ingredients: [
-                { ingredientName: "밥", volume: 2, unit: "공기" },
-                { ingredientName: "김치", volume: 100, unit: "g" },
-              ],
-            },
-            {
-              sortType: "양념",
-              ingredients: [
-                { ingredientName: "고춧가루", volume: 1, unit: "큰술" },
-              ],
-            },
-          ],
-          steps: [
-            { stepNum: 1, stepWay: "팬에 기름을 두르고 김치를 볶습니다.", stepImg: "" },
-            { stepNum: 2, stepWay: "밥을 넣고 볶아줍니다.", stepImg: "" },
-            { stepNum: 3, stepWay: "계란을 넣고 마무리합니다.", stepImg: "" },
-          ],
-        };
-
-        setRecipeName(mockData.recipeName);
-        setCookTime(mockData.cookTime);
-        setPortion(mockData.portion);
-        setPortionUnit(mockData.portionUnit);
-        setCookLevel(mockData.cookLevel);
-        setMajorCategory(mockData.majorCategory);
-        setSubCategory(mockData.subCategory);
-        setIngredientGroups(mockData.ingredientGroups);
-        setSteps(mockData.steps.map((step, idx) => ({
-          ...step,
-          stepImgFile: null,
-        })));
-      } catch (error) {
-        console.error("레시피 데이터 로드 실패:", error);
-        alert("레시피를 불러오는데 실패했습니다.");
-        router.back();
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadRecipeData();
+    // UNUSED: mock 데이터 로딩 블록 (실제 API 연동 완료됨)
+    // const loadRecipeData = async () => {
+    //   setIsLoading(true);
+    //   try {
+    //     // const response = await fetch(`/api/recipes/${recipeId}`);
+    //     // const data = await response.json();
+    //     const mockData = { ... };
+    //     setRecipeName(mockData.recipeName);
+    //     setCookTime(mockData.cookTime);
+    //     setPortion(mockData.portion);
+    //     setPortionUnit(mockData.portionUnit);
+    //     setCookLevel(mockData.cookLevel);
+    //     setMajorCategory(mockData.majorCategory);
+    //     setSubCategory(mockData.subCategory);
+    //     setIngredientGroups(mockData.ingredientGroups);
+    //     setSteps(mockData.steps.map((step) => ({ ...step, stepImgFile: null })));
+    //   } catch (error) {
+    //     console.error("레시피 데이터 로드 실패:", error);
+    //     alert("레시피를 불러오는데 실패했습니다.");
+    //     router.back();
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // };
+    //
+    // loadRecipeData();
   }, [recipeId, router]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, type: "main" | "step", stepIndex?: number) => {
@@ -229,12 +193,7 @@ export default function RecipeEditPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleUpdateRecipe() 호출
-    // await handleUpdateRecipe();
-    
-    // 현재는 테스트용으로만 사용
-    console.log("레시피 수정:", { recipeId, recipeName, cookTime, portion, portionUnit, cookLevel, majorCategory, subCategory, ingredientGroups, steps });
-    alert("레시피 수정 기능은 서버 연동 후 구현됩니다.");
+    await handleUpdateRecipe();
   };
 
   if (isLoading) {

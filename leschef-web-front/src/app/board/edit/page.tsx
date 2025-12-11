@@ -24,32 +24,28 @@ export default function BoardEditPage() {
       return;
     }
 
-    // TODO: API 연동 - 실제 서버에서 게시글 데이터 가져오기
-    // 현재는 mock 데이터 사용
-    const loadPostData = async () => {
-      setIsLoading(true);
-      try {
-        // const response = await fetch(`/api/board/${postId}`);
-        // const data = await response.json();
-        
-        // Mock 데이터
-        const mockData = {
-          title: "게시글 제목 예시",
-          content: "게시글 내용 예시입니다.\n\n여러 줄로 작성된 내용을 확인할 수 있습니다.\n\n수정할 수 있는 내용입니다.",
-        };
-
-        setTitle(mockData.title);
-        setContent(mockData.content);
-      } catch (error) {
-        console.error("게시글 데이터 로드 실패:", error);
-        alert("게시글을 불러오는데 실패했습니다.");
-        router.back();
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadPostData();
+    // UNUSED: mock 데이터 로딩 블록 (실제 API 연동 완료됨)
+    // const loadPostData = async () => {
+    //   setIsLoading(true);
+    //   try {
+    //     // const response = await fetch(`/api/board/${postId}`);
+    //     // const data = await response.json();
+    //     const mockData = {
+    //       title: "게시글 제목 예시",
+    //       content: "게시글 내용 예시입니다.\n\n여러 줄로 작성된 내용을 확인할 수 있습니다.\n\n수정할 수 있는 내용입니다.",
+    //     };
+    //     setTitle(mockData.title);
+    //     setContent(mockData.content);
+    //   } catch (error) {
+    //     console.error("게시글 데이터 로드 실패:", error);
+    //     alert("게시글을 불러오는데 실패했습니다.");
+    //     router.back();
+    //   } finally {
+    //     setIsLoading(false);
+    //   }
+    // };
+    //
+    // loadPostData();
   }, [postId, boardType, router]);
 
   // 게시글 수정 함수 (나중에 버튼에 연결할 때 사용)
@@ -61,7 +57,7 @@ export default function BoardEditPage() {
 
     try {
       const response = await updateBoard({
-        postId,
+        id: postId,
         title,
         content,
       });

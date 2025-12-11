@@ -134,12 +134,7 @@ export default function RecipeWritePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleSubmitRecipe() 호출
-    // await handleSubmitRecipe();
-    
-    // 현재는 테스트용으로만 사용
-    console.log("레시피 작성:", { recipeName, cookTime, portion, portionUnit, cookLevel, majorCategory, subCategory, ingredientGroups, steps });
-    alert("레시피 작성 기능은 서버 연동 후 구현됩니다.");
+    await handleSubmitRecipe();
   };
 
   return (

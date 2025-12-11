@@ -45,14 +45,14 @@ export default function LoginPage() {
       if (result.text === "login Success") {
         // 로그인 성공 시 처리
         // 세션 쿠키가 자동으로 설정되므로 별도로 저장할 필요 없음
-        // 필요시 사용자 정보를 클라이언트에 저장할 수 있음
-        localStorage.setItem("leschef_is_logged_in", "true");
-        localStorage.setItem("leschef_current_user", JSON.stringify({
-          id: result.id,
-          name: result.name,
-          nickName: result.nickName,
-          tel: result.tel,
-        }));
+        // UNUSED: 과거 localStorage 기반 로그인 플래그 저장
+        // localStorage.setItem("leschef_is_logged_in", "true");
+        // localStorage.setItem("leschef_current_user", JSON.stringify({
+        //   id: result.id,
+        //   name: result.name,
+        //   nickName: result.nickName,
+        //   tel: result.tel,
+        // }));
 
         setError(null);
 
@@ -74,37 +74,7 @@ export default function LoginPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleLogin() 호출
-    // await handleLogin();
-    
-    // 현재는 테스트용으로만 사용
-    // Mock: localStorage에서 사용자 정보 확인
-    const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
-    
-    // 회원가입한 사용자 확인
-    const user = users.find((u: any) => u.email === email && u.password === password);
-    
-    if (user) {
-      localStorage.setItem("leschef_is_logged_in", "true");
-      localStorage.setItem("leschef_current_user", JSON.stringify({
-        id: user.id,
-        email: user.email,
-        nickname: user.nickname,
-      }));
-      setError(null);
-
-      const storedReturn = sessionStorage.getItem("leschef_return_to");
-      const target = fromMyPage ? "/myPage" : storedReturn || "/";
-
-      sessionStorage.removeItem("leschef_return_to");
-      sessionStorage.removeItem("leschef_from_source");
-
-      router.push(target);
-      return;
-    }
-
-    setError("아이디 또는 비밀번호가 올바르지 않습니다.");
+    await handleLogin();
   };
 
   return (

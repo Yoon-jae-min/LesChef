@@ -15,7 +15,8 @@ const recipeWrite = asyncHandler(async(req, res) => {
     const parsedRecipeIngredients = JSON.parse(recipeIngredients);
     const parsedRecipeSteps = JSON.parse(recipeSteps);
     const parsedIsEdit = JSON.parse(isEdit);
-    const deleteImgsArray = Array.isArray(deleteImgs) ? deleteImgs : [deleteImgs];
+    // 불필요한 undefined 요소 제거
+    const deleteImgsArray = (Array.isArray(deleteImgs) ? deleteImgs : [deleteImgs]).filter(Boolean);
     const userInfo = await User.findOne({id: req.session.user.id}).lean();
     let isShare = true;
     let recipeId = null;
@@ -51,7 +52,7 @@ const recipeWrite = asyncHandler(async(req, res) => {
             viewCount: parsedRecipeInfo.viewCount,  
             isShare: isShare
         });
-        recipeId = infoAdd._id;
+        recipeId = infoAdd._id.toString(); // 이후 재료/단계에 동일 id 사용
     }else{
         for(const imgUrl of deleteImgsArray){
             if(imgUrl){
@@ -86,11 +87,12 @@ const recipeWrite = asyncHandler(async(req, res) => {
         )
         await RecipeStep.deleteMany({recipeId: parsedRecipeInfo._id});
         await RecipeIngredient.deleteMany({recipeId: parsedRecipeInfo._id});
-        recipeId = recipeInfo._id;
+        recipeId = parsedRecipeInfo._id;
     }
 
+    // 프론트에서 온 recipeId는 사용하지 않고 서버에서 관리한 recipeId로 통일
     const ingredientsData = parsedRecipeIngredients.map((item) => ({
-        recipeId: item.recipeId,
+        recipeId: recipeId,
         sortType: item.sortType,
         ingredientUnit: item.ingredientUnit.map((unit) => ({
             ingredientName: unit.ingredientName,
@@ -100,7 +102,7 @@ const recipeWrite = asyncHandler(async(req, res) => {
     }));
 
     const stepsData = parsedRecipeSteps.map((item) => ({
-        recipeId: parsedRecipeInfo._id,
+        recipeId: recipeId,
         stepNum: item.stepNum,
         stepWay: item.stepWay,
         stepImg: item.stepImg
@@ -140,9 +142,23 @@ const clickWish = asyncHandler(async(req, res) => {
 });
 
 const deleteRecipe = asyncHandler(async(req, res) => {
-    const recipeInfo = await Recipe.findOne({_id: req.body.recipeId}).lean();
-    const recipeSteps = await RecipeStep.find({recipeId: req.body.recipeId}).lean();
-    const recipeIngres = await RecipeIngredient.find({recipeId: req.body.recipeId}).lean();
+    if (!req.session?.user) {
+        return res.status(401).send("로그인이 필요합니다.");
+    }
+    const { id } = req.params;
+    if (!id) {
+        return res.status(400).send("id가 없습니다.");
+    }
+    const recipeInfo = await Recipe.findOne({_id: id}).lean();
+    if (!recipeInfo) {
+        return res.status(404).send("레시피를 찾을 수 없습니다.");
+    }
+    // 본인이 작성한 레시피만 삭제 가능
+    if (recipeInfo.userId !== req.session.user.id) {
+        return res.status(403).send("본인이 작성한 레시피만 삭제할 수 있습니다.");
+    }
+    const recipeSteps = await RecipeStep.find({recipeId: id}).lean();
+    const recipeIngres = await RecipeIngredient.find({recipeId: id}).lean();
 
     let deleteMain = null;
     let deleteStep = [];
@@ -152,7 +168,7 @@ const deleteRecipe = asyncHandler(async(req, res) => {
 
     try{
         if(recipeIngres){
-            await RecipeIngredient.deleteMany({recipeId: req.body.recipeId});
+            await RecipeIngredient.deleteMany({recipeId: id});
         }
     
         if(recipeSteps){
@@ -179,7 +195,7 @@ const deleteRecipe = asyncHandler(async(req, res) => {
                     });
                 }
             }
-            await RecipeStep.deleteMany({recipeId: req.body.recipeId});
+            await RecipeStep.deleteMany({recipeId: id});
         }
     
         if(recipeInfo){
@@ -207,7 +223,7 @@ const deleteRecipe = asyncHandler(async(req, res) => {
                     });
                 });
             }
-            await Recipe.deleteOne({_id: req.body.recipeId});
+            await Recipe.deleteOne({_id: id});
         }
 
         await session.commitTransaction();

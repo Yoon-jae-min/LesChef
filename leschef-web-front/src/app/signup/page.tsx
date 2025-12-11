@@ -16,7 +16,7 @@ export default function SignupPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 회원가입 제출 함수 (나중에 버튼에 연결할 때 사용)
+  // 회원가입 제출 함수
   const handleSignup = async () => {
     setError(null);
 
@@ -68,66 +68,7 @@ export default function SignupPage() {
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
-    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleSignup() 호출
-    // await handleSignup();
-    
-    // 현재는 테스트용으로만 사용
-    setError(null);
-
-    // 유효성 검사
-    if (password !== confirmPassword) {
-      setError("비밀번호가 일치하지 않습니다.");
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("비밀번호는 최소 6자 이상이어야 합니다.");
-      return;
-    }
-
-    if (!agreeToTerms) {
-      setError("이용약관에 동의해주세요.");
-      return;
-    }
-
-    // Mock: localStorage에 사용자 정보 저장
-    const users = JSON.parse(localStorage.getItem("leschef_mock_users") || "[]");
-    
-    // 이메일 중복 체크
-    if (users.find((user: any) => user.email === email)) {
-      setError("이미 등록된 이메일입니다.");
-      return;
-    }
-    
-    // 새 사용자 추가
-    const newUser = {
-      id: Date.now().toString(),
-      email,
-      password,
-      nickname,
-      createdAt: new Date().toISOString(),
-    };
-    
-    users.push(newUser);
-    localStorage.setItem("leschef_mock_users", JSON.stringify(users));
-    
-    // 회원가입 성공 시 자동 로그인 처리
-    localStorage.setItem("leschef_is_logged_in", "true");
-    localStorage.setItem("leschef_current_user", JSON.stringify({
-      id: newUser.id,
-      email: newUser.email,
-      nickname: newUser.nickname,
-    }));
-    
-    console.log("회원가입 완료 (Mock):", newUser);
-    
-    // 회원가입 후 리다이렉트
-    const returnTo = searchParams.get("back") || sessionStorage.getItem("leschef_return_to") || "/";
-    sessionStorage.removeItem("leschef_return_to");
-    
-    alert("회원가입이 완료되었습니다!");
-    router.push(returnTo);
+    await handleSignup();
   };
 
   return (

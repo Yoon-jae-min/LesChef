@@ -27,6 +27,15 @@ export type LoginResponse = {
   tel: string;
 };
 
+export type UserInfoResponse = {
+  id: string;
+  nickName: string;
+  name: string;
+  tel: string;
+  checkAdmin: boolean;
+  text: boolean;
+};
+
 /**
  * 회원가입
  * @param data 회원가입 데이터
@@ -122,5 +131,20 @@ export const checkIdDuplicate = async (id: string): Promise<string> => {
 
   const result = await response.text();
   return result;
+};
+
+/** 유저 정보 조회 */
+export const fetchUserInfo = async (): Promise<UserInfoResponse> => {
+  const response = await fetch(`${API_BASE_URL}/info`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `유저 정보 조회 실패: ${response.status}`);
+  }
+
+  return response.json();
 };
 

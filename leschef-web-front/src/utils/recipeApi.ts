@@ -47,15 +47,71 @@ export type RecipeSubmitData = {
   deleteImgs?: string[]; // edit 모드에서 삭제할 이미지 URL 배열
 };
 
+export type RecipeListParams = {
+  category?: "all" | "korean" | "japanese" | "chinese" | "western" | "other";
+  subCategory?: string;
+  isShare?: boolean;
+  page?: number;
+  limit?: number;
+  sort?: "latest" | "popular";
+};
+
+export type RecipeListResponse = {
+  list: any[];
+  page: number;
+  limit: number;
+  total: number;
+};
+
+export type RecipeDetailResponse = {
+  selectedRecipe: {
+    _id?: string;
+    recipeName: string;
+    cookTime?: number;
+    portion?: number;
+    portionUnit?: string;
+    cookLevel?: string;
+    majorCategory?: string;
+    subCategory?: string;
+    recipeImg?: string;
+    userId?: string;
+    viewCount?: number;
+  };
+  recipeIngres: Array<{
+    sortType: string;
+    ingredientUnit: Array<{
+      ingredientName: string;
+      volume: number;
+      unit: string;
+    }>;
+  }>;
+  recipeSteps: Array<{
+    stepNum: number;
+    stepWay: string;
+    stepImg: string;
+  }>;
+  recipeWish: boolean;
+};
+
+export type MyRecipeListResponse = {
+  list: any[];
+};
+
+export type WishRecipeListResponse = {
+  wishList: any[];
+};
+
+export type ToggleWishResponse = {
+  recipeWish: boolean;
+};
+
 /**
  * 재료 데이터를 백엔드 형식으로 변환
  */
 const transformIngredients = (
   ingredientGroups: IngredientGroup[],
-  recipeId: string
 ): any[] => {
   return ingredientGroups.map((group) => ({
-    recipeId: recipeId,
     sortType: group.sortType,
     ingredientUnit: group.ingredients.map((ingredient) => ({
       ingredientName: ingredient.ingredientName,
@@ -68,9 +124,8 @@ const transformIngredients = (
 /**
  * 조리 단계 데이터를 백엔드 형식으로 변환
  */
-const transformSteps = (steps: RecipeStep[], recipeId: string): any[] => {
+const transformSteps = (steps: RecipeStep[]): any[] => {
   return steps.map((step) => ({
-    recipeId: recipeId,
     stepNum: step.stepNum,
     stepWay: step.stepWay,
     stepImg: step.stepImg.startsWith("data:") ? "" : step.stepImg, // 새로 업로드한 이미지는 빈 문자열
@@ -101,14 +156,12 @@ export const submitRecipe = async (data: RecipeSubmitData): Promise<Response> =>
   // JSON 문자열로 변환하여 FormData에 추가
   formData.append("recipeInfo", JSON.stringify(recipeInfoData));
 
-  // 재료 데이터 변환 및 추가
-  // edit 모드가 아닐 때는 임시 recipeId 사용 (서버에서 생성된 ID로 교체됨)
-  const tempRecipeId = isEdit && recipeId ? recipeId : "temp";
-  const transformedIngredients = transformIngredients(ingredientGroups, tempRecipeId);
+  // 재료 데이터 변환 및 추가 (recipeId는 서버에서 주입)
+  const transformedIngredients = transformIngredients(ingredientGroups);
   formData.append("recipeIngredients", JSON.stringify(transformedIngredients));
 
   // 조리 단계 데이터 변환 및 추가
-  const transformedSteps = transformSteps(steps, tempRecipeId);
+  const transformedSteps = transformSteps(steps);
   formData.append("recipeSteps", JSON.stringify(transformedSteps));
 
   // isEdit 플래그 추가
@@ -164,5 +217,104 @@ export const updateRecipe = async (
     ...data,
     isEdit: true,
   });
+};
+
+/**
+ * 레시피 리스트 조회 (단일 엔드포인트)
+ */
+export const fetchRecipeList = async (params: RecipeListParams = {}): Promise<RecipeListResponse> => {
+  const query = new URLSearchParams();
+  if (params.category) query.set("category", params.category);
+  if (params.subCategory) query.set("subCategory", params.subCategory);
+  if (typeof params.isShare !== "undefined") query.set("isShare", String(params.isShare));
+  if (params.page) query.set("page", String(params.page));
+  if (params.limit) query.set("limit", String(params.limit));
+  if (params.sort) query.set("sort", params.sort);
+
+  const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `리스트 조회 실패: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+/** 레시피 찜 토글 */
+export const toggleRecipeWish = async (recipeId: string): Promise<ToggleWishResponse> => {
+  const response = await fetch(`${API_BASE_URL}/clickwish`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ recipeId }),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `찜 요청 실패: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+/** 레시피 상세 조회 (recipeName 기준) */
+export const fetchRecipeDetail = async (recipeName: string): Promise<RecipeDetailResponse> => {
+  const response = await fetch(`${API_BASE_URL}/info?recipeName=${encodeURIComponent(recipeName)}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `레시피 상세 조회 실패: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+/** 나의 레시피 리스트 */
+export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
+  const response = await fetch(`${API_BASE_URL}/myList`, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `나의 레시피 조회 실패: ${response.status}`);
+  }
+  return response.json();
+};
+
+/** 찜한 레시피 리스트 */
+export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => {
+  const response = await fetch(`${API_BASE_URL}/wishList`, {
+    method: "GET",
+    credentials: "include",
+  });
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `찜한 레시피 조회 실패: ${response.status}`);
+  }
+  return response.json();
+};
+
+/**
+ * 레시피 삭제
+ * @param recipeId 레시피 ID
+ * @returns Promise<Response>
+ */
+export const deleteRecipe = async (recipeId: string): Promise<Response> => {
+  const response = await fetch(`${API_BASE_URL}/${recipeId}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  return response;
 };
 

@@ -14,9 +14,57 @@ export type BoardWriteData = {
 };
 
 export type BoardEditData = {
-  postId: string;
+  id: string; // 게시글 ID (URL 파라미터로 사용)
   title: string;
   content: string;
+};
+
+export type BoardListParams = {
+  page?: number;
+  limit?: number;
+};
+
+export type BoardListResponse = {
+  list: Array<{
+    _id: string;
+    title: string;
+    nickName?: string;
+    userId?: string;
+    viewCount?: number;
+    createdAt?: string;
+    updatedAt?: string;
+  }>;
+  page: number;
+  limit: number;
+  total: number;
+};
+
+export type BoardDetailResponse = {
+  content: {
+    _id: string;
+    title: string;
+    nickName?: string;
+    userId?: string;
+    viewCount?: number;
+    content: string;
+    createdAt?: string;
+    updatedAt?: string;
+  };
+  comments: Array<{
+    _id: string;
+    boardId: string;
+    nickName?: string;
+    userId?: string;
+    content: string;
+    createdAt?: string;
+  }>;
+  likeCount?: number;
+  liked?: boolean;
+};
+
+export type ToggleBoardLikeResponse = {
+  liked: boolean;
+  likeCount: number;
 };
 
 /**
@@ -50,30 +98,108 @@ export const createBoard = async (data: BoardWriteData): Promise<Response> => {
  * 게시글 수정
  * @param data 게시글 수정 데이터
  * @returns Promise<Response>
- * 
- * 주의: 백엔드에 edit API가 아직 없는 경우, 이 함수는 에러를 반환할 수 있습니다.
- * 백엔드에 edit API가 추가되면 이 함수를 사용할 수 있습니다.
  */
 export const updateBoard = async (data: BoardEditData): Promise<Response> => {
-  const { postId, title, content } = data;
+  const { id, title, content } = data;
 
-  // 백엔드에 edit API가 추가되면 아래 주석을 해제하고 실제 엔드포인트로 변경
-  // const response = await fetch(`${API_BASE_URL}/edit`, {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify({
-  //     postId,
-  //     title,
-  //     content,
-  //   }),
-  //   credentials: "include",
-  // });
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      content,
+    }),
+    credentials: "include",
+  });
 
-  // 임시로 에러 반환 (백엔드 API가 준비되면 위 코드로 교체)
-  throw new Error("게시글 수정 API가 아직 구현되지 않았습니다. 백엔드에 edit API를 추가해주세요.");
+  return response;
+};
 
-  // return response;
+/**
+ * 게시글 삭제
+ * @param id 게시글 ID
+ * @returns Promise<Response>
+ */
+export const deleteBoard = async (id: string): Promise<Response> => {
+  const response = await fetch(`${API_BASE_URL}/${id}`, {
+    method: "DELETE",
+    credentials: "include",
+  });
+
+  return response;
+};
+
+/** 게시글 리스트 조회 */
+export const fetchBoardList = async (params: BoardListParams = {}): Promise<BoardListResponse> => {
+  const query = new URLSearchParams();
+  if (params.page) query.set("page", String(params.page));
+  if (params.limit) query.set("limit", String(params.limit));
+
+  const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `게시글 리스트 조회 실패: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+/** 게시글 상세 조회 */
+export const fetchBoardDetail = async (id: string): Promise<BoardDetailResponse> => {
+  const response = await fetch(`${API_BASE_URL}/watch?id=${id}`, {
+    method: "GET",
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `게시글 상세 조회 실패: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+/** 게시글 좋아요 토글 */
+export const toggleBoardLike = async (boardId: string): Promise<ToggleBoardLikeResponse> => {
+  const response = await fetch(`${API_BASE_URL}/like`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ boardId }),
+    credentials: "include",
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(text || `좋아요 토글 실패: ${response.status}`);
+  }
+
+  return response.json();
+};
+
+/** 댓글 작성 */
+export const createBoardComment = async (data: {
+  boardId: string;
+  content: string;
+  nickName?: string;
+  userId?: string;
+}): Promise<Response> => {
+  const response = await fetch(`${API_BASE_URL}/commentWrite`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+    credentials: "include",
+  });
+
+  return response;
 };
 
