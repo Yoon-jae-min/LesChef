@@ -1,0 +1,21 @@
+.box{
+    position: absolute;
+    top: 5vh;
+    left: 0;
+    width: 7vw;
+    height: 90vh;
+}
+
+.icon{
+    margin: 2vh 1.5vw;
+    height: 4vw;
+    width: auto;
+    cursor: pointer;
+}
+
+.loginBtn{
+    display: flex;
+    justify-content: center;
+    height: 7vh;
+    margin-top: 1vh;
+}

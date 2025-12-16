@@ -187,14 +187,33 @@ export const submitRecipe = async (data: RecipeSubmitData): Promise<Response> =>
   });
 
   // 서버로 전송
-  const response = await fetch(`${API_BASE_URL}/write`, {
-    method: "POST",
-    body: formData,
-    // FormData를 사용할 때는 Content-Type을 설정하지 않음 (브라우저가 자동으로 설정)
-    credentials: "include", // 세션 쿠키를 포함하기 위해
-  });
+  try {
+    const response = await fetch(`${API_BASE_URL}/write`, {
+      method: "POST",
+      body: formData,
+      // FormData를 사용할 때는 Content-Type을 설정하지 않음 (브라우저가 자동으로 설정)
+      credentials: "include", // 세션 쿠키를 포함하기 위해
+    });
 
-  return response;
+    if (!response.ok) {
+      let errorMessage = `레시피 제출 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("레시피 제출 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /**
@@ -223,85 +242,167 @@ export const updateRecipe = async (
  * 레시피 리스트 조회 (단일 엔드포인트)
  */
 export const fetchRecipeList = async (params: RecipeListParams = {}): Promise<RecipeListResponse> => {
-  const query = new URLSearchParams();
-  if (params.category) query.set("category", params.category);
-  if (params.subCategory) query.set("subCategory", params.subCategory);
-  if (typeof params.isShare !== "undefined") query.set("isShare", String(params.isShare));
-  if (params.page) query.set("page", String(params.page));
-  if (params.limit) query.set("limit", String(params.limit));
-  if (params.sort) query.set("sort", params.sort);
+  try {
+    const query = new URLSearchParams();
+    if (params.category) query.set("category", params.category);
+    if (params.subCategory) query.set("subCategory", params.subCategory);
+    if (typeof params.isShare !== "undefined") query.set("isShare", String(params.isShare));
+    if (params.page) query.set("page", String(params.page));
+    if (params.limit) query.set("limit", String(params.limit));
+    if (params.sort) query.set("sort", params.sort);
 
-  const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
-    method: "GET",
-    credentials: "include",
-  });
+    const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
+      method: "GET",
+      credentials: "include",
+    });
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `리스트 조회 실패: ${response.status}`);
+    if (!response.ok) {
+      let errorMessage = `리스트 조회 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("레시피 리스트 조회 중 네트워크 오류가 발생했습니다.");
   }
-
-  return response.json();
 };
 
 /** 레시피 찜 토글 */
 export const toggleRecipeWish = async (recipeId: string): Promise<ToggleWishResponse> => {
-  const response = await fetch(`${API_BASE_URL}/clickwish`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ recipeId }),
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `찜 요청 실패: ${response.status}`);
+  if (!recipeId) {
+    throw new Error("레시피 ID가 필요합니다.");
   }
 
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/clickwish`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ recipeId }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `찜 요청 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("찜 요청 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /** 레시피 상세 조회 (recipeName 기준) */
 export const fetchRecipeDetail = async (recipeName: string): Promise<RecipeDetailResponse> => {
-  const response = await fetch(`${API_BASE_URL}/info?recipeName=${encodeURIComponent(recipeName)}`, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `레시피 상세 조회 실패: ${response.status}`);
+  if (!recipeName) {
+    throw new Error("레시피 이름이 필요합니다.");
   }
 
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/info?recipeName=${encodeURIComponent(recipeName)}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `레시피 상세 조회 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("레시피 상세 조회 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /** 나의 레시피 리스트 */
 export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
-  const response = await fetch(`${API_BASE_URL}/myList`, {
-    method: "GET",
-    credentials: "include",
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `나의 레시피 조회 실패: ${response.status}`);
+  try {
+    const response = await fetch(`${API_BASE_URL}/myList`, {
+      method: "GET",
+      credentials: "include",
+    });
+    
+    if (!response.ok) {
+      let errorMessage = `나의 레시피 조회 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("나의 레시피 조회 중 네트워크 오류가 발생했습니다.");
   }
-  return response.json();
 };
 
 /** 찜한 레시피 리스트 */
 export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => {
-  const response = await fetch(`${API_BASE_URL}/wishList`, {
-    method: "GET",
-    credentials: "include",
-  });
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `찜한 레시피 조회 실패: ${response.status}`);
+  try {
+    const response = await fetch(`${API_BASE_URL}/wishList`, {
+      method: "GET",
+      credentials: "include",
+    });
+    
+    if (!response.ok) {
+      let errorMessage = `찜한 레시피 조회 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+    
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("찜한 레시피 조회 중 네트워크 오류가 발생했습니다.");
   }
-  return response.json();
 };
 
 /**
@@ -310,11 +411,34 @@ export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => 
  * @returns Promise<Response>
  */
 export const deleteRecipe = async (recipeId: string): Promise<Response> => {
-  const response = await fetch(`${API_BASE_URL}/${recipeId}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+  if (!recipeId) {
+    throw new Error("레시피 ID가 필요합니다.");
+  }
 
-  return response;
+  try {
+    const response = await fetch(`${API_BASE_URL}/${recipeId}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `레시피 삭제 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("레시피 삭제 중 네트워크 오류가 발생했습니다.");
+  }
 };
 

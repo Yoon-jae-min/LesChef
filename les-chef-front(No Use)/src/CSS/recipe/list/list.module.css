@@ -1,0 +1,92 @@
+.body{
+    position: absolute;
+    top: 25%;
+    height: calc(72% - 15px);
+    width: 90%;
+    margin: 0 5%;
+    overflow: auto;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    padding-top: 15px;
+    max-width: 900px;
+}
+
+.body::-webkit-scrollbar{
+    display: none;
+}
+
+.unit{
+    border-radius: 10px;
+    box-shadow: 0 0 7px 1px rgba(0, 0, 0, 0.7);
+    height: 280px;
+    width: 31%;
+    margin: 0 calc(7% / 6) 20px;
+    min-width: 250px;
+    cursor: pointer;
+    transition: all 0.5s;
+}
+
+.unit:hover{
+    scale: 1.03;
+}
+
+.unitImg{
+    width: calc(90% - 2px);
+    height: 70%;
+    object-fit: cover;
+    overflow: hidden;
+    margin: 10px 5% 0;
+    border-radius: 10px;
+    border: 1px solid rgba(128, 128, 128, 0.7);
+}
+
+.name{
+    margin: 0;
+    width: 100%;
+    height: 8%;
+    font-size: 22px;
+    font-family: "Jua", sans-serif;
+    text-align: center;
+}
+
+.infoBox{
+    position: relative;
+    width: 100%;
+    height: calc(22% - 15px);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+}
+
+.nickName{
+    font-size: 20px;
+    font-weight: 300;
+    font-style: oblique;
+    color: rgb(103, 108, 88);
+    width: auto;
+    max-width: 60%;
+    height: 20px;
+    margin-left: 10px;
+    margin-bottom: 7px;
+}
+
+.countBox{
+    display: flex;
+    margin-bottom: 5px;
+    margin-right: 10px;
+}
+
+.countImg{
+    margin-right: 2px;
+    height: 20px;
+}
+
+.countText{
+    font-size: 18px;
+    font-weight: 400;
+    font-style: oblique;
+    color: rgb(103, 108, 88);
+    height: 20px;
+    line-height: 20px;
+}

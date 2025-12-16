@@ -7,17 +7,46 @@ const Recipe = require("../models/recipeModel");
 const RecipeIngredient = require("../models/recipeIngredientsModel");
 const RecipeStep = require("../models/recipeStepModel");
 const RecipeWishList = require("../models/recipeWishListModel");
+const { safeJsonParse } = require("../middleware/security");
 require("dotenv").config();
 
 const recipeWrite = asyncHandler(async(req, res) => {
-    const { recipeInfo, recipeIngredients, recipeSteps, isEdit, deleteImgs} = req.body;
-    const parsedRecipeInfo = JSON.parse(recipeInfo);
-    const parsedRecipeIngredients = JSON.parse(recipeIngredients);
-    const parsedRecipeSteps = JSON.parse(recipeSteps);
-    const parsedIsEdit = JSON.parse(isEdit);
-    // 불필요한 undefined 요소 제거
-    const deleteImgsArray = (Array.isArray(deleteImgs) ? deleteImgs : [deleteImgs]).filter(Boolean);
-    const userInfo = await User.findOne({id: req.session.user.id}).lean();
+    // 세션 검증
+    if (!req.session?.user?.id) {
+        return res.status(401).json({
+            error: true,
+            message: "로그인이 필요합니다."
+        });
+    }
+
+    try {
+        const { recipeInfo, recipeIngredients, recipeSteps, isEdit, deleteImgs} = req.body;
+        
+        // 필수 데이터 검증
+        if (!recipeInfo || !recipeIngredients || !recipeSteps) {
+            return res.status(400).json({
+                error: true,
+                message: "필수 데이터가 누락되었습니다."
+            });
+        }
+
+        // 안전한 JSON 파싱
+        const parsedRecipeInfo = safeJsonParse(recipeInfo);
+        const parsedRecipeIngredients = safeJsonParse(recipeIngredients);
+        const parsedRecipeSteps = safeJsonParse(recipeSteps);
+        const parsedIsEdit = safeJsonParse(isEdit || "false");
+        
+        // 불필요한 undefined 요소 제거
+        const deleteImgsArray = (Array.isArray(deleteImgs) ? deleteImgs : [deleteImgs]).filter(Boolean);
+        
+        const userInfo = await User.findOne({id: req.session.user.id}).lean();
+        
+        if (!userInfo) {
+            return res.status(404).json({
+                error: true,
+                message: "사용자를 찾을 수 없습니다."
+            });
+        }
     let isShare = true;
     let recipeId = null;
 
@@ -25,70 +54,95 @@ const recipeWrite = asyncHandler(async(req, res) => {
         isShare = false;
     }
 
-    if(parsedRecipeInfo.recipeImg === ""){
-        parsedRecipeInfo.recipeImg = req.files.recipeImgFile[0].newPath;
-    }
-    const uploadedFiles = req.files.recipeStepImgFiles; 
-    let count = 0;
-    parsedRecipeSteps.map((step) => {
-        if (step.stepImg === "") {
-            step.stepImg = uploadedFiles[count].newPath; 
-            count++;
-        }
-    });
-
-    if(!parsedIsEdit){
-        const infoAdd = await Recipe.create({
-            recipeName: parsedRecipeInfo.recipeName,
-            cookTime: parsedRecipeInfo.cookTime, 
-            portion: parsedRecipeInfo.portion, 
-            portionUnit: parsedRecipeInfo.portionUnit, 
-            cookLevel: parsedRecipeInfo.cookLevel,
-            userId: userInfo.id,
-            userNickName: userInfo.nickName, 
-            majorCategory: parsedRecipeInfo.majorCategory, 
-            subCategory: parsedRecipeInfo.subCategory, 
-            recipeImg: parsedRecipeInfo.recipeImg, 
-            viewCount: parsedRecipeInfo.viewCount,  
-            isShare: isShare
-        });
-        recipeId = infoAdd._id.toString(); // 이후 재료/단계에 동일 id 사용
-    }else{
-        for(const imgUrl of deleteImgsArray){
-            if(imgUrl){
-                const stepImg = path.join(__dirname, "..", "..", 'public', imgUrl.slice(1));
-                console.log(stepImg);
-
-                await new Promise((resolve, reject) => {
-                    fs.unlink(stepImg, (err) => {
-                        if(err) {
-                            console.log(err);
-                            reject(err);
-                            return;
-                        }
-                        console.log('파일 삭제 성공');
-                        resolve();
-                    });
-                })
+        if(parsedRecipeInfo.recipeImg === ""){
+            if (!req.files?.recipeImgFile || !req.files.recipeImgFile[0]?.newPath) {
+                return res.status(400).json({
+                    error: true,
+                    message: "레시피 대표 이미지가 필요합니다."
+                });
             }
+            parsedRecipeInfo.recipeImg = req.files.recipeImgFile[0].newPath;
         }
         
-        await Recipe.updateOne({userId: userInfo.id, _id: parsedRecipeInfo._id},
-            {$set: {
+        const uploadedFiles = req.files?.recipeStepImgFiles || []; 
+        let count = 0;
+        parsedRecipeSteps.map((step) => {
+            if (step.stepImg === "") {
+                if (uploadedFiles[count]?.newPath) {
+                    step.stepImg = uploadedFiles[count].newPath; 
+                    count++;
+                } else {
+                    throw new Error(`단계 ${step.stepNum}의 이미지가 누락되었습니다.`);
+                }
+            }
+        });
+
+        if(!parsedIsEdit){
+            const infoAdd = await Recipe.create({
                 recipeName: parsedRecipeInfo.recipeName,
                 cookTime: parsedRecipeInfo.cookTime, 
                 portion: parsedRecipeInfo.portion, 
                 portionUnit: parsedRecipeInfo.portionUnit, 
                 cookLevel: parsedRecipeInfo.cookLevel,
+                userId: userInfo.id,
+                userNickName: userInfo.nickName, 
                 majorCategory: parsedRecipeInfo.majorCategory, 
                 subCategory: parsedRecipeInfo.subCategory, 
-                recipeImg: parsedRecipeInfo.recipeImg,
-            }}
-        )
-        await RecipeStep.deleteMany({recipeId: parsedRecipeInfo._id});
-        await RecipeIngredient.deleteMany({recipeId: parsedRecipeInfo._id});
-        recipeId = parsedRecipeInfo._id;
-    }
+                recipeImg: parsedRecipeInfo.recipeImg, 
+                viewCount: parsedRecipeInfo.viewCount || 0,  
+                isShare: isShare
+            });
+            recipeId = infoAdd._id.toString(); // 이후 재료/단계에 동일 id 사용
+        }else{
+            // 수정 모드에서 기존 레시피 확인
+            if (!parsedRecipeInfo._id) {
+                return res.status(400).json({
+                    error: true,
+                    message: "수정할 레시피 ID가 필요합니다."
+                });
+            }
+
+            const existingRecipe = await Recipe.findOne({userId: userInfo.id, _id: parsedRecipeInfo._id});
+            if (!existingRecipe) {
+                return res.status(404).json({
+                    error: true,
+                    message: "수정할 레시피를 찾을 수 없습니다."
+                });
+            }
+
+            for(const imgUrl of deleteImgsArray){
+                if(imgUrl){
+                    const stepImg = path.join(__dirname, "..", "..", 'public', imgUrl.slice(1));
+                    
+                    await new Promise((resolve, reject) => {
+                        fs.unlink(stepImg, (err) => {
+                            if(err && err.code !== 'ENOENT') { // 파일이 없어도 에러로 처리하지 않음
+                                console.error('파일 삭제 오류:', err);
+                                reject(err);
+                                return;
+                            }
+                            resolve();
+                        });
+                    })
+                }
+            }
+            
+            await Recipe.updateOne({userId: userInfo.id, _id: parsedRecipeInfo._id},
+                {$set: {
+                    recipeName: parsedRecipeInfo.recipeName,
+                    cookTime: parsedRecipeInfo.cookTime, 
+                    portion: parsedRecipeInfo.portion, 
+                    portionUnit: parsedRecipeInfo.portionUnit, 
+                    cookLevel: parsedRecipeInfo.cookLevel,
+                    majorCategory: parsedRecipeInfo.majorCategory, 
+                    subCategory: parsedRecipeInfo.subCategory, 
+                    recipeImg: parsedRecipeInfo.recipeImg,
+                }}
+            )
+            await RecipeStep.deleteMany({recipeId: parsedRecipeInfo._id});
+            await RecipeIngredient.deleteMany({recipeId: parsedRecipeInfo._id});
+            recipeId = parsedRecipeInfo._id;
+        }
 
     // 프론트에서 온 recipeId는 사용하지 않고 서버에서 관리한 recipeId로 통일
     const ingredientsData = parsedRecipeIngredients.map((item) => ({
@@ -108,15 +162,51 @@ const recipeWrite = asyncHandler(async(req, res) => {
         stepImg: item.stepImg
     }));
 
-    await RecipeIngredient.insertMany(ingredientsData);
-    await RecipeStep.insertMany(stepsData);
+        await RecipeIngredient.insertMany(ingredientsData);
+        await RecipeStep.insertMany(stepsData);
 
-    res.status(200).send("success");
+        res.status(200).json({
+            error: false,
+            message: "success"
+        });
+    } catch (parseError) {
+        if (parseError.message.includes('JSON')) {
+            return res.status(400).json({
+                error: true,
+                message: parseError.message || "잘못된 JSON 형식입니다."
+            });
+        }
+        throw parseError; // 다른 에러는 asyncHandler가 처리
+    }
 });
 
 const clickWish = asyncHandler(async(req, res) => {
+    // 세션 검증
+    if (!req.session?.user?.id) {
+        return res.status(401).json({
+            error: true,
+            message: "로그인이 필요합니다."
+        });
+    }
+
     const {recipeId} = req.body;
+    
+    if (!recipeId) {
+        return res.status(400).json({
+            error: true,
+            message: "레시피 ID가 필요합니다."
+        });
+    }
+
     const user = await User.findOne({id: req.session.user.id});
+    
+    if (!user) {
+        return res.status(404).json({
+            error: true,
+            message: "사용자를 찾을 수 없습니다."
+        });
+    }
+
     const wishList = await RecipeWishList.findOne({userId: user._id});
     let recipeWish = true;
     
@@ -138,7 +228,10 @@ const clickWish = asyncHandler(async(req, res) => {
         });
     }
 
-    res.send({recipeWish: recipeWish});
+    res.status(200).json({
+        error: false,
+        recipeWish: recipeWish
+    });
 });
 
 const deleteRecipe = asyncHandler(async(req, res) => {
@@ -227,7 +320,9 @@ const deleteRecipe = asyncHandler(async(req, res) => {
         }
 
         await session.commitTransaction();
-        res.status(200).send({
+        res.status(200).json({
+            error: false,
+            message: "success",
             text: "success"
         });
     }catch (err){
@@ -263,7 +358,9 @@ const deleteRecipe = asyncHandler(async(req, res) => {
 
         await session.abortTransaction();
         console.error("오류 발생: ", err);
-        res.status(500).send({
+        res.status(500).json({
+            error: true,
+            message: "레시피 삭제 중 오류가 발생했습니다.",
             text: "fail"
         });
     } finally{

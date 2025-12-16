@@ -1,16 +1,48 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const User = require("../models/userModel");
+const { validateEmailOrId } = require("../middleware/security");
 
 //postLogin
 const postLogin = asyncHandler(async (req, res) => {
     try {
-        const findUser = await User.findOne({ id: req.body.customerId });
-        let resText = "";
+        const { customerId, customerPwd } = req.body;
 
-        // 사용자 검증
-        if (!findUser || !await bcrypt.compare(req.body.customerPwd, findUser.pwd)) {
-            return res.status(401).send("아이디/비밀번호가 일치하지 않습니다.");
+        // 입력 검증
+        if (!customerId || !customerPwd) {
+            return res.status(400).json({
+                error: true,
+                message: "아이디와 비밀번호를 입력해주세요."
+            });
+        }
+
+        // 아이디 형식 검증
+        if (!validateEmailOrId(customerId)) {
+            return res.status(400).json({
+                error: true,
+                message: "아이디 형식이 올바르지 않습니다."
+            });
+        }
+
+        // MongoDB Injection 방지 - Mongoose는 자동으로 처리하지만 명시적으로 검증
+        const findUser = await User.findOne({ id: customerId }).lean();
+        
+        // 사용자 검증 (타이밍 공격 방지를 위해 항상 bcrypt.compare 실행)
+        if (!findUser) {
+            // 존재하지 않는 사용자도 동일한 시간이 걸리도록 더미 해시 비교
+            await bcrypt.compare(customerPwd, '$2b$10$dummyhashforsecurity');
+            return res.status(401).json({
+                error: true,
+                message: "아이디/비밀번호가 일치하지 않습니다."
+            });
+        }
+
+        const isPasswordValid = await bcrypt.compare(customerPwd, findUser.pwd);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                error: true,
+                message: "아이디/비밀번호가 일치하지 않습니다."
+            });
         }
 
         req.session.user = {
@@ -25,7 +57,8 @@ const postLogin = asyncHandler(async (req, res) => {
                 console.error("세션 저장 오류:", err);
                 return res.status(500).send("세션 저장 중 오류가 발생했습니다.");
             }
-            res.send({
+            res.status(200).json({
+                error: false,
                 text: "login Success",
                 id: findUser.id,
                 name: findUser.name,
@@ -35,28 +68,51 @@ const postLogin = asyncHandler(async (req, res) => {
         });
     } catch (error) {
         console.error("로그인 처리 중 오류:", error);
-        res.status(500).send("서버 오류가 발생했습니다.");
+        res.status(500).json({
+            error: true,
+            message: "서버 오류가 발생했습니다."
+        });
     }
 });
 
 //getLogout
 const getLogout = (req, res) => {
     req.session.destroy(err => {
-        if (err) return res.status(500).send('Error logging out');
+        if (err) {
+            console.error("로그아웃 오류:", err);
+            return res.status(500).json({
+                error: true,
+                message: "로그아웃 중 오류가 발생했습니다."
+            });
+        }
         res.clearCookie('connect.sid');
-        res.status(200).send('Logged out');
+        res.status(200).json({
+            error: false,
+            message: "Logged out"
+        });
     });
 }
 
 //getAuth
 const getAuth = (req, res) => {
-    if (req.session.user) {
-        res.json({
-            loggedIn: true,
-        });
-    } else {
-        res.clearCookie('connect.sid');
-        res.json({
+    try {
+        if (req.session?.user) {
+            res.status(200).json({
+                error: false,
+                loggedIn: true,
+            });
+        } else {
+            res.clearCookie('connect.sid');
+            res.status(200).json({
+                error: false,
+                loggedIn: false
+            });
+        }
+    } catch (error) {
+        console.error("인증 확인 오류:", error);
+        res.status(500).json({
+            error: true,
+            message: "인증 확인 중 오류가 발생했습니다.",
             loggedIn: false
         });
     }
@@ -64,10 +120,27 @@ const getAuth = (req, res) => {
 
 //유저 정보 조회
 const getInfo = asyncHandler(async(req, res) => {
-    if(req.session.user){
+    if(!req.session?.user?.id){
+        return res.status(401).json({
+            error: true,
+            text: false,
+            message: "로그인이 필요합니다."
+        });
+    }
+
+    try {
         const userData = await User.findOne({id: req.session.user.id});
 
-        res.json({
+        if (!userData) {
+            return res.status(404).json({
+                error: true,
+                text: false,
+                message: "사용자를 찾을 수 없습니다."
+            });
+        }
+
+        res.status(200).json({
+            error: false,
             id: userData.id,
             nickName: userData.nickName,
             name: userData.name,
@@ -75,48 +148,88 @@ const getInfo = asyncHandler(async(req, res) => {
             checkAdmin: userData.checkAdmin,
             text: true
         });
-    }else{
-        res.json({
-            text: false
-        });
+    } catch (error) {
+        throw error;
     }
 });
 
 //유저 정보 변경
 const infoChg = asyncHandler(async(req, res) => {
+    if (!req.session?.user?.id) {
+        return res.status(401).json({
+            error: true,
+            message: "로그인이 필요합니다.",
+            result: false
+        });
+    }
+
     const userId = req.session.user.id;
     const {nickName, tel} = req.body;
 
-    const result = await User.updateOne({id: userId},
-        {$set: {
-            nickName,
-            tel
-        }}
-    );
-
-    if(result.modifiedCount === 0){
-        res.status(400).send({
+    if (!nickName) {
+        return res.status(400).json({
             error: true,
-            message: "update fail",
+            message: "닉네임은 필수입니다.",
             result: false
         });
-    }else{
-        res.status(200).send({
+    }
+
+    try {
+        const user = await User.findOne({id: userId});
+        if (!user) {
+            return res.status(404).json({
+                error: true,
+                message: "사용자를 찾을 수 없습니다.",
+                result: false
+            });
+        }
+
+        const result = await User.updateOne({id: userId},
+            {$set: {
+                nickName,
+                tel: tel || ""
+            }}
+        );
+
+        if(result.modifiedCount === 0){
+            return res.status(400).json({
+                error: true,
+                message: "변경된 내용이 없습니다.",
+                result: false
+            });
+        }
+
+        res.status(200).json({
             error: false,
             message: "success",
             result: true
         });
+    } catch (error) {
+        throw error;
     }
 });
 
 //id 중복 확인
 const idCheck = asyncHandler(async(req, res) => {
-    const user = await User.findOne({id: req.query.id});
+    const { id } = req.query;
 
-    if(user){
-        res.send("중복");
-    }else{
-        res.send("중복 아님");
+    if (!id) {
+        return res.status(400).json({
+            error: true,
+            message: "아이디가 필요합니다."
+        });
+    }
+
+    try {
+        const user = await User.findOne({id: id});
+
+        if(user){
+            res.status(200).send("중복");
+        }else{
+            res.status(200).send("중복 아님");
+        }
+    } catch (error) {
+        throw error;
     }
 });
 

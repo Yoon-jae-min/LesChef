@@ -1,0 +1,13 @@
+.box{
+    height: 80%;
+    display: flex;
+    justify-content: center;
+}
+
+.body{
+    margin-top: 10%;
+}
+
+.body p{
+    font-weight: bold;
+}

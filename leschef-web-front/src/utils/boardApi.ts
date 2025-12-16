@@ -73,25 +73,44 @@ export type ToggleBoardLikeResponse = {
  * @returns Promise<Response>
  */
 export const createBoard = async (data: BoardWriteData): Promise<Response> => {
-  const { title, content, id, nickName } = data;
+  const { title, content } = data;
 
-  // 백엔드에서 id와 nickName을 body로 받고 있음
-  // 세션에서 가져오는 경우 id와 nickName은 undefined로 전송해도 됨
-  const response = await fetch(`${API_BASE_URL}/write`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      content,
-      ...(id && { id }), // id가 있으면 포함
-      ...(nickName && { nickName }), // nickName이 있으면 포함
-    }),
-    credentials: "include", // 세션 쿠키를 포함하기 위해
-  });
+  if (!title || !content) {
+    throw new Error("제목과 내용은 필수입니다.");
+  }
 
-  return response;
+  try {
+    const response = await fetch(`${API_BASE_URL}/write`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        content,
+      }),
+      credentials: "include", // 세션 쿠키를 포함하기 위해
+    });
+
+    if (!response.ok) {
+      let errorMessage = `게시글 작성 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("게시글 작성 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /**
@@ -102,19 +121,42 @@ export const createBoard = async (data: BoardWriteData): Promise<Response> => {
 export const updateBoard = async (data: BoardEditData): Promise<Response> => {
   const { id, title, content } = data;
 
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
-    method: "PATCH",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      title,
-      content,
-    }),
-    credentials: "include",
-  });
+  if (!id || !title || !content) {
+    throw new Error("게시글 ID, 제목, 내용은 필수입니다.");
+  }
 
-  return response;
+  try {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        content,
+      }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `게시글 수정 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("게시글 수정 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /**
@@ -123,65 +165,138 @@ export const updateBoard = async (data: BoardEditData): Promise<Response> => {
  * @returns Promise<Response>
  */
 export const deleteBoard = async (id: string): Promise<Response> => {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
-    method: "DELETE",
-    credentials: "include",
-  });
+  if (!id) {
+    throw new Error("게시글 ID가 필요합니다.");
+  }
 
-  return response;
+  try {
+    const response = await fetch(`${API_BASE_URL}/${id}`, {
+      method: "DELETE",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `게시글 삭제 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("게시글 삭제 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /** 게시글 리스트 조회 */
 export const fetchBoardList = async (params: BoardListParams = {}): Promise<BoardListResponse> => {
-  const query = new URLSearchParams();
-  if (params.page) query.set("page", String(params.page));
-  if (params.limit) query.set("limit", String(params.limit));
+  try {
+    const query = new URLSearchParams();
+    if (params.page) query.set("page", String(params.page));
+    if (params.limit) query.set("limit", String(params.limit));
 
-  const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
-    method: "GET",
-    credentials: "include",
-  });
+    const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
+      method: "GET",
+      credentials: "include",
+    });
 
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `게시글 리스트 조회 실패: ${response.status}`);
+    if (!response.ok) {
+      let errorMessage = `게시글 리스트 조회 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("게시글 리스트 조회 중 네트워크 오류가 발생했습니다.");
   }
-
-  return response.json();
 };
 
 /** 게시글 상세 조회 */
 export const fetchBoardDetail = async (id: string): Promise<BoardDetailResponse> => {
-  const response = await fetch(`${API_BASE_URL}/watch?id=${id}`, {
-    method: "GET",
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `게시글 상세 조회 실패: ${response.status}`);
+  if (!id) {
+    throw new Error("게시글 ID가 필요합니다.");
   }
 
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/watch?id=${encodeURIComponent(id)}`, {
+      method: "GET",
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `게시글 상세 조회 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("게시글 상세 조회 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /** 게시글 좋아요 토글 */
 export const toggleBoardLike = async (boardId: string): Promise<ToggleBoardLikeResponse> => {
-  const response = await fetch(`${API_BASE_URL}/like`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ boardId }),
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(text || `좋아요 토글 실패: ${response.status}`);
+  if (!boardId) {
+    throw new Error("게시글 ID가 필요합니다.");
   }
 
-  return response.json();
+  try {
+    const response = await fetch(`${API_BASE_URL}/like`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ boardId }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `좋아요 토글 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("좋아요 토글 중 네트워크 오류가 발생했습니다.");
+  }
 };
 
 /** 댓글 작성 */
@@ -191,15 +306,43 @@ export const createBoardComment = async (data: {
   nickName?: string;
   userId?: string;
 }): Promise<Response> => {
-  const response = await fetch(`${API_BASE_URL}/commentWrite`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-    credentials: "include",
-  });
+  const { boardId, content } = data;
 
-  return response;
+  if (!boardId || !content) {
+    throw new Error("게시글 ID와 댓글 내용은 필수입니다.");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/commentWrite`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        boardId,
+        content,
+      }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `댓글 작성 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("댓글 작성 중 네트워크 오류가 발생했습니다.");
+  }
 };
 

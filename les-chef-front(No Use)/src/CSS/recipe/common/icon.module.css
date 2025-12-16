@@ -1,0 +1,19 @@
+.body{
+    position: absolute;
+    top: 5vh;
+    left: 3vw;
+    display: flex;
+    width: 24vw;
+    height: 10vh;
+}
+
+.icon{
+    margin: 0 0.3vw;
+    width: auto;
+    cursor: pointer;
+    height: 4vw;
+}
+
+.community{
+    margin-top: 3px;
+}

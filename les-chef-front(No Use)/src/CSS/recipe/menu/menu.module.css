@@ -1,0 +1,47 @@
+.body{
+    position: fixed;
+    top: 15vh;
+    left: 3vw;
+    width: 24vw;
+    height: 80vh;
+}
+
+.textBox{
+    position: absolute;
+    top: 0;
+    left: 1vw;
+    width: 22vw;
+}
+
+.textUnit{
+    margin-bottom: 20px;
+}
+
+.koreanText, .englishText{
+    color: white;
+    font-family: "Jua", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    text-shadow: 0px 0px 10px black;
+}
+
+.koreanText{
+    font-size: 6vh;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.koreanText:hover{
+    color: burlywood;
+}
+
+.englishText{
+    font-size: 4vh;
+}
+
+.logo{
+    position: absolute;
+    bottom: 2vh;
+    left: 3vw;
+    width: 10vw;
+}

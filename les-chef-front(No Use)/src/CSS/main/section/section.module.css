@@ -1,0 +1,14 @@
+.section{
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    opacity: 0.7;
+}
+
+.bgImg{
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center center;
+}

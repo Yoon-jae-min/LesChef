@@ -1,0 +1,63 @@
+.box{
+    height: 80%;
+}
+
+.chgBox{
+    box-sizing: border-box;
+    width: 100%;
+    height: 85%;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.chgInBox{
+    margin: 9px 0;
+    display: flex;
+}
+
+.chgPwdLabel{
+    margin: 0;
+    font-weight: bold;
+    width: 130px;
+}
+
+.chgPwdInput{
+    background-color: rgb(182, 182, 182);
+    border: none;
+    border-bottom: 1px solid gray;
+}
+
+.chgPwdInput:focus{
+    outline: none;
+}
+
+.btnBox{
+    width: 35%;
+    height: 10%;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.okBtn, .cancelBtn{
+    width: 40%;
+    height: 70%;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 90%;
+    color: white;
+    cursor: pointer;
+}
+
+.okBtn{
+    background-color: rgb(136, 77, 77);
+}
+
+.cancelBtn{
+    background-color: gray;
+}

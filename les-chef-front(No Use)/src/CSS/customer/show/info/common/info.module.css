@@ -1,0 +1,113 @@
+.box{
+    width: 90%;
+    height: 94%;
+    margin: 2% 5% 0;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.3);
+}
+
+.left{
+    height: 84%;
+    width: 40%;
+}
+
+.right{
+    position: relative;
+    height: 100%;
+    width: 60%;
+}
+
+.profileImg{
+    display: inline-block;
+    border-radius: 50%;
+    box-shadow: 0 0 10px 2px gray;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    transform: scale(0.9);
+}
+
+.iconBox{
+    height: 19%;
+    width: 75%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-around;
+}
+
+.icon{
+    width: 23%;
+}
+
+.iconImg{
+    width: 100%;
+}
+
+.iconText{
+    color: #676c58;
+    text-align: center;
+    line-height: 1;
+    margin: 0;
+    height: 20%;
+}
+
+.head{
+    width: 100%;
+    height: 16%;
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    border-bottom: 1px solid gray;
+}
+
+.nickName{
+    font-family: "Jua", serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #43463a;
+    margin: 0 0 0 2%;
+    font-size: 50px;
+    width: 30%;
+    height: 80%;
+    display: flex;
+    align-items: end;
+}
+
+.btnBox{
+    width: 20%;
+    height: 60%;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.chgBtn, .wdBtn{
+    height: 100%;
+    cursor: pointer;
+}
+
+.menuBox{
+    position: absolute;
+    border: 1px solid gray;
+    border-radius: 5px;
+    top: 15%;
+    right: 15%;
+    width: 15%;
+    height: 10%;
+    z-index: 1;
+    background-color: rgb(182, 182, 182);
+}
+
+.chgInfo, .chgPwd{
+    font-weight: bold;
+    font-size: 90%;
+    height: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.chgInfo{
+    border-bottom: 1px solid gray;
+}
