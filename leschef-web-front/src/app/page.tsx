@@ -2,11 +2,14 @@
 
 import Top from "@/components/common/top";
 import { useState, useEffect } from "react";
+import { getIngredientPrices, type IngredientPriceItem } from "@/utils/ingredientPriceApi";
 
 function Home() {
   // Always start with true to ensure server and client initial render match
   const [isLoading, setIsLoading] = useState(true);
   const [isClient, setIsClient] = useState(false);
+  const [ingredientPrices, setIngredientPrices] = useState<IngredientPriceItem[]>([]);
+  const [priceLoading, setPriceLoading] = useState(true);
 
   useEffect(() => {
     // 클라이언트 사이드임을 표시
@@ -31,6 +34,28 @@ function Home() {
       return () => clearTimeout(timer);
     }
   }, []);
+
+  // 식재료 물가 정보 가져오기
+  useEffect(() => {
+    const fetchPrices = async () => {
+      try {
+        setPriceLoading(true);
+        const response = await getIngredientPrices();
+        if (!response.error && response.data) {
+          setIngredientPrices(response.data);
+        }
+      } catch (error) {
+        console.error("식재료 물가 정보를 가져오는 중 오류:", error);
+        // 오류 발생 시 빈 배열 유지
+      } finally {
+        setPriceLoading(false);
+      }
+    };
+
+    if (isClient && !isLoading) {
+      fetchPrices();
+    }
+  }, [isClient, isLoading]);
 
   if (isLoading) {
     return (
@@ -254,20 +279,65 @@ function Home() {
           <section className="rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-2">식재료 물가 정보</h2>
-              <p className="text-sm text-gray-500">최신 식재료 가격 정보를 확인하세요</p>
+              <p className="text-sm text-gray-500">
+                {priceLoading ? "최신 식재료 가격 정보를 불러오는 중..." : "최신 식재료 가격 정보를 확인하세요"}
+              </p>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {["쌀", "돼지고기", "닭고기", "계란"].map((item, idx) => (
-                <div
-                  key={idx}
-                  className="rounded-2xl border border-gray-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-5 text-center"
-                >
-                  <div className="text-2xl mb-2">🥘</div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-1">{item}</h3>
-                  <p className="text-xs text-gray-600">가격 정보</p>
-                </div>
-              ))}
-            </div>
+            {priceLoading ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {[1, 2, 3, 4].map((idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-2xl border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 p-5 text-center animate-pulse"
+                  >
+                    <div className="h-8 w-8 bg-gray-300 rounded-full mx-auto mb-2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-16 mx-auto mb-1"></div>
+                    <div className="h-3 bg-gray-300 rounded w-20 mx-auto"></div>
+                  </div>
+                ))}
+              </div>
+            ) : ingredientPrices.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {ingredientPrices.slice(0, 8).map((item, idx) => {
+                  const isPositive = (item.change || 0) > 0;
+                  const isNegative = (item.change || 0) < 0;
+                  const changeText = item.change 
+                    ? `${isPositive ? '↑' : isNegative ? '↓' : ''} ${Math.abs(item.change).toLocaleString()}원`
+                    : '-';
+                  
+                  return (
+                    <div
+                      key={idx}
+                      className="rounded-2xl border border-gray-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-5 text-center hover:shadow-md transition-shadow"
+                    >
+                      <div className="text-2xl mb-2">🥘</div>
+                      <h3 className="text-sm font-semibold text-gray-900 mb-2">{item.name}</h3>
+                      <div className="space-y-1">
+                        <p className="text-lg font-bold text-gray-900">
+                          {item.price.toLocaleString()}원
+                        </p>
+                        <p className="text-xs text-gray-600">{item.unit}</p>
+                        {item.change !== undefined && (
+                          <p className={`text-xs font-medium ${
+                            isPositive ? 'text-red-600' : isNegative ? 'text-blue-600' : 'text-gray-600'
+                          }`}>
+                            {changeText}
+                            {item.changeRate !== undefined && item.changeRate !== 0 && (
+                              <span> ({item.changeRate > 0 ? '+' : ''}{item.changeRate.toFixed(1)}%)</span>
+                            )}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <p>식재료 물가 정보를 불러올 수 없습니다.</p>
+                <p className="text-sm mt-2">잠시 후 다시 시도해주세요.</p>
+              </div>
+            )}
           </section>
 
           {/* 빠른 링크 */}

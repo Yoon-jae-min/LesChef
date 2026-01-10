@@ -19,6 +19,7 @@ const customer = require("../src/routers/customer");
 const recipe = require("../src/routers/recipe");
 const board = require("../src/routers/board");
 const foods = require("../src/routers/foods");
+const ingredientPrice = require("../src/routers/ingredientPrice");
 const { healthCheck } = require("./controllers/health");
 
 // MongoDB 연결
@@ -118,6 +119,7 @@ app.use("/customer", customer);
 app.use("/recipe", recipe);
 app.use("/board", board);
 app.use("/foods", foods);
+app.use("/ingredient-price", ingredientPrice);
 
 // 404 핸들러 (API 라우트에만 적용)
 app.use((req, res, next) => {
@@ -125,7 +127,8 @@ app.use((req, res, next) => {
     if (req.path.startsWith('/customer') || 
         req.path.startsWith('/recipe') || 
         req.path.startsWith('/board') || 
-        req.path.startsWith('/foods')) {
+        req.path.startsWith('/foods') ||
+        req.path.startsWith('/ingredient-price')) {
         return res.status(404).json({
             error: true,
             message: '요청한 리소스를 찾을 수 없습니다.'
