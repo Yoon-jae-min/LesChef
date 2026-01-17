@@ -1,10 +1,10 @@
 import type { ReactNode } from "react";
-import ClientMyPageLayout from "./ClientMyPageLayout";
+import MyPageLayoutClient from "./MyPageLayout";
 
 export default function MyPageLayout({
   children,
 }: {
   children: ReactNode;
 }) {
-  return <ClientMyPageLayout>{children}</ClientMyPageLayout>;
+  return <MyPageLayoutClient>{children}</MyPageLayoutClient>;
 }

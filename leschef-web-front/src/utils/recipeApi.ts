@@ -3,8 +3,9 @@
  * 서버로 레시피 데이터를 전송하는 함수들
  */
 
-// 예시 API 주소 (나중에 실제 주소로 변경)
-const API_BASE_URL = "http://localhost:3000/api/recipe";
+import { API_CONFIG } from "@/config/apiConfig";
+
+const API_BASE_URL = API_CONFIG.RECIPE_API;
 
 export type Ingredient = {
   ingredientName: string;
@@ -56,8 +57,19 @@ export type RecipeListParams = {
   sort?: "latest" | "popular";
 };
 
+export type RecipeListItem = {
+  _id?: string;
+  recipeName: string;
+  cookTime?: number;
+  cookLevel?: string;
+  majorCategory?: string;
+  subCategory?: string;
+  recipeImg?: string;
+  viewCount?: number;
+};
+
 export type RecipeListResponse = {
-  list: any[];
+  list: RecipeListItem[];
   page: number;
   limit: number;
   total: number;
@@ -94,11 +106,11 @@ export type RecipeDetailResponse = {
 };
 
 export type MyRecipeListResponse = {
-  list: any[];
+  list: RecipeListItem[];
 };
 
 export type WishRecipeListResponse = {
-  wishList: any[];
+  wishList: RecipeListItem[];
 };
 
 export type ToggleWishResponse = {
@@ -110,7 +122,14 @@ export type ToggleWishResponse = {
  */
 const transformIngredients = (
   ingredientGroups: IngredientGroup[],
-): any[] => {
+): Array<{
+  sortType: string;
+  ingredientUnit: Array<{
+    ingredientName: string;
+    volume: number;
+    unit: string;
+  }>;
+}> => {
   return ingredientGroups.map((group) => ({
     sortType: group.sortType,
     ingredientUnit: group.ingredients.map((ingredient) => ({
@@ -124,7 +143,11 @@ const transformIngredients = (
 /**
  * 조리 단계 데이터를 백엔드 형식으로 변환
  */
-const transformSteps = (steps: RecipeStep[]): any[] => {
+const transformSteps = (steps: RecipeStep[]): Array<{
+  stepNum: number;
+  stepWay: string;
+  stepImg: string;
+}> => {
   return steps.map((step) => ({
     stepNum: step.stepNum,
     stepWay: step.stepWay,

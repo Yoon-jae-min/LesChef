@@ -1,6 +1,7 @@
 "use client";
 
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { updateRecipe } from "@/utils/recipeApi";
@@ -37,7 +38,6 @@ export default function RecipeEditPage() {
   const [subCategory, setSubCategory] = useState("");
   const [recipeImg, setRecipeImg] = useState<File | null>(null);
   const [recipeImgPreview, setRecipeImgPreview] = useState<string>("");
-  const [isLoading, setIsLoading] = useState(true);
 
   const [ingredientGroups, setIngredientGroups] = useState<IngredientGroup[]>([
     { sortType: "주재료", ingredients: [{ ingredientName: "", volume: 0, unit: "개" }] },
@@ -53,33 +53,6 @@ export default function RecipeEditPage() {
       router.push("/myPage/recipes");
       return;
     }
-
-    // UNUSED: mock 데이터 로딩 블록 (실제 API 연동 완료됨)
-    // const loadRecipeData = async () => {
-    //   setIsLoading(true);
-    //   try {
-    //     // const response = await fetch(`/api/recipes/${recipeId}`);
-    //     // const data = await response.json();
-    //     const mockData = { ... };
-    //     setRecipeName(mockData.recipeName);
-    //     setCookTime(mockData.cookTime);
-    //     setPortion(mockData.portion);
-    //     setPortionUnit(mockData.portionUnit);
-    //     setCookLevel(mockData.cookLevel);
-    //     setMajorCategory(mockData.majorCategory);
-    //     setSubCategory(mockData.subCategory);
-    //     setIngredientGroups(mockData.ingredientGroups);
-    //     setSteps(mockData.steps.map((step) => ({ ...step, stepImgFile: null })));
-    //   } catch (error) {
-    //     console.error("레시피 데이터 로드 실패:", error);
-    //     alert("레시피를 불러오는데 실패했습니다.");
-    //     router.back();
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
-    //
-    // loadRecipeData();
   }, [recipeId, router]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>, type: "main" | "step", stepIndex?: number) => {
@@ -186,7 +159,9 @@ export default function RecipeEditPage() {
         throw new Error(`서버 오류: ${response.status}`);
       }
     } catch (error) {
-      console.error("레시피 수정 실패:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("레시피 수정 실패:", error);
+      }
       alert("레시피 수정에 실패했습니다. 다시 시도해주세요.");
     }
   };
@@ -195,19 +170,6 @@ export default function RecipeEditPage() {
     e.preventDefault();
     await handleUpdateRecipe();
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Top />
-        <main className="max-w-4xl mx-auto px-8 py-12">
-          <div className="flex items-center justify-center h-64">
-            <p className="text-gray-500">레시피를 불러오는 중...</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -318,7 +280,14 @@ export default function RecipeEditPage() {
                 <div className="space-y-3">
                   {recipeImgPreview ? (
                     <div className="relative w-full h-64 rounded-2xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                      <img src={recipeImgPreview} alt="레시피 미리보기" className="w-full h-full object-cover" />
+                      <Image 
+                        src={recipeImgPreview} 
+                        alt="레시피 미리보기" 
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
+                        unoptimized
+                      />
                     </div>
                   ) : (
                     <div className="relative w-full h-64 rounded-2xl border-2 border-dashed border-gray-300 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
@@ -477,7 +446,14 @@ export default function RecipeEditPage() {
                     <div>
                       {step.stepImg ? (
                         <div className="mb-2 relative w-full h-48 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                          <img src={step.stepImg} alt={`단계 ${step.stepNum}`} className="w-full h-full object-cover" />
+                          <Image 
+                            src={step.stepImg} 
+                            alt={`단계 ${step.stepNum}`} 
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover"
+                            unoptimized
+                          />
                         </div>
                       ) : (
                         <div className="mb-2 relative w-full h-48 rounded-xl border-2 border-dashed border-gray-300 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">

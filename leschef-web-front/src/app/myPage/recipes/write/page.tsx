@@ -1,6 +1,7 @@
 "use client";
 
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
+import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createRecipe } from "@/utils/recipeApi";
@@ -127,7 +128,9 @@ export default function RecipeWritePage() {
         throw new Error(`서버 오류: ${response.status}`);
       }
     } catch (error) {
-      console.error("레시피 작성 실패:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("레시피 작성 실패:", error);
+      }
       alert("레시피 작성에 실패했습니다. 다시 시도해주세요.");
     }
   };
@@ -246,7 +249,14 @@ export default function RecipeWritePage() {
                 <div className="space-y-3">
                   {recipeImgPreview ? (
                     <div className="relative w-full h-64 rounded-2xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                      <img src={recipeImgPreview} alt="레시피 미리보기" className="w-full h-full object-cover" />
+                      <Image 
+                        src={recipeImgPreview} 
+                        alt="레시피 미리보기" 
+                        fill
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover"
+                        unoptimized
+                      />
                     </div>
                   ) : (
                     <div className="relative w-full h-64 rounded-2xl border-2 border-dashed border-gray-300 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
@@ -405,7 +415,14 @@ export default function RecipeWritePage() {
                     <div>
                       {step.stepImg ? (
                         <div className="mb-2 relative w-full h-48 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                          <img src={step.stepImg} alt={`단계 ${step.stepNum}`} className="w-full h-full object-cover" />
+                          <Image 
+                            src={step.stepImg} 
+                            alt={`단계 ${step.stepNum}`} 
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            className="object-cover"
+                            unoptimized
+                          />
                         </div>
                       ) : (
                         <div className="mb-2 relative w-full h-48 rounded-xl border-2 border-dashed border-gray-300 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">

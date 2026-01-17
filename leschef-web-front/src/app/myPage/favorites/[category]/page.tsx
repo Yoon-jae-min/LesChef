@@ -1,30 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import Image from "next/image";
+import useSWR from "swr";
 import { fetchWishRecipeList, type WishRecipeListResponse } from "@/utils/recipeApi";
 
 export default function FavoritesCategoryPage() {
-  const [recipes, setRecipes] = useState<WishRecipeListResponse["wishList"]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // 찜한 레시피 목록 가져오기 - SWR 캐싱 적용
+  // 전역 설정 사용 (revalidateOnFocus: true, revalidateOnReconnect: true, dedupingInterval: 60000)
+  const { data, error, isLoading: loading } = useSWR<WishRecipeListResponse>(
+    '/wish-recipes',
+    fetchWishRecipeList
+  );
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchWishRecipeList();
-        setRecipes(data.wishList || []);
-      } catch (err) {
-        console.error(err);
-        setError(err instanceof Error ? err.message : "찜한 레시피를 불러오지 못했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  const recipes = data?.wishList || [];
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -35,7 +24,7 @@ export default function FavoritesCategoryPage() {
       )}
       {error && !loading && (
         <div className="col-span-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
+          {error instanceof Error ? error.message : "찜한 레시피를 불러오지 못했습니다."}
         </div>
       )}
       {!loading && !error && recipes.length === 0 && (
@@ -52,9 +41,15 @@ export default function FavoritesCategoryPage() {
           aria-label={`${card.recipeName} 상세로 이동`}
         >
           <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gray-50">
-            <div className="aspect-[5/3] w-full bg-gradient-to-br from-white to-gray-100">
+            <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
               {card.recipeImg ? (
-                <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${card.recipeImg})` }} />
+                <Image
+                  src={card.recipeImg}
+                  alt={card.recipeName}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  className="object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs text-gray-400">
                   <span className="text-3xl">📷</span>

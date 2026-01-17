@@ -3,9 +3,9 @@
  * 백엔드를 통해 공공데이터포털 API를 호출하여 식재료 물가 정보를 가져오는 함수들
  */
 
-// API 베이스 URL (백엔드 서버 주소)
-// 프로덕션 환경에서는 환경 변수나 설정 파일에서 관리하는 것을 권장
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "https://localhost:443";
+import { API_CONFIG } from "@/config/apiConfig";
+
+const API_BASE_URL = API_CONFIG.BASE_URL;
 
 export type IngredientPriceItem = {
   name: string;

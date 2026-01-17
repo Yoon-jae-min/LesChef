@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { login } from "@/utils/authApi";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -19,16 +20,16 @@ export default function LoginPage() {
     const fromParam = searchParams.get("from");
     const backParam = searchParams.get("back");
 
-    const savedReturn = sessionStorage.getItem("leschef_return_to");
-    const savedFrom = sessionStorage.getItem("leschef_from_source");
+    const savedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
+    const savedFrom = sessionStorage.getItem(STORAGE_KEYS.FROM_SOURCE);
 
     if (fromParam === "mypage" || savedFrom === "mypage") {
       setFromMyPage(true);
-      sessionStorage.setItem("leschef_from_source", "mypage");
+      sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
     }
 
     if (backParam) {
-      sessionStorage.setItem("leschef_return_to", backParam);
+      sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, backParam);
     }
   }, [searchParams]);
 
@@ -45,29 +46,23 @@ export default function LoginPage() {
       if (result.text === "login Success") {
         // 로그인 성공 시 처리
         // 세션 쿠키가 자동으로 설정되므로 별도로 저장할 필요 없음
-        // UNUSED: 과거 localStorage 기반 로그인 플래그 저장
-        // localStorage.setItem("leschef_is_logged_in", "true");
-        // localStorage.setItem("leschef_current_user", JSON.stringify({
-        //   id: result.id,
-        //   name: result.name,
-        //   nickName: result.nickName,
-        //   tel: result.tel,
-        // }));
 
         setError(null);
 
-        const storedReturn = sessionStorage.getItem("leschef_return_to");
+        const storedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
         const target = fromMyPage ? "/myPage" : storedReturn || "/";
 
-        sessionStorage.removeItem("leschef_return_to");
-        sessionStorage.removeItem("leschef_from_source");
+        sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
+        sessionStorage.removeItem(STORAGE_KEYS.FROM_SOURCE);
 
         router.push(target);
       } else {
         throw new Error("로그인에 실패했습니다.");
       }
     } catch (error) {
-      console.error("로그인 실패:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("로그인 실패:", error);
+      }
       setError(error instanceof Error ? error.message : "아이디 또는 비밀번호가 올바르지 않습니다.");
     }
   };

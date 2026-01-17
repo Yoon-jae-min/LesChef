@@ -3,8 +3,9 @@
  * 회원가입, 로그인 등 인증 관련 서버 통신 함수들
  */
 
-// 예시 API 주소 (나중에 실제 주소로 변경)
-const API_BASE_URL = "http://localhost:3000/api/customer";
+import { API_CONFIG } from "@/config/apiConfig";
+
+const API_BASE_URL = API_CONFIG.CUSTOMER_API;
 
 export type SignupData = {
   id: string; // 이메일 또는 아이디

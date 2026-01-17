@@ -3,8 +3,9 @@
  * 서버로 게시판 데이터를 전송하는 함수들
  */
 
-// 예시 API 주소 (나중에 실제 주소로 변경)
-const API_BASE_URL = "http://localhost:3000/api/board";
+import { API_CONFIG } from "@/config/apiConfig";
+
+const API_BASE_URL = API_CONFIG.BOARD_API;
 
 export type BoardWriteData = {
   title: string;

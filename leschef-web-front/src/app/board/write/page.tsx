@@ -1,6 +1,6 @@
 "use client";
 
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createBoard } from "@/utils/boardApi";
@@ -35,19 +35,16 @@ export default function BoardWritePage() {
         throw new Error(`서버 오류: ${response.status}`);
       }
     } catch (error) {
-      console.error("게시글 작성 실패:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("게시글 작성 실패:", error);
+      }
       alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleSubmitBoard() 호출
-    // await handleSubmitBoard();
-    
-    // 현재는 테스트용으로만 사용
-    console.log("게시글 작성:", { title, content, boardType });
-    alert("게시글 작성 기능은 서버 연동 후 구현됩니다.");
+    await handleSubmitBoard();
   };
 
   return (

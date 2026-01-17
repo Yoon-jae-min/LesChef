@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signup } from "@/utils/authApi";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 export default function SignupPage() {
   const router = useRouter();
@@ -48,8 +49,8 @@ export default function SignupPage() {
         const result = await response.text();
         if (result === "ok") {
           // 회원가입 성공 시 처리
-          const returnTo = searchParams.get("back") || sessionStorage.getItem("leschef_return_to") || "/";
-          sessionStorage.removeItem("leschef_return_to");
+          const returnTo = searchParams.get("back") || sessionStorage.getItem(STORAGE_KEYS.RETURN_TO) || "/";
+          sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
           
           alert("회원가입이 완료되었습니다!");
           router.push(returnTo);
@@ -61,7 +62,9 @@ export default function SignupPage() {
         throw new Error(errorText || `회원가입 실패: ${response.status}`);
       }
     } catch (error) {
-      console.error("회원가입 실패:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("회원가입 실패:", error);
+      }
       setError(error instanceof Error ? error.message : "회원가입에 실패했습니다. 다시 시도해주세요.");
     }
   };

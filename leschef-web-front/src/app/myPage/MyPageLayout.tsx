@@ -1,11 +1,13 @@
 "use client";
 
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import TabNavigation from "@/components/common/TabNavigation";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { checkLoginStatus } from "@/utils/authUtils";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
-export default function ClientMyPageLayout({
+export default function MyPageLayoutClient({
   children,
 }: {
   children: React.ReactNode;
@@ -44,15 +46,13 @@ export default function ClientMyPageLayout({
   }, [activeTab]);
 
   useEffect(() => {
-    const loggedIn =
-      typeof window !== "undefined" &&
-      localStorage.getItem("leschef_is_logged_in") === "true";
+    const loggedIn = checkLoginStatus();
 
     if (!loggedIn) {
       if (typeof window !== "undefined") {
         const attemptedPath = window.location.pathname + window.location.search;
-        sessionStorage.setItem("leschef_from_source", "mypage");
-        sessionStorage.setItem("leschef_return_to", attemptedPath);
+        sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
+        sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, attemptedPath);
       }
       setIsAuthorized(false);
       setIsCheckingAuth(false);

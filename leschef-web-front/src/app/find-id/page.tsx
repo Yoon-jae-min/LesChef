@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -19,8 +19,7 @@ export default function FindIdPage() {
     setFoundEmail(null);
     setIsSearching(true);
 
-    // TODO: API 연동
-    // 실제로는 서버에서 이름과 전화번호로 이메일을 찾아야 함
+    // API 연동 필요: 서버에서 이름과 전화번호로 이메일 찾기
     
     // Mock: 검색 시뮬레이션
     setTimeout(() => {

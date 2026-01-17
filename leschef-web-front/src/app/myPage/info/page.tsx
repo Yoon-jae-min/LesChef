@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
 import { fetchUserInfo, type UserInfoResponse } from "@/utils/authApi";
 
 export default function InfoPage() {
@@ -13,37 +14,33 @@ export default function InfoPage() {
   const [customReason, setCustomReason] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [nickname, setNickname] = useState("user");
-  const [userInfo, setUserInfo] = useState<UserInfoResponse | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+
+  // 사용자 정보 가져오기 - SWR 캐싱 적용
+  const { data: userInfo, error, isLoading: loading } = useSWR<UserInfoResponse>(
+    '/user-info',
+    async () => {
+      const data = await fetchUserInfo();
+      if (!data?.text) {
+        throw new Error("로그인이 필요합니다.");
+      }
+      return data;
+    },
+    {
+      revalidateOnFocus: false,    // 포커스 시 재검증 안 함 (사용자 정보는 거의 변하지 않음)
+      dedupingInterval: 1800000,   // 30분 동안 중복 요청 방지 (전역 설정보다 더 길게)
+    }
+  );
 
   useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchUserInfo();
-        if (!data?.text) {
-          throw new Error("로그인이 필요합니다.");
-        }
-        setUserInfo(data);
-        if (data.nickName) {
-          setNickname(data.nickName);
-        }
-      } catch (err) {
-        console.error(err);
-        setError(err instanceof Error ? err.message : "사용자 정보를 불러오지 못했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+    if (userInfo?.nickName) {
+      setNickname(userInfo.nickName);
+    }
+  }, [userInfo]);
 
   const handlePasswordCheck = () => {
     setPasswordError("");
     
-    // TODO: API 연동 - 비밀번호 확인 엔드포인트 연결
+    // 비밀번호 확인 엔드포인트 연결 필요
     // 성공 시:
     setDeleteStep("reason");
   };
@@ -56,7 +53,7 @@ export default function InfoPage() {
   };
 
   const handleDeleteAccount = () => {
-    // TODO: API 연동 - 실제 서버로 탈퇴 요청 (/customer/delete)
+    // 실제 서버로 탈퇴 요청 (/customer/delete) 필요
     alert("회원 탈퇴 API 연동 후 처리됩니다.");
   };
 

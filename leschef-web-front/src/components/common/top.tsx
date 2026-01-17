@@ -1,8 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { checkLoginStatus, clearAuthStorage } from "@/utils/authUtils";
+import { STORAGE_KEYS } from "@/constants/storageKeys";
 
 function Top(): React.JSX.Element {
     const router = useRouter();
@@ -13,7 +15,7 @@ function Top(): React.JSX.Element {
 
     useEffect(() => {
         const checkLogin = () => {
-            const loggedIn = typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true";
+            const loggedIn = checkLoginStatus();
             setIsLoggedIn(loggedIn);
         };
 
@@ -22,31 +24,45 @@ function Top(): React.JSX.Element {
         return () => window.removeEventListener("storage", checkLogin);
     }, []);
 
-    const getCurrentPath = () => {
+    // 현재 경로 계산 - useMemo로 메모이제이션
+    const currentPath = useMemo(() => {
         const queryString = searchParams?.toString();
         const basePath = pathname || "/";
         return queryString ? `${basePath}?${queryString}` : basePath;
-    };
+    }, [pathname, searchParams]);
 
-    const handleAuthAction = () => {
-        if (isLoggedIn) {
-            const confirmed = window.confirm("로그아웃 하시겠어요?");
-            if (!confirmed) {
-                return;
-            }
-            localStorage.removeItem("leschef_is_logged_in");
-            sessionStorage.removeItem("leschef_return_to");
-            sessionStorage.removeItem("leschef_from_source");
-            setIsLoggedIn(false);
-            router.push("/login");
-        } else {
-            const currentPath = getCurrentPath();
-            sessionStorage.setItem("leschef_return_to", currentPath);
-            sessionStorage.removeItem("leschef_from_source");
-            const loginTarget = `/login?back=${encodeURIComponent(currentPath)}`;
-            router.push(loginTarget);
+    // 로그아웃 핸들러 - useCallback으로 메모이제이션
+    const handleLogout = useCallback(() => {
+        const confirmed = window.confirm("로그아웃 하시겠어요?");
+        if (!confirmed) {
+            return;
         }
-    };
+        clearAuthStorage();
+        setIsLoggedIn(false);
+        router.push("/login");
+    }, [router]);
+
+    // 로그인 핸들러 - useCallback으로 메모이제이션
+    const handleLogin = useCallback(() => {
+        sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, currentPath);
+        sessionStorage.removeItem(STORAGE_KEYS.FROM_SOURCE);
+        const loginTarget = `/login?back=${encodeURIComponent(currentPath)}`;
+        router.push(loginTarget);
+    }, [currentPath, router]);
+
+    // 인증 액션 핸들러 - useCallback으로 메모이제이션
+    const handleAuthAction = useCallback(() => {
+        if (isLoggedIn) {
+            handleLogout();
+        } else {
+            handleLogin();
+        }
+    }, [isLoggedIn, handleLogout, handleLogin]);
+
+    // 검색바 토글 핸들러 - useCallback으로 메모이제이션
+    const handleToggleSearch = useCallback(() => {
+        setIsSearchExpanded(prev => !prev);
+    }, []);
 
     return (
         <>
@@ -147,7 +163,7 @@ function Top(): React.JSX.Element {
 
                 {/* 검색 아이콘 - 모바일에서만 표시 */}
                 <button 
-                    onClick={() => setIsSearchExpanded(!isSearchExpanded)}
+                    onClick={handleToggleSearch}
                     className="lg:hidden flex items-center ml-auto w-8 h-8 justify-center hover:bg-gray-100 rounded-xl transition-all"
                     aria-label="검색"
                 >

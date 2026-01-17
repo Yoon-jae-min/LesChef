@@ -1,17 +1,25 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
+import useSWR from "swr";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { fetchMyRecipeList, deleteRecipe, type MyRecipeListResponse } from "@/utils/recipeApi";
 
 export default function MyRecipesCategoryPage() {
   const router = useRouter();
-  const [recipes, setRecipes] = useState<MyRecipeListResponse["list"]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+
+  // 나의 레시피 목록 가져오기 - SWR 캐싱 적용
+  // 전역 설정 사용 (revalidateOnFocus: true, revalidateOnReconnect: true, dedupingInterval: 60000)
+  const { data, error, isLoading: loading, mutate } = useSWR<MyRecipeListResponse>(
+    '/my-recipes',
+    fetchMyRecipeList
+  );
+
+  const recipes = data?.list || [];
 
   const handleEditClick = (e: React.MouseEvent, recipeId: string) => {
     e.preventDefault();
@@ -34,9 +42,8 @@ export default function MyRecipesCategoryPage() {
       if (response.ok) {
         const result = await response.json();
         if (result.text === "success") {
-          // 삭제 성공 시 리스트 새로고침
-          const data = await fetchMyRecipeList();
-          setRecipes(data.list || []);
+          // 삭제 성공 시 SWR 캐시 새로고침
+          await mutate();
           setShowDeleteConfirm(false);
           setDeleteTargetId(null);
         } else {
@@ -47,7 +54,9 @@ export default function MyRecipesCategoryPage() {
         throw new Error(text || "레시피 삭제에 실패했습니다.");
       }
     } catch (err) {
-      console.error("레시피 삭제 실패:", err);
+      if (process.env.NODE_ENV === "development") {
+        console.error("레시피 삭제 실패:", err);
+      }
       alert(err instanceof Error ? err.message : "레시피 삭제에 실패했습니다.");
     }
   };
@@ -56,24 +65,6 @@ export default function MyRecipesCategoryPage() {
     setShowDeleteConfirm(false);
     setDeleteTargetId(null);
   };
-
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const data = await fetchMyRecipeList();
-        const list = data.list || [];
-        setRecipes(list);
-      } catch (err) {
-        console.error(err);
-        setError(err instanceof Error ? err.message : "나의 레시피를 불러오지 못했습니다.");
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -84,7 +75,7 @@ export default function MyRecipesCategoryPage() {
       )}
       {error && !loading && (
         <div className="col-span-full rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-          {error}
+          {error instanceof Error ? error.message : "나의 레시피를 불러오지 못했습니다."}
         </div>
       )}
       {!loading && !error && recipes.length === 0 && (
@@ -101,9 +92,15 @@ export default function MyRecipesCategoryPage() {
           aria-label={`${card.title} 상세로 이동`}
         >
           <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gray-50">
-            <div className="aspect-[5/3] w-full bg-gradient-to-br from-white to-gray-100">
+            <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
               {card.recipeImg ? (
-                <div className="h-full w-full bg-cover bg-center" style={{ backgroundImage: `url(${card.recipeImg})` }} />
+                <Image
+                  src={card.recipeImg}
+                  alt={card.title}
+                  fill
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                  className="object-cover"
+                />
               ) : (
                 <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs text-gray-400">
                   <span className="text-3xl">📷</span>

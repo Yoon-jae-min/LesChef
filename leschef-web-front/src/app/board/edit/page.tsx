@@ -1,6 +1,6 @@
 "use client";
 
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { updateBoard } from "@/utils/boardApi";
@@ -13,7 +13,6 @@ export default function BoardEditPage() {
   
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
   const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
 
@@ -23,29 +22,7 @@ export default function BoardEditPage() {
       router.push(`/board/${boardType}`);
       return;
     }
-
-    // UNUSED: mock 데이터 로딩 블록 (실제 API 연동 완료됨)
-    // const loadPostData = async () => {
-    //   setIsLoading(true);
-    //   try {
-    //     // const response = await fetch(`/api/board/${postId}`);
-    //     // const data = await response.json();
-    //     const mockData = {
-    //       title: "게시글 제목 예시",
-    //       content: "게시글 내용 예시입니다.\n\n여러 줄로 작성된 내용을 확인할 수 있습니다.\n\n수정할 수 있는 내용입니다.",
-    //     };
-    //     setTitle(mockData.title);
-    //     setContent(mockData.content);
-    //   } catch (error) {
-    //     console.error("게시글 데이터 로드 실패:", error);
-    //     alert("게시글을 불러오는데 실패했습니다.");
-    //     router.back();
-    //   } finally {
-    //     setIsLoading(false);
-    //   }
-    // };
-    //
-    // loadPostData();
+    // 기존 게시글 데이터 로드 로직은 서버 컴포넌트에서 처리
   }, [postId, boardType, router]);
 
   // 게시글 수정 함수 (나중에 버튼에 연결할 때 사용)
@@ -74,7 +51,9 @@ export default function BoardEditPage() {
         throw new Error(`서버 오류: ${response.status}`);
       }
     } catch (error) {
-      console.error("게시글 수정 실패:", error);
+      if (process.env.NODE_ENV === "development") {
+        console.error("게시글 수정 실패:", error);
+      }
       // 백엔드 API가 아직 없는 경우를 위한 안내 메시지
       if (error instanceof Error && error.message.includes("구현되지 않았습니다")) {
         alert("게시글 수정 기능은 백엔드 API 구현 후 사용할 수 있습니다.");
@@ -86,26 +65,8 @@ export default function BoardEditPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: 실제 서버 연결 시 아래 주석을 해제하고 handleUpdateBoard() 호출
-    // await handleUpdateBoard();
-    
-    // 현재는 테스트용으로만 사용
-    console.log("게시글 수정:", { postId, title, content, boardType });
-    alert("게시글 수정 기능은 서버 연동 후 구현됩니다.");
+    await handleUpdateBoard();
   };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white">
-        <Top />
-        <main className="max-w-4xl mx-auto px-8 py-12">
-          <div className="flex items-center justify-center h-64">
-            <p className="text-gray-500">게시글을 불러오는 중...</p>
-          </div>
-        </main>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-white">

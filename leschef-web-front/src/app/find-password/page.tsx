@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -19,9 +19,7 @@ export default function FindPasswordPage() {
     setError(null);
     setIsSending(true);
 
-    // TODO: API 연동
-    // 실제로는 서버에서 이메일, 이름, 전화번호로 계정을 확인하고
-    // 비밀번호 재설정 링크를 이메일로 전송해야 함
+    // API 연동 필요: 서버에서 계정 확인 후 비밀번호 재설정 링크 이메일 전송
     
     // Mock: 전송 시뮬레이션
     setTimeout(() => {

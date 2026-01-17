@@ -1,6 +1,6 @@
 "use client";
 
-import Top from "@/components/common/top";
+import Top from "@/components/common/Top";
 import TabNavigation from "@/components/common/TabNavigation";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
