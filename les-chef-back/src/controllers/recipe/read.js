@@ -1,41 +1,15 @@
 const asyncHandler = require("express-async-handler");
-const User = require("../models/userModel");
-const Recipe = require("../models/recipeModel");
-const RecipeIngredient = require("../models/recipeIngredientsModel");
-const RecipeStep = require("../models/recipeStepModel");
-const RecipeWishList = require("../models/recipeWishListModel");
+const User = require("../../models/user/userModel");
+const Recipe = require("../../models/recipe/recipeModel");
+const RecipeIngredient = require("../../models/recipe/recipeIngredientsModel");
+const RecipeStep = require("../../models/recipe/recipeStepModel");
+const RecipeWishList = require("../../models/recipe/recipeWishListModel");
 
 const removeId = (recipeList) => {
     return recipeList.map(({_id, ...rest}) => rest);
 }
 
-// 구 카테고리별 리스트 (현재 미사용) --------------------------------------
-// const koreanList = asyncHandler(async(req, res) => {
-//     const recipeList = await Recipe.find({majorCategory: "한식", isShare: false}).lean();
-//     res.send(recipeList);
-// });
-//
-// const japaneseList = asyncHandler(async(req, res) => {
-//     const recipeList = await Recipe.find({majorCategory: "일식", isShare: false}).lean();
-//     res.send(recipeList);
-// });
-//
-// const chineseList = asyncHandler(async(req, res) => {
-//     const recipeList = await Recipe.find({majorCategory: "중식", isShare: false}).lean();
-//     res.send(recipeList);
-// });
-//
-// const westernList = asyncHandler(async(req, res) => {
-//     const recipeList = await Recipe.find({majorCategory: "양식", isShare: false}).lean();
-//     res.send(recipeList);
-// });
-//
-// const shareList = asyncHandler(async(req, res) => {
-//     const recipeList = await Recipe.find({isShare: true}).lean();
-//     res.send(recipeList);
-// });
-
-// 단일 리스트 엔드포인트 -----------------------------------------------
+// 단일 리스트 엔드포인트
 const categoryMap = {
     korean: "한식",
     japanese: "일식",

@@ -13,8 +13,8 @@ function RootLayout({children}: Readonly<{children: React.ReactNode;}>) {
     <html lang="ko">
       <body className="min-h-screen bg-white text-black antialiased">
         <SWRProvider>
-          {children}
-          <ScrollToTop />
+        {children}
+        <ScrollToTop />
         </SWRProvider>
       </body>
     </html>

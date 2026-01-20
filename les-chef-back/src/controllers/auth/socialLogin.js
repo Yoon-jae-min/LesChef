@@ -1,27 +1,17 @@
 const asyncHandler = require('express-async-handler');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const User = require("../models/userModel");
+const User = require("../../models/user/userModel");
+const { getKakaoToken } = require("../../utils/external/kakao");
+const logger = require("../../utils/logger");
+const isDev = process.env.NODE_ENV !== 'production';
 
 const kakaoLogin = asyncHandler(async(req, res) => {
     const {code} = req.query;
 
     try{
         if(code){
-            const response = await fetch('https://kauth.kakao.com/oauth/token',{
-                                method: "POST",
-                                headers: {
-                                    "Content-Type":"application/x-www-form-urlencoded;charset-utf"
-                                },
-                                body: new URLSearchParams({
-                                    grant_type: 'authorization_code',
-                                    client_id: process.env.KAKAO_API_KEY,
-                                    redirect_uri: `${process.env.SERVER_ADDRESS}/customer/kakaoLogin`,
-                                    code: code,
-                                }),
-                            });
-            
-            const data = await response.json();
+            const data = await getKakaoToken(code);
 
             if (!data.id_token) {
                 return res.status(400).send("카카오 로그인 실패: id_token 없음");
@@ -48,7 +38,9 @@ const kakaoLogin = asyncHandler(async(req, res) => {
 
             req.session.save((err) => {
                 if (err) {
-                    console.error("세션 저장 오류:", err);
+                    if (isDev) {
+                        logger.error("세션 저장 오류:", { error: err });
+                    }
                     return res.status(500).send("세션 저장 중 오류가 발생했습니다.");
                 }
                 res.redirect(`${process.env.SERVER_ADDRESS}/?userId=${user ? user.id : decodedIdToken.sub}&name=${user ? user.name : "user"}&nickName=${user ? user.nickName : decodedIdToken.nickName}&tel=${user ? user.tel : ""}`);
@@ -57,7 +49,9 @@ const kakaoLogin = asyncHandler(async(req, res) => {
             res.status(400).send("카카오 인증 코드가 없습니다.");
         }
     }catch(err){
-        console.error("카카오 로그인 중 오류 발생:", err);
+        if (isDev) {
+            logger.error("카카오 로그인 중 오류 발생:", { error: err });
+        }
         res.status(500).send("카카오 로그인 중 오류가 발생했습니다.");
     }
 });

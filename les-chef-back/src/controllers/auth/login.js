@@ -1,7 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
-const { validateEmailOrId } = require("../middleware/security");
+const User = require("../../models/user/userModel");
+const { validateEmailOrId } = require("../../middleware/security");
+const isDev = process.env.NODE_ENV !== 'production';
 
 //postLogin
 const postLogin = asyncHandler(async (req, res) => {
@@ -54,7 +55,9 @@ const postLogin = asyncHandler(async (req, res) => {
         // 세션 저장 후 응답
         req.session.save((err) => {
             if (err) {
-                console.error("세션 저장 오류:", err);
+                if (isDev) {
+                    console.error("세션 저장 오류:", err);
+                }
                 return res.status(500).send("세션 저장 중 오류가 발생했습니다.");
             }
             res.status(200).json({
@@ -67,7 +70,9 @@ const postLogin = asyncHandler(async (req, res) => {
             });
         });
     } catch (error) {
-        console.error("로그인 처리 중 오류:", error);
+        if (isDev) {
+            console.error("로그인 처리 중 오류:", error);
+        }
         res.status(500).json({
             error: true,
             message: "서버 오류가 발생했습니다."
@@ -77,9 +82,12 @@ const postLogin = asyncHandler(async (req, res) => {
 
 //getLogout
 const getLogout = (req, res) => {
+    const isDev = process.env.NODE_ENV !== 'production';
     req.session.destroy(err => {
         if (err) {
-            console.error("로그아웃 오류:", err);
+            if (isDev) {
+                console.error("로그아웃 오류:", err);
+            }
             return res.status(500).json({
                 error: true,
                 message: "로그아웃 중 오류가 발생했습니다."
@@ -109,7 +117,9 @@ const getAuth = (req, res) => {
             });
         }
     } catch (error) {
-        console.error("인증 확인 오류:", error);
+        if (isDev) {
+            console.error("인증 확인 오류:", error);
+        }
         res.status(500).json({
             error: true,
             message: "인증 확인 중 오류가 발생했습니다.",

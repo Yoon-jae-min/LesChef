@@ -1,17 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const { recipeWrite, clickWish, deleteRecipe } = require("../controllers/recipeWrite");
 const {
-    // koreanList,
-    // japaneseList,
-    // chineseList,
-    // westernList,
-    // shareList,
+    createOrUpdate,
+    toggleWish,
+    removeRecipe,
     listRecipes,
     myList,
     wishList,
-    recipeInfo
-} = require("../controllers/recipeGet");
+    recipeInfo,
+} = require("../controllers/recipe");
 const { upload } = require("../uploads/recipeImgUpload");
 
 router
@@ -25,9 +22,9 @@ router
     .get("/list", listRecipes)
     .get("/myList", myList)
     .get("/wishList", wishList)
-    .post("/write", upload, recipeWrite)
-    .post("/clickwish", clickWish)
-    .delete("/:id", deleteRecipe); // DELETE /recipe/:id - 레시피 삭제
+    .post("/write", upload, createOrUpdate)
+    .post("/clickwish", toggleWish)
+    .delete("/:id", removeRecipe); // DELETE /recipe/:id - 레시피 삭제
 
 
 module.exports = router;

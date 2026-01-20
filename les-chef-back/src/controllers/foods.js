@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
-const Foods = require("../models/foodsModel");
+const Foods = require("../models/foods/foodsModel");
+const isDev = process.env.NODE_ENV !== 'production';
 
 const getPlace = asyncHandler(async(req, res) => {
     if (!req.session?.user?.id) {
@@ -142,7 +143,9 @@ const updatePlace = asyncHandler(async(req, res) => {
             });
         }
     }catch(err) {
-        console.error("보관 장소 수정 오류:", err);
+        if (isDev) {
+            console.error("보관 장소 수정 오류:", err);
+        }
         throw err;
     }
 });

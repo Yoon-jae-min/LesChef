@@ -1,15 +1,7 @@
 const asyncHandler = require("express-async-handler");
-const Board = require("../models/boardModel");
-const Comment = require("../models/boardCommentModel");
-const BoardLike = require("../models/boardLikeModel");
-
-// 현재 프론트 요청에서 사용하지 않는 리스트 조회 (필요 시 주석 해제)
-// const getWriting = asyncHandler(async(req, res) => {
-//     const pageNum = req.query.page;
-//     const posts = pageNum === "1" ? await Board.find({}, {content: 0}).sort({ createdAt: -1 }).limit(20).lean() : await Board.find({}, {content: 0}).skip(20 + (pageNum * 15)).limit(15).lean();
-//
-//     res.send(posts);
-// });
+const Board = require("../models/board/boardModel");
+const Comment = require("../models/board/boardCommentModel");
+const BoardLike = require("../models/board/boardLikeModel");
 
 // 단일 리스트 API (현재 카테고리 분류 필드는 없으므로 전체 목록)
 const listBoards = asyncHandler(async(req, res) => {
@@ -75,24 +67,6 @@ const postWriting = asyncHandler(async(req, res) => {
         throw error;
     }
 });
-
-// 현재 프론트 요청에서 사용하지 않는 상세/댓글 조회 (필요 시 주석 해제)
-// const getWatch = asyncHandler(async(req, res) => {
-//     await Board.updateOne(
-//         { _id: req.query.id },
-//         { $inc: { viewCount: 1 } }
-//     );
-//
-//     const content = await Board.find({_id: req.query.id}, {content: 1, viewCount: 1}).lean();
-//     const comments = await Comment.find({boardId: req.query.id}).sort({createdAt: -1}).lean();
-//
-//
-//
-//     res.send({
-//         content: content,
-//         comments: comments
-//     });
-// });
 
 // 게시글 상세 + 댓글
 const getBoard = asyncHandler(async(req, res) => {
@@ -197,7 +171,7 @@ const deleteBoard = asyncHandler(async(req, res) => {
     }
 
     // 본인 게시글만 삭제 가능 (관리자는 예외)
-    const user = await require("../models/userModel").findOne({id: req.session.user.id});
+    const user = await require("../models/user/userModel").findOne({id: req.session.user.id});
     if (board.userId !== req.session.user.id && (!user || !user.checkAdmin)) {
         return res.status(403).json({
             error: true,
@@ -257,7 +231,7 @@ const editBoard = asyncHandler(async (req, res) => {
     }
 
     // 본인 게시글만 수정 가능 (관리자는 예외)
-    const user = await require("../models/userModel").findOne({id: req.session.user.id});
+    const user = await require("../models/user/userModel").findOne({id: req.session.user.id});
     if (board.userId !== req.session.user.id && (!user || !user.checkAdmin)) {
         return res.status(403).json({
             error: true,

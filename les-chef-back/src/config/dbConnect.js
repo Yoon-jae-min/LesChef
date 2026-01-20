@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
 require("dotenv").config();
+const isDev = process.env.NODE_ENV !== 'production';
+const logger = require("../utils/logger");
 
 const dbConnect = async () => {
     try{
@@ -8,40 +10,52 @@ const dbConnect = async () => {
       	});
         
         // 연결 성공 정보 출력
-        console.log("✅ MongoDB 연결 성공!");
-        console.log(`   - 호스트: ${connect.connection.host}`);
-        console.log(`   - 데이터베이스: ${connect.connection.name}`);
-        console.log(`   - 상태: ${connect.connection.readyState === 1 ? '연결됨' : '연결 안됨'}`);
+        if (isDev) {
+            logger.info("✅ MongoDB 연결 성공!", {
+                host: connect.connection.host,
+                db: connect.connection.name,
+                state: connect.connection.readyState === 1 ? '연결됨' : '연결 안됨',
+            });
+        }
         
         // 연결 이벤트 리스너
         mongoose.connection.on('connected', () => {
-            console.log('✅ MongoDB 연결됨');
+            if (isDev) {
+                logger.info('✅ MongoDB 연결됨');
+            }
         });
         
         mongoose.connection.on('error', (err) => {
-            console.error('❌ MongoDB 연결 오류:', err);
+            if (isDev) {
+                logger.error('❌ MongoDB 연결 오류:', { error: err });
+            }
         });
         
         mongoose.connection.on('disconnected', () => {
-            console.warn('⚠️  MongoDB 연결 끊김');
+            if (isDev) {
+                logger.warn('⚠️  MongoDB 연결 끊김');
+            }
         });
         
         // 프로세스 종료 시 연결 종료
         process.on('SIGINT', async () => {
             await mongoose.connection.close();
-            console.log('MongoDB 연결이 종료되었습니다.');
+            if (isDev) {
+                logger.info('MongoDB 연결이 종료되었습니다.');
+            }
             process.exit(0);
         });
         
         return connect;
     }catch(err){
-        console.error("❌ MongoDB 연결 실패:");
-        console.error("   - 오류:", err.message);
-        if (err.message.includes('authentication')) {
-            console.error("   - 인증 실패: 사용자 이름 또는 비밀번호를 확인하세요.");
-        }
-        if (err.message.includes('ENOTFOUND') || err.message.includes('getaddrinfo')) {
-            console.error("   - 호스트를 찾을 수 없습니다: 연결 문자열을 확인하세요.");
+        if (isDev) {
+            logger.error("❌ MongoDB 연결 실패:", { error: err.message });
+            if (err.message.includes('authentication')) {
+                logger.error("   - 인증 실패: 사용자 이름 또는 비밀번호를 확인하세요.");
+            }
+            if (err.message.includes('ENOTFOUND') || err.message.includes('getaddrinfo')) {
+                logger.error("   - 호스트를 찾을 수 없습니다: 연결 문자열을 확인하세요.");
+            }
         }
         throw err;
     }

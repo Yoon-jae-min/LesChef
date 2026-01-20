@@ -1,10 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
-const User = require("../models/userModel");
-const Recipe = require("../models/recipeModel");
+const User = require("../../models/user/userModel");
+const Recipe = require("../../models/recipe/recipeModel");
 const { response } = require("express");
+const isDev = process.env.NODE_ENV !== 'production';
+const { unlinkKakaoUser } = require("../../utils/external/kakao");
+const logger = require("../../utils/logger");
 
-const { validateEmailOrId, validatePassword, validateNickname } = require("../middleware/security");
+const { validateEmailOrId, validatePassword, validateNickname } = require("../../middleware/security");
 
 const postJoin = asyncHandler(async (req, res) => {
     const { id, pwd, name, nickName, tel } = req.body;
@@ -114,26 +117,20 @@ const delUser = asyncHandler(async(req, res) => {
         // 카카오 로그인 사용자인 경우 카카오 API 호출
         if(userType !== "common"){
             try {
-                await fetch(`https://kapi.kakao.com/v1/user/unlink`,{
-                    method: "POST",
-                    headers: {
-                        "Content-Type":"application/x-www-form-urlencoded;charset=utf-8",
-                        "Authorization": `KakaoAK ${process.env.KAKAO_APP_ADMIN_KEY}`
-                    },
-                    body: new URLSearchParams({
-                        target_id_type: "user_id",
-                        target_id: Number(userId.split("_")[1])
-                    })
-                });
+                await unlinkKakaoUser(userId);
             } catch (kakaoErr) {
-                console.error("카카오 연동 해제 오류:", kakaoErr);
+                if (isDev) {
+                    logger.error("카카오 연동 해제 오류:", { error: kakaoErr });
+                }
                 // 카카오 연동 해제 실패해도 회원 탈퇴는 진행
             }
         }
 
         req.session.destroy(err => {
             if (err) {
-                console.error("세션 삭제 오류:", err);
+                if (isDev) {
+                    logger.error("세션 삭제 오류:", { error: err });
+                }
                 return res.status(500).json({
                     error: true,
                     message: "세션 삭제 중 오류가 발생했습니다.",

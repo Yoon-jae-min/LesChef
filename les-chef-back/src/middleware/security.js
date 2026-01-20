@@ -4,6 +4,7 @@
  */
 
 const rateLimit = require('express-rate-limit');
+const { RATE_LIMIT } = require('../constants');
 
 /**
  * Rate Limiting 설정
@@ -21,25 +22,25 @@ const createRateLimiter = (windowMs, max, message) => {
     });
 };
 
-// 일반 API 요청 제한 (15분에 100회)
+// 일반 API 요청 제한
 const apiLimiter = createRateLimiter(
-    15 * 60 * 1000,
-    100,
-    '너무 많은 요청이 발생했습니다. 잠시 후 다시 시도해주세요.'
+    RATE_LIMIT.API.WINDOW_MS,
+    RATE_LIMIT.API.MAX,
+    RATE_LIMIT.API.MESSAGE
 );
 
-// 인증 관련 요청 제한 (15분에 5회)
+// 인증 관련 요청 제한
 const authLimiter = createRateLimiter(
-    15 * 60 * 1000,
-    5,
-    '로그인 시도 횟수를 초과했습니다. 15분 후 다시 시도해주세요.'
+    RATE_LIMIT.AUTH.WINDOW_MS,
+    RATE_LIMIT.AUTH.MAX,
+    RATE_LIMIT.AUTH.MESSAGE
 );
 
-// 파일 업로드 제한 (1시간에 20회)
+// 파일 업로드 제한
 const uploadLimiter = createRateLimiter(
-    60 * 60 * 1000,
-    20,
-    '파일 업로드 횟수를 초과했습니다. 1시간 후 다시 시도해주세요.'
+    RATE_LIMIT.UPLOAD.WINDOW_MS,
+    RATE_LIMIT.UPLOAD.MAX,
+    RATE_LIMIT.UPLOAD.MESSAGE
 );
 
 /**

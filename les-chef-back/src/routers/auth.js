@@ -1,8 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const {postLogin, getLogout, getAuth, getInfo, infoChg, idCheck, pwdChg, pwCheck} = require("../controllers/login");
-const {postJoin, delUser} = require("../controllers/join");
-const {kakaoLogin} = require("../controllers/snsLogin");
+const {
+    postLogin,
+    getLogout,
+    getAuth,
+    getInfo,
+    infoChg,
+    idCheck,
+    pwdChg,
+    pwCheck,
+    postJoin,
+    delUser,
+    kakaoLogin,
+} = require("../controllers/auth");
 
 router
     .get("/logout", getLogout)

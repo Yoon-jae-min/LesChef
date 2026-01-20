@@ -3,8 +3,12 @@
  * 모든 컨트롤러에서 발생하는 에러를 일관되게 처리
  */
 
+const isDev = process.env.NODE_ENV !== 'production';
+
 const errorHandler = (err, req, res, next) => {
-    console.error('Error:', err);
+    if (isDev) {
+        console.error('Error:', err);
+    }
 
     // Mongoose validation error
     if (err.name === 'ValidationError') {

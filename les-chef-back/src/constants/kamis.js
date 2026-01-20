@@ -1,0 +1,36 @@
+/**
+ * KAMIS API 관련 상수
+ */
+
+// 식재료 목록 최대 반환 개수
+const MAX_INGREDIENT_ITEMS = 8;
+
+// 주요 식재료 목록
+const MAIN_INGREDIENTS = [
+  '쌀',
+  '돼지고기',
+  '닭고기',
+  '계란',
+  '소고기',
+  '양파',
+  '마늘',
+  '배추',
+  '고추',
+  '당근',
+  '무',
+  '상추',
+];
+
+// KAMIS 요청 기본 파라미터
+const KAMIS_DEFAULT_PARAMS = {
+  productClsCode: '01',      // 01: 농산물, 02: 축산물
+  itemCategoryCode: '100',   // 100: 곡물류 (예시 기본값)
+  countyCode: '1101',        // 1101: 서울
+};
+
+module.exports = {
+  MAX_INGREDIENT_ITEMS,
+  MAIN_INGREDIENTS,
+  KAMIS_DEFAULT_PARAMS,
+};
+

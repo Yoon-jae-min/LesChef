@@ -6,7 +6,10 @@ const fs = require('fs');
 const MongoStore = require('connect-mongo'); 
 const cors = require("cors");
 const helmet = require("helmet");
+const compression = require("compression");
 const { dbConnect, checkConnection } = require("./config/dbConnect");
+const { SESSION_TTL_SECONDS, SESSION_MAX_AGE_MS } = require("./constants");
+const logger = require("./utils/logger");
 const errorHandler = require("./middleware/errorHandler");
 const { apiLimiter, authLimiter, uploadLimiter, validateInput } = require("./middleware/security");
 const validateEnvVars = require("./middleware/envValidator");
@@ -15,7 +18,7 @@ const validateEnvVars = require("./middleware/envValidator");
 validateEnvVars();
 
 //라우터
-const customer = require("../src/routers/customer");
+const authRouter = require("./routers/auth");
 const recipe = require("../src/routers/recipe");
 const board = require("../src/routers/board");
 const foods = require("../src/routers/foods");
@@ -24,7 +27,7 @@ const { healthCheck } = require("./controllers/health");
 
 // MongoDB 연결
 dbConnect().catch(error => {
-    console.error('❌ DB connection error:', error);
+    logger.error('❌ DB connection error:', { error });
     process.exit(1); // 연결 실패 시 프로세스 종료
 });
 
@@ -52,14 +55,12 @@ app.use(helmet({
 const options = {
     key: fs.readFileSync(path.join(__dirname, process.env.SSL_KEY_PATH)), // 비밀키 파일 경로
     cert: fs.readFileSync(path.join(__dirname, process.env.SSL_CERT_PATH)) // 인증서 파일 경로
-    // key: fs.readFileSync('./src/certs/private-key.pem'), // 비밀키 파일 경로
-    // cert: fs.readFileSync('./src/certs/certificate.pem') // 인증서 파일 경로
 };
 
 // 세션 설정
 const mongoStore = MongoStore.create({
     mongoUrl: process.env.DB_CONNECT, 
-    ttl: 3600, 
+    ttl: SESSION_TTL_SECONDS, 
     collectionName: 'sessions'
 });
 app.use(session({
@@ -70,7 +71,7 @@ app.use(session({
     name: 'sessionId', // 기본 'connect.sid' 대신 커스텀 이름 사용
     cookie: {
         secure: true, // HTTPS에서만 전송
-        maxAge: 1000 * 60 * 60, // 1시간
+        maxAge: SESSION_MAX_AGE_MS, // 1시간
         httpOnly: true, // XSS 방지
         sameSite: 'none', // CORS 환경에서 필요
         signed: true, // 쿠키 서명
@@ -84,7 +85,6 @@ app.use(session({
 
 // CORS 설정 (세션 이후에 위치)
 app.use(cors({
-    // origin: ['https://localhost:3000', 'https://172.30.1.93:3000'], 
     origin: process.env.CORS_ORIGIN.split(','), 
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -94,6 +94,23 @@ app.use(cors({
 // JSON 파싱 미들웨어 (크기 제한)
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
+
+// 응답 압축 (gzip) - JSON 파싱 이후, 라우터 이전에 위치
+app.use(compression({
+    // 1KB 이상인 응답만 압축 (작은 응답은 압축 오버헤드가 더 큼)
+    threshold: 1024,
+    // 압축 레벨 (1-9, 기본값: -1 = 기본 레벨)
+    level: 6,
+    // 압축할 MIME 타입 필터
+    filter: (req, res) => {
+        // 이미 압축된 응답은 제외
+        if (req.headers['x-no-compression']) {
+            return false;
+        }
+        // compression 미들웨어가 기본적으로 처리하는 타입 사용
+        return compression.filter(req, res);
+    }
+}));
 
 // 입력 검증 및 sanitization
 app.use(validateInput);
@@ -115,7 +132,7 @@ app.use(express.static(path.join(__dirname, '..', 'public', 'build')));
 app.get("/health", healthCheck);
 
 // 라우터 설정
-app.use("/customer", customer);
+app.use("/customer", authRouter);
 app.use("/recipe", recipe);
 app.use("/board", board);
 app.use("/foods", foods);
@@ -145,10 +162,9 @@ app.get('*', (req, res) => {
 // 전역 에러 핸들러 (모든 라우터 이후에 위치해야 함)
 app.use(errorHandler);
 
-https.createServer(options, app).listen(443, "0.0.0.0", () => {
-    console.log('HTTPS 서버가 실행 중입니다. https://158.180.94.75');
-});
+const PORT = process.env.PORT || 443;
+const SERVER_URL = process.env.SERVER_URL || `https://localhost:${PORT}`;
 
-// https.createServer(options, app).listen(5000, "0.0.0.0", () => {
-//     console.log('HTTPS 서버가 실행 중입니다. https://localhost:5000');
-// });
+https.createServer(options, app).listen(PORT, "0.0.0.0", () => {
+    logger.info(`HTTPS 서버가 실행 중입니다. ${SERVER_URL}`);
+});
