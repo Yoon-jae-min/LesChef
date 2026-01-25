@@ -1,21 +1,32 @@
 "use client";
 
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
-import Top from "@/components/common/Top";
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { signup } from "@/utils/authApi";
-import { STORAGE_KEYS } from "@/constants/storageKeys";
+import Top from "@/components/common/navigation/Top";
+import { useState, useEffect } from "react";
+import { signup } from "@/utils/api/auth";
+import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
 export default function SignupPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [returnTo, setReturnTo] = useState<string>("/");
+
+  // URL 파라미터에서 return 경로 가져오기
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const backParam = params.get("back");
+      const storedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
+      setReturnTo(backParam || storedReturn || "/");
+    }
+  }, []);
 
   // 회원가입 제출 함수
   const handleSignup = async () => {
@@ -49,11 +60,11 @@ export default function SignupPage() {
         const result = await response.text();
         if (result === "ok") {
           // 회원가입 성공 시 처리
-          const returnTo = searchParams.get("back") || sessionStorage.getItem(STORAGE_KEYS.RETURN_TO) || "/";
-          sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
-          
-          alert("회원가입이 완료되었습니다!");
-          router.push(returnTo);
+          if (typeof window !== 'undefined') {
+            sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
+            alert("회원가입이 완료되었습니다!");
+            window.location.href = returnTo;
+          }
         } else {
           throw new Error("서버 응답 오류");
         }

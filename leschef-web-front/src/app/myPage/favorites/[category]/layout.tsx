@@ -1,7 +1,7 @@
 "use client";
 
-import TabNavigation from "@/components/common/TabNavigation";
-import FilterTabs from "@/components/common/FilterTabs";
+import TabNavigation from "@/components/common/navigation/TabNavigation";
+import FilterTabs from "@/components/common/ui/FilterTabs";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 

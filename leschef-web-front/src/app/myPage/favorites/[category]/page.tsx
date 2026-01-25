@@ -1,9 +1,12 @@
 "use client";
 
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import { fetchWishRecipeList, type WishRecipeListResponse } from "@/utils/recipeApi";
+import { fetchWishRecipeList, type WishRecipeListResponse } from "@/utils/api/recipeApi";
 
 export default function FavoritesCategoryPage() {
   // 찜한 레시피 목록 가져오기 - SWR 캐싱 적용

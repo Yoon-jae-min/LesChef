@@ -1,29 +1,37 @@
 "use client";
 
-import Top from "@/components/common/Top";
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
+
+import Top from "@/components/common/navigation/Top";
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { updateBoard } from "@/utils/boardApi";
+import { updateBoard } from "@/utils/api/board";
 
 export default function BoardEditPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const postId = searchParams.get("id");
-  const boardType = searchParams.get("type") || "notice";
-  
+  const [postId, setPostId] = useState<string | null>(null);
+  const [boardType, setBoardType] = useState<string>("notice");
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
-
-  // 기존 게시글 데이터 불러오기
+  // URL 파라미터에서 postId와 boardType 가져오기
   useEffect(() => {
-    if (!postId) {
-      router.push(`/board/${boardType}`);
-      return;
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get("id");
+      const type = params.get("type") || "notice";
+      
+      if (!id) {
+        window.location.href = `/board/${type}`;
+        return;
+      }
+      
+      setPostId(id);
+      setBoardType(type);
+      // 기존 게시글 데이터 로드 로직은 서버 컴포넌트에서 처리
     }
-    // 기존 게시글 데이터 로드 로직은 서버 컴포넌트에서 처리
-  }, [postId, boardType, router]);
+  }, []);
+
+  const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
 
   // 게시글 수정 함수 (나중에 버튼에 연결할 때 사용)
   const handleUpdateBoard = async () => {
@@ -43,7 +51,9 @@ export default function BoardEditPage() {
         const result = await response.text();
         if (result === "ok") {
           // 성공 시 처리 (예: 게시글 상세 페이지로 이동)
-          router.push(`/board/detail?id=${postId}&type=${boardType}`);
+          if (typeof window !== 'undefined' && postId) {
+            window.location.href = `/board/detail?id=${postId}&type=${boardType}`;
+          }
         } else {
           throw new Error("서버 응답 오류");
         }
@@ -115,7 +125,11 @@ export default function BoardEditPage() {
           <div className="flex items-center justify-end gap-4">
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.history.back();
+                }
+              }}
               className="rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
             >
               취소

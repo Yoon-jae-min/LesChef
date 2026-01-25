@@ -1,11 +1,11 @@
 "use client";
 
-import Top from "@/components/common/Top";
-import TabNavigation from "@/components/common/TabNavigation";
-import FilterTabs from "@/components/common/FilterTabs";
+import Top from "@/components/common/navigation/Top";
+import TabNavigation from "@/components/common/navigation/TabNavigation";
+import FilterTabs from "@/components/common/ui/FilterTabs";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
-import { checkLoginStatus } from "@/utils/authUtils";
+import { checkLoginStatus } from "@/utils/helpers/authUtils";
 
 const CUISINE_TABS = ["한식", "일식", "중식", "양식", "기타"] as const;
 const CATEGORY_TO_DISPLAY: Record<string, string> = {

@@ -1,5 +1,5 @@
-import { getRecipeDetailServer } from "@/utils/serverApi";
-import RecipeDetailClient from "@/components/recipe/RecipeDetailClient";
+import { getRecipeDetailServer } from "@/utils/api/serverApi";
+import DetailClient from "@/components/recipe/detail/DetailClient";
 
 /**
  * 레시피 상세 페이지 (서버 컴포넌트)
@@ -32,7 +32,7 @@ export default async function RecipeDetailPage({
       }
 
   return (
-    <RecipeDetailClient 
+    <DetailClient 
       recipeId={recipeId}
       recipeNameParam={recipeNameParam}
       initialData={initialData}

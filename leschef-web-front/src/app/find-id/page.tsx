@@ -1,12 +1,13 @@
 "use client";
 
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
-import Top from "@/components/common/Top";
+import Top from "@/components/common/navigation/Top";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function FindIdPage() {
-  const router = useRouter();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -116,7 +117,11 @@ export default function FindIdPage() {
                   </p>
                   <div className="flex gap-3">
                     <button
-                      onClick={() => router.push("/login")}
+                      onClick={() => {
+                        if (typeof window !== 'undefined') {
+                          window.location.href = "/login";
+                        }
+                      }}
                       className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
                     >
                       로그인하기

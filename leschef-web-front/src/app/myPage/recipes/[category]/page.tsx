@@ -1,14 +1,15 @@
 "use client";
 
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
 import Image from "next/image";
 import useSWR from "swr";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { fetchMyRecipeList, deleteRecipe, type MyRecipeListResponse } from "@/utils/recipeApi";
+import { fetchMyRecipeList, deleteRecipe, type MyRecipeListResponse } from "@/utils/api/recipeApi";
 
-export default function MyRecipesCategoryPage() {
-  const router = useRouter();
+function MyRecipesCategoryPageContent() {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -24,7 +25,9 @@ export default function MyRecipesCategoryPage() {
   const handleEditClick = (e: React.MouseEvent, recipeId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    router.push(`/myPage/recipes/edit?id=${recipeId}`);
+    if (typeof window !== 'undefined') {
+      window.location.href = `/myPage/recipes/edit?id=${recipeId}`;
+    }
   };
 
   const handleDeleteClick = (e: React.MouseEvent, recipeId: string) => {
@@ -89,14 +92,14 @@ export default function MyRecipesCategoryPage() {
           key={card._id}
           href={`/recipe/detail?id=${card._id}&recipeName=${encodeURIComponent(card.recipeName)}`}
           className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
-          aria-label={`${card.title} 상세로 이동`}
+          aria-label={`${card.recipeName} 상세로 이동`}
         >
           <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gray-50">
             <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
               {card.recipeImg ? (
                 <Image
                   src={card.recipeImg}
-                  alt={card.title}
+                  alt={card.recipeName}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
                   className="object-cover"
@@ -140,13 +143,15 @@ export default function MyRecipesCategoryPage() {
           <div className="mt-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button
-                onClick={(e) => handleEditClick(e, card._id)}
+                onClick={(e) => card._id && handleEditClick(e, card._id)}
                 className="rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                disabled={!card._id}
               >
                 편집
               </button>
               <button
-                onClick={(e) => handleDeleteClick(e, card._id)}
+                onClick={(e) => card._id && handleDeleteClick(e, card._id)}
+                disabled={!card._id}
                 className="rounded-xl border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:border-red-300 hover:bg-red-50 transition"
               >
                 삭제
@@ -202,4 +207,8 @@ export default function MyRecipesCategoryPage() {
       )}
     </section>
   );
+}
+
+export default function MyRecipesCategoryPage() {
+  return <MyRecipesCategoryPageContent />;
 }

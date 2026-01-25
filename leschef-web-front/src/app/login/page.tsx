@@ -1,37 +1,49 @@
 "use client";
 
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
+
 import Link from "next/link";
-import Top from "@/components/common/Top";
+import Top from "@/components/common/navigation/Top";
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { login } from "@/utils/authApi";
-import { STORAGE_KEYS } from "@/constants/storageKeys";
+import { login } from "@/utils/api/auth";
+import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
 export default function LoginPage() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [saveSession, setSaveSession] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [fromMyPage, setFromMyPage] = useState(false);
+  const [returnTo, setReturnTo] = useState<string>("/");
 
+  // URL 파라미터에서 정보 가져오기
   useEffect(() => {
-    const fromParam = searchParams.get("from");
-    const backParam = searchParams.get("back");
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const fromParam = params.get("from");
+      const backParam = params.get("back");
 
-    const savedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
-    const savedFrom = sessionStorage.getItem(STORAGE_KEYS.FROM_SOURCE);
+      const savedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
+      const savedFrom = sessionStorage.getItem(STORAGE_KEYS.FROM_SOURCE);
 
-    if (fromParam === "mypage" || savedFrom === "mypage") {
-      setFromMyPage(true);
-      sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
+      let isFromMyPage = false;
+      if (fromParam === "mypage" || savedFrom === "mypage") {
+        isFromMyPage = true;
+        setFromMyPage(true);
+        sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
+      }
+
+      if (backParam) {
+        sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, backParam);
+        setReturnTo(backParam);
+      } else if (savedReturn) {
+        setReturnTo(savedReturn);
+      } else if (isFromMyPage) {
+        setReturnTo("/myPage");
+      }
     }
-
-    if (backParam) {
-      sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, backParam);
-    }
-  }, [searchParams]);
+  }, []);
 
   // 로그인 제출 함수 (나중에 버튼에 연결할 때 사용)
   const handleLogin = async () => {
@@ -49,13 +61,12 @@ export default function LoginPage() {
 
         setError(null);
 
-        const storedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
-        const target = fromMyPage ? "/myPage" : storedReturn || "/";
-
-        sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
-        sessionStorage.removeItem(STORAGE_KEYS.FROM_SOURCE);
-
-        router.push(target);
+        if (typeof window !== 'undefined') {
+          const target = fromMyPage ? "/myPage" : returnTo;
+          sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
+          sessionStorage.removeItem(STORAGE_KEYS.FROM_SOURCE);
+          window.location.href = target;
+        }
       } else {
         throw new Error("로그인에 실패했습니다.");
       }

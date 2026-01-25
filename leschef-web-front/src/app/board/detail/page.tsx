@@ -1,5 +1,5 @@
-import { getBoardDetailServer } from "@/utils/serverApi";
-import BoardDetailClient from "@/components/board/BoardDetailClient";
+import { getBoardDetailServer } from "@/utils/api/serverApi";
+import BoardDetail from "@/components/board/BoardDetail";
 
 /**
  * 게시판 상세 페이지 (서버 컴포넌트)
@@ -33,7 +33,7 @@ export default async function BoardDetailPage({
     }
 
   return (
-    <BoardDetailClient 
+    <BoardDetail 
       postId={postId}
       initialCategory={category}
       initialData={initialData}

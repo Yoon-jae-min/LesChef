@@ -1,19 +1,18 @@
 "use client";
 
-import Top from "@/components/common/Top";
-import TabNavigation from "@/components/common/TabNavigation";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { checkLoginStatus } from "@/utils/authUtils";
-import { STORAGE_KEYS } from "@/constants/storageKeys";
+import Top from "@/components/common/navigation/Top";
+import TabNavigation from "@/components/common/navigation/TabNavigation";
+import { usePathname } from "next/navigation";
+import { useEffect, useMemo, useState, Suspense } from "react";
+import { checkLoginStatus } from "@/utils/helpers/authUtils";
+import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
-export default function MyPageLayoutClient({
+function MyPageLayoutClientContent({
   children,
 }: {
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
 
@@ -53,16 +52,16 @@ export default function MyPageLayoutClient({
         const attemptedPath = window.location.pathname + window.location.search;
         sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
         sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, attemptedPath);
+        window.location.replace("/login?from=mypage");
       }
       setIsAuthorized(false);
       setIsCheckingAuth(false);
-      router.replace("/login?from=mypage");
       return;
     }
 
     setIsAuthorized(true);
     setIsCheckingAuth(false);
-  }, [router]);
+  }, []);
 
   const handleTabChange = (tab: string) => {
     const tabInfo = tabs.find((t) => t.label === tab);
@@ -92,6 +91,27 @@ export default function MyPageLayoutClient({
         </div>
       )}
     </div>
+  );
+}
+
+export default function MyPageLayoutClient({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <Suspense fallback={
+      <div className="relative min-h-screen bg-white">
+        <Top />
+        <main className="max-w-6xl mx-auto px-8 py-8">
+          <div className="flex items-center justify-center min-h-[400px]">
+            <p className="text-gray-400">Loading...</p>
+          </div>
+        </main>
+      </div>
+    }>
+      <MyPageLayoutClientContent>{children}</MyPageLayoutClientContent>
+    </Suspense>
   );
 }
 

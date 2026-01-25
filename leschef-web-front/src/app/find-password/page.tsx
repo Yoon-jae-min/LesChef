@@ -1,12 +1,13 @@
 "use client";
 
-import Link from "next/link";
-import Top from "@/components/common/Top";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+// 동적 렌더링 강제 (useSearchParams 이슈 방지)
+export const dynamic = 'force-dynamic';
 
-export default function FindPasswordPage() {
-  const router = useRouter();
+import Link from "next/link";
+import Top from "@/components/common/navigation/Top";
+import { useState, Suspense } from "react";
+
+function FindPasswordPageContent() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -120,7 +121,11 @@ export default function FindPasswordPage() {
                   </p>
                   <div className="flex gap-3">
                     <button
-                      onClick={() => router.push("/login")}
+                      onClick={() => {
+                        if (typeof window !== 'undefined') {
+                          window.location.href = "/login";
+                        }
+                      }}
                       className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
                     >
                       로그인하기
@@ -223,6 +228,20 @@ export default function FindPasswordPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function FindPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+        <div className="flex items-center justify-center min-h-screen">
+          <p className="text-gray-400">Loading...</p>
+        </div>
+      </div>
+    }>
+      <FindPasswordPageContent />
+    </Suspense>
   );
 }
 

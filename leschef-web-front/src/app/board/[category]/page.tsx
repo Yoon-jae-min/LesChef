@@ -1,5 +1,5 @@
-import { getBoardListServer } from "@/utils/serverApi";
-import BoardListClient from "@/components/board/BoardListClient";
+import { getBoardListServer } from "@/utils/api/serverApi";
+import BoardList from "@/components/board/BoardList";
 
 /**
  * 게시판 카테고리 페이지 (서버 컴포넌트)
@@ -29,7 +29,7 @@ export default async function BoardCategoryPage({
   }
 
   return (
-    <BoardListClient 
+    <BoardList 
       initialCategory={categoryKey}
       initialData={initialData}
       initialError={error}

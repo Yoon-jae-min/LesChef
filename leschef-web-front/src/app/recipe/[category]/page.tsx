@@ -1,6 +1,6 @@
-import { getRecipeListServer } from "@/utils/serverApi";
-import RecipeListClient from "@/components/recipe/RecipeListClient";
-import { RECIPE_CATEGORY_TO_API } from "@/constants/categories";
+import { getRecipeListServer } from "@/utils/api/serverApi";
+import List from "@/components/recipe/list/List";
+import { RECIPE_CATEGORY_TO_API } from "@/constants/navigation/categories";
 
 /**
  * 레시피 카테고리 페이지 (서버 컴포넌트)
@@ -34,7 +34,7 @@ export default async function CategoryPage({
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <RecipeListClient 
+      <List 
         initialCategory={categoryKey}
         initialData={initialData}
         initialError={error}
