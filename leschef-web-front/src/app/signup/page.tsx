@@ -17,6 +17,8 @@ export default function SignupPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [returnTo, setReturnTo] = useState<string>("/");
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // URL 파라미터에서 return 경로 가져오기
   useEffect(() => {
@@ -39,7 +41,7 @@ export default function SignupPage() {
     }
 
     if (password.length < 6) {
-      setError("비밀번호는 최소 6자 이상이어야 합니다.");
+      setError("비밀번호는 최소 8자 이상이어야 합니다.");
       return;
     }
 
@@ -57,8 +59,8 @@ export default function SignupPage() {
       });
 
       if (response.ok) {
-        const result = await response.text();
-        if (result === "ok") {
+        const result = await response.json();
+        if (result.message === "ok") {
           // 회원가입 성공 시 처리
           if (typeof window !== 'undefined') {
             sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
@@ -170,6 +172,7 @@ export default function SignupPage() {
                   placeholder="닉네임을 입력해주세요"
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
                   required
+                  autoComplete="username"
                 />
               </div>
 
@@ -177,30 +180,50 @@ export default function SignupPage() {
                 <label className="text-sm font-medium text-gray-700">
                   비밀번호
                 </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요 (최소 6자)"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-                  required
-                  minLength={6}
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="비밀번호를 입력해주세요 (최소 8자)"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    required
+                    minLength={6}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? "숨기기" : "보기"}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
                   비밀번호 확인
                 </label>
-                <input
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  placeholder="비밀번호를 다시 입력해주세요"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-                  required
-                  minLength={6}
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="비밀번호를 다시 입력해주세요"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    required
+                    minLength={6}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    {showConfirmPassword ? "숨기기" : "보기"}
+                  </button>
+                </div>
               </div>
 
               <div className="space-y-3">

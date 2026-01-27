@@ -26,6 +26,13 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
     }
   );
 
+  // 메모이제이션으로 불필요한 재계산 방지
+  // ⚠️ 중요: 모든 Hook은 early return 전에 호출해야 함
+  const places: StoragePlace[] = useMemo(() => data?.sectionList || [], [data?.sectionList]);
+  const totalFoods = useMemo(() => {
+    return places.reduce((sum, place) => sum + (place.foodList?.length || 0), 0);
+  }, [places]);
+
   if (!isLoggedIn) {
     return (
       <section className="py-8">
@@ -55,12 +62,6 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
       </section>
     );
   }
-
-  // 메모이제이션으로 불필요한 재계산 방지
-  const places: StoragePlace[] = useMemo(() => data?.sectionList || [], [data?.sectionList]);
-  const totalFoods = useMemo(() => {
-    return places.reduce((sum, place) => sum + (place.foodList?.length || 0), 0);
-  }, [places]);
 
   if (isLoading) {
     return (

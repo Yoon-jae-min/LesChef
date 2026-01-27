@@ -5,6 +5,7 @@ import TabNavigation from "@/components/common/navigation/TabNavigation";
 import { usePathname } from "next/navigation";
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { checkLoginStatus } from "@/utils/helpers/authUtils";
+import { checkAuth } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
 function MyPageLayoutClientContent({
@@ -45,22 +46,33 @@ function MyPageLayoutClientContent({
   }, [activeTab]);
 
   useEffect(() => {
-    const loggedIn = checkLoginStatus();
+    const verifyAuth = async () => {
+      // 1차: 서버 세션 기준으로 인증 상태 확인
+      const authResult = await checkAuth();
+      const serverLoggedIn = authResult.loggedIn === true;
 
-    if (!loggedIn) {
-      if (typeof window !== "undefined") {
-        const attemptedPath = window.location.pathname + window.location.search;
-        sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
-        sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, attemptedPath);
-        window.location.replace("/login?from=mypage");
+      // 2차: 클라이언트 플래그와 동기화
+      const clientLoggedIn = checkLoginStatus();
+
+      const loggedIn = serverLoggedIn && clientLoggedIn;
+
+      if (!loggedIn) {
+        if (typeof window !== "undefined") {
+          const attemptedPath = window.location.pathname + window.location.search;
+          sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");
+          sessionStorage.setItem(STORAGE_KEYS.RETURN_TO, attemptedPath);
+          window.location.replace("/login?from=mypage");
+        }
+        setIsAuthorized(false);
+        setIsCheckingAuth(false);
+        return;
       }
-      setIsAuthorized(false);
-      setIsCheckingAuth(false);
-      return;
-    }
 
-    setIsAuthorized(true);
-    setIsCheckingAuth(false);
+      setIsAuthorized(true);
+      setIsCheckingAuth(false);
+    };
+
+    void verifyAuth();
   }, []);
 
   const handleTabChange = (tab: string) => {

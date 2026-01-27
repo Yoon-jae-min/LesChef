@@ -26,6 +26,26 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
     }
   );
 
+  // 메모이제이션으로 불필요한 재계산 방지
+  // ⚠️ 중요: 모든 Hook은 early return 전에 호출해야 함
+  const alerts = data;
+  const hasAlerts = useMemo(() => {
+    return alerts && (alerts.expiredCount > 0 || alerts.urgentCount > 0 || alerts.warningCount > 0 || alerts.noticeCount > 0);
+  }, [alerts]);
+
+  // 우선순위 알림 목록 메모이제이션
+  const priorityAlerts = useMemo(() => {
+    if (!alerts || !hasAlerts) return [];
+    
+    // 우선순위: 만료 > 긴급 > 경고 > 알림
+    return [
+      ...(alerts.expired || []).map(item => ({ ...item, priority: 'expired' as const })),
+      ...(alerts.urgent || []).map(item => ({ ...item, priority: 'urgent' as const })),
+      ...(alerts.warning || []).map(item => ({ ...item, priority: 'warning' as const })),
+      ...(alerts.notice || []).map(item => ({ ...item, priority: 'notice' as const })),
+    ].slice(0, 6); // 최대 6개만 표시
+  }, [alerts, hasAlerts]);
+
   if (!isLoggedIn) {
     return (
       <section className="py-8">
@@ -55,25 +75,6 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
       </section>
     );
   }
-
-  // 메모이제이션으로 불필요한 재계산 방지
-  const alerts = data;
-  const hasAlerts = useMemo(() => {
-    return alerts && (alerts.expiredCount > 0 || alerts.urgentCount > 0 || alerts.warningCount > 0 || alerts.noticeCount > 0);
-  }, [alerts]);
-
-  // 우선순위 알림 목록 메모이제이션
-  const priorityAlerts = useMemo(() => {
-    if (!alerts || !hasAlerts) return [];
-    
-    // 우선순위: 만료 > 긴급 > 경고 > 알림
-    return [
-      ...(alerts.expired || []).map(item => ({ ...item, priority: 'expired' as const })),
-      ...(alerts.urgent || []).map(item => ({ ...item, priority: 'urgent' as const })),
-      ...(alerts.warning || []).map(item => ({ ...item, priority: 'warning' as const })),
-      ...(alerts.notice || []).map(item => ({ ...item, priority: 'notice' as const })),
-    ].slice(0, 6); // 최대 6개만 표시
-  }, [alerts, hasAlerts]);
 
   if (isLoading) {
     return (

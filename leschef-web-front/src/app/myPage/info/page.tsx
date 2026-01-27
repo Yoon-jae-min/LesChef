@@ -47,24 +47,86 @@ function InfoPageContent() {
         </div>
       )}
       <section className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-        <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gradient-to-br from-orange-100 via-rose-100 to-yellow-100 px-6 py-8">
-          <div className="flex items-center gap-4">
-            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-white/70">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" className="h-10 w-10 text-gray-500">
-                <circle cx="12" cy="8" r="4" />
-                <path d="M4 20c1.5-3 4.5-5 8-5s6.5 2 8 5" />
-              </svg>
+        {/* 프로필 헤더 - 모바일: 세로 배치, 데스크톱: 좌우 배치 + 오른쪽에 아이콘 버튼 */}
+        <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gradient-to-br from-orange-100 via-rose-100 to-yellow-100 px-6 py-8 lg:px-8 lg:py-10">
+          <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
+            {/* 프로필 정보 영역 */}
+            <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-center lg:gap-6 lg:flex-1">
+              <div className="flex h-20 w-20 lg:h-24 lg:w-24 items-center justify-center rounded-2xl bg-white/70 flex-shrink-0">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.3" className="h-10 w-10 lg:h-12 lg:w-12 text-gray-500">
+                  <circle cx="12" cy="8" r="4" />
+                  <path d="M4 20c1.5-3 4.5-5 8-5s6.5 2 8 5" />
+                </svg>
+              </div>
+              <div className="text-center lg:text-left">
+                <p className="text-xs uppercase tracking-[0.4em] text-gray-600 lg:text-sm">Profile</p>
+                <p className="text-2xl lg:text-3xl font-semibold text-gray-900 mt-1">{nickname}</p>
+                <p className="text-sm lg:text-base text-gray-700 mt-1">나의 LesChef 요리 여정</p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.4em] text-gray-600">Profile</p>
-              <p className="text-2xl font-semibold text-gray-900">{nickname}</p>
-              <p className="text-sm text-gray-700">나의 LesChef 요리 여정</p>
+
+            {/* 데스크톱: 아이콘 버튼들 (오른쪽 배치) */}
+            <div className="hidden lg:flex items-center gap-3 relative z-10">
+              {/* 정보확인 */}
+              <button
+                className="flex flex-col items-center justify-center rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:shadow-md"
+                title="정보확인"
+                aria-label="정보확인"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 mb-1">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+                <span className="text-xs font-medium">정보확인</span>
+              </button>
+
+              {/* 정보변경 */}
+              <button
+                className="flex flex-col items-center justify-center rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:shadow-md"
+                title="정보변경"
+                aria-label="정보변경"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 mb-1">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                <span className="text-xs font-medium">정보변경</span>
+              </button>
+
+              {/* 비밀번호 변경 */}
+              <button
+                className="flex flex-col items-center justify-center rounded-xl border-2 border-gray-200 bg-white px-4 py-3 text-gray-600 transition-all duration-200 hover:border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:shadow-md"
+                title="비밀번호 변경"
+                aria-label="비밀번호 변경"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 mb-1">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+                <span className="text-xs font-medium">비밀번호 변경</span>
+              </button>
+
+              {/* 회원 탈퇴 */}
+              <button
+                onClick={() => setShowDeleteConfirm(true)}
+                className="flex flex-col items-center justify-center rounded-xl border-2 border-red-200 bg-white px-4 py-3 text-red-600 transition-all duration-200 hover:border-red-300 hover:bg-red-50 hover:text-red-700 hover:shadow-md"
+                title="회원 탈퇴"
+                aria-label="회원 탈퇴"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5 mb-1">
+                  <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                  <circle cx="9" cy="7" r="4" />
+                  <line x1="18" y1="6" x2="22" y2="10" strokeWidth="2.5" />
+                  <line x1="22" y1="6" x2="18" y2="10" strokeWidth="2.5" />
+                </svg>
+                <span className="text-xs font-medium">회원 탈퇴</span>
+              </button>
             </div>
           </div>
-          <div className="absolute inset-0 rounded-[24px] border border-gray-200/10" />
         </div>
 
-        <div className="mt-6 space-y-3">
+        {/* 모바일: 버튼 영역 (세로 배치) */}
+        <div className="mt-6 space-y-3 lg:hidden">
           {["정보확인", "정보변경", "비밀번호 변경"].map((label) => (
             <button
               key={label}

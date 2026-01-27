@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null);
   const [fromMyPage, setFromMyPage] = useState(false);
   const [returnTo, setReturnTo] = useState<string>("/");
+  const [showPassword, setShowPassword] = useState(false);
 
   // URL 파라미터에서 정보 가져오기
   useEffect(() => {
@@ -45,7 +46,7 @@ export default function LoginPage() {
     }
   }, []);
 
-  // 로그인 제출 함수 (나중에 버튼에 연결할 때 사용)
+  // 로그인 제출 함수
   const handleLogin = async () => {
     setError(null);
 
@@ -58,11 +59,27 @@ export default function LoginPage() {
       if (result.text === "login Success") {
         // 로그인 성공 시 처리
         // 세션 쿠키가 자동으로 설정되므로 별도로 저장할 필요 없음
-
         setError(null);
 
         if (typeof window !== 'undefined') {
           const target = fromMyPage ? "/myPage" : returnTo;
+
+          // 프론트 로그인 상태 플래그 및 사용자 정보 저장
+          try {
+            localStorage.setItem(STORAGE_KEYS.IS_LOGGED_IN, "true");
+            localStorage.setItem(
+              STORAGE_KEYS.CURRENT_USER,
+              JSON.stringify({
+                id: result.id,
+                name: result.name,
+                nickName: result.nickName,
+                tel: result.tel,
+              }),
+            );
+          } catch {
+            // 스토리지 사용 불가한 환경에서는 무시
+          }
+
           sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
           sessionStorage.removeItem(STORAGE_KEYS.FROM_SOURCE);
           window.location.href = target;
@@ -154,6 +171,7 @@ export default function LoginPage() {
                   placeholder="you@example.com"
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
                   required
+                  autoComplete="username"
                 />
               </div>
 
@@ -161,14 +179,24 @@ export default function LoginPage() {
                 <label className="text-sm font-medium text-gray-700">
                   비밀번호
                 </label>
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="비밀번호를 입력해주세요"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-                  required
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="비밀번호를 입력해주세요"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    required
+                    autoComplete="current-password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword((prev) => !prev)}
+                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? "숨기기" : "보기"}
+                  </button>
+                </div>
               </div>
 
               <div className="flex items-center justify-between text-sm">

@@ -3,13 +3,16 @@
 import React, { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSWRConfig } from "swr";
 import { checkLoginStatus, clearAuthStorage } from "@/utils/helpers/authUtils";
+import { logout } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { NAVIGATION_ITEMS, getActiveMenuId } from "@/constants/navigation/navigation";
 import { StorageIcon, RecipeIcon, MyPageIcon, BoardIcon } from "./NavigationIcons";
 
 function Top(): React.JSX.Element {
     const pathname = usePathname();
+    const { mutate } = useSWRConfig();
     const [isSearchExpanded, setIsSearchExpanded] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -35,17 +38,30 @@ function Top(): React.JSX.Element {
     }, [pathname]);
 
     // 로그아웃 핸들러 - useCallback으로 메모이제이션
-    const handleLogout = useCallback(() => {
+    const handleLogout = useCallback(async () => {
         const confirmed = window.confirm("로그아웃 하시겠어요?");
         if (!confirmed) {
             return;
         }
+        
+        try {
+            // 백엔드 로그아웃 API 호출 (세션 삭제)
+            await logout();
+        } catch (error) {
+            // 로그아웃 API 실패해도 프론트엔드 정리는 진행
+            console.error("로그아웃 API 호출 실패:", error);
+        }
+        
+        // 프론트엔드 정리
         clearAuthStorage();
         setIsLoggedIn(false);
+        // SWR 캐시 무효화하여 로그인 상태 갱신
+        mutate("auth_status", { loggedIn: false }, false);
+        
         if (typeof window !== 'undefined') {
             window.location.href = "/login";
         }
-    }, []);
+    }, [mutate]);
 
     // 로그인 핸들러 - useCallback으로 메모이제이션
     const handleLogin = useCallback(() => {

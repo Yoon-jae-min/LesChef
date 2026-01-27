@@ -96,10 +96,10 @@ app.use(session({
     saveUninitialized: false,
     name: 'sessionId', // 기본 'connect.sid' 대신 커스텀 이름 사용
     cookie: {
-        secure: !!httpsOptions, // HTTPS가 활성화된 경우에만 true
+        secure: false, // 개발 환경: HTTP 사용 시 false (HTTPS 사용 시 true로 변경 필요)
         maxAge: SESSION_MAX_AGE_MS, // 1시간
         httpOnly: true, // XSS 방지
-        sameSite: httpsOptions ? 'none' : 'lax', // HTTPS일 때만 'none', HTTP일 때는 'lax'
+        sameSite: 'lax', // 개발 환경: HTTP 사용 시 'lax' (HTTPS 사용 시 'none'으로 변경 필요)
         signed: true, // 쿠키 서명
         domain: process.env.COOKIE_DOMAIN || undefined // 도메인 제한 (필요시)
     },
