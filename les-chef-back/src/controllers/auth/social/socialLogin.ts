@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import User from "../../../models/user/userModel";
-import { getKakaoToken } from "../../../utils/external/kakao";
+import { getKakaoToken, getKakaoUserInfo } from "../../../utils/external/kakao";
 import logger from "../../../utils/system/logger";
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -39,22 +39,76 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                 return;
             }
 
-            const kakaoUserId = "kakao_" + decodedIdToken.sub.toString();
-            const user = await User.findOne({id: kakaoUserId}).lean();
+            // 카카오 사용자 정보 가져오기 (이메일 포함)
+            let kakaoEmail: string | null = null;
+            let kakaoNickname: string | null = null;
+            
+            if (data.access_token) {
+                try {
+                    const userInfo = await getKakaoUserInfo(data.access_token);
+                    kakaoEmail = userInfo.kakao_account?.email || null;
+                    kakaoNickname = userInfo.kakao_account?.profile?.nickname 
+                        || userInfo.properties?.nickname 
+                        || decodedIdToken.nickname 
+                        || decodedIdToken.nickName 
+                        || "카카오사용자";
+                } catch (error) {
+                    if (isDev) {
+                        logger.warn("카카오 사용자 정보 가져오기 실패 (이메일 없이 진행)", { error });
+                    }
+                    kakaoNickname = decodedIdToken.nickname || decodedIdToken.nickName || "카카오사용자";
+                }
+            } else {
+                kakaoNickname = decodedIdToken.nickname || decodedIdToken.nickName || "카카오사용자";
+            }
 
-            if(!user){
-                const secure_pwd = await bcrypt.hash("kakao", 10);
-                await User.create({
-                    id: kakaoUserId,
-                    pwd: secure_pwd,
-                    nickName: decodedIdToken.nickname || decodedIdToken.nickName || "카카오사용자",
-                    userType: "kakao"
-                });
+            // 이메일 기반 계정 통합 로직
+            let user = null;
+            let finalUserId: string;
+
+            // 1. 이메일이 있고, 해당 이메일로 가입된 계정이 있으면 연결
+            if (kakaoEmail) {
+                const existingUserByEmail = await User.findOne({ id: kakaoEmail }).lean();
+                if (existingUserByEmail) {
+                    // 기존 계정과 연결 (이메일 기반 통합)
+                    user = existingUserByEmail;
+                    finalUserId = existingUserByEmail.id;
+                } else {
+                    // 2. 이메일이 있지만 계정이 없으면 이메일을 ID로 사용하여 새 계정 생성
+                    const secure_pwd = await bcrypt.hash("kakao", 10);
+                    await User.create({
+                        id: kakaoEmail,
+                        pwd: secure_pwd,
+                        nickName: kakaoNickname,
+                        userType: "kakao"
+                    });
+                    finalUserId = kakaoEmail;
+                }
+            } else {
+                // 3. 이메일이 없으면 기존 방식대로 kakao_123456 형식 사용
+                const kakaoUserId = "kakao_" + decodedIdToken.sub.toString();
+                user = await User.findOne({id: kakaoUserId}).lean();
+
+                if(!user){
+                    const secure_pwd = await bcrypt.hash("kakao", 10);
+                    await User.create({
+                        id: kakaoUserId,
+                        pwd: secure_pwd,
+                        nickName: kakaoNickname,
+                        userType: "kakao"
+                    });
+                }
+                finalUserId = user ? user.id : kakaoUserId;
+            }
+
+            // 최종 사용자 정보 가져오기
+            if (!user) {
+                user = await User.findOne({id: finalUserId}).lean();
             }
 
             req.session.user = {
-                id: user ? user.id : kakaoUserId,
-                nickName: user ? user.nickName : (decodedIdToken.nickname || decodedIdToken.nickName || "카카오사용자"),
+                id: finalUserId,
+                nickName: user ? user.nickName : kakaoNickname,
                 userType: "kakao",
             };
 
@@ -66,11 +120,14 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                     res.status(500).send("세션 저장 중 오류가 발생했습니다.");
                     return;
                 }
-                const userId = user ? user.id : kakaoUserId;
+                const userId = finalUserId;
                 const name = user ? user.name : "user";
-                const nickName = user ? user.nickName : (decodedIdToken.nickname || decodedIdToken.nickName || "카카오사용자");
+                const nickName = user ? user.nickName : kakaoNickname;
                 const tel = user ? user.tel : "";
-                res.redirect(`${process.env.SERVER_ADDRESS}/?userId=${userId}&name=${name}&nickName=${nickName}&tel=${tel}`);
+
+                // 프론트엔드 주소로 리다이렉트 (없으면 SERVER_ADDRESS fallback)
+                const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+                res.redirect(`${redirectBase}/?userId=${userId}&name=${name}&nickName=${nickName}&tel=${tel}`);
             });
         }else{
             res.status(400).send("카카오 인증 코드가 없습니다.");

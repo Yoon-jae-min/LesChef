@@ -11,6 +11,10 @@ import {
     postJoin,
     delUser,
     kakaoLogin,
+    googleLogin,
+    naverLogin,
+    sendVerificationCodeController,
+    verifyEmailCodeController,
 } from "../../controllers/auth";
 
 const router = express.Router();
@@ -26,7 +30,11 @@ router
     .post("/login", postLogin)
     .post("/join", postJoin)
     .delete("/delete", delUser)
-    .get("/kakaoLogin", kakaoLogin);
+    .get("/kakaoLogin", kakaoLogin)
+    .get("/googleLogin", googleLogin)
+    .get("/naverLogin", naverLogin)
+    .post("/sendVerificationCode", sendVerificationCodeController)
+    .post("/verifyEmailCode", verifyEmailCodeController);
 
 export default router;
 

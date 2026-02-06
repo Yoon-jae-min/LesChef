@@ -26,6 +26,7 @@ const productionOnlyEnvVars: string[] = [
 const recommendedEnvVars: string[] = [
     'SERVER_URL',
     'SERVER_ADDRESS',
+    'FRONTEND_URL',
     'KAMIS_API_BASE_URL',
     'KAMIS_CERT_KEY',
     'KAMIS_CERT_ID',

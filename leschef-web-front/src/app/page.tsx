@@ -1,5 +1,6 @@
 import { getIngredientPricesServer } from "@/utils/api/serverApi";
 import HomeClient from "@/components/home/HomeClient";
+import { Suspense } from "react";
 
 /**
  * 메인 페이지 (서버 컴포넌트)
@@ -21,9 +22,11 @@ export default async function Home() {
   }
 
   return (
-    <HomeClient 
-      priceInitialData={priceInitialData}
-      priceInitialError={priceError}
-    />
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
+      <HomeClient 
+        priceInitialData={priceInitialData}
+        priceInitialError={priceError}
+      />
+    </Suspense>
   );
 }

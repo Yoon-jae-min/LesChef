@@ -16,6 +16,8 @@ export type {
 export {
   signup,
   checkIdDuplicate,
+  sendVerificationCode,
+  verifyEmailCode,
 } from "./signup";
 
 // 로그인/로그아웃 함수들

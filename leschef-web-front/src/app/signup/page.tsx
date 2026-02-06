@@ -6,8 +6,9 @@ export const dynamic = 'force-dynamic';
 import Link from "next/link";
 import Top from "@/components/common/navigation/Top";
 import { useState, useEffect } from "react";
-import { signup } from "@/utils/api/auth";
+import { signup, sendVerificationCode, verifyEmailCode } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
+import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 
 export default function SignupPage() {
   const [email, setEmail] = useState("");
@@ -19,6 +20,14 @@ export default function SignupPage() {
   const [returnTo, setReturnTo] = useState<string>("/");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  // 이메일 인증 관련 상태
+  const [verificationCode, setVerificationCode] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const [verificationError, setVerificationError] = useState<string | null>(null);
 
   // URL 파라미터에서 return 경로 가져오기
   useEffect(() => {
@@ -30,9 +39,75 @@ export default function SignupPage() {
     }
   }, []);
 
+  // 타이머 카운트다운
+  useEffect(() => {
+    if (countdown > 0) {
+      const timer = setTimeout(() => setCountdown(countdown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [countdown]);
+
+  // 이메일 인증 코드 발송
+  const handleSendVerificationCode = async () => {
+    if (!email) {
+      setVerificationError("이메일을 입력해주세요.");
+      return;
+    }
+
+    // 이메일 형식 검증
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setVerificationError("올바른 이메일 형식이 아닙니다.");
+      return;
+    }
+
+    setIsSendingCode(true);
+    setVerificationError(null);
+    setIsEmailVerified(false);
+    setVerificationCode("");
+
+    try {
+      await sendVerificationCode(email);
+      setCountdown(600); // 10분 (600초)
+      alert("인증 코드가 발송되었습니다. 이메일을 확인해주세요.");
+    } catch (error) {
+      setVerificationError(error instanceof Error ? error.message : "인증 코드 발송에 실패했습니다.");
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
+
+  // 이메일 인증 코드 검증
+  const handleVerifyCode = async () => {
+    if (!email || !verificationCode) {
+      setVerificationError("인증 코드를 입력해주세요.");
+      return;
+    }
+
+    setIsVerifyingCode(true);
+    setVerificationError(null);
+
+    try {
+      await verifyEmailCode(email, verificationCode);
+      setIsEmailVerified(true);
+      setCountdown(0);
+      alert("이메일 인증이 완료되었습니다.");
+    } catch (error) {
+      setVerificationError(error instanceof Error ? error.message : "인증 코드가 올바르지 않습니다.");
+    } finally {
+      setIsVerifyingCode(false);
+    }
+  };
+
   // 회원가입 제출 함수
   const handleSignup = async () => {
     setError(null);
+
+    // 이메일 인증 확인
+    if (!isEmailVerified) {
+      setError("이메일 인증을 완료해주세요.");
+      return;
+    }
 
     // 유효성 검사
     if (password !== confirmPassword) {
@@ -151,15 +226,78 @@ export default function SignupPage() {
                 <label className="text-sm font-medium text-gray-700">
                   이메일
                 </label>
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-                  required
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                      setIsEmailVerified(false);
+                      setVerificationCode("");
+                      setVerificationError(null);
+                    }}
+                    placeholder="you@example.com"
+                    className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    required
+                    disabled={isEmailVerified}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleSendVerificationCode}
+                    disabled={isSendingCode || countdown > 0 || isEmailVerified}
+                    className="px-4 py-3 rounded-2xl bg-gray-800 text-white text-sm font-medium hover:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap"
+                  >
+                    {isSendingCode
+                      ? "발송 중..."
+                      : countdown > 0
+                      ? `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`
+                      : isEmailVerified
+                      ? "인증 완료"
+                      : "인증 코드 발송"}
+                  </button>
+                </div>
+                {isEmailVerified && (
+                  <p className="text-xs text-green-600">✓ 이메일 인증이 완료되었습니다.</p>
+                )}
               </div>
+
+              {/* 인증 코드 입력 */}
+              {!isEmailVerified && countdown > 0 && (
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-700">
+                    인증 코드
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={verificationCode}
+                      onChange={(e) => {
+                        setVerificationCode(e.target.value.replace(/\D/g, "").slice(0, 6));
+                        setVerificationError(null);
+                      }}
+                      placeholder="6자리 인증 코드"
+                      className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                      maxLength={6}
+                    />
+                    <button
+                      type="button"
+                      onClick={handleVerifyCode}
+                      disabled={isVerifyingCode || verificationCode.length !== 6}
+                      className="px-4 py-3 rounded-2xl bg-black text-white text-sm font-medium hover:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap"
+                    >
+                      {isVerifyingCode ? "확인 중..." : "인증 확인"}
+                    </button>
+                  </div>
+                  {verificationError && (
+                    <p className="text-xs text-red-500">{verificationError}</p>
+                  )}
+                  {countdown > 0 && (
+                    <p className="text-xs text-gray-500">
+                      인증 코드가 만료되기 전까지 {Math.floor(countdown / 60)}분 {countdown % 60}초 남았습니다.
+                    </p>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700">
@@ -273,15 +411,53 @@ export default function SignupPage() {
             </div>
 
             <div className="mt-5 grid grid-cols-3 gap-3">
-              {["카카오", "네이버", "구글"].map((provider) => (
-                <button
-                  key={provider}
-                  type="button"
-                  className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
-                >
-                  {provider}
-                </button>
-              ))}
+              {/* 카카오 로그인 */}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const kakaoUrl = getKakaoLoginUrl();
+                    window.location.href = kakaoUrl;
+                  } catch (error) {
+                    alert("카카오 로그인을 시작할 수 없습니다.");
+                  }
+                }}
+                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+              >
+                카카오
+              </button>
+              
+              {/* 네이버 로그인 */}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const naverUrl = getNaverLoginUrl();
+                    window.location.href = naverUrl;
+                  } catch (error) {
+                    alert("네이버 로그인을 시작할 수 없습니다.");
+                  }
+                }}
+                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+              >
+                네이버
+              </button>
+              
+              {/* 구글 로그인 */}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const googleUrl = getGoogleLoginUrl();
+                    window.location.href = googleUrl;
+                  } catch (error) {
+                    alert("구글 로그인을 시작할 수 없습니다.");
+                  }
+                }}
+                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+              >
+                구글
+              </button>
             </div>
 
             <div className="mt-8 rounded-2xl bg-gray-50 px-5 py-4 text-sm text-gray-600">

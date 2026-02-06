@@ -65,6 +65,53 @@ export async function getKakaoToken(code: string): Promise<KakaoTokenResponse> {
 }
 
 /**
+ * 카카오 사용자 정보 가져오기
+ * @param accessToken - 카카오 액세스 토큰
+ * @returns 사용자 정보 (이메일 포함)
+ */
+export async function getKakaoUserInfo(accessToken: string): Promise<{
+    id: number;
+    kakao_account?: {
+        email?: string;
+        email_needs_agreement?: boolean;
+        has_email?: boolean;
+        is_email_valid?: boolean;
+        is_email_verified?: boolean;
+        profile?: {
+            nickname?: string;
+            profile_image_url?: string;
+        };
+    };
+    properties?: {
+        nickname?: string;
+        profile_image?: string;
+    };
+}> {
+    const KAKAO_API_URL = process.env.KAKAO_API_URL || 'https://kapi.kakao.com';
+    
+    // 사용자 정보 API는 JSON 형식이므로 별도로 처리
+    try {
+        const response = await fetch(`${KAKAO_API_URL}/v2/user/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text().catch(() => 'Unknown error');
+            throw new Error(`카카오 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`);
+        }
+
+        return await response.json();
+    } catch (error) {
+        logger.error('카카오 사용자 정보 API 호출 오류', { error });
+        throw error;
+    }
+}
+
+/**
  * 카카오 사용자 연동 해제
  * @param userId - 카카오 사용자 ID (kakao_123456 형식)
  * @returns Promise<void>

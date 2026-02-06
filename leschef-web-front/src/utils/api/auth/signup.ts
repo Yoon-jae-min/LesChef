@@ -87,3 +87,86 @@ export const checkIdDuplicate = async (id: string): Promise<string> => {
   }
 };
 
+/**
+ * 이메일 인증 코드 발송
+ * @param email 이메일 주소
+ * @returns Promise<Response>
+ */
+export const sendVerificationCode = async (email: string): Promise<Response> => {
+  if (!email) {
+    throw new Error("이메일을 입력해주세요.");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/sendVerificationCode`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `인증 코드 발송 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("인증 코드 발송 중 네트워크 오류가 발생했습니다.");
+  }
+};
+
+/**
+ * 이메일 인증 코드 검증
+ * @param email 이메일 주소
+ * @param code 인증 코드
+ * @returns Promise<Response>
+ */
+export const verifyEmailCode = async (email: string, code: string): Promise<Response> => {
+  if (!email || !code) {
+    throw new Error("이메일과 인증 코드를 입력해주세요.");
+  }
+
+  try {
+    const response = await fetch(`${API_BASE_URL}/verifyEmailCode`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, code }),
+      credentials: "include",
+    });
+
+    if (!response.ok) {
+      let errorMessage = `인증 코드 검증 실패: ${response.status}`;
+      try {
+        const errorData = await response.json();
+        errorMessage = errorData.message || errorData.error || errorMessage;
+      } catch {
+        const text = await response.text();
+        errorMessage = text || errorMessage;
+      }
+      throw new Error(errorMessage);
+    }
+
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("인증 코드 검증 중 네트워크 오류가 발생했습니다.");
+  }
+};
+

@@ -8,6 +8,7 @@ import Top from "@/components/common/navigation/Top";
 import { useEffect, useState } from "react";
 import { login } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
+import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -240,15 +241,65 @@ export default function LoginPage() {
             </div>
 
             <div className="mt-5 grid grid-cols-3 gap-3">
-              {["카카오", "네이버", "구글"].map((provider) => (
-                <button
-                  key={provider}
-                  type="button"
-                  className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
-                >
-                  {provider}
-                </button>
-              ))}
+              {/* 카카오 로그인 */}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const kakaoUrl = getKakaoLoginUrl();
+                    window.location.href = kakaoUrl;
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      setError(error.message);
+                    } else {
+                      setError("카카오 로그인을 시작할 수 없습니다.");
+                    }
+                  }
+                }}
+                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+              >
+                카카오
+              </button>
+              
+              {/* 네이버 로그인 */}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const naverUrl = getNaverLoginUrl();
+                    window.location.href = naverUrl;
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      setError(error.message);
+                    } else {
+                      setError("네이버 로그인을 시작할 수 없습니다.");
+                    }
+                  }
+                }}
+                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+              >
+                네이버
+              </button>
+              
+              {/* 구글 로그인 */}
+              <button
+                type="button"
+                onClick={() => {
+                  try {
+                    const googleUrl = getGoogleLoginUrl();
+                    window.location.href = googleUrl;
+                  } catch (error) {
+                    if (error instanceof Error) {
+                      setError(error.message);
+                    } else {
+                      setError("구글 로그인을 시작할 수 없습니다.");
+                    }
+                  }
+                }}
+                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+              >
+                구글
+              </button>
             </div>
 
             <div className="mt-8 rounded-2xl bg-gray-50 px-5 py-4 text-sm text-gray-600">
