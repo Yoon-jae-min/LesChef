@@ -173,6 +173,9 @@ export const getInfo = asyncHandler(async(req: Request, res: Response<ApiSuccess
             name: userData.name,
             tel: userData.tel,
             checkAdmin: userData.checkAdmin,
+            kakaoLinked: !!userData.kakaoId,
+            googleLinked: !!userData.googleId,
+            naverLinked: !!userData.naverId,
             text: true as unknown as false
         });
     } catch (error) {

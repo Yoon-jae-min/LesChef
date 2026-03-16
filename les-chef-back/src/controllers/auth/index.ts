@@ -8,3 +8,4 @@ export { kakaoLogin } from "./social/socialLogin";
 export { googleLogin } from "./social/googleLogin";
 export { naverLogin } from "./social/naverLogin";
 export { sendVerificationCodeController, verifyEmailCodeController } from "./email/emailVerification";
+export { unlinkSocialAccount } from "./social/unlink";

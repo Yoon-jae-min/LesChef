@@ -22,7 +22,7 @@ interface DecodedIdToken {
 }
 
 export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
-    const {code} = req.query;
+    const {code, state} = req.query;
 
     try{
         if(code && typeof code === 'string'){
@@ -38,6 +38,8 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                 res.status(400).send("카카오 로그인 실패: 토큰 디코딩 오류");
                 return;
             }
+
+            const kakaoUniqueId = decodedIdToken.sub.toString();
 
             // 카카오 사용자 정보 가져오기 (이메일 포함)
             let kakaoEmail: string | null = null;
@@ -62,10 +64,42 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                 kakaoNickname = decodedIdToken.nickname || decodedIdToken.nickName || "카카오사용자";
             }
 
-            // 이메일 기반 계정 통합 로직
+            // [1] 계정 연동 모드: 로그인된 사용자의 계정에 카카오 계정 연결
+            if (req.session?.user?.id && state === 'link') {
+                const baseUser = await User.findOne({ id: req.session.user.id });
+                if (!baseUser) {
+                    res.status(404).send("기존 사용자를 찾을 수 없습니다.");
+                    return;
+                }
+
+                // 다른 계정에 이미 연결된 카카오 ID 인지 확인
+                const duplicated = await User.findOne({
+                    kakaoId: kakaoUniqueId,
+                    id: { $ne: baseUser.id }
+                }).lean();
+
+                if (duplicated) {
+                    res.status(400).send("이미 다른 계정에 연동된 카카오 계정입니다.");
+                    return;
+                }
+
+                baseUser.kakaoId = kakaoUniqueId;
+                await baseUser.save();
+
+                const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+                res.redirect(`${redirectBase}/myPage/info?link=kakao&status=success`);
+                return;
+            }
+
+            // [2] 일반 카카오 로그인 – 이메일/카카오 ID 기반 계정 통합 로직
             let user = null;
             let finalUserId: string;
 
+            // 0. kakaoId로 먼저 조회 (명시적으로 연동된 계정 우선)
+            user = await User.findOne({ kakaoId: kakaoUniqueId }).lean();
+            if (user) {
+                finalUserId = user.id;
+            } else {
             // 1. 이메일이 있고, 해당 이메일로 가입된 계정이 있으면 연결
             if (kakaoEmail) {
                 const existingUserByEmail = await User.findOne({ id: kakaoEmail }).lean();
@@ -73,6 +107,8 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                     // 기존 계정과 연결 (이메일 기반 통합)
                     user = existingUserByEmail;
                     finalUserId = existingUserByEmail.id;
+                    // 이후 로그인에도 사용될 수 있도록 kakaoId 저장
+                    await User.updateOne({ id: existingUserByEmail.id }, { $set: { kakaoId: kakaoUniqueId } });
                 } else {
                     // 2. 이메일이 있지만 계정이 없으면 이메일을 ID로 사용하여 새 계정 생성
                     const secure_pwd = await bcrypt.hash("kakao", 10);
@@ -80,13 +116,14 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                         id: kakaoEmail,
                         pwd: secure_pwd,
                         nickName: kakaoNickname,
-                        userType: "kakao"
+                        userType: "kakao",
+                        kakaoId: kakaoUniqueId
                     });
                     finalUserId = kakaoEmail;
                 }
             } else {
                 // 3. 이메일이 없으면 기존 방식대로 kakao_123456 형식 사용
-                const kakaoUserId = "kakao_" + decodedIdToken.sub.toString();
+                const kakaoUserId = "kakao_" + kakaoUniqueId;
                 user = await User.findOne({id: kakaoUserId}).lean();
 
                 if(!user){
@@ -95,11 +132,12 @@ export const kakaoLogin = asyncHandler(async(req: Request, res: Response) => {
                         id: kakaoUserId,
                         pwd: secure_pwd,
                         nickName: kakaoNickname,
-                        userType: "kakao"
+                        userType: "kakao",
+                        kakaoId: kakaoUniqueId
                     });
                 }
                 finalUserId = user ? user.id : kakaoUserId;
-            }
+            }}
 
             // 최종 사용자 정보 가져오기
             if (!user) {

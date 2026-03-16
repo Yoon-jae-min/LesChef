@@ -13,6 +13,7 @@ import {
     kakaoLogin,
     googleLogin,
     naverLogin,
+    unlinkSocialAccount,
     sendVerificationCodeController,
     verifyEmailCodeController,
 } from "../../controllers/auth";
@@ -30,6 +31,7 @@ router
     .post("/login", postLogin)
     .post("/join", postJoin)
     .delete("/delete", delUser)
+    .post("/unlink/:provider", unlinkSocialAccount)
     .get("/kakaoLogin", kakaoLogin)
     .get("/googleLogin", googleLogin)
     .get("/naverLogin", naverLogin)

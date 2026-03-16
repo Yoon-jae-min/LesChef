@@ -10,6 +10,8 @@ import { signup, sendVerificationCode, verifyEmailCode } from "@/utils/api/auth"
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 
+const isDev = process.env.NODE_ENV !== "production";
+
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -49,6 +51,11 @@ export default function SignupPage() {
 
   // 이메일 인증 코드 발송
   const handleSendVerificationCode = async () => {
+    // 개발 모드에서는 실제 발송 기능 비활성화
+    if (isDev) {
+      setVerificationError("개발 중에는 이메일 인증 없이 회원가입 가능합니다.");
+      return;
+    }
     if (!email) {
       setVerificationError("이메일을 입력해주세요.");
       return;
@@ -104,7 +111,7 @@ export default function SignupPage() {
     setError(null);
 
     // 이메일 인증 확인
-    if (!isEmailVerified) {
+    if (!isDev && !isEmailVerified) {
       setError("이메일 인증을 완료해주세요.");
       return;
     }
@@ -244,10 +251,12 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={handleSendVerificationCode}
-                    disabled={isSendingCode || countdown > 0 || isEmailVerified}
+                    disabled={isDev || isSendingCode || countdown > 0 || isEmailVerified}
                     className="px-4 py-3 rounded-2xl bg-gray-800 text-white text-sm font-medium hover:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap"
                   >
-                    {isSendingCode
+                    {isDev
+                      ? "개발 중 비활성"
+                      : isSendingCode
                       ? "발송 중..."
                       : countdown > 0
                       ? `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`

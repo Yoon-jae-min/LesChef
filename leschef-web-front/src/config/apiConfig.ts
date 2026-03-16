@@ -34,7 +34,7 @@ export const KAKAO_CONFIG = {
  * 카카오 로그인 URL 생성
  * @returns 카카오 OAuth 인증 URL
  */
-export const getKakaoLoginUrl = (): string => {
+export const getKakaoLoginUrl = (mode: 'login' | 'link' = 'login'): string => {
   if (!KAKAO_CONFIG.REST_API_KEY) {
     throw new Error('카카오 REST API 키가 설정되지 않았습니다.');
   }
@@ -43,6 +43,7 @@ export const getKakaoLoginUrl = (): string => {
     client_id: KAKAO_CONFIG.REST_API_KEY,
     redirect_uri: KAKAO_CONFIG.REDIRECT_URI,
     response_type: 'code',
+    state: mode === 'link' ? 'link' : 'login',
   });
   
   return `${KAKAO_CONFIG.AUTH_URL}?${params.toString()}`;
@@ -62,7 +63,7 @@ export const GOOGLE_CONFIG = {
  * 구글 로그인 URL 생성
  * @returns 구글 OAuth 인증 URL
  */
-export const getGoogleLoginUrl = (): string => {
+export const getGoogleLoginUrl = (mode: 'login' | 'link' = 'login'): string => {
   if (!GOOGLE_CONFIG.CLIENT_ID) {
     throw new Error('구글 클라이언트 ID가 설정되지 않았습니다.');
   }
@@ -74,6 +75,7 @@ export const getGoogleLoginUrl = (): string => {
     scope: GOOGLE_CONFIG.SCOPE,
     access_type: 'offline',
     prompt: 'consent',
+    state: mode,
   });
   
   return `${GOOGLE_CONFIG.AUTH_URL}?${params.toString()}`;
@@ -86,14 +88,15 @@ export const NAVER_CONFIG = {
   CLIENT_ID: process.env.NEXT_PUBLIC_NAVER_CLIENT_ID || '',
   AUTH_URL: 'https://nid.naver.com/oauth2.0/authorize',
   REDIRECT_URI: `${API_CONFIG.BASE_URL}/customer/naverLogin`,
-  STATE: 'leschef_naver_login', // CSRF 방지용 (실제로는 랜덤 값 권장)
+  STATE_LOGIN: 'leschef_naver_login',
+  STATE_LINK: 'leschef_naver_link', // 계정 연동용 state
 } as const;
 
 /**
  * 네이버 로그인 URL 생성
  * @returns 네이버 OAuth 인증 URL
  */
-export const getNaverLoginUrl = (): string => {
+export const getNaverLoginUrl = (mode: 'login' | 'link' = 'login'): string => {
   if (!NAVER_CONFIG.CLIENT_ID) {
     throw new Error('네이버 클라이언트 ID가 설정되지 않았습니다.');
   }
@@ -102,7 +105,7 @@ export const getNaverLoginUrl = (): string => {
     response_type: 'code',
     client_id: NAVER_CONFIG.CLIENT_ID,
     redirect_uri: NAVER_CONFIG.REDIRECT_URI,
-    state: NAVER_CONFIG.STATE,
+    state: mode === 'link' ? NAVER_CONFIG.STATE_LINK : NAVER_CONFIG.STATE_LOGIN,
   });
   
   return `${NAVER_CONFIG.AUTH_URL}?${params.toString()}`;

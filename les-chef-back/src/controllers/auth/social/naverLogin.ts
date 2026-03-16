@@ -37,33 +37,79 @@ export const naverLogin = asyncHandler(async(req: Request, res: Response) => {
             const naverEmail = naverResponse.email;
             const naverName = naverResponse.name || "네이버사용자";
             const naverNickname = naverResponse.nickname || naverResponse.name || "네이버사용자";
+            const naverUniqueId = naverResponse.id;
 
             if (!naverEmail) {
                 res.status(400).send("네이버 로그인 실패: 이메일 정보 없음");
                 return;
             }
 
-            // 이메일 기반 계정 통합 로직
+            // [1] 계정 연동 모드: 로그인된 사용자의 계정에 네이버 계정 연결
+            if (req.session?.user?.id && state === 'leschef_naver_link') {
+                const baseUser = await User.findOne({ id: req.session.user.id });
+                if (!baseUser) {
+                    res.status(404).send("기존 사용자를 찾을 수 없습니다.");
+                    return;
+                }
+
+                if (naverUniqueId) {
+                    const duplicated = await User.findOne({
+                        naverId: naverUniqueId,
+                        id: { $ne: baseUser.id }
+                    }).lean();
+
+                    if (duplicated) {
+                        res.status(400).send("이미 다른 계정에 연동된 네이버 계정입니다.");
+                        return;
+                    }
+
+                    baseUser.naverId = naverUniqueId;
+                    await baseUser.save();
+                }
+
+                const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+                res.redirect(`${redirectBase}/myPage/info?link=naver&status=success`);
+                return;
+            }
+
+            // [2] 일반 네이버 로그인 – 네이버 ID/이메일 기반 계정 통합 로직
             let user = null;
             let finalUserId: string;
 
-            // 1. 해당 이메일로 가입된 계정이 있으면 연결
-            const existingUserByEmail = await User.findOne({ id: naverEmail }).lean();
-            if (existingUserByEmail) {
-                // 기존 계정과 연결 (이메일 기반 통합)
-                user = existingUserByEmail;
-                finalUserId = existingUserByEmail.id;
+            // 0. naverId 로 먼저 조회
+            if (naverUniqueId) {
+                user = await User.findOne({ naverId: naverUniqueId }).lean();
+            }
+
+            if (user) {
+                finalUserId = user.id;
             } else {
-                // 2. 계정이 없으면 이메일을 ID로 사용하여 새 계정 생성
-                const secure_pwd = await bcrypt.hash("naver", 10);
-                await User.create({
-                    id: naverEmail,
-                    pwd: secure_pwd,
-                    name: naverName,
-                    nickName: naverNickname,
-                    userType: "naver"
-                });
-                finalUserId = naverEmail;
+                // 1. 해당 이메일로 가입된 계정이 있으면 연결
+                const existingUserByEmail = await User.findOne({ id: naverEmail }).lean();
+                if (existingUserByEmail) {
+                    // 기존 계정과 연결 (이메일 기반 통합)
+                    user = existingUserByEmail;
+                    finalUserId = existingUserByEmail.id;
+
+                    if (naverUniqueId) {
+                        await User.updateOne(
+                            { id: existingUserByEmail.id },
+                            { $set: { naverId: naverUniqueId } }
+                        );
+                    }
+                } else {
+                    // 2. 계정이 없으면 이메일을 ID로 사용하여 새 계정 생성
+                    const secure_pwd = await bcrypt.hash("naver", 10);
+                    await User.create({
+                        id: naverEmail,
+                        pwd: secure_pwd,
+                        name: naverName,
+                        nickName: naverNickname,
+                        userType: "naver",
+                        naverId: naverUniqueId || ""
+                    });
+                    finalUserId = naverEmail;
+                }
             }
 
             // 최종 사용자 정보 가져오기

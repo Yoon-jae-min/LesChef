@@ -34,6 +34,19 @@ const userSchema = new Schema<IUser>({
         type: String,
         default: "common"
     },
+    // SNS 계정 연동용 필드들 (선택값)
+    kakaoId: {
+        type: String,
+        default: ""
+    },
+    googleId: {
+        type: String,
+        default: ""
+    },
+    naverId: {
+        type: String,
+        default: ""
+    },
     createdAt: { 
         type: Date,
         default: () => new Date().setMilliseconds(0)

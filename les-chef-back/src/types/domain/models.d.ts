@@ -14,6 +14,10 @@ export interface IUser extends Document {
   profileImg?: string;
   checkAdmin?: boolean;
   userType?: string;
+  // SNS 계정 연동용 식별자 (선택값)
+  kakaoId?: string;
+  googleId?: string;
+  naverId?: string;
   createdAt: Date;
   updatedAt: Date;
 }

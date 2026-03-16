@@ -5,7 +5,8 @@ export const dynamic = 'force-dynamic';
 
 import { useState, useEffect, Suspense } from "react";
 import useSWR from "swr";
-import { fetchUserInfo, type UserInfoResponse } from "@/utils/api/auth";
+import { fetchUserInfo, type UserInfoResponse, unlinkSocial } from "@/utils/api/auth";
+import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 import DeleteAccount from "@/components/myPage/DeleteAccount";
 
 function InfoPageContent() {
@@ -147,6 +148,99 @@ function InfoPageContent() {
       </section>
 
       <section className="space-y-6">
+        {/* SNS 계정 연동 섹션 */}
+        <div className="rounded-[32px] border border-gray-200 bg-white px-6 py-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <p className="text-xs uppercase tracking-[0.4em] text-gray-400">Account Link</p>
+              <h2 className="text-2xl font-semibold text-gray-900">SNS 계정 연동</h2>
+            </div>
+          </div>
+          <p className="text-sm text-gray-500 mb-4">
+            네이버, 구글, 카카오 계정을 연동해 두면 다음부터는 해당 SNS 버튼으로 바로 로그인할 수 있어요.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (userInfo?.kakaoLinked) {
+                  if (confirm("카카오 계정 연동을 해제하시겠습니까?")) {
+                    unlinkSocial("kakao")
+                      .then(() => window.location.reload())
+                      .catch((err) => console.error(err));
+                  }
+                } else {
+                  try {
+                    const url = getKakaoLoginUrl("link");
+                    window.location.href = url;
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }
+              }}
+              className={`w-full rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                userInfo?.kakaoLinked
+                  ? "border border-green-200 bg-green-50 text-green-700"
+                  : "border border-gray-200 text-gray-700 hover:border-gray-400 hover:text-black"
+              }`}
+            >
+              {userInfo?.kakaoLinked ? "카카오 연동 해제" : "카카오 계정 연동"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (userInfo?.googleLinked) {
+                  if (confirm("구글 계정 연동을 해제하시겠습니까?")) {
+                    unlinkSocial("google")
+                      .then(() => window.location.reload())
+                      .catch((err) => console.error(err));
+                  }
+                } else {
+                  try {
+                    const url = getGoogleLoginUrl("link");
+                    window.location.href = url;
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }
+              }}
+              className={`w-full rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                userInfo?.googleLinked
+                  ? "border border-green-200 bg-green-50 text-green-700"
+                  : "border border-gray-200 text-gray-700 hover:border-gray-400 hover:text-black"
+              }`}
+            >
+              {userInfo?.googleLinked ? "구글 연동 해제" : "구글 계정 연동"}
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (userInfo?.naverLinked) {
+                  if (confirm("네이버 계정 연동을 해제하시겠습니까?")) {
+                    unlinkSocial("naver")
+                      .then(() => window.location.reload())
+                      .catch((err) => console.error(err));
+                  }
+                } else {
+                  try {
+                    const url = getNaverLoginUrl("link");
+                    window.location.href = url;
+                  } catch (error) {
+                    console.error(error);
+                  }
+                }
+              }}
+              className={`w-full rounded-2xl px-4 py-3 text-sm font-medium transition ${
+                userInfo?.naverLinked
+                  ? "border border-green-200 bg-green-50 text-green-700"
+                  : "border border-gray-200 text-gray-700 hover:border-gray-400 hover:text-black"
+              }`}
+            >
+              {userInfo?.naverLinked ? "네이버 연동 해제" : "네이버 계정 연동"}
+            </button>
+          </div>
+        </div>
+
         <div className="rounded-[32px] border border-gray-200 bg-white px-6 py-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
           <div className="flex items-center justify-between">
             <div>

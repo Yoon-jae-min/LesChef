@@ -16,81 +16,52 @@ LesChef 백엔드는 Express.js와 MongoDB를 사용하여 RESTful API를 제공
 - **File Upload**: Multer
 - **Session Store**: MongoDB (connect-mongo)
 
-## 📁 프로젝트 구조
+## 📁 프로젝트 구조 (요약)
 
 ```
 les-chef-back/
 ├── src/
-│   ├── index.js              # 서버 진입점
-│   ├── config/
-│   │   └── dbConnect.js      # MongoDB 연결 설정
-│   ├── controllers/          # 비즈니스 로직
-│   │   ├── recipeWrite.js    # 레시피 작성
-│   │   ├── recipeGet.js      # 레시피 조회
-│   │   ├── board.js          # 커뮤니티 게시판
-│   │   ├── login.js          # 로그인
-│   │   ├── join.js           # 회원가입
-│   │   ├── foods.js          # 보관함 관리
-│   │   ├── snsLogin.js       # 소셜 로그인
-│   │   └── health.js         # 헬스 체크
-│   ├── models/               # MongoDB 스키마
-│   │   ├── userModel.js
-│   │   ├── recipeModel.js
-│   │   ├── recipeStepModel.js
-│   │   ├── recipeIngredientsModel.js
-│   │   ├── boardModel.js
-│   │   ├── boardCommentModel.js
-│   │   ├── boardLikeModel.js
-│   │   ├── foodsModel.js
-│   │   └── recipeWishListModel.js
-│   ├── routers/              # API 라우팅
-│   │   ├── recipe.js
-│   │   ├── board.js
-│   │   ├── customer.js
-│   │   └── foods.js
-│   ├── middleware/           # 미들웨어
-│   │   ├── errorHandler.js  # 전역 에러 처리
-│   │   ├── security.js       # 보안 미들웨어
-│   │   └── envValidator.js   # 환경 변수 검증
-│   └── uploads/              # 파일 업로드
-│       └── recipeImgUpload.js
-├── public/                   # 정적 파일
+│   ├── index.ts                 # 서버 진입점
+│   ├── config/                  # DB/환경설정
+│   ├── controllers/             # 비즈니스 로직
+│   ├── middleware/              # 보안/에러/검증 미들웨어
+│   ├── models/                  # MongoDB 스키마
+│   ├── routers/                 # 라우팅 (/customer, /recipe, /board, ...)
+│   ├── utils/                   # 외부 API/로거/이메일 등 유틸
+│   └── __tests__/               # 테스트
+├── public/                      # 정적 파일
+├── dist/                        # 빌드 결과물
 └── package.json
 ```
 
-## 🔌 API 엔드포인트
+## 🔌 API 엔드포인트 (대표)
 
 ### 인증
-- `POST /api/join` - 회원가입
-- `POST /api/login` - 로그인
-- `POST /api/logout` - 로그아웃
-- `POST /api/snsLogin` - 소셜 로그인 (카카오, 네이버)
+- `POST /customer/join` - 회원가입
+- `POST /customer/login` - 로그인
+- `GET /customer/logout` - 로그아웃
+- `GET /customer/kakaoLogin` - 카카오 로그인 콜백
+- `GET /customer/googleLogin` - 구글 로그인 콜백
+- `GET /customer/naverLogin` - 네이버 로그인 콜백
+- `POST /customer/unlink/:provider` - SNS 연동 해제 (`kakao|google|naver`)
+- `POST /customer/sendVerificationCode` - 이메일 인증 코드 발송
+- `POST /customer/verifyEmailCode` - 이메일 인증 코드 검증
 
 ### 레시피
-- `GET /api/recipe` - 레시피 목록 조회
-- `GET /api/recipe/:id` - 레시피 상세 조회
-- `POST /api/recipe` - 레시피 등록
-- `PUT /api/recipe/:id` - 레시피 수정
-- `DELETE /api/recipe/:id` - 레시피 삭제
+- `GET /recipe/...` - 레시피 조회/검색
+- `POST /recipe/...` - 레시피 등록/수정/삭제
 
 ### 커뮤니티
-- `GET /api/board` - 게시글 목록
-- `GET /api/board/:id` - 게시글 상세
-- `POST /api/board` - 게시글 작성
-- `PUT /api/board/:id` - 게시글 수정
-- `DELETE /api/board/:id` - 게시글 삭제
-- `POST /api/board/:id/like` - 좋아요
-- `POST /api/board/:id/comment` - 댓글 작성
+- `GET /board/...` - 게시글 목록/상세
+- `POST /board/...` - 게시글 작성/수정/삭제
 
 ### 사용자
-- `GET /api/customer` - 사용자 정보 조회
-- `PUT /api/customer` - 사용자 정보 수정
-- `DELETE /api/customer` - 회원 탈퇴
+- `GET /customer/info` - 사용자 정보 조회
+- `PATCH /customer/info` - 사용자 정보 수정
+- `DELETE /customer/delete` - 회원 탈퇴
 
 ### 보관함
-- `GET /api/foods` - 보관함 조회
-- `POST /api/foods` - 재료 추가
-- `DELETE /api/foods/:id` - 재료 삭제
+- `GET /foods/...` - 보관함 조회/관리
 
 ### 헬스 체크
 - `GET /health` - 서버 및 DB 연결 상태 확인
@@ -152,41 +123,23 @@ les-chef-back/
 
 ## ⚙️ 환경 변수
 
-`.env` 파일에 다음 변수들을 설정해야 합니다:
+이 프로젝트는 **`.env.example`** 를 템플릿으로 제공합니다.
 
-```env
-# 서버 설정
-PORT=3000
-NODE_ENV=development
+- `les-chef-back/.env.example` 를 복사해서 `les-chef-back/.env` 를 만든 뒤 값만 채우면 됩니다.
 
-# MongoDB
-MONGODB_URI=mongodb://localhost:27017/leschef
-
-# 세션
-SESSION_SECRET=your-secret-key
-
-# JWT
-JWT_SECRET=your-jwt-secret
-
-# 소셜 로그인
-KAKAO_CLIENT_ID=your-kakao-client-id
-NAVER_CLIENT_ID=your-naver-client-id
-NAVER_CLIENT_SECRET=your-naver-client-secret
-
-# HTTPS (선택)
-HTTPS_PORT=3443
-SSL_CERT_PATH=./src/certs/cert.pem
-SSL_KEY_PATH=./src/certs/key.pem
+```bash
+cd les-chef-back
+cp .env.example .env
 ```
 
-환경 변수 검증은 `envValidator.js` 미들웨어에서 자동으로 수행됩니다.
+환경 변수 검증은 `src/middleware/validation/envValidator` 에서 수행됩니다.
 
 ## 🚀 실행 방법
 
 ### 개발 환경
 ```bash
 npm install
-npm start  # nodemon으로 자동 재시작
+npm run dev
 ```
 
 ### 프로덕션 환경

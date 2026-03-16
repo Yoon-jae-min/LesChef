@@ -166,10 +166,17 @@ npm start
 ```
 
 ### 환경 변수
-`.env.local` 파일에 다음 변수를 설정할 수 있습니다:
-```env
-NEXT_PUBLIC_API_URL=http://localhost:3000
+
+이 프로젝트는 **`env.example`** 를 템플릿으로 제공합니다.
+
+- `leschef-web-front/env.example` 를 복사해서 `leschef-web-front/.env` 를 만든 뒤 값만 채우면 됩니다.
+
+```bash
+cd leschef-web-front
+cp env.example .env
 ```
+
+> 참고: `.env*` 는 `.gitignore` 에 의해 커밋되지 않습니다.
 
 ## 📱 반응형 디자인
 

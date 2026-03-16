@@ -36,3 +36,8 @@ export {
   fetchUserInfo,
 } from "./user";
 
+// SNS 계정 연동 관련 함수
+export {
+  unlinkSocial,
+} from "./socialLink";
+

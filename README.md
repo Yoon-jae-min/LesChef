@@ -82,8 +82,8 @@ LesChef-Web/
 ```bash
 cd les-chef-back
 npm install
-cp .env.example .env  # 환경 변수 설정
-npm start
+cp .env.example .env  # 환경 변수 설정 (Windows는 복사로 동일하게)
+npm run dev
 ```
 
 자세한 내용은 [백엔드 README](./les-chef-back/README.md)를 참고하세요.
@@ -92,6 +92,7 @@ npm start
 ```bash
 cd leschef-web-front
 npm install
+# 환경 변수 설정: env.example -> .env 로 복사 후 값 채우기
 npm run dev
 ```
 
@@ -108,8 +109,8 @@ npm run dev
 ## 📦 배포
 
 ### 개발 환경
-- 백엔드: `http://localhost:3000` (또는 HTTPS 포트)
-- 프론트엔드: `http://localhost:3001` (또는 HTTPS 포트)
+- 프론트엔드: `http://localhost:3000`
+- 백엔드: `http://localhost:3001`
 
 ### 프로덕션 환경
 - 환경 변수를 통해 프로덕션 설정 구성

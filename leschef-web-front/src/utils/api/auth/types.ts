@@ -29,6 +29,9 @@ export type UserInfoResponse = {
   name: string;
   tel: string;
   checkAdmin: boolean;
+  kakaoLinked?: boolean;
+  googleLinked?: boolean;
+  naverLinked?: boolean;
   text: boolean;
 };
 

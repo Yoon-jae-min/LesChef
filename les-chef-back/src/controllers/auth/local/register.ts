@@ -70,25 +70,31 @@ export const postJoin = asyncHandler(async (req: Request<{}, ApiSuccessResponse 
         return;
     }
 
-    // 이메일 인증 확인 (일반 회원가입인 경우만)
-    // 이메일 형식인지 확인 (간단한 체크)
-    const isEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id);
-    if (isEmailFormat) {
-        const emailVerification = await EmailVerification.findOne({
-            email: id,
-            verified: true
-        });
-
-        if (!emailVerification) {
-            res.status(400).json({
-                error: true,
-                message: "이메일 인증이 완료되지 않았습니다. 인증 코드를 발송하고 인증을 완료해주세요."
+    /**
+     * 이메일 인증 확인
+     * - 개발 단계에서는 회원가입 흐름을 막지 않기 위해 SKIP
+     * - 운영 환경(production)에서는 기존 로직 그대로 강제
+     */
+    if (!isDev) {
+        // 이메일 형식인지 확인 (간단한 체크)
+        const isEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id);
+        if (isEmailFormat) {
+            const emailVerification = await EmailVerification.findOne({
+                email: id,
+                verified: true
             });
-            return;
-        }
 
-        // 인증 완료 후 인증 레코드 삭제 (보안상 한 번만 사용)
-        await EmailVerification.deleteOne({ _id: emailVerification._id });
+            if (!emailVerification) {
+                res.status(400).json({
+                    error: true,
+                    message: "이메일 인증이 완료되지 않았습니다. 인증 코드를 발송하고 인증을 완료해주세요."
+                });
+                return;
+            }
+
+            // 인증 완료 후 인증 레코드 삭제 (보안상 한 번만 사용)
+            await EmailVerification.deleteOne({ _id: emailVerification._id });
+        }
     }
 
     try {
