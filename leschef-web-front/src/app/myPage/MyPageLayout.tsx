@@ -8,11 +8,7 @@ import { checkLoginStatus } from "@/utils/helpers/authUtils";
 import { checkAuth } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
-function MyPageLayoutClientContent({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -106,24 +102,21 @@ function MyPageLayoutClientContent({
   );
 }
 
-export default function MyPageLayoutClient({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function MyPageLayoutClient({ children }: { children: React.ReactNode }) {
   return (
-    <Suspense fallback={
-      <div className="relative min-h-screen bg-white">
-        <Top />
-        <main className="max-w-6xl mx-auto px-8 py-8">
-          <div className="flex items-center justify-center min-h-[400px]">
-            <p className="text-gray-400">Loading...</p>
-          </div>
-        </main>
-      </div>
-    }>
+    <Suspense
+      fallback={
+        <div className="relative min-h-screen bg-white">
+          <Top />
+          <main className="max-w-6xl mx-auto px-8 py-8">
+            <div className="flex items-center justify-center min-h-[400px]">
+              <p className="text-gray-400">Loading...</p>
+            </div>
+          </main>
+        </div>
+      }
+    >
       <MyPageLayoutClientContent>{children}</MyPageLayoutClientContent>
     </Suspense>
   );
 }
-

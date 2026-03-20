@@ -1,10 +1,7 @@
 /**
- * 레시피 API 유틸리티 함수
- * 하위 호환성을 위한 인덱스 파일
- * 모든 타입과 함수를 re-export
+ * 레시피 API·타입 — 화면에서는 `@/utils/api/recipeApi` 또는 `@/types/recipe` 를 사용하세요.
  */
 
-// 타입 정의
 export type {
   Ingredient,
   IngredientGroup,
@@ -21,24 +18,14 @@ export type {
   ToggleWishResponse,
 } from "@/types/recipe";
 
-// CRUD 함수들
-export {
-  submitRecipe,
-  createRecipe,
-  updateRecipe,
-  deleteRecipe,
-} from "../recipe/crud";
+export { submitRecipe, createRecipe, updateRecipe, deleteRecipe } from "../recipe/crud";
 
-// 조회 함수들
 export {
   fetchRecipeList,
-  fetchRecipeDetail,
+  fetchRecipeDetailById,
+  fetchRecipeForEdit,
   fetchMyRecipeList,
   fetchWishRecipeList,
 } from "../recipe/queries";
 
-// 찜 기능
-export {
-  toggleRecipeWish,
-} from "../recipe/wish";
-
+export { toggleRecipeWish } from "../recipe/wish";

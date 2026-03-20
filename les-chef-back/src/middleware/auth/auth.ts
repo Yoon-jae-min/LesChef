@@ -19,7 +19,7 @@ export const requireAuth = (
     if (!req.session?.user?.id) {
         res.status(401).json({
             error: true,
-            message: COMMON_ERROR_MESSAGES.UNAUTHORIZED
+            message: COMMON_ERROR_MESSAGES.UNAUTHORIZED,
         });
         return;
     }
@@ -36,4 +36,3 @@ export const getUserId = (req: Request): string => {
     }
     return req.session.user.id;
 };
-

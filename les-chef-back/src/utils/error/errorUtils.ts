@@ -30,7 +30,10 @@ interface ErrorOptions {
  * @param resourceName 리소스 이름 (예: "레시피", "게시글")
  * @returns 변환된 에러
  */
-export const handleMongoError = (error: CustomError, resourceName: string = "데이터"): CustomError => {
+export const handleMongoError = (
+    error: CustomError,
+    resourceName: string = '데이터'
+): CustomError => {
     if (error.name === 'CastError') {
         const customError = new Error(`잘못된 ${resourceName} ID 형식입니다.`) as CustomError;
         customError.statusCode = 400;
@@ -42,10 +45,10 @@ export const handleMongoError = (error: CustomError, resourceName: string = "데
     if (error.name === 'ValidationError' && error.errors) {
         const customError = new Error(`${resourceName} 데이터 검증에 실패했습니다.`) as CustomError;
         customError.statusCode = 400;
-        customError.details = Object.values(error.errors).map(e => ({
+        customError.details = Object.values(error.errors).map((e) => ({
             field: e.path,
             message: e.message,
-            value: e.value
+            value: e.value,
         }));
         return customError;
     }
@@ -60,7 +63,9 @@ export const handleMongoError = (error: CustomError, resourceName: string = "데
     }
 
     if (error.name === 'MongoServerError' || error.name === 'MongoNetworkError') {
-        const customError = new Error(`${resourceName} 조회 중 데이터베이스 오류가 발생했습니다.`) as CustomError;
+        const customError = new Error(
+            `${resourceName} 조회 중 데이터베이스 오류가 발생했습니다.`
+        ) as CustomError;
         customError.statusCode = 503;
         return customError;
     }
@@ -74,7 +79,7 @@ export const handleMongoError = (error: CustomError, resourceName: string = "데
  * @param fileType 파일 타입 (예: "이미지", "파일")
  * @returns 변환된 에러
  */
-export const handleFileError = (error: CustomError, fileType: string = "파일"): CustomError => {
+export const handleFileError = (error: CustomError, fileType: string = '파일'): CustomError => {
     if (error.code === 'ENOENT') {
         const customError = new Error(`${fileType}을(를) 찾을 수 없습니다.`) as CustomError;
         customError.statusCode = 404;
@@ -112,7 +117,9 @@ export const handleFileError = (error: CustomError, fileType: string = "파일")
  */
 export const handleJsonError = (error: Error): CustomError => {
     if (error.message.includes('JSON') || error.name === 'SyntaxError') {
-        const customError = new Error('잘못된 JSON 형식입니다. 데이터를 확인해주세요.') as CustomError;
+        const customError = new Error(
+            '잘못된 JSON 형식입니다. 데이터를 확인해주세요.'
+        ) as CustomError;
         customError.statusCode = 400;
         customError.details = error.message;
         return customError;
@@ -126,20 +133,32 @@ export const handleJsonError = (error: Error): CustomError => {
  * @param options 옵션
  * @returns 변환된 에러
  */
-export const handleError = (error: Error | CustomError, options: ErrorOptions = {}): CustomError => {
-    const { resourceName = "데이터", fileType = "파일", defaultMessage } = options;
+export const handleError = (
+    error: Error | CustomError,
+    options: ErrorOptions = {}
+): CustomError => {
+    const { resourceName = '데이터', fileType = '파일', defaultMessage } = options;
     const err = error as CustomError;
 
     // MongoDB 에러 처리
-    if (err.name === 'CastError' || err.name === 'ValidationError' || 
-        err.code === 11000 || err.name === 'MongoServerError' || 
-        err.name === 'MongoNetworkError') {
+    if (
+        err.name === 'CastError' ||
+        err.name === 'ValidationError' ||
+        err.code === 11000 ||
+        err.name === 'MongoServerError' ||
+        err.name === 'MongoNetworkError'
+    ) {
         return handleMongoError(err, resourceName);
     }
 
     // 파일 시스템 에러 처리
-    if (err.code === 'ENOENT' || err.code === 'EACCES' || err.code === 'EPERM' ||
-        err.code === 'LIMIT_FILE_SIZE' || err.code === 'LIMIT_FILE_COUNT') {
+    if (
+        err.code === 'ENOENT' ||
+        err.code === 'EACCES' ||
+        err.code === 'EPERM' ||
+        err.code === 'LIMIT_FILE_SIZE' ||
+        err.code === 'LIMIT_FILE_COUNT'
+    ) {
         return handleFileError(err, fileType);
     }
 
@@ -160,4 +179,3 @@ export const handleError = (error: Error | CustomError, options: ErrorOptions = 
 
     return err;
 };
-

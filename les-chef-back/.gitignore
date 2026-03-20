@@ -25,3 +25,12 @@ yarn-debug.log*
 yarn-error.log*
 
 package-lock.json
+
+# 사용자 업로드 레시피 이미지 — 실제 파일은 추적하지 않음 (폴더 구조만 .gitkeep 으로 공유)
+public/Image/RecipeImage/ListImg/*/*
+!public/Image/RecipeImage/ListImg/*/.gitkeep
+public/Image/RecipeImage/ListImg/*/thumbnails/
+
+public/Image/RecipeImage/InfoImg/step/*/*
+!public/Image/RecipeImage/InfoImg/step/*/.gitkeep
+public/Image/RecipeImage/InfoImg/step/*/thumbnails/

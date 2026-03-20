@@ -86,4 +86,3 @@ export const logout = async (): Promise<Response> => {
     throw new Error("로그아웃 중 네트워크 오류가 발생했습니다.");
   }
 };
-

@@ -25,18 +25,14 @@ interface ListProps {
  * 레시피 목록 클라이언트 컴포넌트
  * 서버에서 가져온 초기 데이터를 사용하고, SWR로 실시간 업데이트
  */
-export default function List({ 
-  initialCategory, 
-  initialData, 
-  initialError 
-}: ListProps) {
+export default function List({ initialCategory, initialData, initialError }: ListProps) {
   const apiCategory = RECIPE_CATEGORY_TO_API[initialCategory] || "korean";
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [sortOption, setSortOption] = useState<RecipeSortOption>(DEFAULT_SORT_OPTION);
 
   // URL에서 검색어 및 정렬 옵션 가져오기
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const keyword = params.get("keyword") || "";
       const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
@@ -48,7 +44,7 @@ export default function List({
   // URL 변경 감지
   useEffect(() => {
     const handlePopState = () => {
-      if (typeof window !== 'undefined') {
+      if (typeof window !== "undefined") {
         const params = new URLSearchParams(window.location.search);
         const keyword = params.get("keyword") || "";
         const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
@@ -56,16 +52,16 @@ export default function List({
         setSortOption(sort);
       }
     };
-    
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   // 검색 핸들러
   const handleSearch = useCallback((keyword: string) => {
     setSearchKeyword(keyword);
     // URL 업데이트
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       if (keyword) {
         params.set("keyword", keyword);
@@ -73,8 +69,8 @@ export default function List({
         params.delete("keyword");
       }
       const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
-      window.history.pushState({}, '', newUrl);
-      window.dispatchEvent(new PopStateEvent('popstate'));
+      window.history.pushState({}, "", newUrl);
+      window.dispatchEvent(new PopStateEvent("popstate"));
     }
   }, []);
 
@@ -82,7 +78,7 @@ export default function List({
   const handleSortChange = useCallback((sort: RecipeSortOption) => {
     setSortOption(sort);
     // URL 업데이트
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       if (sort !== DEFAULT_SORT_OPTION) {
         params.set("sort", sort);
@@ -90,23 +86,29 @@ export default function List({
         params.delete("sort");
       }
       const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
-      window.history.pushState({}, '', newUrl);
-      window.dispatchEvent(new PopStateEvent('popstate'));
+      window.history.pushState({}, "", newUrl);
+      window.dispatchEvent(new PopStateEvent("popstate"));
     }
   }, []);
 
   // 레시피 목록 가져오기 - SWR 캐싱 적용
   // 서버에서 가져온 초기 데이터가 있으면 fallbackData로 사용
-  const { data, error, isLoading: loading } = useSWR<RecipeListResponse>(
-    ['recipe-list', apiCategory, searchKeyword, sortOption], // 캐시 키: 카테고리, 검색어, 정렬 옵션별로 별도 캐시
-    () => fetchRecipeList({
-      category: apiCategory as RecipeListParams["category"],
-      keyword: searchKeyword || undefined,
-      sort: sortOption,
-    }),
+  const {
+    data,
+    error,
+    isLoading: loading,
+  } = useSWR<RecipeListResponse>(
+    ["recipe-list", apiCategory, searchKeyword, sortOption], // 캐시 키: 카테고리, 검색어, 정렬 옵션별로 별도 캐시
+    () =>
+      fetchRecipeList({
+        category: apiCategory as RecipeListParams["category"],
+        keyword: searchKeyword || undefined,
+        sort: sortOption,
+      }),
     {
       dedupingInterval: TIMING.FIVE_MINUTES, // 5분 동안 중복 요청 방지
-      fallbackData: (searchKeyword || sortOption !== DEFAULT_SORT_OPTION) ? undefined : (initialData || undefined), // 검색어나 정렬 옵션이 있을 때는 초기 데이터 사용 안 함
+      fallbackData:
+        searchKeyword || sortOption !== DEFAULT_SORT_OPTION ? undefined : initialData || undefined, // 검색어나 정렬 옵션이 있을 때는 초기 데이터 사용 안 함
     }
   );
 
@@ -150,11 +152,8 @@ export default function List({
     <>
       {/* 검색바 및 정렬 옵션 */}
       <div className="col-span-full mb-4 space-y-3">
-        <SearchBar 
-          onSearch={handleSearch}
-          initialKeyword={searchKeyword}
-        />
-        
+        <SearchBar onSearch={handleSearch} initialKeyword={searchKeyword} />
+
         {/* 정렬 옵션 선택 */}
         <div className="flex items-center justify-between gap-2">
           <div className="text-sm text-gray-600">
@@ -194,4 +193,3 @@ export default function List({
     </>
   );
 }
-

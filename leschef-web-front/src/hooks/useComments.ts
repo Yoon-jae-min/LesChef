@@ -13,7 +13,10 @@ interface UseCommentsProps {
   detail: BoardDetailResponse | undefined;
   comments: BoardDetailResponse["comments"];
   mutate: (
-    data?: BoardDetailResponse | Promise<BoardDetailResponse> | MutatorCallback<BoardDetailResponse>,
+    data?:
+      | BoardDetailResponse
+      | Promise<BoardDetailResponse>
+      | MutatorCallback<BoardDetailResponse>,
     shouldRevalidate?: boolean
   ) => Promise<BoardDetailResponse | undefined>;
 }
@@ -76,16 +79,19 @@ export function useComments({ postId, detail, comments, mutate }: UseCommentsPro
   /**
    * 댓글 삭제 (Optimistic Updates 적용)
    */
-  const handleDeleteComment = useCallback((id: string) => {
-    if (!detail) return;
-    
-    // 로컬 상태 업데이트 (실제 삭제는 API에서 처리)
-    // API에서 삭제 후 mutate() 호출 (현재는 optimistic update 사용)
-    mutate(
-      { ...detail, comments: comments.filter(c => c._id !== id) },
-      false // optimistic update
-    );
-  }, [detail, comments, mutate]);
+  const handleDeleteComment = useCallback(
+    (id: string) => {
+      if (!detail) return;
+
+      // 로컬 상태 업데이트 (실제 삭제는 API에서 처리)
+      // API에서 삭제 후 mutate() 호출 (현재는 optimistic update 사용)
+      mutate(
+        { ...detail, comments: comments.filter((c) => c._id !== id) },
+        false // optimistic update
+      );
+    },
+    [detail, comments, mutate]
+  );
 
   return {
     comment,
@@ -94,4 +100,3 @@ export function useComments({ postId, detail, comments, mutate }: UseCommentsPro
     handleDeleteComment,
   };
 }
-

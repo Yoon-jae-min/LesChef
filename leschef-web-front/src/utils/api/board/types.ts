@@ -62,4 +62,3 @@ export type ToggleBoardLikeResponse = {
   liked: boolean;
   likeCount: number;
 };
-

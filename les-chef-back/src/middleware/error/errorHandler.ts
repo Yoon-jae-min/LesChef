@@ -48,26 +48,27 @@ const errorHandler = (
 
     // Mongoose validation error
     if (err.name === 'ValidationError' && err.errors) {
-        const details = Object.values(err.errors).map(e => {
+        const details = Object.values(err.errors).map((e) => {
             const fieldName = getFieldName(e.path);
             return {
                 field: e.path,
                 fieldName: fieldName,
                 message: e.message.replace(e.path, fieldName),
-                value: e.value
+                value: e.value,
             };
         });
-        
+
         // 첫 번째 에러 필드의 한글명 사용
         const firstField = details[0]?.fieldName || '입력 항목';
-        const message = details.length === 1
-            ? `${firstField}을(를) 확인해주세요.`
-            : COMMON_ERROR_MESSAGES.VALIDATION_ERROR;
-        
+        const message =
+            details.length === 1
+                ? `${firstField}을(를) 확인해주세요.`
+                : COMMON_ERROR_MESSAGES.VALIDATION_ERROR;
+
         res.status(400).json({
             error: true,
             message: message,
-            details: details
+            details: details,
         });
         return;
     }
@@ -80,7 +81,7 @@ const errorHandler = (
             message: `잘못된 ${fieldName} 형식입니다.`,
             field: err.path,
             fieldName: fieldName,
-            value: err.value
+            value: err.value,
         });
         return;
     }
@@ -90,7 +91,7 @@ const errorHandler = (
         const field = Object.keys(err.keyPattern || {})[0] || 'unknown';
         const fieldName = getFieldName(field);
         const duplicateValue = err.keyValue?.[field];
-        
+
         // 리소스별 메시지 확인
         let message = `이미 사용 중인 ${fieldName}입니다.`;
         if (field === 'id' && RESOURCE_ERROR_MESSAGES.USER.DUPLICATE_ID) {
@@ -98,13 +99,13 @@ const errorHandler = (
         } else if (field === 'recipeName' && RESOURCE_ERROR_MESSAGES.RECIPE.DUPLICATE_NAME) {
             message = RESOURCE_ERROR_MESSAGES.RECIPE.DUPLICATE_NAME;
         }
-        
+
         res.status(409).json({
             error: true,
             message: message,
             field: field,
             fieldName: fieldName,
-            duplicateValue: duplicateValue
+            duplicateValue: duplicateValue,
         });
         return;
     }
@@ -114,7 +115,7 @@ const errorHandler = (
         res.status(503).json({
             error: true,
             message: COMMON_ERROR_MESSAGES.DATABASE_ERROR,
-            ...(isDev && { originalError: err.message })
+            ...(isDev && { originalError: err.message }),
         });
         return;
     }
@@ -123,7 +124,7 @@ const errorHandler = (
     if (err.name === 'JsonWebTokenError') {
         res.status(401).json({
             error: true,
-            message: '인증 토큰이 유효하지 않습니다.'
+            message: '인증 토큰이 유효하지 않습니다.',
         });
         return;
     }
@@ -131,7 +132,7 @@ const errorHandler = (
     if (err.name === 'TokenExpiredError') {
         res.status(401).json({
             error: true,
-            message: '인증 토큰이 만료되었습니다.'
+            message: '인증 토큰이 만료되었습니다.',
         });
         return;
     }
@@ -142,7 +143,7 @@ const errorHandler = (
         res.status(404).json({
             error: true,
             message: RESOURCE_ERROR_MESSAGES.FILE.NOT_FOUND,
-            path: err.path
+            path: err.path,
         });
         return;
     }
@@ -150,7 +151,7 @@ const errorHandler = (
     if (errorCode === 'EACCES' || errorCode === 'EPERM') {
         res.status(403).json({
             error: true,
-            message: COMMON_ERROR_MESSAGES.FORBIDDEN
+            message: COMMON_ERROR_MESSAGES.FORBIDDEN,
         });
         return;
     }
@@ -162,7 +163,7 @@ const errorHandler = (
             error: true,
             message: `파일 크기가 너무 큽니다. (최대 ${maxSizeMB}MB)`,
             maxSize: err.maxSize,
-            maxSizeMB: maxSizeMB
+            maxSizeMB: maxSizeMB,
         });
         return;
     }
@@ -171,7 +172,7 @@ const errorHandler = (
         res.status(400).json({
             error: true,
             message: RESOURCE_ERROR_MESSAGES.FILE.TOO_MANY,
-            maxCount: err.maxCount
+            maxCount: err.maxCount,
         });
         return;
     }
@@ -201,7 +202,7 @@ const errorHandler = (
         error: true,
         message: isDev ? message : defaultMessage,
     };
-    
+
     if (isDev) {
         if (err.stack) {
             errorResponse.stack = err.stack;
@@ -210,9 +211,8 @@ const errorHandler = (
             errorResponse.originalError = err.message;
         }
     }
-    
+
     res.status(statusCode).json(errorResponse);
 };
 
 export default errorHandler;
-

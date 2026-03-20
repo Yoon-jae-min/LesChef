@@ -16,7 +16,7 @@ const createRateLimiter = (windowMs: number, max: number, message: string) => {
         max: max,
         message: {
             error: true,
-            message: message
+            message: message,
         },
         standardHeaders: true,
         legacyHeaders: false,
@@ -53,26 +53,50 @@ const escapeHtml = (text: string): string => {
         '<': '&lt;',
         '>': '&gt;',
         '"': '&quot;',
-        "'": '&#039;'
+        "'": '&#039;',
     };
-    return text.replace(/[&<>"']/g, m => map[m]);
+    return text.replace(/[&<>"']/g, (m) => map[m]);
 };
 
 /**
- * 입력 sanitization
+ * HTML 이스케이프 생략 (JSON 문자열·본문·비밀번호 등 — 이스케이프 시 깨짐/XSS는 렌더 단계에서 처리)
  */
-export const sanitizeInput = (input: unknown): unknown => {
+const STRING_FIELDS_SKIP_HTML_ESCAPE = new Set<string>([
+    'recipeInfo',
+    'recipeIngredients',
+    'recipeSteps',
+    'isEdit',
+    'deleteImgs',
+    'content',
+    'customerPwd',
+    'pwd',
+    'currentPwd',
+    'newPwd',
+    'password',
+    'resetToken',
+]);
+
+/**
+ * 입력 sanitization
+ * @param fieldKey 객체 프로퍼티명(배열 부모 키 전달 시 자식 문자열에도 동일 적용)
+ */
+export const sanitizeInput = (input: unknown, fieldKey?: string): unknown => {
     if (typeof input === 'string') {
-        // HTML 태그 제거 및 이스케이프
-        return escapeHtml(input.trim());
+        const trimmed = input.trim();
+        if (fieldKey && STRING_FIELDS_SKIP_HTML_ESCAPE.has(fieldKey)) {
+            return trimmed;
+        }
+        return escapeHtml(trimmed);
     }
     if (Array.isArray(input)) {
-        return input.map(item => sanitizeInput(item));
+        return input.map((item) => sanitizeInput(item, fieldKey));
     }
     if (typeof input === 'object' && input !== null) {
         const sanitized: Record<string, unknown> = {};
         for (const key in input) {
-            sanitized[key] = sanitizeInput((input as Record<string, unknown>)[key]);
+            if (Object.prototype.hasOwnProperty.call(input, key)) {
+                sanitized[key] = sanitizeInput((input as Record<string, unknown>)[key], key);
+            }
         }
         return sanitized;
     }
@@ -87,12 +111,12 @@ export const validateInput = (req: Request, _res: Response, next: NextFunction):
     if (req.body) {
         req.body = sanitizeInput(req.body) as typeof req.body;
     }
-    
+
     // req.query sanitization
     if (req.query) {
         req.query = sanitizeInput(req.query) as typeof req.query;
     }
-    
+
     next();
 };
 
@@ -103,12 +127,12 @@ export const safeJsonParse = (jsonString: unknown, maxLength: number = 1000000):
     if (typeof jsonString !== 'string') {
         throw new Error('JSON 문자열이 아닙니다.');
     }
-    
+
     // JSON 크기 제한 (1MB)
     if (jsonString.length > maxLength) {
         throw new Error('JSON 크기가 너무 큽니다.');
     }
-    
+
     try {
         return JSON.parse(jsonString);
     } catch (error) {
@@ -123,12 +147,12 @@ export const validateEmailOrId = (value: unknown): boolean => {
     if (!value || typeof value !== 'string') {
         return false;
     }
-    
+
     // 최소/최대 길이 검증
     if (value.length < 3 || value.length > 50) {
         return false;
     }
-    
+
     // 특수문자 제한 (알파벳, 숫자, @, ., _, - 만 허용)
     return /^[a-zA-Z0-9@._-]+$/.test(value);
 };
@@ -140,24 +164,24 @@ export const validatePassword = (password: unknown): { valid: boolean; message?:
     if (!password || typeof password !== 'string') {
         return { valid: false, message: '비밀번호를 입력해주세요.' };
     }
-    
+
     if (password.length < 8) {
         return { valid: false, message: '비밀번호는 최소 8자 이상이어야 합니다.' };
     }
-    
+
     if (password.length > 128) {
         return { valid: false, message: '비밀번호는 128자 이하여야 합니다.' };
     }
-    
+
     // 최소 하나의 숫자, 하나의 영문자 포함
     if (!/[0-9]/.test(password)) {
         return { valid: false, message: '비밀번호에 최소 하나의 숫자가 포함되어야 합니다.' };
     }
-    
+
     if (!/[a-zA-Z]/.test(password)) {
         return { valid: false, message: '비밀번호에 최소 하나의 영문자가 포함되어야 합니다.' };
     }
-    
+
     return { valid: true };
 };
 
@@ -168,18 +192,17 @@ export const validateNickname = (nickname: unknown): { valid: boolean; message?:
     if (!nickname || typeof nickname !== 'string') {
         return { valid: false, message: '닉네임을 입력해주세요.' };
     }
-    
+
     const trimmed = nickname.trim();
-    
+
     if (trimmed.length < 2 || trimmed.length > 20) {
         return { valid: false, message: '닉네임은 2자 이상 20자 이하여야 합니다.' };
     }
-    
+
     // 특수문자 제한
     if (!/^[a-zA-Z0-9가-힣\s_-]+$/.test(trimmed)) {
         return { valid: false, message: '닉네임에 허용되지 않은 문자가 포함되어 있습니다.' };
     }
-    
+
     return { valid: true };
 };
-

@@ -1,63 +1,62 @@
-import mongoose, { Schema, Model } from "mongoose";
-import { IUser } from "../../types";
+import mongoose, { Schema, Model } from 'mongoose';
+import { IUser } from '../../types';
 
 const userSchema = new Schema<IUser>({
     id: {
         type: String,
-        required: [true, "아이디를 입력해주세요."]
+        required: [true, '아이디를 입력해주세요.'],
     },
     pwd: {
         type: String,
-        required: [true, "패스워드를 입력해주세요."]
+        required: [true, '패스워드를 입력해주세요.'],
     },
     name: {
         type: String,
-        default: "user"
+        default: 'user',
     },
     nickName: {
         type: String,
-        default: "nickName"
+        default: 'nickName',
     },
     tel: {
         type: String,
-        default: ""
+        default: '',
     },
     profileImg: {
         type: String,
-        default: ""
+        default: '',
     },
     checkAdmin: {
         type: Boolean,
-        default: false
+        default: false,
     },
     userType: {
         type: String,
-        default: "common"
+        default: 'common',
     },
     // SNS 계정 연동용 필드들 (선택값)
     kakaoId: {
         type: String,
-        default: ""
+        default: '',
     },
     googleId: {
         type: String,
-        default: ""
+        default: '',
     },
     naverId: {
         type: String,
-        default: ""
+        default: '',
     },
-    createdAt: { 
+    createdAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
+        default: () => new Date().setMilliseconds(0),
     },
     updatedAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
-    }
+        default: () => new Date().setMilliseconds(0),
+    },
 });
 
-const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);
+const User: Model<IUser> = mongoose.model<IUser>('User', userSchema);
 
 export default User;
-

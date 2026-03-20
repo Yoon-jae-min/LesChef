@@ -13,12 +13,19 @@ import type {
   WishRecipeListResponse,
 } from "@/types/recipe";
 
+export type RecipeDetailApiBody = RecipeDetailResponse & {
+  error?: boolean;
+  message?: string;
+};
+
 const API_BASE_URL = API_CONFIG.RECIPE_API;
 
 /**
  * 레시피 리스트 조회 (단일 엔드포인트)
  */
-export const fetchRecipeList = async (params: RecipeListParams = {}): Promise<RecipeListResponse> => {
+export const fetchRecipeList = async (
+  params: RecipeListParams = {}
+): Promise<RecipeListResponse> => {
   try {
     const query = new URLSearchParams();
     if (params.category) query.set("category", params.category);
@@ -49,15 +56,15 @@ export const fetchRecipeList = async (params: RecipeListParams = {}): Promise<Re
 };
 
 /**
- * 레시피 상세 조회 (recipeName 기준)
+ * 레시피 상세 조회 (MongoDB _id)
  */
-export const fetchRecipeDetail = async (recipeName: string): Promise<RecipeDetailResponse> => {
-  if (!recipeName) {
-    throw new Error("레시피 이름이 필요합니다.");
+export const fetchRecipeDetailById = async (recipeId: string): Promise<RecipeDetailResponse> => {
+  if (!recipeId) {
+    throw new Error("레시피 ID가 필요합니다.");
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/info?recipeName=${encodeURIComponent(recipeName)}`, {
+    const response = await fetch(`${API_BASE_URL}/info?id=${encodeURIComponent(recipeId)}`, {
       method: "GET",
       credentials: "include",
     });
@@ -84,6 +91,41 @@ export const fetchRecipeDetail = async (recipeName: string): Promise<RecipeDetai
 };
 
 /**
+ * 레시피 수정 폼용 상세 조회 (MongoDB _id, 로그인·소유자 검증은 백엔드)
+ */
+export const fetchRecipeForEdit = async (recipeId: string): Promise<RecipeDetailResponse> => {
+  if (!recipeId) {
+    throw new Error("레시피 ID가 필요합니다.");
+  }
+
+  try {
+    const response = await fetch(
+      `${API_BASE_URL}/info?id=${encodeURIComponent(recipeId)}&forEdit=1`,
+      {
+        method: "GET",
+        credentials: "include",
+      }
+    );
+
+    if (!response.ok) {
+      throw await handleApiError(response);
+    }
+
+    const body = (await response.json()) as RecipeDetailApiBody;
+    if (body.error === true) {
+      throw new Error(body.message || "레시피를 불러올 수 없습니다.");
+    }
+
+    return body;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw error;
+    }
+    throw new Error("레시피를 불러오는 중 네트워크 오류가 발생했습니다.");
+  }
+};
+
+/**
  * 나의 레시피 리스트
  */
 export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
@@ -92,7 +134,7 @@ export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
       method: "GET",
       credentials: "include",
     });
-    
+
     if (!response.ok) {
       let errorMessage = `나의 레시피 조회 실패: ${response.status}`;
       try {
@@ -104,7 +146,7 @@ export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
       }
       throw new Error(errorMessage);
     }
-    
+
     return await response.json();
   } catch (error) {
     if (error instanceof Error) {
@@ -123,7 +165,7 @@ export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => 
       method: "GET",
       credentials: "include",
     });
-    
+
     if (!response.ok) {
       let errorMessage = `찜한 레시피 조회 실패: ${response.status}`;
       try {
@@ -135,7 +177,7 @@ export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => 
       }
       throw new Error(errorMessage);
     }
-    
+
     return await response.json();
   } catch (error) {
     if (error instanceof Error) {
@@ -144,4 +186,3 @@ export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => 
     throw new Error("찜한 레시피 조회 중 네트워크 오류가 발생했습니다.");
   }
 };
-

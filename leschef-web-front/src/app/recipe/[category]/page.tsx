@@ -7,11 +7,7 @@ import { RECIPE_CATEGORY_TO_API } from "@/constants/navigation/categories";
  * 서버에서 초기 데이터를 가져와서 렌더링
  * 클라이언트 컴포넌트는 실시간 업데이트를 위해 사용
  */
-export default async function CategoryPage({
-  params,
-}: {
-  params: Promise<{ category: string }>;
-}) {
+export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   // Next.js 15: params는 Promise이므로 await 필요
   const { category } = await params;
   const categoryKey = RECIPE_CATEGORY_TO_API[category] ? category : "korean";
@@ -34,12 +30,7 @@ export default async function CategoryPage({
 
   return (
     <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <List 
-        initialCategory={categoryKey}
-        initialData={initialData}
-        initialError={error}
-      />
+      <List initialCategory={categoryKey} initialData={initialData} initialError={error} />
     </section>
   );
 }
-

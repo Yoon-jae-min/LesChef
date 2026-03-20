@@ -39,4 +39,3 @@ export const fetchUserInfo = async (): Promise<UserInfoResponse> => {
     throw new Error("유저 정보 조회 중 네트워크 오류가 발생했습니다.");
   }
 };
-

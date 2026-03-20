@@ -25,13 +25,13 @@ const DEFAULT_SETTINGS: NotificationSettings = {
   autoCloseDuration: 5000, // 5초
 };
 
-const SETTINGS_KEY = STORAGE_KEYS.NOTIFICATION_SETTINGS || 'notification-settings';
+const SETTINGS_KEY = STORAGE_KEYS.NOTIFICATION_SETTINGS || "notification-settings";
 
 /**
  * 알림 설정 불러오기
  */
 export function getNotificationSettings(): NotificationSettings {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return DEFAULT_SETTINGS;
   }
 
@@ -43,7 +43,7 @@ export function getNotificationSettings(): NotificationSettings {
       return { ...DEFAULT_SETTINGS, ...parsed };
     }
   } catch (error) {
-    console.error('알림 설정 불러오기 실패:', error);
+    console.error("알림 설정 불러오기 실패:", error);
   }
 
   return DEFAULT_SETTINGS;
@@ -53,7 +53,7 @@ export function getNotificationSettings(): NotificationSettings {
  * 알림 설정 저장하기
  */
 export function saveNotificationSettings(settings: Partial<NotificationSettings>): void {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return;
   }
 
@@ -62,7 +62,7 @@ export function saveNotificationSettings(settings: Partial<NotificationSettings>
     const updated = { ...current, ...settings };
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(updated));
   } catch (error) {
-    console.error('알림 설정 저장 실패:', error);
+    console.error("알림 설정 저장 실패:", error);
   }
 }
 
@@ -70,14 +70,13 @@ export function saveNotificationSettings(settings: Partial<NotificationSettings>
  * 알림 설정 초기화
  */
 export function resetNotificationSettings(): void {
-  if (typeof window === 'undefined') {
+  if (typeof window === "undefined") {
     return;
   }
 
   try {
     localStorage.removeItem(SETTINGS_KEY);
   } catch (error) {
-    console.error('알림 설정 초기화 실패:', error);
+    console.error("알림 설정 초기화 실패:", error);
   }
 }
-

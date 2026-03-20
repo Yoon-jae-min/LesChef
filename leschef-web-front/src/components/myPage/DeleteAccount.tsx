@@ -26,7 +26,7 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
 
   const handlePasswordCheck = () => {
     setPasswordError("");
-    
+
     // 비밀번호 확인 엔드포인트 연결 필요
     // 성공 시:
     setDeleteStep("reason");
@@ -65,13 +65,21 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
           <>
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <svg
+                  className="w-8 h-8 text-red-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">
-                회원 탈퇴
-              </h3>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">회원 탈퇴</h3>
               <p className="text-sm text-gray-600 mb-4 text-center">
                 정말로 회원 탈퇴를 하시겠습니까?
               </p>
@@ -108,17 +116,11 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
         {/* 2단계: 비밀번호 확인 */}
         {deleteStep === "password" && (
           <>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-              비밀번호 확인
-            </h3>
-            <p className="text-sm text-gray-600 mb-6">
-              보안을 위해 비밀번호를 입력해주세요.
-            </p>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">비밀번호 확인</h3>
+            <p className="text-sm text-gray-600 mb-6">보안을 위해 비밀번호를 입력해주세요.</p>
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  비밀번호
-                </label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
                 <input
                   type="password"
                   value={password}
@@ -128,11 +130,9 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                   }}
                   placeholder="비밀번호를 입력하세요"
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-                  onKeyPress={(e) => e.key === 'Enter' && handlePasswordCheck()}
+                  onKeyPress={(e) => e.key === "Enter" && handlePasswordCheck()}
                 />
-                {passwordError && (
-                  <p className="text-sm text-red-500 mt-2">{passwordError}</p>
-                )}
+                {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
               </div>
             </div>
             <div className="flex gap-3">
@@ -155,9 +155,7 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
         {/* 3단계: 탈퇴 사유 */}
         {deleteStep === "reason" && (
           <>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">
-              탈퇴 사유
-            </h3>
+            <h3 className="text-2xl font-semibold text-gray-900 mb-2">탈퇴 사유</h3>
             <p className="text-sm text-gray-600 mb-6">
               서비스 개선을 위해 탈퇴 사유를 알려주세요. (선택사항)
             </p>
@@ -216,16 +214,22 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
           <>
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg
+                  className="w-8 h-8 text-red-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">
-                최종 확인
-              </h3>
-              <p className="text-sm text-gray-600 mb-4 text-center">
-                정말로 탈퇴하시겠습니까?
-              </p>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">최종 확인</h3>
+              <p className="text-sm text-gray-600 mb-4 text-center">정말로 탈퇴하시겠습니까?</p>
               <div className="rounded-2xl bg-gray-50 border border-gray-200 p-4">
                 <p className="text-xs text-gray-600 mb-2">선택하신 탈퇴 사유:</p>
                 <p className="text-sm text-gray-900 font-medium">
@@ -254,4 +258,3 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
     </div>
   );
 }
-

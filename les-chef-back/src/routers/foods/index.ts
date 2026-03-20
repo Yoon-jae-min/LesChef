@@ -1,4 +1,4 @@
-import express from "express";
+import express from 'express';
 import {
     getPlace,
     addPlace,
@@ -7,9 +7,9 @@ import {
     addContent,
     deleteContent,
     updateContent,
-    getExpiryAlerts
-} from "../../controllers/foods";
-import { requireAuth } from "../../middleware/auth/auth";
+    getExpiryAlerts,
+} from '../../controllers/foods';
+import { requireAuth } from '../../middleware/auth/auth';
 
 const router = express.Router();
 
@@ -17,14 +17,13 @@ const router = express.Router();
 router.use(requireAuth);
 
 router
-    .get("/place", getPlace)
-    .post("/place", addPlace)
-    .patch("/place", updatePlace)
-    .delete("/place", deletePlace)
-    .post("/content", addContent)
-    .delete("/content", deleteContent)
-    .patch("/content", updateContent)
-    .get("/expiry-alerts", getExpiryAlerts);
+    .get('/place', getPlace)
+    .post('/place', addPlace)
+    .patch('/place', updatePlace)
+    .delete('/place', deletePlace)
+    .post('/content', addContent)
+    .delete('/content', deleteContent)
+    .patch('/content', updateContent)
+    .get('/expiry-alerts', getExpiryAlerts);
 
 export default router;
-

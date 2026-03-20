@@ -30,19 +30,25 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
   // ⚠️ 중요: 모든 Hook은 early return 전에 호출해야 함
   const alerts = data;
   const hasAlerts = useMemo(() => {
-    return alerts && (alerts.expiredCount > 0 || alerts.urgentCount > 0 || alerts.warningCount > 0 || alerts.noticeCount > 0);
+    return (
+      alerts &&
+      (alerts.expiredCount > 0 ||
+        alerts.urgentCount > 0 ||
+        alerts.warningCount > 0 ||
+        alerts.noticeCount > 0)
+    );
   }, [alerts]);
 
   // 우선순위 알림 목록 메모이제이션
   const priorityAlerts = useMemo(() => {
     if (!alerts || !hasAlerts) return [];
-    
+
     // 우선순위: 만료 > 긴급 > 경고 > 알림
     return [
-      ...(alerts.expired || []).map(item => ({ ...item, priority: 'expired' as const })),
-      ...(alerts.urgent || []).map(item => ({ ...item, priority: 'urgent' as const })),
-      ...(alerts.warning || []).map(item => ({ ...item, priority: 'warning' as const })),
-      ...(alerts.notice || []).map(item => ({ ...item, priority: 'notice' as const })),
+      ...(alerts.expired || []).map((item) => ({ ...item, priority: "expired" as const })),
+      ...(alerts.urgent || []).map((item) => ({ ...item, priority: "urgent" as const })),
+      ...(alerts.warning || []).map((item) => ({ ...item, priority: "warning" as const })),
+      ...(alerts.notice || []).map((item) => ({ ...item, priority: "notice" as const })),
     ].slice(0, 6); // 최대 6개만 표시
   }, [alerts, hasAlerts]);
 
@@ -83,7 +89,10 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
           <h2 className="text-2xl font-bold text-gray-900 mb-4">유통기한 알림</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="rounded-2xl border border-gray-200 bg-gray-50 p-4 animate-pulse h-32"></div>
+              <div
+                key={i}
+                className="rounded-2xl border border-gray-200 bg-gray-50 p-4 animate-pulse h-32"
+              ></div>
             ))}
           </div>
         </div>
@@ -104,29 +113,29 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
     );
   }
 
-  const getPriorityStyle = (priority: 'expired' | 'urgent' | 'warning' | 'notice') => {
+  const getPriorityStyle = (priority: "expired" | "urgent" | "warning" | "notice") => {
     switch (priority) {
-      case 'expired':
-        return 'bg-red-50 border-red-200 text-red-900';
-      case 'urgent':
-        return 'bg-orange-50 border-orange-200 text-orange-900';
-      case 'warning':
-        return 'bg-yellow-50 border-yellow-200 text-yellow-900';
-      case 'notice':
-        return 'bg-blue-50 border-blue-200 text-blue-900';
+      case "expired":
+        return "bg-red-50 border-red-200 text-red-900";
+      case "urgent":
+        return "bg-orange-50 border-orange-200 text-orange-900";
+      case "warning":
+        return "bg-yellow-50 border-yellow-200 text-yellow-900";
+      case "notice":
+        return "bg-blue-50 border-blue-200 text-blue-900";
     }
   };
 
-  const getPriorityLabel = (priority: 'expired' | 'urgent' | 'warning' | 'notice') => {
+  const getPriorityLabel = (priority: "expired" | "urgent" | "warning" | "notice") => {
     switch (priority) {
-      case 'expired':
-        return '만료';
-      case 'urgent':
-        return '긴급';
-      case 'warning':
-        return '경고';
-      case 'notice':
-        return '알림';
+      case "expired":
+        return "만료";
+      case "urgent":
+        return "긴급";
+      case "warning":
+        return "경고";
+      case "notice":
+        return "알림";
     }
   };
 
@@ -173,8 +182,8 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
                     {daysUntilExpiry < 0
                       ? `만료됨 (${Math.abs(daysUntilExpiry)}일 전)`
                       : daysUntilExpiry === 0
-                      ? "오늘 만료"
-                      : `D-${daysUntilExpiry}`}
+                        ? "오늘 만료"
+                        : `D-${daysUntilExpiry}`}
                   </p>
                 </div>
               </div>
@@ -196,4 +205,3 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
     </section>
   );
 }
-

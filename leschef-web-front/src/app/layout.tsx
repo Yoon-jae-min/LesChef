@@ -2,10 +2,10 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ScrollToTop from "@/components/common/ui/ScrollToTop";
 import SWRProvider from "@/components/common/providers/SWRProvider";
+import GlobalClientFailureHandlers from "@/components/common/providers/GlobalClientFailureHandlers";
 import { NotificationProvider } from "@/contexts/Notification";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
@@ -39,14 +39,13 @@ export const metadata: Metadata = {
   },
 };
 
-function RootLayout({
-  children,
-}: Readonly<{ children: React.ReactNode }>) {
+function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="ko">
       <body className="min-h-screen bg-white text-black antialiased">
         <SWRProvider>
           <NotificationProvider>
+            <GlobalClientFailureHandlers />
             {children}
             <ScrollToTop />
           </NotificationProvider>

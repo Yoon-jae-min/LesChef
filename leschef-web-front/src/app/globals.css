@@ -2,8 +2,8 @@
 
 /* Pretendard Variable 폰트 로드 (로컬) */
 @font-face {
-  font-family: 'Pretendard Variable';
-  src: url('/fonts/PretendardVariable.woff2') format('woff2');
+  font-family: "Pretendard Variable";
+  src: url("/fonts/PretendardVariable.woff2") format("woff2");
   font-weight: 45 920;
   font-style: normal;
   font-display: swap;
@@ -16,7 +16,6 @@
   --font-mono: var(--font-geist-mono);
 }
 
-
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;
@@ -27,7 +26,19 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", sans-serif;
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    Roboto,
+    "Helvetica Neue",
+    "Segoe UI",
+    "Apple SD Gothic Neo",
+    "Noto Sans KR",
+    "Malgun Gothic",
+    sans-serif;
 }
 
 /* 스크롤바 스타일링 - Tailwind로는 직접 지원하지 않으므로 CSS로 정의 */

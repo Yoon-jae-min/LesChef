@@ -26,10 +26,7 @@ interface HomeClientProps {
   priceInitialError?: string | null;
 }
 
-export default function HomeClient({
-  priceInitialData,
-  priceInitialError,
-}: HomeClientProps) {
+export default function HomeClient({ priceInitialData, priceInitialError }: HomeClientProps) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -39,7 +36,7 @@ export default function HomeClient({
   const nickNameParam = searchParams.get("nickName");
   const telParam = searchParams.get("tel");
   const isSnsCallback = !!userIdParam && !!nickNameParam;
-  
+
   // 로그인 상태 확인 (isLoading 추가)
   const { data: authData, isLoading: isAuthLoading } = useSWR("auth_status", checkAuth);
   // 로딩 중이 아니고 데이터가 있으며 loggedIn이 true일 때만 실제 로그인으로 간주
@@ -110,7 +107,7 @@ export default function HomeClient({
   return (
     <div className="min-h-screen bg-white">
       <Top />
-      
+
       {/* 히어로 섹션 */}
       <HeroSection />
 
@@ -131,10 +128,12 @@ export default function HomeClient({
             {/* 레시피 섹션 (서브 - 더 작게) */}
             <div className="pt-12 border-t-2 border-gray-300">
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-500 uppercase tracking-wide">레시피 둘러보기</h2>
+                <h2 className="text-xl font-semibold text-gray-500 uppercase tracking-wide">
+                  레시피 둘러보기
+                </h2>
                 <p className="text-sm text-gray-400 mt-1">다양한 레시피를 탐색해보세요</p>
               </div>
-              
+
               <div className="space-y-6">
                 <RecipeSection
                   title="인기 레시피"
@@ -162,10 +161,7 @@ export default function HomeClient({
 
           {/* 사이드바 (1열) */}
           <div className="lg:col-span-1">
-            <IngredientPrice
-              initialData={priceInitialData}
-              initialError={priceInitialError}
-            />
+            <IngredientPrice initialData={priceInitialData} initialError={priceInitialError} />
           </div>
         </div>
       </div>

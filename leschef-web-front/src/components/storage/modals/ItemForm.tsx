@@ -40,7 +40,9 @@ export default function ItemForm({
     <Storage open={open} onClose={onClose}>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-[0.4em] text-gray-400">Inventory</p>
-        <h3 className="text-2xl font-semibold text-gray-900">{editingItem ? "재료 수정" : "새 재료 추가"}</h3>
+        <h3 className="text-2xl font-semibold text-gray-900">
+          {editingItem ? "재료 수정" : "새 재료 추가"}
+        </h3>
         <p className="text-sm text-gray-500">
           {activePlaceName
             ? `${activePlaceName}에 보관 중인 재료 정보를 입력해주세요.`
@@ -117,4 +119,3 @@ export default function ItemForm({
     </Storage>
   );
 }
-

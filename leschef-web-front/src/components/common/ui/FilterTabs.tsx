@@ -9,12 +9,7 @@ interface FilterTabsProps {
   variant?: "default" | "gray";
 }
 
-function FilterTabs({ 
-  items, 
-  activeItem, 
-  onItemChange,
-  variant = "default"
-}: FilterTabsProps) {
+function FilterTabs({ items, activeItem, onItemChange, variant = "default" }: FilterTabsProps) {
   const getActiveClasses = (isActive: boolean) => {
     if (variant === "gray") {
       return isActive
@@ -44,4 +39,3 @@ function FilterTabs({
 }
 
 export default FilterTabs;
-

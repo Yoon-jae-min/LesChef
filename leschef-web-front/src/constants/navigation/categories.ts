@@ -22,4 +22,3 @@ export const BOARD_CATEGORY_LABEL: Record<string, string> = {
   notice: "공지",
   free: "자유",
 } as const;
-

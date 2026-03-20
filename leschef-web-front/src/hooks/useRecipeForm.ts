@@ -5,7 +5,9 @@
 
 import { useState, useCallback } from "react";
 import type { Ingredient, IngredientGroup, RecipeStep } from "@/utils/api/recipeApi";
+import type { RecipeDetailResponse } from "@/types/recipe";
 import { RECIPE_DEFAULTS } from "@/constants/recipe/recipe";
+import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 
 export type RecipeFormState = {
   recipeName: string;
@@ -60,40 +62,39 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
   });
 
   // 기본 필드 업데이트
-  const updateField = useCallback(<K extends keyof RecipeFormState>(
-    field: K,
-    value: RecipeFormState[K]
-  ) => {
-    setFormState((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const updateField = useCallback(
+    <K extends keyof RecipeFormState>(field: K, value: RecipeFormState[K]) => {
+      setFormState((prev) => ({ ...prev, [field]: value }));
+    },
+    []
+  );
 
   // 이미지 변경 핸들러
-  const handleImageChange = useCallback((
-    e: React.ChangeEvent<HTMLInputElement>,
-    type: "main" | "step",
-    stepIndex?: number
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const handleImageChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>, type: "main" | "step", stepIndex?: number) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
 
-    if (type === "main") {
-      updateField("recipeImg", file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        updateField("recipeImgPreview", reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    } else if (stepIndex !== undefined) {
-      const newSteps = [...formState.steps];
-      newSteps[stepIndex].stepImgFile = file;
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newSteps[stepIndex].stepImg = reader.result as string;
-        setFormState((prev) => ({ ...prev, steps: newSteps }));
-      };
-      reader.readAsDataURL(file);
-    }
-  }, [formState.steps, updateField]);
+      if (type === "main") {
+        updateField("recipeImg", file);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          updateField("recipeImgPreview", reader.result as string);
+        };
+        reader.readAsDataURL(file);
+      } else if (stepIndex !== undefined) {
+        const newSteps = [...formState.steps];
+        newSteps[stepIndex].stepImgFile = file;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          newSteps[stepIndex].stepImg = reader.result as string;
+          setFormState((prev) => ({ ...prev, steps: newSteps }));
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [formState.steps, updateField]
+  );
 
   // 재료 그룹 추가
   const addIngredientGroup = useCallback(() => {
@@ -141,35 +142,37 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
   }, []);
 
   // 재료 그룹 필드 업데이트
-  const updateIngredientGroup = useCallback((
-    groupIndex: number,
-    field: "sortType" | "ingredients",
-    value: string | Ingredient[]
-  ) => {
-    setFormState((prev) => {
-      const newGroups = [...prev.ingredientGroups];
-      if (field === "sortType") {
-        newGroups[groupIndex].sortType = value as string;
-      } else {
-        newGroups[groupIndex].ingredients = value as Ingredient[];
-      }
-      return { ...prev, ingredientGroups: newGroups };
-    });
-  }, []);
+  const updateIngredientGroup = useCallback(
+    (groupIndex: number, field: "sortType" | "ingredients", value: string | Ingredient[]) => {
+      setFormState((prev) => {
+        const newGroups = [...prev.ingredientGroups];
+        if (field === "sortType") {
+          newGroups[groupIndex].sortType = value as string;
+        } else {
+          newGroups[groupIndex].ingredients = value as Ingredient[];
+        }
+        return { ...prev, ingredientGroups: newGroups };
+      });
+    },
+    []
+  );
 
   // 재료 필드 업데이트
-  const updateIngredient = useCallback((
-    groupIndex: number,
-    ingredientIndex: number,
-    field: keyof Ingredient,
-    value: string | number
-  ) => {
-    setFormState((prev) => {
-      const newGroups = [...prev.ingredientGroups];
-      newGroups[groupIndex].ingredients[ingredientIndex][field] = value as never;
-      return { ...prev, ingredientGroups: newGroups };
-    });
-  }, []);
+  const updateIngredient = useCallback(
+    (
+      groupIndex: number,
+      ingredientIndex: number,
+      field: keyof Ingredient,
+      value: string | number
+    ) => {
+      setFormState((prev) => {
+        const newGroups = [...prev.ingredientGroups];
+        newGroups[groupIndex].ingredients[ingredientIndex][field] = value as never;
+        return { ...prev, ingredientGroups: newGroups };
+      });
+    },
+    []
+  );
 
   // 조리 단계 추가
   const addStep = useCallback(() => {
@@ -199,22 +202,21 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
   }, []);
 
   // 조리 단계 필드 업데이트
-  const updateStep = useCallback((
-    index: number,
-    field: keyof RecipeStep,
-    value: string | number | File | null
-  ) => {
-    setFormState((prev) => {
-      const newSteps = [...prev.steps];
-      newSteps[index][field] = value as never;
-      return { ...prev, steps: newSteps };
-    });
-  }, []);
+  const updateStep = useCallback(
+    (index: number, field: keyof RecipeStep, value: string | number | File | null) => {
+      setFormState((prev) => {
+        const newSteps = [...prev.steps];
+        newSteps[index][field] = value as never;
+        return { ...prev, steps: newSteps };
+      });
+    },
+    []
+  );
 
   // 폼 검증
   const validateRecipe = useCallback((): { isValid: boolean; errorMessage: string } => {
     const { RECIPE_VALIDATION_MESSAGES } = require("@/constants/recipe/recipe");
-    
+
     // 1. 레시피 이름 필수
     if (!formState.recipeName || formState.recipeName.trim().length === 0) {
       return {
@@ -224,8 +226,8 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
     }
 
     // 2. 재료 1개 이상 필수
-    const hasValidIngredient = formState.ingredientGroups.some(
-      (group) => group.ingredients.some(
+    const hasValidIngredient = formState.ingredientGroups.some((group) =>
+      group.ingredients.some(
         (ingredient) => ingredient.ingredientName && ingredient.ingredientName.trim().length > 0
       )
     );
@@ -255,6 +257,47 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
     setFormState(INITIAL_STATE);
   }, []);
 
+  /** 수정 페이지: API 상세 응답으로 폼 채우기 */
+  const hydrateFromDetail = useCallback((data: RecipeDetailResponse) => {
+    const r = data.selectedRecipe;
+
+    const ingredientGroups =
+      data.recipeIngres && data.recipeIngres.length > 0
+        ? data.recipeIngres.map((g) => ({
+            sortType: g.sortType || "",
+            ingredients: (g.ingredientUnit || []).map((u) => ({
+              ingredientName: u.ingredientName || "",
+              volume: typeof u.volume === "number" ? u.volume : Number(u.volume) || 0,
+              unit: u.unit || RECIPE_DEFAULTS.INGREDIENT_UNIT,
+            })),
+          }))
+        : INITIAL_STATE.ingredientGroups;
+
+    const steps =
+      data.recipeSteps && data.recipeSteps.length > 0
+        ? data.recipeSteps.map((s) => ({
+            stepNum: s.stepNum,
+            stepWay: s.stepWay || "",
+            stepImg: resolveBackendAssetUrl(s.stepImg || ""),
+            stepImgFile: null,
+          }))
+        : INITIAL_STATE.steps;
+
+    setFormState({
+      recipeName: r.recipeName || "",
+      cookTime: typeof r.cookTime === "number" ? r.cookTime : RECIPE_DEFAULTS.COOK_TIME,
+      portion: typeof r.portion === "number" ? r.portion : RECIPE_DEFAULTS.PORTION,
+      portionUnit: r.portionUnit || RECIPE_DEFAULTS.PORTION_UNIT,
+      cookLevel: r.cookLevel || RECIPE_DEFAULTS.COOK_LEVEL,
+      majorCategory: r.majorCategory || RECIPE_DEFAULTS.MAJOR_CATEGORY,
+      subCategory: r.subCategory || "",
+      recipeImg: null,
+      recipeImgPreview: resolveBackendAssetUrl(r.recipeImg || ""),
+      ingredientGroups,
+      steps,
+    });
+  }, []);
+
   return {
     formState,
     updateField,
@@ -269,6 +312,6 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
     updateStep,
     validateRecipe,
     resetForm,
+    hydrateFromDetail,
   };
 }
-

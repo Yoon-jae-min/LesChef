@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export default function RecipePage() {
   useEffect(() => {
     // Redirect to korean (한식) as default
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.location.replace("/recipe/korean");
     }
   }, []);
@@ -16,5 +16,3 @@ export default function RecipePage() {
     </div>
   );
 }
-
-

@@ -93,50 +93,53 @@ export default function Review({ recipeId }: ReviewProps) {
     return () => clearInterval(timer);
   }, [fetchReviews]);
 
-  const handleSubmit = useCallback(async (rating: number, comment: string) => {
-    setIsSubmitting(true);
-    try {
-      const response = await fetch(`${REVIEW_API_BASE}/review`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          recipeId,
-          rating,
-          comment,
-        }),
-      });
+  const handleSubmit = useCallback(
+    async (rating: number, comment: string) => {
+      setIsSubmitting(true);
+      try {
+        const response = await fetch(`${REVIEW_API_BASE}/review`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            recipeId,
+            rating,
+            comment,
+          }),
+        });
 
-      if (!response.ok) {
-        throw new Error("리뷰 등록에 실패했습니다.");
+        if (!response.ok) {
+          throw new Error("리뷰 등록에 실패했습니다.");
+        }
+
+        const data = (await response.json()) as UpsertReviewResponse;
+        if (data.error) {
+          throw new Error("리뷰 등록에 실패했습니다.");
+        }
+
+        // 로컬 상태 업데이트
+        setAverageRating(data.averageRating || 0);
+        setCount(data.count || 0);
+        setReviews((prev) => {
+          const others = prev.filter((r) => r.userId !== currentUserId);
+          return [...others, data.review];
+        });
+
+        alert("리뷰가 저장되었습니다.");
+      } catch (err) {
+        if (err instanceof Error) {
+          alert(err.message);
+        } else {
+          alert("리뷰 등록에 실패했습니다.");
+        }
+      } finally {
+        setIsSubmitting(false);
       }
-
-      const data = (await response.json()) as UpsertReviewResponse;
-      if (data.error) {
-        throw new Error("리뷰 등록에 실패했습니다.");
-      }
-
-      // 로컬 상태 업데이트
-      setAverageRating(data.averageRating || 0);
-      setCount(data.count || 0);
-      setReviews((prev) => {
-        const others = prev.filter((r) => r.userId !== currentUserId);
-        return [...others, data.review];
-      });
-
-      alert("리뷰가 저장되었습니다.");
-    } catch (err) {
-      if (err instanceof Error) {
-        alert(err.message);
-      } else {
-        alert("리뷰 등록에 실패했습니다.");
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [recipeId, currentUserId]);
+    },
+    [recipeId, currentUserId]
+  );
 
   const handleDelete = useCallback(async () => {
     setIsSubmitting(true);
@@ -198,18 +201,12 @@ export default function Review({ recipeId }: ReviewProps) {
           <span className="text-lg font-semibold text-gray-900">
             {roundedAverage || "평가 없음"}
           </span>
-          {count > 0 && (
-            <span className="text-sm text-gray-500">({count}명)</span>
-          )}
+          {count > 0 && <span className="text-sm text-gray-500">({count}명)</span>}
         </div>
         {isLoggedIn ? (
-          <span className="text-xs text-gray-500">
-            로그인 상태입니다. 리뷰를 작성해보세요.
-          </span>
+          <span className="text-xs text-gray-500">로그인 상태입니다. 리뷰를 작성해보세요.</span>
         ) : (
-          <span className="text-xs text-gray-500">
-            로그인 후 리뷰를 작성할 수 있습니다.
-          </span>
+          <span className="text-xs text-gray-500">로그인 후 리뷰를 작성할 수 있습니다.</span>
         )}
       </div>
 
@@ -229,4 +226,3 @@ export default function Review({ recipeId }: ReviewProps) {
     </div>
   );
 }
-

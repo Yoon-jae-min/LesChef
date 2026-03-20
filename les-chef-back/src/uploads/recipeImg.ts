@@ -1,7 +1,10 @@
 import multer from 'multer';
 import path from 'path';
+import os from 'os';
 import crypto from 'crypto';
+import fs from 'fs';
 import { Request } from 'express';
+import { getStorageConfig } from '../config/storage';
 
 // 허용된 이미지 MIME 타입
 const ALLOWED_MIME_TYPES: string[] = [
@@ -9,7 +12,7 @@ const ALLOWED_MIME_TYPES: string[] = [
     'image/jpg',
     'image/png',
     'image/gif',
-    'image/webp'
+    'image/webp',
 ];
 
 // 허용된 파일 확장자
@@ -22,140 +25,200 @@ type CategoryType = 'korean' | 'japanese' | 'chinese' | 'western' | 'other';
 
 const categoryTrans = (category: string): CategoryType => {
     const categoryMap: Record<string, CategoryType> = {
-        '한식': 'korean',
-        '일식': 'japanese',
-        '중식': 'chinese',
-        '양식': 'western',
-        '기타': 'other'
+        한식: 'korean',
+        일식: 'japanese',
+        중식: 'chinese',
+        양식: 'western',
+        기타: 'other',
     };
-    
-    // 허용된 카테고리만 반환, 기본값은 'other'
+
     return categoryMap[category] || 'other';
 };
 
-// 파일명 sanitization (경로 traversal 공격 방지)
 const sanitizeFileName = (fileName: string): string => {
-    // 경로 구분자 제거
-    return fileName.replace(/[\/\\]/g, '')
-                   .replace(/\.\./g, '')
-                   .replace(/[<>:"|?*]/g, '');
+    return fileName
+        .replace(/[\/\\]/g, '')
+        .replace(/\.\./g, '')
+        .replace(/[<>:"|?*]/g, '');
 };
 
 const generateUniqueFileName = (originalName: string): string => {
-    // 파일명 sanitization
     const sanitized = sanitizeFileName(originalName);
     const extensionIndex = sanitized.lastIndexOf('.');
-    
+
     if (extensionIndex === -1) {
-        // 확장자가 없으면 .jpg로 기본 설정
         return `image-${crypto.randomBytes(16).toString('hex')}-${Date.now()}.jpg`;
     }
-    
+
     const fileExtension = sanitized.substring(extensionIndex).toLowerCase();
-    
-    // 허용된 확장자인지 확인
+
     if (!ALLOWED_EXTENSIONS.includes(fileExtension)) {
         throw new Error('허용되지 않은 파일 형식입니다.');
     }
-    
-    // 랜덤 해시를 사용하여 고유한 파일명 생성
+
     return `${crypto.randomBytes(16).toString('hex')}-${Date.now()}${fileExtension}`;
 };
 
+/**
+ * S3/R2 등 객체 스토리지로 보낼 때는 임시 폴더에 먼저 저장.
+ * STORAGE_DRIVER=s3 이지만 필수 env 누락 시에는 로컬 디스크로 폴백 (컨트롤러 isS3Storage()와 동일)
+ */
+function useObjectStorageUpload(): boolean {
+    try {
+        return getStorageConfig().driver === 's3';
+    } catch {
+        return false;
+    }
+}
+
 // Multer 파일 타입 확장
-interface MulterFileWithPath extends Express.Multer.File {
+export interface MulterFileWithPath extends Express.Multer.File {
+    /** 로컬: /Image/...  |  객체 스토리지 업로드용 object key (앞 슬래시 없음) */
     newPath?: string;
 }
 
+const diskStorageLocal = multer.diskStorage({
+    destination: function (
+        req: Request,
+        file: Express.Multer.File,
+        cb: (error: Error | null, destination: string) => void
+    ) {
+        try {
+            if (!req.body.recipeInfo) {
+                return cb(new Error('레시피 정보가 없습니다.'), '');
+            }
+
+            const recipeInfo = JSON.parse(req.body.recipeInfo as string);
+            const { majorCategory } = recipeInfo;
+
+            if (!majorCategory) {
+                return cb(new Error('카테고리가 없습니다.'), '');
+            }
+
+            const category = categoryTrans(majorCategory);
+
+            let destPath: string;
+            if (file.fieldname === 'recipeImgFile') {
+                destPath = path.join(
+                    __dirname,
+                    `../../public/Image/RecipeImage/ListImg/${category}`
+                );
+            } else if (file.fieldname === 'recipeStepImgFiles') {
+                destPath = path.join(
+                    __dirname,
+                    `../../public/Image/RecipeImage/InfoImg/step/${category}`
+                );
+            } else {
+                return cb(new Error('잘못된 파일 필드명입니다.'), '');
+            }
+
+            const normalizedPath = path.normalize(destPath);
+            const basePath = path.normalize(path.join(__dirname, '../../public'));
+
+            if (!normalizedPath.startsWith(basePath)) {
+                return cb(new Error('잘못된 파일 경로입니다.'), '');
+            }
+
+            fs.mkdirSync(normalizedPath, { recursive: true });
+            cb(null, normalizedPath);
+        } catch (error) {
+            cb(error as Error, '');
+        }
+    },
+    filename: function (
+        req: Request,
+        file: Express.Multer.File,
+        cb: (error: Error | null, filename: string) => void
+    ) {
+        try {
+            const recipeInfo = JSON.parse(req.body.recipeInfo as string);
+            const { majorCategory } = recipeInfo;
+            const category = categoryTrans(majorCategory);
+
+            const uniqueName = generateUniqueFileName(file.originalname);
+
+            const fileWithPath = file as MulterFileWithPath;
+            if (file.fieldname === 'recipeImgFile') {
+                fileWithPath.newPath = `/Image/RecipeImage/ListImg/${category}/${uniqueName}`;
+            } else if (file.fieldname === 'recipeStepImgFiles') {
+                fileWithPath.newPath = `/Image/RecipeImage/InfoImg/step/${category}/${uniqueName}`;
+            }
+
+            cb(null, uniqueName);
+        } catch (error) {
+            cb(error as Error, '');
+        }
+    },
+});
+
+/** 임시 디스크 → 컨트롤러에서 S3 업로드 후 삭제. newPath는 버킷 object key (슬래시 없음) */
+const diskStorageTempForS3 = multer.diskStorage({
+    destination: function (
+        _req: Request,
+        _file: Express.Multer.File,
+        cb: (error: Error | null, destination: string) => void
+    ) {
+        cb(null, os.tmpdir());
+    },
+    filename: function (
+        req: Request,
+        file: Express.Multer.File,
+        cb: (error: Error | null, filename: string) => void
+    ) {
+        try {
+            const recipeInfo = JSON.parse(req.body.recipeInfo as string);
+            const { majorCategory } = recipeInfo;
+            const category = categoryTrans(majorCategory);
+
+            const uniqueName = generateUniqueFileName(file.originalname);
+
+            const fileWithPath = file as MulterFileWithPath;
+            if (file.fieldname === 'recipeImgFile') {
+                fileWithPath.newPath = `Image/RecipeImage/ListImg/${category}/${uniqueName}`;
+            } else if (file.fieldname === 'recipeStepImgFiles') {
+                fileWithPath.newPath = `Image/RecipeImage/InfoImg/step/${category}/${uniqueName}`;
+            }
+
+            cb(null, uniqueName);
+        } catch (error) {
+            cb(error as Error, '');
+        }
+    },
+});
+
+const storage = useObjectStorageUpload() ? diskStorageTempForS3 : diskStorageLocal;
+
+type MulterFileFilterDone = (error: Error | null, acceptFile: boolean) => void;
+
 const upload = multer({
-    storage: multer.diskStorage({
-        destination: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
-            try {
-                // JSON 파싱 에러 처리
-                if (!req.body.recipeInfo) {
-                    return cb(new Error('레시피 정보가 없습니다.'), '');
-                }
-
-                const recipeInfo = JSON.parse(req.body.recipeInfo as string);
-                const { majorCategory } = recipeInfo;
-                
-                if (!majorCategory) {
-                    return cb(new Error('카테고리가 없습니다.'), '');
-                }
-
-                const category = categoryTrans(majorCategory);
-                
-                // 경로 traversal 공격 방지 - 정규화된 경로 사용
-                let destPath: string;
-                if (file.fieldname === 'recipeImgFile') {
-                    destPath = path.join(__dirname, `../../public/Image/RecipeImage/ListImg/${category}`);
-                } else if (file.fieldname === 'recipeStepImgFiles') {
-                    destPath = path.join(__dirname, `../../public/Image/RecipeImage/InfoImg/step/${category}`);
-                } else {
-                    return cb(new Error('잘못된 파일 필드명입니다.'), '');
-                }
-
-                // 경로 정규화 및 검증
-                const normalizedPath = path.normalize(destPath);
-                const basePath = path.normalize(path.join(__dirname, '../../public'));
-                
-                // basePath 밖으로 나가는지 확인
-                if (!normalizedPath.startsWith(basePath)) {
-                    return cb(new Error('잘못된 파일 경로입니다.'), '');
-                }
-
-                cb(null, normalizedPath);
-            } catch (error) {
-                cb(error as Error, '');
-            }
-        },
-        filename: function (req: Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-            try {
-                const recipeInfo = JSON.parse(req.body.recipeInfo as string);
-                const { majorCategory } = recipeInfo;
-                const category = categoryTrans(majorCategory);
-                
-                const uniqueName = generateUniqueFileName(file.originalname);
-
-                const fileWithPath = file as MulterFileWithPath;
-                if (file.fieldname === 'recipeImgFile') {
-                    fileWithPath.newPath = `/Image/RecipeImage/ListImg/${category}/${uniqueName}`;
-                } else if (file.fieldname === 'recipeStepImgFiles') {
-                    fileWithPath.newPath = `/Image/RecipeImage/InfoImg/step/${category}/${uniqueName}`;
-                }
-
-                cb(null, uniqueName);
-            } catch (error) {
-                cb(error as Error, '');
-            }
-        }
-    }),
+    storage,
     fileFilter: function (_req: Request, file: Express.Multer.File, cb: multer.FileFilterCallback) {
+        const done = cb as MulterFileFilterDone;
         if (!file) {
-            return cb(new Error('파일이 없습니다.') as any, false);
+            return done(new Error('파일이 없습니다.'), false);
         }
 
-        // MIME 타입 검증
         if (!ALLOWED_MIME_TYPES.includes(file.mimetype)) {
-            return cb(new Error('허용되지 않은 파일 형식입니다. (JPEG, PNG, GIF, WEBP만 허용)') as any, false);
+            return done(
+                new Error('허용되지 않은 파일 형식입니다. (JPEG, PNG, GIF, WEBP만 허용)'),
+                false
+            );
         }
 
-        // 파일 확장자 검증
         const ext = path.extname(file.originalname).toLowerCase();
         if (!ALLOWED_EXTENSIONS.includes(ext)) {
-            return cb(new Error('허용되지 않은 파일 확장자입니다.') as any, false);
+            return done(new Error('허용되지 않은 파일 확장자입니다.'), false);
         }
 
-        cb(null, true);
+        done(null, true);
     },
     limits: {
         fileSize: MAX_FILE_SIZE,
-        files: 11 // recipeImgFile 1개 + recipeStepImgFiles 최대 10개
-    }
+        files: 11,
+    },
 }).fields([
     { name: 'recipeImgFile', maxCount: 1 },
-    { name: 'recipeStepImgFiles', maxCount: 10 }
+    { name: 'recipeStepImgFiles', maxCount: 10 },
 ]);
 
 export { upload };
-

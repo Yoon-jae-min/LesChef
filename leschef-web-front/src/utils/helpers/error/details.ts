@@ -14,13 +14,16 @@ export function getErrorDetails(error: ApiError | Error | unknown): Array<{
   fieldName: string;
   message: string;
 }> {
-  if (typeof error === 'object' && error !== null && 'error' in error) {
+  if (typeof error === "object" && error !== null && "error" in error) {
     const apiError = error as ApiError;
-    
+
     if (apiError.details && Array.isArray(apiError.details)) {
       return apiError.details
-        .filter((detail): detail is { field: string; fieldName?: string; message: string; value?: unknown } => 
-          typeof detail === 'object' && 'field' in detail && 'message' in detail
+        .filter(
+          (
+            detail
+          ): detail is { field: string; fieldName?: string; message: string; value?: unknown } =>
+            typeof detail === "object" && "field" in detail && "message" in detail
         )
         .map((detail) => ({
           field: detail.field,
@@ -29,7 +32,6 @@ export function getErrorDetails(error: ApiError | Error | unknown): Array<{
         }));
     }
   }
-  
+
   return [];
 }
-

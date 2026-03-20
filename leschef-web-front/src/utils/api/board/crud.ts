@@ -136,4 +136,3 @@ export const deleteBoard = async (id: string): Promise<Response> => {
     throw new Error("게시글 삭제 중 네트워크 오류가 발생했습니다.");
   }
 };
-

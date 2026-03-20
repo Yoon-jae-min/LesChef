@@ -55,8 +55,10 @@ export async function generateThumbnail(
         // URL 경로 생성 (원본 경로 기준)
         const originalDir = path.dirname(originalPath);
         const relativePath = path.relative(originalDir, thumbnailPath);
-        const thumbnailUrl = path.join(path.dirname(originalPath.replace(/\\/g, '/')), relativePath).replace(/\\/g, '/');
-        
+        const thumbnailUrl = path
+            .join(path.dirname(originalPath.replace(/\\/g, '/')), relativePath)
+            .replace(/\\/g, '/');
+
         // 원본 URL 경로
         const originalUrl = originalPath.replace(/\\/g, '/').replace(/.*\/public/, '');
 
@@ -107,9 +109,7 @@ export async function optimizeImage(
                     .toFile(output);
             } else {
                 // 크기가 적절하면 포맷만 변환
-                await image
-                    .webp({ quality: IMAGE_OPTIMIZATION.WEBP_QUALITY })
-                    .toFile(output);
+                await image.webp({ quality: IMAGE_OPTIMIZATION.WEBP_QUALITY }).toFile(output);
             }
         }
 
@@ -140,4 +140,3 @@ export async function generateRecipeStepThumbnail(
 ): Promise<ThumbnailResult> {
     return generateThumbnail(originalPath, THUMBNAIL_SIZES.STEP, outputDir);
 }
-

@@ -57,4 +57,3 @@ export const createBoardComment = async (data: {
     throw new Error("댓글 작성 중 네트워크 오류가 발생했습니다.");
   }
 };
-

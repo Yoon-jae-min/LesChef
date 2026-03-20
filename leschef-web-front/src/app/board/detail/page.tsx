@@ -27,13 +27,13 @@ export default async function BoardDetailPage({
     } catch (err) {
       if (process.env.NODE_ENV === "development") {
         console.error("서버에서 게시글 상세 가져오기 실패:", err);
-    }
+      }
       error = err instanceof Error ? err.message : "게시글을 불러오지 못했습니다.";
     }
-    }
+  }
 
   return (
-    <BoardDetail 
+    <BoardDetail
       postId={postId}
       initialCategory={category}
       initialData={initialData}

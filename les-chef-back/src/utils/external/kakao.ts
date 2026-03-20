@@ -14,6 +14,26 @@ interface KakaoTokenResponse {
     [key: string]: unknown;
 }
 
+/** GET /v2/user/me 응답 (필요 필드만) */
+export interface KakaoUserInfo {
+    id: number;
+    kakao_account?: {
+        email?: string;
+        email_needs_agreement?: boolean;
+        has_email?: boolean;
+        is_email_valid?: boolean;
+        is_email_verified?: boolean;
+        profile?: {
+            nickname?: string;
+            profile_image_url?: string;
+        };
+    };
+    properties?: {
+        nickname?: string;
+        profile_image?: string;
+    };
+}
+
 /**
  * 카카오 API 호출 헬퍼
  * @param url - API URL
@@ -34,7 +54,9 @@ export async function fetchKakaoAPI(url: string, options: RequestInit = {}): Pro
         // 상태 코드 검사
         if (!response.ok) {
             const errorText = await response.text().catch(() => 'Unknown error');
-            throw new Error(`카카오 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`);
+            throw new Error(
+                `카카오 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`
+            );
         }
 
         return response;
@@ -61,7 +83,7 @@ export async function getKakaoToken(code: string): Promise<KakaoTokenResponse> {
         }),
     });
 
-    return await response.json() as KakaoTokenResponse;
+    return (await response.json()) as KakaoTokenResponse;
 }
 
 /**
@@ -69,42 +91,27 @@ export async function getKakaoToken(code: string): Promise<KakaoTokenResponse> {
  * @param accessToken - 카카오 액세스 토큰
  * @returns 사용자 정보 (이메일 포함)
  */
-export async function getKakaoUserInfo(accessToken: string): Promise<{
-    id: number;
-    kakao_account?: {
-        email?: string;
-        email_needs_agreement?: boolean;
-        has_email?: boolean;
-        is_email_valid?: boolean;
-        is_email_verified?: boolean;
-        profile?: {
-            nickname?: string;
-            profile_image_url?: string;
-        };
-    };
-    properties?: {
-        nickname?: string;
-        profile_image?: string;
-    };
-}> {
+export async function getKakaoUserInfo(accessToken: string): Promise<KakaoUserInfo> {
     const KAKAO_API_URL = process.env.KAKAO_API_URL || 'https://kapi.kakao.com';
-    
+
     // 사용자 정보 API는 JSON 형식이므로 별도로 처리
     try {
         const response = await fetch(`${KAKAO_API_URL}/v2/user/me`, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accessToken}`,
+                Authorization: `Bearer ${accessToken}`,
                 'Content-Type': 'application/json',
             },
         });
 
         if (!response.ok) {
             const errorText = await response.text().catch(() => 'Unknown error');
-            throw new Error(`카카오 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`);
+            throw new Error(
+                `카카오 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`
+            );
         }
 
-        return await response.json();
+        return (await response.json()) as KakaoUserInfo;
     } catch (error) {
         logger.error('카카오 사용자 정보 API 호출 오류', { error });
         throw error;
@@ -127,7 +134,7 @@ export async function unlinkKakaoUser(userId: string): Promise<void> {
     await fetchKakaoAPI(`${KAKAO_API_URL}/v1/user/unlink`, {
         method: 'POST',
         headers: {
-            'Authorization': `KakaoAK ${process.env.KAKAO_APP_ADMIN_KEY}`,
+            Authorization: `KakaoAK ${process.env.KAKAO_APP_ADMIN_KEY}`,
         },
         body: new URLSearchParams({
             target_id_type: 'user_id',
@@ -135,4 +142,3 @@ export async function unlinkKakaoUser(userId: string): Promise<void> {
         }),
     });
 }
-

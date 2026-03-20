@@ -1,67 +1,67 @@
-import mongoose, { Schema, Model } from "mongoose";
-import { IRecipe } from "../../../types";
+import mongoose, { Schema, Model } from 'mongoose';
+import { IRecipe } from '../../../types';
 
 const recipeSchema = new Schema<IRecipe>({
     recipeName: {
-        type: String
+        type: String,
     },
     cookTime: {
-        type: Number
+        type: Number,
     },
     portion: {
-        type: Number
+        type: Number,
     },
     portionUnit: {
-        type: String
+        type: String,
     },
     cookLevel: {
-        type: String
+        type: String,
     },
     majorCategory: {
-        type: String
+        type: String,
     },
     subCategory: {
-        type: String
+        type: String,
     },
     recipeImg: {
-        type: String
+        type: String,
     },
     viewCount: {
         type: Number,
-        default: 0
+        default: 0,
     },
     userId: {
-        type: String
+        type: String,
     },
     userNickName: {
-        type: String
+        type: String,
     },
     isShare: {
-        type: Boolean
+        type: Boolean,
     },
     tags: {
         type: [String],
-        default: []
+        default: [],
     },
     averageRating: {
         type: Number,
         default: 0,
         min: 0,
-        max: 5
+        max: 5,
     },
     reviewCount: {
         type: Number,
         default: 0,
-        min: 0
+        min: 0,
     },
-    createdAt: { 
+    createdAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
+        default: () => new Date().setMilliseconds(0),
     },
     updatedAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
-    }
+        default: () => new Date().setMilliseconds(0),
+    },
 });
 
 // 검색 성능 향상을 위한 인덱스 추가
@@ -74,7 +74,6 @@ recipeSchema.index({ viewCount: -1 }); // 조회수 정렬용
 // 인기순 정렬을 위한 복합 인덱스 (조회수, 평점, 리뷰 수)
 recipeSchema.index({ viewCount: -1, averageRating: -1, reviewCount: -1 });
 
-const Recipe: Model<IRecipe> = mongoose.model<IRecipe>("Recipe", recipeSchema);
+const Recipe: Model<IRecipe> = mongoose.model<IRecipe>('Recipe', recipeSchema);
 
 export default Recipe;
-

@@ -35,40 +35,34 @@ export const addStoragePlace = async (placeName: string): Promise<FoodsListRespo
 };
 
 /**
- * 보관 장소 이름 변경
- * @param placeName 기존 보관 장소 이름
- * @param changeName 변경할 보관 장소 이름
- * @returns Promise<FoodsListResponse>
+ * 보관 장소 이름 변경 (MongoDB place 서브도큐먼트 _id)
  */
 export const updateStoragePlace = async (
-  placeName: string,
+  placeId: string,
   changeName: string
 ): Promise<FoodsListResponse> => {
-  if (!placeName || !changeName) {
-    throw new Error("기존 이름과 변경할 이름이 필요합니다.");
+  if (!placeId || !changeName?.trim()) {
+    throw new Error("장소 ID와 변경할 이름이 필요합니다.");
   }
 
   return fetchJson<FoodsListResponse>(`${API_BASE_URL}/place`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ placeName, changeName }),
+    body: JSON.stringify({ placeId, changeName: changeName.trim() }),
   });
 };
 
 /**
- * 보관 장소 삭제
- * @param placeName 보관 장소 이름
- * @returns Promise<FoodsListResponse>
+ * 보관 장소 삭제 (MongoDB place 서브도큐먼트 _id)
  */
-export const deleteStoragePlace = async (placeName: string): Promise<FoodsListResponse> => {
-  if (!placeName) {
-    throw new Error("보관 장소 이름이 필요합니다.");
+export const deleteStoragePlace = async (placeId: string): Promise<FoodsListResponse> => {
+  if (!placeId) {
+    throw new Error("보관 장소 ID가 필요합니다.");
   }
 
   return fetchJson<FoodsListResponse>(`${API_BASE_URL}/place`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ placeName }),
+    body: JSON.stringify({ placeId }),
   });
 };
-

@@ -1,5 +1,5 @@
-import mongoose, { Schema, Model, Document, Types } from "mongoose";
-import { IRecipeStep } from "../../../types";
+import mongoose, { Schema, Model, Document, Types } from 'mongoose';
+import { IRecipeStep } from '../../../types';
 
 interface RecipeStepDocument extends IRecipeStep, Document {
     recipeId: Types.ObjectId;
@@ -8,28 +8,30 @@ interface RecipeStepDocument extends IRecipeStep, Document {
 const recipeStepSchema = new Schema<RecipeStepDocument>({
     recipeId: {
         type: Schema.Types.ObjectId,
-        ref: "Recipe"
+        ref: 'Recipe',
     },
     stepNum: {
-        type: Number
+        type: Number,
     },
     stepWay: {
-        type: String
+        type: String,
     },
     stepImg: {
-        type: String
+        type: String,
     },
-    createdAt: { 
+    createdAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
+        default: () => new Date().setMilliseconds(0),
     },
     updatedAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
-    }
+        default: () => new Date().setMilliseconds(0),
+    },
 });
 
-const RecipeStep: Model<RecipeStepDocument> = mongoose.model<RecipeStepDocument>("RecipeStep", recipeStepSchema);
+const RecipeStep: Model<RecipeStepDocument> = mongoose.model<RecipeStepDocument>(
+    'RecipeStep',
+    recipeStepSchema
+);
 
 export default RecipeStep;
-

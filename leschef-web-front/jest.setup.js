@@ -12,10 +12,9 @@ global.localStorage = localStorageMock;
 global.sessionStorage = localStorageMock;
 
 // window 객체 모킹
-Object.defineProperty(window, 'localStorage', {
+Object.defineProperty(window, "localStorage", {
   value: localStorageMock,
 });
-Object.defineProperty(window, 'sessionStorage', {
+Object.defineProperty(window, "sessionStorage", {
   value: localStorageMock,
 });
-

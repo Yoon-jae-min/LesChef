@@ -1,7 +1,7 @@
 "use client";
 
 // 동적 렌더링 강제 (useSearchParams 이슈 방지)
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Top from "@/components/common/navigation/Top";
@@ -21,7 +21,7 @@ export default function LoginPage() {
 
   // URL 파라미터에서 정보 가져오기
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const fromParam = params.get("from");
       const backParam = params.get("back");
@@ -62,7 +62,7 @@ export default function LoginPage() {
         // 세션 쿠키가 자동으로 설정되므로 별도로 저장할 필요 없음
         setError(null);
 
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
           const target = fromMyPage ? "/myPage" : returnTo;
 
           // 프론트 로그인 상태 플래그 및 사용자 정보 저장
@@ -75,7 +75,7 @@ export default function LoginPage() {
                 name: result.name,
                 nickName: result.nickName,
                 tel: result.tel,
-              }),
+              })
             );
           } catch {
             // 스토리지 사용 불가한 환경에서는 무시
@@ -92,7 +92,9 @@ export default function LoginPage() {
       if (process.env.NODE_ENV === "development") {
         console.error("로그인 실패:", error);
       }
-      setError(error instanceof Error ? error.message : "아이디 또는 비밀번호가 올바르지 않습니다.");
+      setError(
+        error instanceof Error ? error.message : "아이디 또는 비밀번호가 올바르지 않습니다."
+      );
     }
   };
 
@@ -121,15 +123,12 @@ export default function LoginPage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-400 to-yellow-400">
                 LesChef{" "}
               </span>
-              와{" "}
-              <span className="underline decoration-4 decoration-orange-300">
-                계속
-              </span>
+              와 <span className="underline decoration-4 decoration-orange-300">계속</span>
             </h1>
 
             <p className="mt-6 text-base text-gray-600 leading-relaxed">
-              즐겨찾기, 식재료 관리, 맞춤 레시피 추천까지. 로그인하면
-              나에게 딱 맞춘 LesChef의 서비스를 온전히 경험할 수 있어요.
+              즐겨찾기, 식재료 관리, 맞춤 레시피 추천까지. 로그인하면 나에게 딱 맞춘 LesChef의
+              서비스를 온전히 경험할 수 있어요.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -138,10 +137,7 @@ export default function LoginPage() {
                 "게시판 글쓰기 및 커뮤니티 참여",
                 "마이페이지에서 즐겨찾기와 저장함 관리",
               ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start gap-3 text-gray-800"
-                >
+                <div key={item} className="flex items-start gap-3 text-gray-800">
                   <span className="mt-1 h-2 w-2 rounded-full bg-black" />
                   <p className="text-sm lg:text-base leading-relaxed">{item}</p>
                 </div>
@@ -152,19 +148,13 @@ export default function LoginPage() {
           {/* 로그인 폼 */}
           <section className="bg-white border border-gray-200 rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="space-y-1">
-              <h2 className="text-2xl font-semibold text-gray-900">
-                계정으로 로그인
-              </h2>
-              <p className="text-sm text-gray-500">
-                LesChef 서비스 이용을 위해 로그인해 주세요.
-              </p>
+              <h2 className="text-2xl font-semibold text-gray-900">계정으로 로그인</h2>
+              <p className="text-sm text-gray-500">LesChef 서비스 이용을 위해 로그인해 주세요.</p>
             </div>
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  이메일
-                </label>
+                <label className="text-sm font-medium text-gray-700">이메일</label>
                 <input
                   type="email"
                   value={email}
@@ -177,9 +167,7 @@ export default function LoginPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  비밀번호
-                </label>
+                <label className="text-sm font-medium text-gray-700">비밀번호</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -222,9 +210,7 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
-              )}
+              {error && <p className="text-sm text-red-500">{error}</p>}
 
               <button
                 type="submit"
@@ -260,7 +246,7 @@ export default function LoginPage() {
               >
                 카카오
               </button>
-              
+
               {/* 네이버 로그인 */}
               <button
                 type="button"
@@ -280,7 +266,7 @@ export default function LoginPage() {
               >
                 네이버
               </button>
-              
+
               {/* 구글 로그인 */}
               <button
                 type="button"
@@ -320,4 +306,3 @@ export default function LoginPage() {
     </div>
   );
 }
-

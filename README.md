@@ -1,126 +1,87 @@
-# 🌐 LesChef Web Service
+# LesChef-Web
 
-LesChef의 웹 서비스 플랫폼
+레시피·게시판·식재료 보관함을 다루는 웹 프로젝트입니다. **프론트(Next.js)** 와 **백엔드(Express)** 가 분리된 저장소입니다.
 
-## 📋 개요
+## 구성
 
-LesChef-Web은 Next.js 기반의 프론트엔드와 Express.js 기반의 백엔드로 구성된 풀스택 웹 애플리케이션입니다. 사용자들이 레시피를 검색, 등록, 공유하고 커뮤니티에서 소통할 수 있는 기능을 제공합니다.
+| 디렉터리 | 설명 |
+|----------|------|
+| `leschef-web-front/` | Next.js 15 (App Router), `src/app` · `src/components` |
+| `les-chef-back/` | Express + MongoDB(Mongoose), `src/routers` · `src/controllers` |
 
-## 🎯 주요 기능
+## 사전 준비
 
-### 레시피 기능
-- 레시피 등록, 수정, 삭제
-- 카테고리별 레시피 조회 (한식, 중식, 일식, 양식)
-- 재료 기반 레시피 검색
-- 단계별 조리법 제공
-- 레시피 찜하기 기능
+- Node.js 20+ 권장  
+- MongoDB (백엔드)  
+- 각 패키지의 `.env` / `.env.example` 참고
 
-### 커뮤니티 기능
-- 게시글 작성, 수정, 삭제
-- 댓글 작성 및 관리
-- 좋아요 기능
-- 게시글 검색
-
-### 사용자 기능
-- 회원가입 및 로그인
-- 소셜 로그인 (카카오, 네이버)
-- 프로필 관리
-- 보관함 관리 (재료 목록)
-- 찜한 레시피 목록
-
-## 🏗️ 아키텍처
-
-```
-LesChef-Web/
-├── les-chef-back/        # Express.js 백엔드 서버
-│   ├── src/
-│   │   ├── controllers/ # 비즈니스 로직
-│   │   ├── models/      # MongoDB 스키마
-│   │   ├── routers/     # API 라우팅
-│   │   ├── middleware/  # 미들웨어 (보안, 에러 처리)
-│   │   └── uploads/     # 파일 업로드 처리
-│   └── public/         # 정적 파일
-│
-└── leschef-web-front/    # Next.js 프론트엔드
-    ├── src/
-    │   ├── app/         # Next.js App Router 페이지
-    │   ├── components/  # 재사용 가능한 컴포넌트
-    │   └── utils/       # API 유틸리티 함수
-    └── public/          # 정적 자산
-```
-
-## 🛠️ 기술 스택
+## 로컬 실행
 
 ### 백엔드
-- **Runtime**: Node.js
-- **Framework**: Express.js 4.21
-- **Database**: MongoDB (Mongoose ODM)
-- **Authentication**: JWT, Express Session
-- **Security**: Helmet.js, express-rate-limit, bcrypt
 
-### 프론트엔드
-- **Framework**: Next.js 15.4
-- **UI Library**: React 19
-- **Language**: TypeScript 5
-- **Styling**: Tailwind CSS 4
-
-## 🔌 API 통신
-
-프론트엔드와 백엔드는 RESTful API를 통해 통신합니다:
-- 인증: JWT 토큰 기반 세션 관리
-- 데이터 형식: JSON
-- HTTPS 지원 (개발 환경)
-
-## 🚀 빠른 시작
-
-### 필수 요구사항
-- Node.js 18 이상
-- MongoDB
-- npm 또는 yarn
-
-### 백엔드 실행
 ```bash
 cd les-chef-back
+cp .env.example .env   # 최초 1회, 값 수정
 npm install
-cp .env.example .env  # 환경 변수 설정 (Windows는 복사로 동일하게)
-npm run dev
+npm run dev             # 기본 http://localhost:3001 (PORT는 .env)
 ```
 
-자세한 내용은 [백엔드 README](./les-chef-back/README.md)를 참고하세요.
+### 프론트
 
-### 프론트엔드 실행
 ```bash
 cd leschef-web-front
+cp .env.example .env    # API 베이스 URL 등
 npm install
-# 환경 변수 설정: env.example -> .env 로 복사 후 값 채우기
-npm run dev
+npm run dev             # node server.js → 기본 http://localhost:3000
+# 또는: npm run dev:http  (next dev만)
 ```
 
-자세한 내용은 [프론트엔드 README](./leschef-web-front/README.md)를 참고하세요.
+## 자주 쓰는 스크립트
 
-## 🔐 보안 기능
+### 프론트 (`leschef-web-front`)
 
-- **Rate Limiting**: API 요청 제한
-- **Input Validation**: 입력 데이터 검증
-- **File Upload Security**: 파일 업로드 보안 (MIME 타입, 크기 제한)
-- **Session Security**: 세션 고정 공격 방지
-- **Security Headers**: Helmet.js를 통한 보안 헤더 설정
+| 스크립트 | 설명 |
+|----------|------|
+| `npm run dev` | 커스텀 HTTP 서버로 Next 실행 |
+| `npm run dev:http` | `next dev --turbopack` |
+| `npm run build` / `npm start` | 프로덕션 빌드·실행 |
+| `npm run type-check` | `tsc --noEmit` |
+| `npm run knip` | 미사용 파일·의존성·export 점검 |
+| `npm run format` / `npm run format:check` | Prettier 일괄 포맷 / 검사 |
+| `npm test` | Jest |
 
-## 📦 배포
+### 백엔드 (`les-chef-back`)
 
-### 개발 환경
-- 프론트엔드: `http://localhost:3000`
-- 백엔드: `http://localhost:3001`
+| 스크립트 | 설명 |
+|----------|------|
+| `npm run dev` | `tsx watch src/index.ts` |
+| `npm run build` | `tsc` → `dist/` |
+| `npm start` | `node dist/index.js` |
+| `npm run type-check` | 타입만 검사 |
+| `npm run knip` | 미사용 코드 점검 |
+| `npm run format` / `npm run format:check` | Prettier |
+| `npm test` | Jest (`RUN_AUTH_API_INTEGRATION=1` 시 일부 통합 테스트) |
 
-### 프로덕션 환경
-- 환경 변수를 통해 프로덕션 설정 구성
-- MongoDB 연결 문자열 설정
-- HTTPS 인증서 설정
+## 코드 가이드 (요약)
 
-## 📖 상세 문서
+- **프론트**: 페이지는 `src/app`, 공통 UI는 `src/components`, API 래퍼는 `src/utils/api`, 경로 별칭 `@/` → `src/`.
+- **백엔드**: 라우트는 `src/routers/<도메인>/index.ts`, 비즈니스 로직은 `src/controllers`. 컨트롤러 **배럴 `index.ts`** 는 라우터에서 직접 파일을 import 하는 경우가 많으므로, 배럴을 새로 만들 때는 실제 import 경로를 맞출 것.
+- **환경 변수**: 민감 값은 커밋하지 말고 `.env.example`만 갱신.
 
-- [백엔드 API 문서](./les-chef-back/README.md) - API 엔드포인트 및 서버 설정
-- [프론트엔드 컴포넌트 가이드](./leschef-web-front/README.md) - UI/UX 및 컴포넌트 구조
-- [보안 가이드](./les-chef-back/SECURITY.md) - 보안 기능 상세 설명
-- [데이터베이스 연결 가이드](./les-chef-back/MONGODB_CONNECTION_GUIDE.md) - MongoDB 연결 방법
+## 유지보수 시 추천 순서
 
+1. `npm run format:check` (또는 저장 전 `npm run format`)  
+2. `npm run type-check` (프론트/백 각각)  
+3. `npm run knip` — 제거 후보 확인 (Tailwind 설정 등 **예외는 `knip.json`** 참고)  
+4. `npm test`  
+5. 프론트는 `npm run build`로 최종 확인  
+
+## Lockfile
+
+상위 폴더에 다른 `package-lock.json`이 있으면 Knip/NPM이 잘못된 루트를 고를 수 있습니다. **이 프로젝트는 각 하위 폴더에서만 `npm install` 하는 것**을 권장합니다.
+
+## 코드 스타일 (Prettier)
+
+- 프론트·백 각각 `.prettierrc.json` / `.prettierignore` 가 있습니다.
+- VS Code/Cursor에서 **Prettier 확장** 설치 시 `.vscode/settings.json` 기준으로 저장 시 포맷됩니다.
+- PR 전 `npm run format:check` 로 통일 여부를 확인할 수 있습니다.

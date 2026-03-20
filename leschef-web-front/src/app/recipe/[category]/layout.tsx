@@ -32,11 +32,7 @@ const CUISINE_TO_SUBFILTERS: Record<(typeof CUISINE_TABS)[number], readonly stri
   기타: [],
 } as const;
 
-export default function RecipeCategoryLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RecipeCategoryLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [activeSub, setActiveSub] = useState<string>("전체");
   const [matchMode, setMatchMode] = useState<"bestMatch" | "needFew">("bestMatch");
@@ -51,16 +47,13 @@ export default function RecipeCategoryLayout({
 
   useEffect(() => {
     const loggedIn =
-      typeof window !== "undefined" &&
-      localStorage.getItem("leschef_is_logged_in") === "true";
+      typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true";
     setIsLoggedIn(loggedIn);
     setIncludeMyInventory(loggedIn);
   }, []);
   const modeLabel = useMemo(
     () =>
-      matchMode === "bestMatch"
-        ? "내 재료와 많이 겹치는 순"
-        : "부족 재료 1~2개만 사면 되는 순",
+      matchMode === "bestMatch" ? "내 재료와 많이 겹치는 순" : "부족 재료 1~2개만 사면 되는 순",
     [matchMode]
   );
 
@@ -99,11 +92,15 @@ export default function RecipeCategoryLayout({
         )}
 
         <div className="mb-8 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">Smart Filter</p>
+          <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">
+            Smart Filter
+          </p>
           <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <h2 className="text-2xl font-semibold text-gray-900">내 재료 기반 레시피 추천</h2>
             <span className="text-xs text-gray-500">
-              {isLoggedIn ? "보관 재료 정보를 활용해 정렬할 수 있습니다." : "로그인 후 매칭 옵션을 이용해 보세요."}
+              {isLoggedIn
+                ? "보관 재료 정보를 활용해 정렬할 수 있습니다."
+                : "로그인 후 매칭 옵션을 이용해 보세요."}
             </span>
           </div>
         </div>

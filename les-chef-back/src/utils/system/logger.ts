@@ -12,10 +12,7 @@ const logger = createLogger({
             return `${timestamp} [${level}]: ${message}${metaString}`;
         })
     ),
-    transports: [
-        new transports.Console(),
-    ],
+    transports: [new transports.Console()],
 });
 
 export default logger;
-

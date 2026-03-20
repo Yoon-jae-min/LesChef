@@ -23,10 +23,7 @@ export default async function Home() {
 
   return (
     <Suspense fallback={<div className="min-h-screen bg-white" />}>
-      <HomeClient 
-        priceInitialData={priceInitialData}
-        priceInitialError={priceError}
-      />
+      <HomeClient priceInitialData={priceInitialData} priceInitialError={priceError} />
     </Suspense>
   );
 }

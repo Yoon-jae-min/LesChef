@@ -33,7 +33,7 @@ export const getCurrentUser = (): StoredUserInfo | null => {
   if (typeof window === "undefined") return null;
   const userStr = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
   if (!userStr) return null;
-  
+
   try {
     const parsed = JSON.parse(userStr) as StoredUserInfo;
     // 최소한 id가 있는지 확인
@@ -63,4 +63,3 @@ export const clearAuthStorage = (): void => {
   sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
   sessionStorage.removeItem(STORAGE_KEYS.FROM_SOURCE);
 };
-

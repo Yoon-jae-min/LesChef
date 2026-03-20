@@ -8,7 +8,11 @@
 import Link from "next/link";
 import useSWR from "swr";
 import RecipeCard from "@/components/recipe/card/RecipeCard";
-import { fetchRecipeList, type RecipeListResponse, type RecipeSortOption } from "@/utils/api/recipeApi";
+import {
+  fetchRecipeList,
+  type RecipeListResponse,
+  type RecipeSortOption,
+} from "@/utils/api/recipeApi";
 import { TIMING } from "@/constants/system/timing";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
@@ -63,12 +67,7 @@ export default function RecipeSection({
               className="text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1"
             >
               전체보기
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -91,9 +90,7 @@ export default function RecipeSection({
             ))}
           </div>
         ) : recipes.length === 0 ? (
-          <div className="text-center py-12 text-gray-500">
-            레시피가 없습니다.
-          </div>
+          <div className="text-center py-12 text-gray-500">레시피가 없습니다.</div>
         ) : (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {recipes.map((recipe) => (
@@ -105,4 +102,3 @@ export default function RecipeSection({
     </section>
   );
 }
-

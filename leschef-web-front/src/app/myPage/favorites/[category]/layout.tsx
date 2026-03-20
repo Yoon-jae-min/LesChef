@@ -30,18 +30,15 @@ const CUISINE_TO_SUBFILTERS: Record<(typeof CUISINE_TABS)[number], readonly stri
   기타: [],
 } as const;
 
-export default function FavoritesCategoryLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function FavoritesCategoryLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const [activeSub, setActiveSub] = useState<string>("전체");
 
   // Get current category from pathname
   const currentCategory = pathname.split("/").pop() || "korean";
   const currentDisplay = CATEGORY_TO_DISPLAY[currentCategory] || "한식";
-  const subFiltersForActive = CUISINE_TO_SUBFILTERS[currentDisplay as keyof typeof CUISINE_TO_SUBFILTERS] || [];
+  const subFiltersForActive =
+    CUISINE_TO_SUBFILTERS[currentDisplay as keyof typeof CUISINE_TO_SUBFILTERS] || [];
 
   const handleTabChange = (tab: string) => {
     const newCategory = DISPLAY_TO_CATEGORY[tab];

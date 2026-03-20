@@ -89,7 +89,9 @@ export const submitRecipe = async (data: RecipeSubmitData): Promise<Response> =>
 /**
  * 레시피 작성 전용 함수 (편의 함수)
  */
-export const createRecipe = async (data: Omit<RecipeSubmitData, "isEdit" | "recipeId" | "deleteImgs">): Promise<Response> => {
+export const createRecipe = async (
+  data: Omit<RecipeSubmitData, "isEdit" | "recipeId" | "deleteImgs">
+): Promise<Response> => {
   return submitRecipe({
     ...data,
     isEdit: false,
@@ -144,4 +146,3 @@ export const deleteRecipe = async (recipeId: string): Promise<Response> => {
     throw new Error("레시피 삭제 중 네트워크 오류가 발생했습니다.");
   }
 };
-

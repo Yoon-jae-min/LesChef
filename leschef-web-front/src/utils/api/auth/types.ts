@@ -34,4 +34,3 @@ export type UserInfoResponse = {
   naverLinked?: boolean;
   text: boolean;
 };
-

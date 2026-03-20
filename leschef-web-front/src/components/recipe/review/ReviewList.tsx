@@ -11,23 +11,17 @@ interface ReviewListProps {
 export default function ReviewList({ reviews, loading, error }: ReviewListProps) {
   if (loading) {
     return (
-      <div className="text-center text-sm text-gray-500 py-4">
-        리뷰를 불러오는 중입니다...
-      </div>
+      <div className="text-center text-sm text-gray-500 py-4">리뷰를 불러오는 중입니다...</div>
     );
   }
 
   if (error) {
-    return (
-      <div className="text-center text-sm text-red-500 py-4">{error}</div>
-    );
+    return <div className="text-center text-sm text-red-500 py-4">{error}</div>;
   }
 
   if (reviews.length === 0) {
     return (
-      <div className="text-center text-sm text-gray-500 py-4">
-        아직 작성된 리뷰가 없습니다.
-      </div>
+      <div className="text-center text-sm text-gray-500 py-4">아직 작성된 리뷰가 없습니다.</div>
     );
   }
 
@@ -41,9 +35,7 @@ export default function ReviewList({ reviews, loading, error }: ReviewListProps)
           <div className="flex items-start justify-between mb-2">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center border border-gray-400">
-                <span className="text-sm text-gray-700">
-                  {review.userNickName?.[0] || "유"}
-                </span>
+                <span className="text-sm text-gray-700">{review.userNickName?.[0] || "유"}</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-sm font-medium text-gray-900">
@@ -56,9 +48,7 @@ export default function ReviewList({ reviews, loading, error }: ReviewListProps)
             </div>
             <div className="flex items-center gap-1">
               <span className="text-yellow-400 text-sm">★</span>
-              <span className="text-sm font-semibold text-gray-900">
-                {review.rating}
-              </span>
+              <span className="text-sm font-semibold text-gray-900">{review.rating}</span>
             </div>
           </div>
           <p className="text-sm text-gray-800 whitespace-pre-wrap">
@@ -69,4 +59,3 @@ export default function ReviewList({ reviews, loading, error }: ReviewListProps)
     </div>
   );
 }
-

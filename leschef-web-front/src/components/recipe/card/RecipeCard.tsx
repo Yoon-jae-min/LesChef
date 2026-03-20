@@ -5,7 +5,11 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { checkLoginStatus } from "@/utils/helpers/authUtils";
 import { type RecipeListItem } from "@/utils/api/recipeApi";
-import { getThumbnailPath, generateImagePlaceholder } from "@/utils/helpers/imageUtils";
+import {
+  getThumbnailPath,
+  generateImagePlaceholder,
+  resolveBackendAssetUrl,
+} from "@/utils/helpers/imageUtils";
 
 interface RecipeCardProps {
   recipe: RecipeListItem;
@@ -25,12 +29,13 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
   const cookTimeLabel = recipe.cookTime ? `${recipe.cookTime}분` : "시간 정보 없음";
   const levelLabel = recipe.cookLevel || "난이도 정보 없음";
   const tags = [recipe.subCategory || recipe.majorCategory || "레시피"];
-  const recipeId = recipe._id || recipe.recipeName;
+  const recipeId = recipe._id || "";
+  const recipeImgUrl = recipe.recipeImg ? resolveBackendAssetUrl(recipe.recipeImg) : "";
 
   return (
     <Link
-      key={recipeId}
-      href={`/recipe/detail?id=${recipeId}&recipeName=${encodeURIComponent(recipe.recipeName)}`}
+      key={recipeId || recipe.recipeName}
+      href={recipeId ? `/recipe/detail?id=${recipeId}` : "/recipe"}
       className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
       aria-label={`${recipe.recipeName} 상세로 이동`}
     >
@@ -38,7 +43,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
         <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
           {recipe.recipeImg ? (
             <Image
-              src={recipe.recipeImg}
+              src={recipeImgUrl}
               alt={recipe.recipeName}
               fill
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
@@ -49,9 +54,11 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               onError={(e) => {
                 // 썸네일 로드 실패 시 원본 이미지로 폴백
                 const target = e.target as HTMLImageElement;
-                const thumbnailPath = recipe.recipeImg ? getThumbnailPath(recipe.recipeImg) : '';
-                if (recipe.recipeImg && target.src !== recipe.recipeImg && thumbnailPath) {
-                  target.src = recipe.recipeImg;
+                const thumbnailPath = recipe.recipeImg
+                  ? resolveBackendAssetUrl(getThumbnailPath(recipe.recipeImg))
+                  : "";
+                if (recipeImgUrl && target.src !== recipeImgUrl && thumbnailPath) {
+                  target.src = recipeImgUrl;
                 }
               }}
             />
@@ -107,4 +114,3 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
     </Link>
   );
 }
-

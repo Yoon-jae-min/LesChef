@@ -37,7 +37,7 @@ interface NaverUserInfo {
  */
 export async function getNaverToken(code: string, state: string): Promise<NaverTokenResponse> {
     const NAVER_TOKEN_URL = 'https://nid.naver.com/oauth2.0/token';
-    
+
     try {
         const response = await fetch(NAVER_TOKEN_URL, {
             method: 'POST',
@@ -55,13 +55,17 @@ export async function getNaverToken(code: string, state: string): Promise<NaverT
 
         if (!response.ok) {
             const errorText = await response.text().catch(() => 'Unknown error');
-            throw new Error(`네이버 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`);
+            throw new Error(
+                `네이버 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`
+            );
         }
 
-        const data = await response.json() as NaverTokenResponse;
-        
+        const data = (await response.json()) as NaverTokenResponse;
+
         if (data.error) {
-            throw new Error(`네이버 토큰 요청 실패: ${data.error} - ${data.error_description || ''}`);
+            throw new Error(
+                `네이버 토큰 요청 실패: ${data.error} - ${data.error_description || ''}`
+            );
         }
 
         return data;
@@ -78,24 +82,25 @@ export async function getNaverToken(code: string, state: string): Promise<NaverT
  */
 export async function getNaverUserInfo(accessToken: string): Promise<NaverUserInfo> {
     const NAVER_USERINFO_URL = 'https://openapi.naver.com/v1/nid/me';
-    
+
     try {
         const response = await fetch(NAVER_USERINFO_URL, {
             method: 'GET',
             headers: {
-                'Authorization': `Bearer ${accessToken}`,
+                Authorization: `Bearer ${accessToken}`,
             },
         });
 
         if (!response.ok) {
             const errorText = await response.text().catch(() => 'Unknown error');
-            throw new Error(`네이버 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`);
+            throw new Error(
+                `네이버 API 호출 실패: ${response.status} ${response.statusText} - ${errorText}`
+            );
         }
 
-        return await response.json() as NaverUserInfo;
+        return (await response.json()) as NaverUserInfo;
     } catch (error) {
         logger.error('네이버 사용자 정보 API 호출 오류', { error });
         throw error;
     }
 }
-

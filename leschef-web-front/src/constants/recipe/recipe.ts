@@ -39,4 +39,3 @@ export const RECIPE_VALIDATION_MESSAGES = {
   INGREDIENT_REQUIRED: "최소 1개 이상의 재료를 입력해주세요.",
   STEP_REQUIRED: "최소 1개 이상의 조리 단계를 입력해주세요.",
 } as const;
-

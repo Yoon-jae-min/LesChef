@@ -17,11 +17,7 @@ const DISPLAY_TO_CATEGORY: Record<string, string> = {
   자유게시판: "free",
 };
 
-export default function BoardCategoryLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function BoardCategoryLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   // Get current category from pathname

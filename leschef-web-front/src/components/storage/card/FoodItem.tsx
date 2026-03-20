@@ -16,7 +16,8 @@ export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
     typeof item.expirate === "string"
       ? item.expirate
       : new Date(item.expirate).toISOString().slice(0, 10);
-  const dday = typeof item.daysUntilExpiry === "number" ? item.daysUntilExpiry : getDday(expirateStr);
+  const dday =
+    typeof item.daysUntilExpiry === "number" ? item.daysUntilExpiry : getDday(expirateStr);
   const priority = getPriority(dday);
 
   return (
@@ -38,13 +39,17 @@ export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
       <div className="mt-6 grid grid-cols-2 gap-4 text-sm text-gray-600">
         <div>
           <p className="text-xs uppercase tracking-wide text-gray-400">유통기한</p>
-          <p className={`font-medium ${dday !== null && dday < 3 ? "text-orange-600" : "text-gray-900"}`}>
+          <p
+            className={`font-medium ${dday !== null && dday < 3 ? "text-orange-600" : "text-gray-900"}`}
+          >
             {expirateStr || "-"}
           </p>
         </div>
         <div>
           <p className="text-xs uppercase tracking-wide text-gray-400">D-Day</p>
-          <p className={`font-semibold ${dday !== null && dday < 0 ? "text-red-600" : "text-gray-900"}`}>
+          <p
+            className={`font-semibold ${dday !== null && dday < 0 ? "text-red-600" : "text-gray-900"}`}
+          >
             {formatDday(dday)}
           </p>
         </div>
@@ -73,4 +78,3 @@ export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
     </div>
   );
 }
-

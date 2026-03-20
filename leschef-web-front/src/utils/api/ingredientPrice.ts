@@ -59,4 +59,3 @@ export const getIngredientPrices = async (): Promise<IngredientPriceResponse> =>
     throw new Error("식재료 물가 정보 조회 중 네트워크 오류가 발생했습니다.");
   }
 };
-

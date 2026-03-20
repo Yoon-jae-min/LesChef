@@ -14,32 +14,32 @@ import { getErrorAction } from "./actions";
  */
 export function formatErrorMessage(error: ApiError | Error | unknown): string {
   // ApiError 타입인 경우
-  if (typeof error === 'object' && error !== null && 'error' in error) {
+  if (typeof error === "object" && error !== null && "error" in error) {
     const apiError = error as ApiError;
-    
+
     // details가 배열인 경우 첫 번째 메시지 사용
     if (apiError.details && Array.isArray(apiError.details) && apiError.details.length > 0) {
       const firstDetail = apiError.details[0];
-      if (typeof firstDetail === 'object' && 'message' in firstDetail) {
+      if (typeof firstDetail === "object" && "message" in firstDetail) {
         return firstDetail.message;
       }
     }
-    
+
     // fieldName이 있으면 더 구체적인 메시지 생성
     if (apiError.fieldName && apiError.message) {
       return apiError.message;
     }
-    
-    return apiError.message || '오류가 발생했습니다.';
+
+    return apiError.message || "오류가 발생했습니다.";
   }
-  
+
   // 일반 Error 객체인 경우
   if (error instanceof Error) {
-    return error.message || '오류가 발생했습니다.';
+    return error.message || "오류가 발생했습니다.";
   }
-  
+
   // 알 수 없는 에러
-  return '알 수 없는 오류가 발생했습니다.';
+  return "알 수 없는 오류가 발생했습니다.";
 }
 
 /**
@@ -58,4 +58,3 @@ export function formatErrorForUser(error: ApiError | Error | unknown): {
     action: getErrorAction(error),
   };
 }
-

@@ -8,9 +8,7 @@ interface IngredientsProps {
   ingredients: RecipeDetailResponse["recipeIngres"];
 }
 
-export default function Ingredients({
-  ingredients,
-}: IngredientsProps) {
+export default function Ingredients({ ingredients }: IngredientsProps) {
   if (ingredients.length === 0) {
     return (
       <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
@@ -27,7 +25,7 @@ export default function Ingredients({
       <h2 className="text-2xl font-bold text-black pb-1 mb-4 text-center">
         <span className="border-b-2 border-gray-300 px-1">Ingredient</span>
       </h2>
-      
+
       {ingredients.map((group, idx) => (
         <div key={`${group.sortType}-${idx}`} className="mb-6 last:mb-0">
           <button className="px-4 py-2 text-gray-700 rounded-2xl text-base font-medium mb-4 border border-gray-300 bg-white hover:bg-gray-50 transition-colors">
@@ -52,4 +50,3 @@ export default function Ingredients({
     </div>
   );
 }
-

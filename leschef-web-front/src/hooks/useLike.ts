@@ -14,7 +14,10 @@ interface UseLikeProps {
   isLiked: boolean;
   likeCount: number;
   mutate: (
-    data?: BoardDetailResponse | Promise<BoardDetailResponse> | MutatorCallback<BoardDetailResponse>,
+    data?:
+      | BoardDetailResponse
+      | Promise<BoardDetailResponse>
+      | MutatorCallback<BoardDetailResponse>,
     shouldRevalidate?: boolean
   ) => Promise<BoardDetailResponse | undefined>;
 }
@@ -48,10 +51,7 @@ export function useLike({ postId, detail, isLiked, likeCount, mutate }: UseLikeP
       const result = await toggleBoardLike(postId);
 
       // 3. 서버 응답으로 최종 동기화
-      mutate(
-        { ...detail, liked: result.liked, likeCount: result.likeCount },
-        false
-      );
+      mutate({ ...detail, liked: result.liked, likeCount: result.likeCount }, false);
     } catch (err) {
       // 4. 실패 시 이전 상태로 롤백
       mutate(previousData, false);
@@ -66,4 +66,3 @@ export function useLike({ postId, detail, isLiked, likeCount, mutate }: UseLikeP
     handleToggleLike,
   };
 }
-

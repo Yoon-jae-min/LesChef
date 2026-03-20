@@ -36,7 +36,7 @@ class SimpleCache {
      */
     get<T>(key: string): T | null {
         const item = this.cache.get(key);
-        
+
         if (!item) {
             return null;
         }
@@ -91,10 +91,12 @@ const cache = new SimpleCache();
 
 // 주기적으로 만료된 항목 정리 (10분마다)
 if (typeof setInterval !== 'undefined') {
-    setInterval(() => {
-        cache.cleanup();
-    }, 10 * 60 * 1000); // 10분
+    setInterval(
+        () => {
+            cache.cleanup();
+        },
+        10 * 60 * 1000
+    ); // 10분
 }
 
 export default cache;
-

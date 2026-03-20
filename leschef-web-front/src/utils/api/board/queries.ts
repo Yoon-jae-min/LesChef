@@ -81,4 +81,3 @@ export const fetchBoardDetail = async (id: string): Promise<BoardDetailResponse>
     throw new Error("게시글 상세 조회 중 네트워크 오류가 발생했습니다.");
   }
 };
-

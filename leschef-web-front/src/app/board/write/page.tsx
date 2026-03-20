@@ -1,21 +1,23 @@
 "use client";
 
 // 동적 렌더링 강제 (useSearchParams 이슈 방지)
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import Top from "@/components/common/navigation/Top";
 import { useState, useEffect } from "react";
 import { createBoard } from "@/utils/api/board";
+import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
+import { reportActionFailure } from "@/utils/helpers/actionFailure";
 
 export default function BoardWritePage() {
   const [boardType, setBoardType] = useState<string>("notice");
-  
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
   // URL 파라미터에서 boardType 가져오기
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const type = params.get("type") || "notice";
       setBoardType(type);
@@ -32,24 +34,15 @@ export default function BoardWritePage() {
         content,
       });
 
-      if (response.ok) {
-        const result = await response.text();
-        if (result === "ok") {
-          // 성공 시 처리 (예: 게시판 목록으로 이동)
-          if (typeof window !== 'undefined') {
-            window.location.href = `/board/${boardType}`;
-          }
-        } else {
-          throw new Error("서버 응답 오류");
-        }
-      } else {
-        throw new Error(`서버 오류: ${response.status}`);
+      await assertApiJsonSuccess(response, "ok");
+      if (typeof window !== "undefined") {
+        window.location.href = `/board/${boardType}`;
       }
     } catch (error) {
       if (process.env.NODE_ENV === "development") {
         console.error("게시글 작성 실패:", error);
       }
-      alert("게시글 작성에 실패했습니다. 다시 시도해주세요.");
+      reportActionFailure(error, { redirect: "back" });
     }
   };
 
@@ -67,7 +60,9 @@ export default function BoardWritePage() {
             <span className="px-3 py-1 rounded-full bg-gray-100 text-sm font-medium text-gray-600">
               {categoryName}
             </span>
-            <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">Board Write</p>
+            <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">
+              Board Write
+            </p>
           </div>
           <h1 className="text-2xl font-semibold text-gray-900">게시글 작성</h1>
           <p className="text-xs text-gray-500 mt-1">커뮤니티에 글을 작성해보세요.</p>
@@ -106,7 +101,7 @@ export default function BoardWritePage() {
             <button
               type="button"
               onClick={() => {
-                if (typeof window !== 'undefined') {
+                if (typeof window !== "undefined") {
                   window.history.back();
                 }
               }}
@@ -126,4 +121,3 @@ export default function BoardWritePage() {
     </div>
   );
 }
-

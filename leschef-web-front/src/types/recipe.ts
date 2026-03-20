@@ -115,4 +115,3 @@ export type WishRecipeListResponse = {
 export type ToggleWishResponse = {
   recipeWish: boolean;
 };
-

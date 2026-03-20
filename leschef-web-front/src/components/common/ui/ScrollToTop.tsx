@@ -46,15 +46,10 @@ export default function ScrollToTop() {
             stroke="currentColor"
             strokeWidth={2}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M5 10l7-7m0 0l7 7m-7-7v18"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
         </button>
       )}
     </>
   );
 }
-

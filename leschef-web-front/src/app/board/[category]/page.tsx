@@ -28,11 +28,5 @@ export default async function BoardCategoryPage({
     error = err instanceof Error ? err.message : "게시글을 불러오지 못했습니다.";
   }
 
-  return (
-    <BoardList 
-      initialCategory={categoryKey}
-      initialData={initialData}
-      initialError={error}
-    />
-  );
+  return <BoardList initialCategory={categoryKey} initialData={initialData} initialError={error} />;
 }

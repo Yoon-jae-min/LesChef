@@ -10,17 +10,10 @@ dotenv.config();
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-const requiredEnvVars: string[] = [
-    'DB_CONNECT',
-    'SESSION_SECRET_KEY',
-    'CORS_ORIGIN',
-];
+const requiredEnvVars: string[] = ['DB_CONNECT', 'SESSION_SECRET_KEY', 'CORS_ORIGIN'];
 
 // 프로덕션에서만 필수인 환경 변수
-const productionOnlyEnvVars: string[] = [
-    'SSL_KEY_PATH',
-    'SSL_CERT_PATH',
-];
+const productionOnlyEnvVars: string[] = ['SSL_KEY_PATH', 'SSL_CERT_PATH'];
 
 // 서비스 품질을 위해 설정을 권장하는 환경 변수 (없어도 실행 가능)
 const recommendedEnvVars: string[] = [
@@ -38,39 +31,42 @@ const recommendedEnvVars: string[] = [
 
 const validateEnvVars = (): void => {
     const missing: string[] = [];
-    
+
     // 항상 필수인 환경 변수 검증
-    requiredEnvVars.forEach(varName => {
+    requiredEnvVars.forEach((varName) => {
         if (!process.env[varName]) {
             missing.push(varName);
         }
     });
-    
+
     // 프로덕션 환경에서만 SSL 관련 변수 필수
     if (!isDev) {
-        productionOnlyEnvVars.forEach(varName => {
+        productionOnlyEnvVars.forEach((varName) => {
             if (!process.env[varName]) {
                 missing.push(varName);
             }
         });
     }
-    
+
     if (missing.length > 0) {
         logger.error('❌ 필수 환경 변수가 설정되지 않았습니다:', { missing });
         process.exit(1);
     }
-    
-    // SESSION_SECRET_KEY 강도 검증
+
+    // SESSION_SECRET_KEY 강도 검증 (프로덕션은 미달 시 기동 중단)
     if (process.env.SESSION_SECRET_KEY && process.env.SESSION_SECRET_KEY.length < 32) {
         if (isDev) {
-            logger.warn('⚠️  SESSION_SECRET_KEY는 최소 32자 이상이어야 합니다.');
+            logger.warn('⚠️  SESSION_SECRET_KEY는 최소 32자 이상을 권장합니다.');
+        } else {
+            logger.error('❌ 프로덕션에서는 SESSION_SECRET_KEY를 32자 이상으로 설정해야 합니다.');
+            process.exit(1);
         }
     }
-    
+
     // CORS_ORIGIN 형식 검증
     if (process.env.CORS_ORIGIN) {
         const origins = process.env.CORS_ORIGIN.split(',');
-        origins.forEach(origin => {
+        origins.forEach((origin) => {
             if (!origin.trim().startsWith('http://') && !origin.trim().startsWith('https://')) {
                 if (isDev) {
                     logger.warn(`⚠️  CORS_ORIGIN 형식이 올바르지 않습니다: ${origin}`);
@@ -80,15 +76,16 @@ const validateEnvVars = (): void => {
     }
 
     // 권장 환경 변수 안내 (개발/테스트는 동작 가능)
-    const missingRecommended = recommendedEnvVars.filter(varName => !process.env[varName]);
+    const missingRecommended = recommendedEnvVars.filter((varName) => !process.env[varName]);
     if (missingRecommended.length > 0 && isDev) {
-        logger.warn('ℹ️  설정을 권장하는 환경 변수가 누락되었습니다 (개발/테스트는 동작 가능):', { missingRecommended });
+        logger.warn('ℹ️  설정을 권장하는 환경 변수가 누락되었습니다 (개발/테스트는 동작 가능):', {
+            missingRecommended,
+        });
     }
-    
+
     if (isDev) {
         logger.info('✅ 환경 변수 검증 완료');
     }
 };
 
 export default validateEnvVars;
-

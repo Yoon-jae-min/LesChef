@@ -15,9 +15,8 @@ const API_BASE_URL = API_CONFIG.FOODS_API;
  * @returns Promise<ExpiryAlertResponse>
  */
 export const fetchExpiryAlerts = async (
-  status?: 'expired' | 'urgent' | 'warning' | 'notice' | 'all'
+  status?: "expired" | "urgent" | "warning" | "notice" | "all"
 ): Promise<ExpiryAlertResponse> => {
-  const query = status && status !== 'all' ? `?status=${status}` : '';
+  const query = status && status !== "all" ? `?status=${status}` : "";
   return fetchJson<ExpiryAlertResponse>(`${API_BASE_URL}/expiry-alerts${query}`, { method: "GET" });
 };
-

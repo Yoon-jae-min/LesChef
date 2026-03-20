@@ -42,7 +42,7 @@ export function useExpiryAlerts(isLoggedIn: boolean = false) {
 
     const newNotifications: Array<{
       foodId: string;
-      type: 'expired' | 'urgent' | 'warning' | 'notice';
+      type: "expired" | "urgent" | "warning" | "notice";
       title: string;
       message: string;
     }> = [];
@@ -54,8 +54,8 @@ export function useExpiryAlerts(isLoggedIn: boolean = false) {
         if (!notifiedIdsRef.current.has(`expired-${foodId}`)) {
           newNotifications.push({
             foodId,
-            type: 'expired',
-            title: '식재료 만료 알림',
+            type: "expired",
+            title: "식재료 만료 알림",
             message: `${item.food.name} (${item.place})이(가) 만료되었습니다.`,
           });
           notifiedIdsRef.current.add(`expired-${foodId}`);
@@ -71,8 +71,8 @@ export function useExpiryAlerts(isLoggedIn: boolean = false) {
         if (!notifiedIdsRef.current.has(`urgent-${foodId}`) && days <= 1) {
           newNotifications.push({
             foodId,
-            type: 'urgent',
-            title: '유통기한 임박 알림 (1일 전)',
+            type: "urgent",
+            title: "유통기한 임박 알림 (1일 전)",
             message: `${item.food.name} (${item.place})이(가) 내일 만료됩니다.`,
           });
           notifiedIdsRef.current.add(`urgent-${foodId}`);
@@ -88,8 +88,8 @@ export function useExpiryAlerts(isLoggedIn: boolean = false) {
         if (!notifiedIdsRef.current.has(`warning-${foodId}`) && days <= 3 && days > 1) {
           newNotifications.push({
             foodId,
-            type: 'warning',
-            title: '유통기한 임박 알림 (3일 전)',
+            type: "warning",
+            title: "유통기한 임박 알림 (3일 전)",
             message: `${item.food.name} (${item.place})이(가) ${days}일 후 만료됩니다.`,
           });
           notifiedIdsRef.current.add(`warning-${foodId}`);
@@ -108,8 +108,8 @@ export function useExpiryAlerts(isLoggedIn: boolean = false) {
           message: notif.message,
           duration: settings.autoClose ? settings.autoCloseDuration : 0,
           action: {
-            label: '식재료 관리',
-            href: '/myPage/storage',
+            label: "식재료 관리",
+            href: "/myPage/storage",
           },
         });
       });
@@ -124,7 +124,11 @@ export function useExpiryAlerts(isLoggedIn: boolean = false) {
 
   return {
     alerts,
-    hasAlerts: alerts && (alerts.expiredCount > 0 || alerts.urgentCount > 0 || alerts.warningCount > 0 || alerts.noticeCount > 0),
+    hasAlerts:
+      alerts &&
+      (alerts.expiredCount > 0 ||
+        alerts.urgentCount > 0 ||
+        alerts.warningCount > 0 ||
+        alerts.noticeCount > 0),
   };
 }
-

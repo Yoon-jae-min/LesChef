@@ -80,7 +80,7 @@ export const FIELD_NAMES: Record<string, string> = {
     nickName: '닉네임',
     tel: '전화번호',
     email: '이메일',
-    
+
     // 레시피 필드
     recipeName: '레시피 이름',
     cookTime: '조리 시간',
@@ -97,12 +97,12 @@ export const FIELD_NAMES: Record<string, string> = {
     tags: '태그',
     averageRating: '평균 평점',
     reviewCount: '리뷰 수',
-    
+
     // 게시글 필드
     title: '제목',
     content: '내용',
     boardId: '게시글 ID',
-    
+
     // 공통 필드
     _id: 'ID',
     createdAt: '생성일',
@@ -139,39 +139,36 @@ export function getUserFriendlyMessage(
     field?: string
 ): string {
     const fieldName = field ? getFieldName(field) : '';
-    
+
     switch (errorType) {
         case 'ValidationError':
-            return fieldName 
+            return fieldName
                 ? `${fieldName}을(를) 확인해주세요.`
                 : COMMON_ERROR_MESSAGES.VALIDATION_ERROR;
-        
+
         case 'CastError':
-            return fieldName
-                ? `잘못된 ${fieldName} 형식입니다.`
-                : '잘못된 데이터 형식입니다.';
-        
+            return fieldName ? `잘못된 ${fieldName} 형식입니다.` : '잘못된 데이터 형식입니다.';
+
         case 'DuplicateKey':
             return fieldName
                 ? `이미 사용 중인 ${fieldName}입니다.`
                 : COMMON_ERROR_MESSAGES.VALIDATION_ERROR;
-        
+
         case 'NotFound':
             return resourceName
                 ? `${resourceName}을(를) 찾을 수 없습니다.`
                 : COMMON_ERROR_MESSAGES.NOT_FOUND;
-        
+
         case 'Unauthorized':
             return COMMON_ERROR_MESSAGES.UNAUTHORIZED;
-        
+
         case 'Forbidden':
             return COMMON_ERROR_MESSAGES.FORBIDDEN;
-        
+
         case 'FileError':
             return resourceName || COMMON_ERROR_MESSAGES.SERVER_ERROR;
-        
+
         default:
             return COMMON_ERROR_MESSAGES.SERVER_ERROR;
     }
 }
-

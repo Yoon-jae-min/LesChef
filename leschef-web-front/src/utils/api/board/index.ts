@@ -15,25 +15,13 @@ export type {
 } from "./types";
 
 // CRUD 함수들
-export {
-  createBoard,
-  updateBoard,
-  deleteBoard,
-} from "./crud";
+export { createBoard, updateBoard, deleteBoard } from "./crud";
 
 // 조회 함수들
-export {
-  fetchBoardList,
-  fetchBoardDetail,
-} from "./queries";
+export { fetchBoardList, fetchBoardDetail } from "./queries";
 
 // 좋아요 함수
-export {
-  toggleBoardLike,
-} from "./like";
+export { toggleBoardLike } from "./like";
 
 // 댓글 함수
-export {
-  createBoardComment,
-} from "./comment";
-
+export { createBoardComment } from "./comment";

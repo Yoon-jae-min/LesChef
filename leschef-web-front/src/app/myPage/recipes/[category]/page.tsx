@@ -1,7 +1,7 @@
 "use client";
 
 // 동적 렌더링 강제 (useSearchParams 이슈 방지)
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -15,17 +15,19 @@ function MyRecipesCategoryPageContent() {
 
   // 나의 레시피 목록 가져오기 - SWR 캐싱 적용
   // 전역 설정 사용 (revalidateOnFocus: true, revalidateOnReconnect: true, dedupingInterval: 60000)
-  const { data, error, isLoading: loading, mutate } = useSWR<MyRecipeListResponse>(
-    '/my-recipes',
-    fetchMyRecipeList
-  );
+  const {
+    data,
+    error,
+    isLoading: loading,
+    mutate,
+  } = useSWR<MyRecipeListResponse>("/my-recipes", fetchMyRecipeList);
 
   const recipes = data?.list || [];
 
   const handleEditClick = (e: React.MouseEvent, recipeId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.location.href = `/myPage/recipes/edit?id=${recipeId}`;
     }
   };
@@ -87,81 +89,90 @@ function MyRecipesCategoryPageContent() {
         </div>
       )}
 
-      {!loading && !error && recipes.map((card) => (
-        <Link
-          key={card._id}
-          href={`/recipe/detail?id=${card._id}&recipeName=${encodeURIComponent(card.recipeName)}`}
-          className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
-          aria-label={`${card.recipeName} 상세로 이동`}
-        >
-          <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gray-50">
-            <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
-              {card.recipeImg ? (
-                <Image
-                  src={card.recipeImg}
-                  alt={card.recipeName}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                  className="object-cover"
-                />
-              ) : (
-                <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs text-gray-400">
-                  <span className="text-3xl">📷</span>
-                  <span>레시피 이미지</span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div
-            className={`relative mt-4 flex items-center justify-between rounded-[24px] border border-gray-200 bg-gradient-to-br from-gray-50 to-white px-5 py-6`}
+      {!loading &&
+        !error &&
+        recipes.map((card) => (
+          <Link
+            key={card._id}
+            href={card._id ? `/recipe/detail?id=${card._id}` : "/recipe"}
+            className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
+            aria-label={`${card.recipeName} 상세로 이동`}
           >
-            <span className="text-4xl">🍳</span>
-            <div className="text-right text-black">
-              <p className="text-xs uppercase tracking-[0.4em] text-gray-600">My Recipe</p>
-              <p className="text-3xl font-semibold">작성 레시피</p>
-              <p className="text-xs text-gray-700">{card.subCategory || card.majorCategory || "나의 레시피"}</p>
+            <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gray-50">
+              <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
+                {card.recipeImg ? (
+                  <Image
+                    src={card.recipeImg}
+                    alt={card.recipeName}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs text-gray-400">
+                    <span className="text-3xl">📷</span>
+                    <span>레시피 이미지</span>
+                  </div>
+                )}
+              </div>
             </div>
-            <div className="absolute inset-0 rounded-[24px] border border-gray-200/10" />
-          </div>
 
-          <h3 className="mt-3 text-xl font-semibold text-gray-900">{card.recipeName}</h3>
-
-          <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
-            <div className="flex flex-wrap gap-2">
-              {(card.subCategory ? [card.subCategory] : [card.majorCategory || "레시피"]).map((tag) => (
-                <span key={tag} className="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600">
-                  #{tag}
-                </span>
-              ))}
+            <div
+              className={`relative mt-4 flex items-center justify-between rounded-[24px] border border-gray-200 bg-gradient-to-br from-gray-50 to-white px-5 py-6`}
+            >
+              <span className="text-4xl">🍳</span>
+              <div className="text-right text-black">
+                <p className="text-xs uppercase tracking-[0.4em] text-gray-600">My Recipe</p>
+                <p className="text-3xl font-semibold">작성 레시피</p>
+                <p className="text-xs text-gray-700">
+                  {card.subCategory || card.majorCategory || "나의 레시피"}
+                </p>
+              </div>
+              <div className="absolute inset-0 rounded-[24px] border border-gray-200/10" />
             </div>
-            <span className="rounded-full border px-3 py-1 text-xs font-semibold bg-green-50 text-green-600 border-green-200">
-              작성 완료
-            </span>
-          </div>
 
-          <div className="mt-4 flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <button
-                onClick={(e) => card._id && handleEditClick(e, card._id)}
-                className="rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
-                disabled={!card._id}
-              >
-                편집
-              </button>
-              <button
-                onClick={(e) => card._id && handleDeleteClick(e, card._id)}
-                disabled={!card._id}
-                className="rounded-xl border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:border-red-300 hover:bg-red-50 transition"
-              >
-                삭제
-              </button>
-              <span className="text-[11px] text-gray-500">레시피 상세 보기</span>
+            <h3 className="mt-3 text-xl font-semibold text-gray-900">{card.recipeName}</h3>
+
+            <div className="mt-2 flex items-center justify-between text-xs text-gray-600">
+              <div className="flex flex-wrap gap-2">
+                {(card.subCategory ? [card.subCategory] : [card.majorCategory || "레시피"]).map(
+                  (tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600"
+                    >
+                      #{tag}
+                    </span>
+                  )
+                )}
+              </div>
+              <span className="rounded-full border px-3 py-1 text-xs font-semibold bg-green-50 text-green-600 border-green-200">
+                작성 완료
+              </span>
             </div>
-            <span className="font-semibold text-gray-800 text-[11px]">→</span>
-          </div>
-        </Link>
-      ))}
+
+            <div className="mt-4 flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={(e) => card._id && handleEditClick(e, card._id)}
+                  className="rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                  disabled={!card._id}
+                >
+                  편집
+                </button>
+                <button
+                  onClick={(e) => card._id && handleDeleteClick(e, card._id)}
+                  disabled={!card._id}
+                  className="rounded-xl border border-red-200 px-3 py-1.5 text-xs font-medium text-red-600 hover:border-red-300 hover:bg-red-50 transition"
+                >
+                  삭제
+                </button>
+                <span className="text-[11px] text-gray-500">레시피 상세 보기</span>
+              </div>
+              <span className="font-semibold text-gray-800 text-[11px]">→</span>
+            </div>
+          </Link>
+        ))}
 
       {/* 삭제 확인 모달 */}
       {showDeleteConfirm && (
@@ -169,13 +180,21 @@ function MyRecipesCategoryPageContent() {
           <div className="bg-white rounded-[32px] border border-gray-200 p-8 max-w-md w-full shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="mb-6">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                <svg
+                  className="w-8 h-8 text-red-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">
-                레시피 삭제
-              </h3>
+              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">레시피 삭제</h3>
               <p className="text-sm text-gray-600 mb-4 text-center">
                 정말로 이 레시피를 삭제하시겠습니까?
               </p>

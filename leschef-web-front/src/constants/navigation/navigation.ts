@@ -7,7 +7,7 @@ export interface NavigationItem {
   id: string;
   label: string;
   href: string;
-  iconId: 'storage' | 'recipe' | 'mypage' | 'board';
+  iconId: "storage" | "recipe" | "mypage" | "board";
   ariaLabel: string;
 }
 
@@ -17,32 +17,32 @@ export interface NavigationItem {
  */
 export const NAVIGATION_ITEMS: NavigationItem[] = [
   {
-    id: 'storage',
-    label: '식재료 관리',
-    href: '/myPage/storage',
-    iconId: 'storage',
-    ariaLabel: '식재료 관리 페이지로 이동',
+    id: "storage",
+    label: "식재료 관리",
+    href: "/myPage/storage",
+    iconId: "storage",
+    ariaLabel: "식재료 관리 페이지로 이동",
   },
   {
-    id: 'recipe',
-    label: '레시피',
-    href: '/recipe/korean',
-    iconId: 'recipe',
-    ariaLabel: '레시피 페이지로 이동',
+    id: "recipe",
+    label: "레시피",
+    href: "/recipe/korean",
+    iconId: "recipe",
+    ariaLabel: "레시피 페이지로 이동",
   },
   {
-    id: 'mypage',
-    label: '마이페이지',
-    href: '/myPage/info',
-    iconId: 'mypage',
-    ariaLabel: '마이페이지로 이동',
+    id: "mypage",
+    label: "마이페이지",
+    href: "/myPage/info",
+    iconId: "mypage",
+    ariaLabel: "마이페이지로 이동",
   },
   {
-    id: 'board',
-    label: '게시판',
-    href: '/board/notice',
-    iconId: 'board',
-    ariaLabel: '게시판 페이지로 이동',
+    id: "board",
+    label: "게시판",
+    href: "/board/notice",
+    iconId: "board",
+    ariaLabel: "게시판 페이지로 이동",
   },
 ];
 
@@ -57,4 +57,3 @@ export function getActiveMenuId(pathname: string): string | null {
   }
   return null;
 }
-

@@ -14,7 +14,7 @@ import { getStatusMessage } from "./actions";
  */
 export async function handleApiError(response: Response): Promise<Error> {
   let errorData: ApiError | null = null;
-  
+
   try {
     errorData = await response.json();
   } catch {
@@ -26,12 +26,11 @@ export async function handleApiError(response: Response): Promise<Error> {
       return new Error(getStatusMessage(response.status));
     }
   }
-  
+
   // API 에러 응답이 있는 경우 사용자 친화적 메시지 사용
-  if (errorData && 'error' in errorData && errorData.error) {
+  if (errorData && "error" in errorData && errorData.error) {
     return new Error(formatErrorMessage(errorData));
   }
-  
+
   return new Error(getStatusMessage(response.status));
 }
-

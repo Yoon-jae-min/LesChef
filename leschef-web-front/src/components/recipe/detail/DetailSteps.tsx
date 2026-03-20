@@ -3,7 +3,7 @@
  */
 
 import Image from "next/image";
-import { generateImagePlaceholder } from "@/utils/helpers/imageUtils";
+import { generateImagePlaceholder, resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 import type { RecipeDetailResponse } from "@/types/recipe";
 
 interface DetailStepsProps {
@@ -27,16 +27,19 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
       <h2 className="text-2xl font-bold text-black pb-1 mb-4 text-center">
         <span className="border-b-2 border-gray-300 px-1">Step</span>
       </h2>
-      
+
       <div className="space-y-4">
         {steps.map((step) => (
-          <div key={step.stepNum} className="border border-gray-200 rounded-2xl p-4 bg-gradient-to-br from-gray-50 to-white">
+          <div
+            key={step.stepNum}
+            className="border border-gray-200 rounded-2xl p-4 bg-gradient-to-br from-gray-50 to-white"
+          >
             <div className="flex items-start space-x-6">
               <div className="w-24 h-24 relative flex-shrink-0 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
                 {step.stepImg && step.stepImg !== "" ? (
-                  <Image 
-                    src={step.stepImg} 
-                    alt={`step-${step.stepNum}`} 
+                  <Image
+                    src={resolveBackendAssetUrl(step.stepImg)}
+                    alt={`step-${step.stepNum}`}
                     fill
                     sizes="96px"
                     className="object-cover transition-opacity duration-300"
@@ -61,4 +64,3 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
     </div>
   );
 }
-

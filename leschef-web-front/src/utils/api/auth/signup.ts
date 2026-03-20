@@ -169,4 +169,3 @@ export const verifyEmailCode = async (email: string, code: string): Promise<Resp
     throw new Error("인증 코드 검증 중 네트워크 오류가 발생했습니다.");
   }
 };
-

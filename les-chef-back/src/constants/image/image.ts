@@ -36,4 +36,3 @@ export const MAX_IMAGE_DIMENSIONS = {
         height: 1200,
     },
 } as const;
-

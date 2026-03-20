@@ -32,4 +32,3 @@ export async function fetchJson<T>(url: string, options: RequestInit = {}): Prom
 
   return response.json() as Promise<T>;
 }
-

@@ -30,4 +30,3 @@ export const checkAuth = async (): Promise<{ loggedIn: boolean }> => {
     return { loggedIn: false };
   }
 };
-

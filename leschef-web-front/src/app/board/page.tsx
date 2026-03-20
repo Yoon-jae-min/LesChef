@@ -5,7 +5,7 @@ import { useEffect } from "react";
 export default function BoardPage() {
   useEffect(() => {
     // Redirect to notice (공지사항) as default
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       window.location.replace("/board/notice");
     }
   }, []);

@@ -33,4 +33,3 @@ function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
 }
 
 export default TabNavigation;
-

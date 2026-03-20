@@ -6,10 +6,15 @@
 "use client";
 
 // 동적 렌더링 강제 (useSearchParams 이슈 방지)
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import { useState, useEffect } from "react";
-import { getNotificationSettings, saveNotificationSettings, resetNotificationSettings, type NotificationSettings } from "@/utils/helpers/notification";
+import {
+  getNotificationSettings,
+  saveNotificationSettings,
+  resetNotificationSettings,
+  type NotificationSettings,
+} from "@/utils/helpers/notification";
 import { useNotification } from "@/contexts/Notification";
 
 export default function NotificationSettingsPage() {
@@ -34,23 +39,23 @@ export default function NotificationSettingsPage() {
     saveNotificationSettings(settings);
     setHasChanges(false);
     addNotification({
-      type: 'success',
-      title: '설정 저장 완료',
-      message: '알림 설정이 저장되었습니다.',
+      type: "success",
+      title: "설정 저장 완료",
+      message: "알림 설정이 저장되었습니다.",
       duration: 3000,
     });
   };
 
   const handleReset = () => {
-    if (window.confirm('알림 설정을 기본값으로 초기화하시겠습니까?')) {
+    if (window.confirm("알림 설정을 기본값으로 초기화하시겠습니까?")) {
       resetNotificationSettings();
       const defaultSettings = getNotificationSettings();
       setSettings(defaultSettings);
       setHasChanges(false);
       addNotification({
-        type: 'success',
-        title: '설정 초기화 완료',
-        message: '알림 설정이 기본값으로 초기화되었습니다.',
+        type: "success",
+        title: "설정 초기화 완료",
+        message: "알림 설정이 기본값으로 초기화되었습니다.",
         duration: 3000,
       });
     }
@@ -76,7 +81,7 @@ export default function NotificationSettingsPage() {
               <input
                 type="checkbox"
                 checked={settings.enabled}
-                onChange={(e) => handleChange('enabled', e.target.checked)}
+                onChange={(e) => handleChange("enabled", e.target.checked)}
                 className="sr-only peer"
               />
               <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
@@ -93,10 +98,20 @@ export default function NotificationSettingsPage() {
             <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-red-50/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 text-red-600">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/>
-                    <line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-5 h-5 text-red-600"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" />
                   </svg>
                 </div>
                 <div>
@@ -108,7 +123,7 @@ export default function NotificationSettingsPage() {
                 <input
                   type="checkbox"
                   checked={settings.showExpired}
-                  onChange={(e) => handleChange('showExpired', e.target.checked)}
+                  onChange={(e) => handleChange("showExpired", e.target.checked)}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-red-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
@@ -119,10 +134,20 @@ export default function NotificationSettingsPage() {
             <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-orange-50/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 text-orange-600">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/>
-                    <line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-5 h-5 text-orange-600"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" />
                   </svg>
                 </div>
                 <div>
@@ -134,7 +159,7 @@ export default function NotificationSettingsPage() {
                 <input
                   type="checkbox"
                   checked={settings.showUrgent}
-                  onChange={(e) => handleChange('showUrgent', e.target.checked)}
+                  onChange={(e) => handleChange("showUrgent", e.target.checked)}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
@@ -145,10 +170,20 @@ export default function NotificationSettingsPage() {
             <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-yellow-50/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 text-yellow-600">
-                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" strokeLinecap="round" strokeLinejoin="round"/>
-                    <line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round"/>
-                    <line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-5 h-5 text-yellow-600"
+                  >
+                    <path
+                      d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                    <line x1="12" y1="9" x2="12" y2="13" strokeLinecap="round" />
+                    <line x1="12" y1="17" x2="12.01" y2="17" strokeLinecap="round" />
                   </svg>
                 </div>
                 <div>
@@ -160,7 +195,7 @@ export default function NotificationSettingsPage() {
                 <input
                   type="checkbox"
                   checked={settings.showWarning}
-                  onChange={(e) => handleChange('showWarning', e.target.checked)}
+                  onChange={(e) => handleChange("showWarning", e.target.checked)}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-yellow-600"></div>
@@ -171,10 +206,16 @@ export default function NotificationSettingsPage() {
             <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-blue-50/50">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5 text-blue-600">
-                    <circle cx="12" cy="12" r="10"/>
-                    <line x1="12" y1="16" x2="12" y2="12" strokeLinecap="round"/>
-                    <line x1="12" y1="8" x2="12.01" y2="8" strokeLinecap="round"/>
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    className="w-5 h-5 text-blue-600"
+                  >
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="16" x2="12" y2="12" strokeLinecap="round" />
+                    <line x1="12" y1="8" x2="12.01" y2="8" strokeLinecap="round" />
                   </svg>
                 </div>
                 <div>
@@ -186,7 +227,7 @@ export default function NotificationSettingsPage() {
                 <input
                   type="checkbox"
                   checked={settings.showNotice}
-                  onChange={(e) => handleChange('showNotice', e.target.checked)}
+                  onChange={(e) => handleChange("showNotice", e.target.checked)}
                   className="sr-only peer"
                 />
                 <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -208,7 +249,7 @@ export default function NotificationSettingsPage() {
                   <input
                     type="checkbox"
                     checked={settings.autoClose}
-                    onChange={(e) => handleChange('autoClose', e.target.checked)}
+                    onChange={(e) => handleChange("autoClose", e.target.checked)}
                     className="sr-only peer"
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
@@ -226,7 +267,7 @@ export default function NotificationSettingsPage() {
                     max="10000"
                     step="1000"
                     value={settings.autoCloseDuration}
-                    onChange={(e) => handleChange('autoCloseDuration', Number(e.target.value))}
+                    onChange={(e) => handleChange("autoCloseDuration", Number(e.target.value))}
                     className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
                   />
                   <div className="flex justify-between text-xs text-gray-500 mt-1">
@@ -261,4 +302,3 @@ export default function NotificationSettingsPage() {
     </div>
   );
 }
-

@@ -45,4 +45,3 @@ export const toggleRecipeWish = async (recipeId: string): Promise<ToggleWishResp
     throw new Error("찜 요청 중 네트워크 오류가 발생했습니다.");
   }
 };
-

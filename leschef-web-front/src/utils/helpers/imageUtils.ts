@@ -3,6 +3,8 @@
  * 썸네일 경로 생성 및 이미지 최적화 관련 함수
  */
 
+import { API_CONFIG } from "@/config/apiConfig";
+
 /**
  * 썸네일 경로 생성
  * 원본 이미지 경로에서 썸네일 경로를 생성합니다.
@@ -10,29 +12,56 @@
  * @returns 썸네일 경로 (없으면 원본 경로 반환)
  */
 export function getThumbnailPath(originalPath: string | undefined): string {
-  if (!originalPath) return '';
-  
+  if (!originalPath) return "";
+
   // 이미 썸네일 경로인 경우 그대로 반환
-  if (originalPath.includes('/thumbnails/')) {
+  if (originalPath.includes("/thumbnails/")) {
     return originalPath;
   }
-  
+
   // 썸네일 경로 생성: /Image/RecipeImage/ListImg/korean/image.jpg -> /Image/RecipeImage/ListImg/korean/thumbnails/image_thumb.jpg
-  const pathParts = originalPath.split('/');
+  const pathParts = originalPath.split("/");
   const fileName = pathParts[pathParts.length - 1];
-  const extIndex = fileName.lastIndexOf('.');
-  
+  const extIndex = fileName.lastIndexOf(".");
+
   if (extIndex === -1) {
     return originalPath; // 확장자가 없으면 원본 반환
   }
-  
+
   const nameWithoutExt = fileName.substring(0, extIndex);
   const ext = fileName.substring(extIndex);
   const thumbnailFileName = `${nameWithoutExt}_thumb${ext}`;
-  
+
   // thumbnails 폴더 경로 삽입
-  const dirPath = pathParts.slice(0, -1).join('/');
+  const dirPath = pathParts.slice(0, -1).join("/");
   return `${dirPath}/thumbnails/${thumbnailFileName}`;
+}
+
+/**
+ * 백엔드 정적 파일 경로를 실제 접근 가능한 URL로 변환
+ * - DB에는 보통 `/Image/...` 처럼 상대 경로가 저장됨
+ * - 브라우저에서는 프론트(3000)가 아니라 백엔드(3001)로 요청해야 함
+ */
+export function resolveBackendAssetUrl(input: string | undefined): string {
+  if (!input) return "";
+
+  // data URL / blob / 절대 URL은 그대로 사용
+  if (
+    input.startsWith("data:") ||
+    input.startsWith("blob:") ||
+    input.startsWith("http://") ||
+    input.startsWith("https://")
+  ) {
+    return input;
+  }
+
+  // 백엔드에서 서빙하는 정적 경로
+  if (input.startsWith("/Image/") || input.startsWith("/Video/")) {
+    return `${API_CONFIG.BASE_URL}${input}`;
+  }
+
+  // 그 외는 그대로 반환 (상대 경로를 프론트에서 서빙하는 경우)
+  return input;
 }
 
 /**
@@ -49,19 +78,18 @@ export function generateImagePlaceholder(width = 400, height = 240): string {
       <text x="50%" y="50%" text-anchor="middle" dy=".3em" fill="#9ca3af" font-size="14">Loading...</text>
     </svg>
   `.trim();
-  
+
   // 브라우저에서 사용 가능한 방법으로 base64 인코딩
   // URL 인코딩 후 base64 인코딩
   try {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
     }
   } catch {
     // btoa 실패 시 인코딩된 SVG 반환
     return `data:image/svg+xml,${encodeURIComponent(svg)}`;
   }
-  
+
   // 서버 사이드에서는 인코딩된 SVG 반환
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
-

@@ -156,13 +156,11 @@ export default function BasicInfo({
           <div className="space-y-3">
             {recipeImgPreview ? (
               <div className="relative w-full h-64 rounded-2xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                <Image
+                {/* 박스 크기는 고정, 이미지가 비율 유지하며 안에 다 들어오도록 */}
+                <img
                   src={recipeImgPreview}
                   alt="레시피 미리보기"
-                  fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="object-cover"
-                  unoptimized
+                  className="w-full h-full object-contain block"
                 />
               </div>
             ) : (
@@ -185,4 +183,3 @@ export default function BasicInfo({
     </section>
   );
 }
-

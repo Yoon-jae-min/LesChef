@@ -39,7 +39,9 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">보유 재료 요약</h2>
           <div className="rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
-            <p className="text-gray-600 mb-4">로그인하시면 우리 집 식재료 현황을 한눈에 볼 수 있어요!</p>
+            <p className="text-gray-600 mb-4">
+              로그인하시면 우리 집 식재료 현황을 한눈에 볼 수 있어요!
+            </p>
             <Link
               href="/login"
               className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors"
@@ -70,7 +72,10 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
           <h2 className="text-2xl font-bold text-gray-900 mb-4">보유 재료 요약</h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="rounded-2xl border border-gray-200 bg-gray-50 p-6 animate-pulse h-32"></div>
+              <div
+                key={i}
+                className="rounded-2xl border border-gray-200 bg-gray-50 p-6 animate-pulse h-32"
+              ></div>
             ))}
           </div>
         </div>
@@ -126,8 +131,18 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
           <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-600">전체 식재료</span>
-              <svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              <svg
+                className="w-6 h-6 text-orange-600"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
               </svg>
             </div>
             <p className="text-3xl font-bold text-gray-900">{totalFoods}</p>
@@ -142,8 +157,18 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
             >
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm font-medium text-gray-600">{place.name}</span>
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
+                <svg
+                  className="w-5 h-5 text-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+                  />
                 </svg>
               </div>
               <p className="text-3xl font-bold text-gray-900">{place.foodList?.length || 0}</p>
@@ -167,8 +192,18 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
                     <p className="font-medium text-gray-900">{place.name}</p>
                     <p className="text-sm text-gray-500">{place.foodList?.length || 0}개</p>
                   </div>
-                  <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-5 h-5 text-gray-400"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </Link>
               ))}
@@ -179,4 +214,3 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
     </section>
   );
 }
-

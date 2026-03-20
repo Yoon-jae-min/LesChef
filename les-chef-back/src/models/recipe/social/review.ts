@@ -1,5 +1,5 @@
-import mongoose, { Schema, Model, Document, Types } from "mongoose";
-import { IRecipeReview } from "../../../types";
+import mongoose, { Schema, Model, Document, Types } from 'mongoose';
+import { IRecipeReview } from '../../../types';
 
 interface RecipeReviewDocument extends IRecipeReview, Document {
     recipeId: Types.ObjectId;
@@ -8,7 +8,7 @@ interface RecipeReviewDocument extends IRecipeReview, Document {
 const recipeReviewSchema = new Schema<RecipeReviewDocument>({
     recipeId: {
         type: Schema.Types.ObjectId,
-        ref: "Recipe",
+        ref: 'Recipe',
         required: true,
         index: true,
     },
@@ -29,7 +29,7 @@ const recipeReviewSchema = new Schema<RecipeReviewDocument>({
     },
     comment: {
         type: String,
-        default: "",
+        default: '',
         maxlength: 1000,
     },
     createdAt: {
@@ -46,7 +46,9 @@ const recipeReviewSchema = new Schema<RecipeReviewDocument>({
 recipeReviewSchema.index({ recipeId: 1, userId: 1 }, { unique: true });
 recipeReviewSchema.index({ recipeId: 1, createdAt: -1 }); // 최신순 정렬용
 
-const RecipeReview: Model<RecipeReviewDocument> = mongoose.model<RecipeReviewDocument>("RecipeReview", recipeReviewSchema);
+const RecipeReview: Model<RecipeReviewDocument> = mongoose.model<RecipeReviewDocument>(
+    'RecipeReview',
+    recipeReviewSchema
+);
 
 export default RecipeReview;
-

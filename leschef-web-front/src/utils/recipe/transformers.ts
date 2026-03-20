@@ -9,7 +9,7 @@ import type { IngredientGroup, RecipeStep } from "@/types/recipe";
  * 재료 데이터를 백엔드 형식으로 변환
  */
 export const transformIngredients = (
-  ingredientGroups: IngredientGroup[],
+  ingredientGroups: IngredientGroup[]
 ): Array<{
   sortType: string;
   ingredientUnit: Array<{
@@ -31,7 +31,9 @@ export const transformIngredients = (
 /**
  * 조리 단계 데이터를 백엔드 형식으로 변환
  */
-export const transformSteps = (steps: RecipeStep[]): Array<{
+export const transformSteps = (
+  steps: RecipeStep[]
+): Array<{
   stepNum: number;
   stepWay: string;
   stepImg: string;
@@ -42,4 +44,3 @@ export const transformSteps = (steps: RecipeStep[]): Array<{
     stepImg: step.stepImg.startsWith("data:") ? "" : step.stepImg, // 새로 업로드한 이미지는 빈 문자열
   }));
 };
-

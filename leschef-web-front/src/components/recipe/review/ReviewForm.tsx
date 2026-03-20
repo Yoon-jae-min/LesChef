@@ -82,9 +82,7 @@ export default function ReviewForm({
   return (
     <div className="mb-6 rounded-2xl border border-gray-200 bg-gray-50 p-4">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-gray-800">
-          나의 평점
-        </span>
+        <span className="text-sm font-medium text-gray-800">나의 평점</span>
         <div className="flex items-center gap-1">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
@@ -93,13 +91,7 @@ export default function ReviewForm({
               onClick={() => isLoggedIn && setMyRating(star)}
               className="text-xl focus:outline-none"
             >
-              <span
-                className={
-                  star <= myRating ? "text-yellow-400" : "text-gray-300"
-                }
-              >
-                ★
-              </span>
+              <span className={star <= myRating ? "text-yellow-400" : "text-gray-300"}>★</span>
             </button>
           ))}
         </div>
@@ -117,9 +109,7 @@ export default function ReviewForm({
         className="w-full min-h-[80px] px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white disabled:bg-gray-100"
       />
       <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-gray-400">
-          {myComment.length} / 1000자
-        </span>
+        <span className="text-xs text-gray-400">{myComment.length} / 1000자</span>
         <div className="flex items-center gap-2">
           {myReview && (
             <button
@@ -144,4 +134,3 @@ export default function ReviewForm({
     </div>
   );
 }
-

@@ -70,7 +70,12 @@ export default function Ingredient({
                     type="text"
                     value={ingredient.ingredientName}
                     onChange={(e) =>
-                      onUpdateIngredient(groupIndex, ingredientIndex, "ingredientName", e.target.value)
+                      onUpdateIngredient(
+                        groupIndex,
+                        ingredientIndex,
+                        "ingredientName",
+                        e.target.value
+                      )
                     }
                     placeholder="재료명"
                     className="flex-1 rounded-xl border border-gray-200 px-3 py-2 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
@@ -79,7 +84,12 @@ export default function Ingredient({
                     type="number"
                     value={ingredient.volume}
                     onChange={(e) =>
-                      onUpdateIngredient(groupIndex, ingredientIndex, "volume", Number(e.target.value))
+                      onUpdateIngredient(
+                        groupIndex,
+                        ingredientIndex,
+                        "volume",
+                        Number(e.target.value)
+                      )
                     }
                     placeholder="수량"
                     min={0}
@@ -111,4 +121,3 @@ export default function Ingredient({
     </section>
   );
 }
-

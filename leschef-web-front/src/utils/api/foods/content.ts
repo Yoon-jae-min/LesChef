@@ -11,7 +11,7 @@ const API_BASE_URL = API_CONFIG.FOODS_API;
 
 /**
  * 식재료 추가
- * @param placeName 보관 장소 이름
+ * @param placeId 보관 장소 MongoDB 서브도큐먼트 _id
  * @param foodName 식재료 이름
  * @param volume 수량
  * @param unit 단위
@@ -19,21 +19,21 @@ const API_BASE_URL = API_CONFIG.FOODS_API;
  * @returns Promise<FoodsListResponse>
  */
 export const addFoodItem = async (
-  placeName: string,
+  placeId: string,
   foodName: string,
   volume: number,
   unit: string,
   expiryDate: string
 ): Promise<FoodsListResponse> => {
-  if (!placeName || !foodName) {
-    throw new Error("보관 장소 이름과 식재료 이름은 필수입니다.");
+  if (!placeId || !foodName) {
+    throw new Error("보관 장소 ID와 식재료 이름은 필수입니다.");
   }
 
   return fetchJson<FoodsListResponse>(`${API_BASE_URL}/content`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      placeName,
+      placeId,
       unitName: foodName,
       unitVol: volume,
       unitUnit: unit,
@@ -43,9 +43,8 @@ export const addFoodItem = async (
 };
 
 /**
- * 식재료 수정
- * @param placeName 보관 장소 이름
- * @param contentId 식재료 ID
+ * 식재료 수정 (contentId만으로 식별)
+ * @param contentId 식재료 항목 MongoDB _id
  * @param name 식재료 이름
  * @param volume 수량
  * @param unit 단위
@@ -53,22 +52,20 @@ export const addFoodItem = async (
  * @returns Promise<FoodsListResponse>
  */
 export const updateFoodItem = async (
-  placeName: string,
   contentId: string,
   name: string,
   volume: number,
   unit: string,
   date: string
 ): Promise<FoodsListResponse> => {
-  if (!placeName || !contentId || !name) {
-    throw new Error("보관 장소 이름, 식재료 ID, 식재료 이름은 필수입니다.");
+  if (!contentId || !name) {
+    throw new Error("식재료 ID와 이름은 필수입니다.");
   }
 
   return fetchJson<FoodsListResponse>(`${API_BASE_URL}/content`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      placeName,
       contentId,
       name,
       vol: volume,
@@ -79,23 +76,18 @@ export const updateFoodItem = async (
 };
 
 /**
- * 식재료 삭제
- * @param place 보관 장소 이름
- * @param food 식재료 이름
+ * 식재료 삭제 (MongoDB foodList 항목 _id)
+ * @param contentId 식재료 항목 _id
  * @returns Promise<FoodsListResponse>
  */
-export const deleteFoodItem = async (
-  place: string,
-  food: string
-): Promise<FoodsListResponse> => {
-  if (!place || !food) {
-    throw new Error("보관 장소 이름과 식재료 이름은 필수입니다.");
+export const deleteFoodItem = async (contentId: string): Promise<FoodsListResponse> => {
+  if (!contentId) {
+    throw new Error("식재료 ID가 필요합니다.");
   }
 
   return fetchJson<FoodsListResponse>(`${API_BASE_URL}/content`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ place, food }),
+    body: JSON.stringify({ contentId }),
   });
 };
-

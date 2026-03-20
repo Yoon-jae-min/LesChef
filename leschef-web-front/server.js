@@ -112,13 +112,13 @@
 // ============================================
 // HTTP 모드 (개발 환경용 - 현재 활성화)
 // ============================================
-const { createServer } = require('http');
-const { parse } = require('url');
-const next = require('next');
+const { createServer } = require("http");
+const { parse } = require("url");
+const next = require("next");
 
-const dev = process.env.NODE_ENV !== 'production';
-const hostname = 'localhost';
-const port = parseInt(process.env.PORT || '3000', 10);
+const dev = process.env.NODE_ENV !== "production";
+const hostname = "localhost";
+const port = parseInt(process.env.PORT || "3000", 10);
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
@@ -129,15 +129,15 @@ app.prepare().then(() => {
       const parsedUrl = parse(req.url, true);
       await handle(req, res, parsedUrl);
     } catch (err) {
-      console.error('Error occurred handling', req.url, err);
+      console.error("Error occurred handling", req.url, err);
       res.statusCode = 500;
-      res.end('internal server error');
+      res.end("internal server error");
     }
   }).listen(port, (err) => {
     if (err) throw err;
-    console.log('');
-    console.log('🚀 Next.js 서버가 실행 중입니다:');
+    console.log("");
+    console.log("🚀 Next.js 서버가 실행 중입니다:");
     console.log(`   http://${hostname}:${port}`);
-    console.log('');
+    console.log("");
   });
 });

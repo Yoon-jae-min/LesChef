@@ -5,7 +5,10 @@
 export interface ApiError {
   error: true;
   message: string;
-  details?: string | string[] | Array<{ field: string; fieldName?: string; message: string; value?: unknown }>;
+  details?:
+    | string
+    | string[]
+    | Array<{ field: string; fieldName?: string; message: string; value?: unknown }>;
   field?: string;
   fieldName?: string;
   value?: unknown;
@@ -17,4 +20,3 @@ export interface ApiError {
   stack?: string;
   originalError?: string;
 }
-

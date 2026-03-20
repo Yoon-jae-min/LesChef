@@ -10,7 +10,7 @@ interface ExpiryAlertsProps {
 
 export default function ExpiryAlerts({ alerts }: ExpiryAlertsProps) {
   if (!alerts) return null;
-  
+
   const hasAlerts =
     alerts.expiredCount > 0 ||
     alerts.urgentCount > 0 ||
@@ -45,7 +45,8 @@ export default function ExpiryAlerts({ alerts }: ExpiryAlertsProps) {
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-yellow-500"></span>
                 <span className="text-gray-700">
-                  <span className="font-semibold text-yellow-600">{alerts.warningCount}</span>개 경고
+                  <span className="font-semibold text-yellow-600">{alerts.warningCount}</span>개
+                  경고
                 </span>
               </div>
             )}
@@ -63,4 +64,3 @@ export default function ExpiryAlerts({ alerts }: ExpiryAlertsProps) {
     </div>
   );
 }
-

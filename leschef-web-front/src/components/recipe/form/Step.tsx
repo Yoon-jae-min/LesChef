@@ -67,13 +67,11 @@ export default function Step({
               <div>
                 {step.stepImg ? (
                   <div className="mb-2 relative w-full h-48 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
-                    <Image
+                    {/* 박스는 고정 높이, 이미지가 비율 유지하며 상자 안에 다 보이도록 */}
+                    <img
                       src={step.stepImg}
                       alt={`단계 ${step.stepNum}`}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 50vw"
-                      className="object-cover"
-                      unoptimized
+                      className="w-full h-full object-contain block"
                     />
                   </div>
                 ) : (
@@ -98,4 +96,3 @@ export default function Step({
     </section>
   );
 }
-

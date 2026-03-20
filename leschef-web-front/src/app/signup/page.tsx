@@ -1,7 +1,7 @@
 "use client";
 
 // 동적 렌더링 강제 (useSearchParams 이슈 방지)
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
 import Link from "next/link";
 import Top from "@/components/common/navigation/Top";
@@ -22,7 +22,7 @@ export default function SignupPage() {
   const [returnTo, setReturnTo] = useState<string>("/");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  
+
   // 이메일 인증 관련 상태
   const [verificationCode, setVerificationCode] = useState("");
   const [isEmailVerified, setIsEmailVerified] = useState(false);
@@ -33,7 +33,7 @@ export default function SignupPage() {
 
   // URL 파라미터에서 return 경로 가져오기
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       const backParam = params.get("back");
       const storedReturn = sessionStorage.getItem(STORAGE_KEYS.RETURN_TO);
@@ -78,7 +78,9 @@ export default function SignupPage() {
       setCountdown(600); // 10분 (600초)
       alert("인증 코드가 발송되었습니다. 이메일을 확인해주세요.");
     } catch (error) {
-      setVerificationError(error instanceof Error ? error.message : "인증 코드 발송에 실패했습니다.");
+      setVerificationError(
+        error instanceof Error ? error.message : "인증 코드 발송에 실패했습니다."
+      );
     } finally {
       setIsSendingCode(false);
     }
@@ -100,7 +102,9 @@ export default function SignupPage() {
       setCountdown(0);
       alert("이메일 인증이 완료되었습니다.");
     } catch (error) {
-      setVerificationError(error instanceof Error ? error.message : "인증 코드가 올바르지 않습니다.");
+      setVerificationError(
+        error instanceof Error ? error.message : "인증 코드가 올바르지 않습니다."
+      );
     } finally {
       setIsVerifyingCode(false);
     }
@@ -144,7 +148,7 @@ export default function SignupPage() {
         const result = await response.json();
         if (result.message === "ok") {
           // 회원가입 성공 시 처리
-          if (typeof window !== 'undefined') {
+          if (typeof window !== "undefined") {
             sessionStorage.removeItem(STORAGE_KEYS.RETURN_TO);
             alert("회원가입이 완료되었습니다!");
             window.location.href = returnTo;
@@ -160,7 +164,9 @@ export default function SignupPage() {
       if (process.env.NODE_ENV === "development") {
         console.error("회원가입 실패:", error);
       }
-      setError(error instanceof Error ? error.message : "회원가입에 실패했습니다. 다시 시도해주세요.");
+      setError(
+        error instanceof Error ? error.message : "회원가입에 실패했습니다. 다시 시도해주세요."
+      );
     }
   };
 
@@ -189,15 +195,12 @@ export default function SignupPage() {
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-400 to-yellow-400">
                 LesChef{" "}
               </span>
-              와{" "}
-              <span className="underline decoration-4 decoration-orange-300">
-                시작
-              </span>
+              와 <span className="underline decoration-4 decoration-orange-300">시작</span>
             </h1>
 
             <p className="mt-6 text-base text-gray-600 leading-relaxed">
-              냉장고 재료 관리부터 맞춤 레시피 추천까지. 지금 가입하고
-              나만의 요리 여정을 시작해보세요.
+              냉장고 재료 관리부터 맞춤 레시피 추천까지. 지금 가입하고 나만의 요리 여정을
+              시작해보세요.
             </p>
 
             <div className="mt-10 space-y-4">
@@ -206,10 +209,7 @@ export default function SignupPage() {
                 "커뮤니티에서 레시피 공유",
                 "즐겨찾기와 보관함 관리",
               ].map((item) => (
-                <div
-                  key={item}
-                  className="flex items-start gap-3 text-gray-800"
-                >
+                <div key={item} className="flex items-start gap-3 text-gray-800">
                   <span className="mt-1 h-2 w-2 rounded-full bg-black" />
                   <p className="text-sm lg:text-base leading-relaxed">{item}</p>
                 </div>
@@ -220,19 +220,13 @@ export default function SignupPage() {
           {/* 회원가입 폼 */}
           <section className="bg-white border border-gray-200 rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
             <div className="space-y-1">
-              <h2 className="text-2xl font-semibold text-gray-900">
-                회원가입
-              </h2>
-              <p className="text-sm text-gray-500">
-                LesChef와 함께 요리 여정을 시작해보세요.
-              </p>
+              <h2 className="text-2xl font-semibold text-gray-900">회원가입</h2>
+              <p className="text-sm text-gray-500">LesChef와 함께 요리 여정을 시작해보세요.</p>
             </div>
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  이메일
-                </label>
+                <label className="text-sm font-medium text-gray-700">이메일</label>
                 <div className="flex gap-2">
                   <input
                     type="email"
@@ -257,12 +251,12 @@ export default function SignupPage() {
                     {isDev
                       ? "개발 중 비활성"
                       : isSendingCode
-                      ? "발송 중..."
-                      : countdown > 0
-                      ? `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`
-                      : isEmailVerified
-                      ? "인증 완료"
-                      : "인증 코드 발송"}
+                        ? "발송 중..."
+                        : countdown > 0
+                          ? `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`
+                          : isEmailVerified
+                            ? "인증 완료"
+                            : "인증 코드 발송"}
                   </button>
                 </div>
                 {isEmailVerified && (
@@ -273,9 +267,7 @@ export default function SignupPage() {
               {/* 인증 코드 입력 */}
               {!isEmailVerified && countdown > 0 && (
                 <div className="space-y-2">
-                  <label className="text-sm font-medium text-gray-700">
-                    인증 코드
-                  </label>
+                  <label className="text-sm font-medium text-gray-700">인증 코드</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
@@ -297,21 +289,18 @@ export default function SignupPage() {
                       {isVerifyingCode ? "확인 중..." : "인증 확인"}
                     </button>
                   </div>
-                  {verificationError && (
-                    <p className="text-xs text-red-500">{verificationError}</p>
-                  )}
+                  {verificationError && <p className="text-xs text-red-500">{verificationError}</p>}
                   {countdown > 0 && (
                     <p className="text-xs text-gray-500">
-                      인증 코드가 만료되기 전까지 {Math.floor(countdown / 60)}분 {countdown % 60}초 남았습니다.
+                      인증 코드가 만료되기 전까지 {Math.floor(countdown / 60)}분 {countdown % 60}초
+                      남았습니다.
                     </p>
                   )}
                 </div>
               )}
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  닉네임
-                </label>
+                <label className="text-sm font-medium text-gray-700">닉네임</label>
                 <input
                   type="text"
                   value={nickname}
@@ -324,9 +313,7 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  비밀번호
-                </label>
+                <label className="text-sm font-medium text-gray-700">비밀번호</label>
                 <div className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -349,9 +336,7 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  비밀번호 확인
-                </label>
+                <label className="text-sm font-medium text-gray-700">비밀번호 확인</label>
                 <div className="relative">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
@@ -383,17 +368,11 @@ export default function SignupPage() {
                     required
                   />
                   <span>
-                    <Link
-                      href="/terms"
-                      className="text-black underline-offset-4 hover:underline"
-                    >
+                    <Link href="/terms" className="text-black underline-offset-4 hover:underline">
                       이용약관
                     </Link>
                     및{" "}
-                    <Link
-                      href="/privacy"
-                      className="text-black underline-offset-4 hover:underline"
-                    >
+                    <Link href="/privacy" className="text-black underline-offset-4 hover:underline">
                       개인정보처리방침
                     </Link>
                     에 동의합니다.
@@ -401,9 +380,7 @@ export default function SignupPage() {
                 </label>
               </div>
 
-              {error && (
-                <p className="text-sm text-red-500">{error}</p>
-              )}
+              {error && <p className="text-sm text-red-500">{error}</p>}
 
               <button
                 type="submit"
@@ -435,7 +412,7 @@ export default function SignupPage() {
               >
                 카카오
               </button>
-              
+
               {/* 네이버 로그인 */}
               <button
                 type="button"
@@ -451,7 +428,7 @@ export default function SignupPage() {
               >
                 네이버
               </button>
-              
+
               {/* 구글 로그인 */}
               <button
                 type="button"
@@ -487,4 +464,3 @@ export default function SignupPage() {
     </div>
   );
 }
-

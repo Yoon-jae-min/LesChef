@@ -1,34 +1,33 @@
-import mongoose, { Schema, Model } from "mongoose";
-import { IBoard } from "../../types";
+import mongoose, { Schema, Model } from 'mongoose';
+import { IBoard } from '../../types';
 
 const BoardSchema = new Schema<IBoard>({
     title: {
-        type: String
+        type: String,
     },
     nickName: {
-        type: String
+        type: String,
     },
     userId: {
-        type: String
+        type: String,
     },
     viewCount: {
         type: Number,
-        default: 0
+        default: 0,
     },
     content: {
-        type: String
+        type: String,
     },
-    createdAt: { 
+    createdAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
+        default: () => new Date().setMilliseconds(0),
     },
     updatedAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
-    }
+        default: () => new Date().setMilliseconds(0),
+    },
 });
 
-const Board: Model<IBoard> = mongoose.model<IBoard>("Board", BoardSchema);
+const Board: Model<IBoard> = mongoose.model<IBoard>('Board', BoardSchema);
 
 export default Board;
-

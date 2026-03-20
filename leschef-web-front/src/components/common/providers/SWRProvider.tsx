@@ -15,10 +15,10 @@ export default function SWRProvider({ children }: { children: React.ReactNode })
         // fetcher: fetcher,
 
         // 전역 기본 옵션
-        revalidateOnFocus: true,        // 포커스 시 재검증 (새 데이터 확인)
-        revalidateOnReconnect: true,    // 네트워크 재연결 시 재검증
-        refreshInterval: 0,              // 자동 새로고침 비활성화 (수동으로만)
-        dedupingInterval: TIMING.ONE_MINUTE,        // 기본 1분 동안 중복 요청 방지
+        revalidateOnFocus: true, // 포커스 시 재검증 (새 데이터 확인)
+        revalidateOnReconnect: true, // 네트워크 재연결 시 재검증
+        refreshInterval: 0, // 자동 새로고침 비활성화 (수동으로만)
+        dedupingInterval: TIMING.ONE_MINUTE, // 기본 1분 동안 중복 요청 방지
 
         // 에러 재시도 설정
         onErrorRetry: (error, key, config, revalidate, { retryCount }) => {
@@ -34,7 +34,7 @@ export default function SWRProvider({ children }: { children: React.ReactNode })
 
           // 지수 백오프: 1초, 2초, 4초 후 재시도
           const timeout = Math.min(1000 * 2 ** retryCount, 10000);
-          
+
           setTimeout(() => {
             revalidate({ retryCount });
           }, timeout);
@@ -61,4 +61,3 @@ export default function SWRProvider({ children }: { children: React.ReactNode })
     </SWRConfig>
   );
 }
-

@@ -83,7 +83,7 @@ export const sendVerificationCode = async (email: string, code: string): Promise
         };
 
         const info = await transporter.sendMail(mailOptions);
-        
+
         if (isDev) {
             logger.info(`이메일 발송 성공: ${email}`, { messageId: info.messageId });
         }
@@ -94,4 +94,3 @@ export const sendVerificationCode = async (email: string, code: string): Promise
         throw error;
     }
 };
-

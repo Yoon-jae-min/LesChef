@@ -9,7 +9,11 @@ import Link from "next/link";
 import { useMemo } from "react";
 import useSWR from "swr";
 import { fetchFoodsList, type FoodsListResponse, type StoragePlace } from "@/utils/api/foods";
-import { fetchRecipeList, type RecipeListResponse, type RecipeListItem } from "@/utils/api/recipeApi";
+import {
+  fetchRecipeList,
+  type RecipeListResponse,
+  type RecipeListItem,
+} from "@/utils/api/recipeApi";
 import { TIMING } from "@/constants/system/timing";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 import RecipeCard from "@/components/recipe/card/RecipeCard";
@@ -20,19 +24,19 @@ interface RecommendedProps {
 
 export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
   // 보유 재료 목록 가져오기 (로그인한 경우에만)
-  const { data: foodsData, error: foodsError, isLoading: foodsLoading } = useSWR<FoodsListResponse>(
-    isLoggedIn ? "/foods/place" : null,
-    () => fetchFoodsList(),
-    {
-      dedupingInterval: TIMING.ONE_MINUTE,
-      revalidateOnFocus: false,
-    }
-  );
+  const {
+    data: foodsData,
+    error: foodsError,
+    isLoading: foodsLoading,
+  } = useSWR<FoodsListResponse>(isLoggedIn ? "/foods/place" : null, () => fetchFoodsList(), {
+    dedupingInterval: TIMING.ONE_MINUTE,
+    revalidateOnFocus: false,
+  });
 
   // 보유 재료 이름 목록 추출 (메모이제이션으로 성능 최적화)
   const ownedIngredients = useMemo(() => {
     if (!foodsData?.sectionList || foodsData.sectionList.length === 0) return [];
-    
+
     const ingredients = new Set<string>();
     foodsData.sectionList.forEach((place: StoragePlace) => {
       place.foodList?.forEach((food) => {
@@ -45,7 +49,7 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
         }
       });
     });
-    
+
     return Array.from(ingredients);
   }, [foodsData?.sectionList]);
 
@@ -60,18 +64,22 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
     return ownedIngredients.slice(0, 3).join(" ");
   }, [ownedIngredients]);
 
-  const { data: recipesData, error: recipesError, isLoading: recipesLoading } = useSWR<RecipeListResponse>(
+  const {
+    data: recipesData,
+    error: recipesError,
+    isLoading: recipesLoading,
+  } = useSWR<RecipeListResponse>(
     shouldFetchRecipes ? ["recommended-recipes", searchKeywords] : null,
     async () => {
       // 보유 재료 이름을 키워드로 검색
       // API의 keyword 파라미터를 사용하여 재료명으로 검색
-      const searchResults = await fetchRecipeList({ 
-        category: "all", 
-        sort: "popular", 
+      const searchResults = await fetchRecipeList({
+        category: "all",
+        sort: "popular",
         limit: 12,
         keyword: searchKeywords,
       });
-      
+
       return {
         ...searchResults,
         list: searchResults.list.slice(0, 6), // 최대 6개만 표시
@@ -95,11 +103,15 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">보유 재료로 만들 수 있는 레시피</h2>
-              <p className="text-sm text-gray-500 mt-1">보유한 재료를 등록하면 맞춤 레시피를 추천해드립니다.</p>
+              <p className="text-sm text-gray-500 mt-1">
+                보유한 재료를 등록하면 맞춤 레시피를 추천해드립니다.
+              </p>
             </div>
           </div>
           <div className="rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
-            <p className="text-gray-600 mb-4">로그인하시면 보유한 재료로 만들 수 있는 레시피를 추천해드려요!</p>
+            <p className="text-gray-600 mb-4">
+              로그인하시면 보유한 재료로 만들 수 있는 레시피를 추천해드려요!
+            </p>
             <Link
               href="/login"
               className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors"
@@ -120,13 +132,25 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-2xl font-bold text-gray-900">보유 재료로 만들 수 있는 레시피</h2>
-              <p className="text-sm text-gray-500 mt-1">보유한 재료를 등록하면 맞춤 레시피를 추천해드립니다.</p>
+              <p className="text-sm text-gray-500 mt-1">
+                보유한 재료를 등록하면 맞춤 레시피를 추천해드립니다.
+              </p>
             </div>
           </div>
           <div className="rounded-3xl border border-dashed border-gray-300 bg-gradient-to-br from-orange-50 to-yellow-50 p-12 text-center">
             <div className="mb-4">
-              <svg className="w-16 h-16 mx-auto text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+              <svg
+                className="w-16 h-16 mx-auto text-orange-400"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1.5}
+                  d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"
+                />
               </svg>
             </div>
             <p className="text-gray-600 mb-4 font-medium">아직 등록된 식재료가 없어요</p>
@@ -175,7 +199,12 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
             >
               전체보기
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
               </svg>
             </Link>
           )}
@@ -209,4 +238,3 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
     </section>
   );
 }
-

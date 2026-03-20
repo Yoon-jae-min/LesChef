@@ -48,4 +48,3 @@ export const toggleBoardLike = async (boardId: string): Promise<ToggleBoardLikeR
     throw new Error("좋아요 토글 중 네트워크 오류가 발생했습니다.");
   }
 };
-

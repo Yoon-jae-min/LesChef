@@ -6,7 +6,11 @@
 
 import Link from "next/link";
 import useSWR from "swr";
-import { getIngredientPrices, type IngredientPriceItem, type IngredientPriceResponse } from "@/utils/api/ingredientPrice";
+import {
+  getIngredientPrices,
+  type IngredientPriceItem,
+  type IngredientPriceResponse,
+} from "@/utils/api/ingredientPrice";
 import { TIMING } from "@/constants/system/timing";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
@@ -15,19 +19,16 @@ interface IngredientPriceProps {
   initialError?: string | null;
 }
 
-export default function IngredientPrice({
-  initialData,
-  initialError,
-}: IngredientPriceProps) {
-  const { data: priceData, error: priceError, isLoading } = useSWR<IngredientPriceResponse>(
-    '/ingredient-price',
-    getIngredientPrices,
-    {
-      revalidateOnFocus: false,
-      dedupingInterval: TIMING.ONE_HOUR,
-      fallbackData: initialData || undefined,
-    }
-  );
+export default function IngredientPrice({ initialData, initialError }: IngredientPriceProps) {
+  const {
+    data: priceData,
+    error: priceError,
+    isLoading,
+  } = useSWR<IngredientPriceResponse>("/ingredient-price", getIngredientPrices, {
+    revalidateOnFocus: false,
+    dedupingInterval: TIMING.ONE_HOUR,
+    fallbackData: initialData || undefined,
+  });
 
   const ingredientPrices = priceData?.data || initialData?.data || [];
   const displayError = priceError || (initialError ? new Error(initialError) : null);
@@ -42,10 +43,7 @@ export default function IngredientPrice({
       {isLoading && !initialData && (
         <div className="space-y-3">
           {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={i}
-              className="h-16 bg-gray-100 rounded-xl animate-pulse"
-            />
+            <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
           ))}
         </div>
       )}
@@ -60,9 +58,7 @@ export default function IngredientPrice({
       )}
 
       {!isLoading && !displayError && displayPrices.length === 0 && (
-        <div className="text-center py-8 text-sm text-gray-500">
-          물가 정보가 없습니다.
-        </div>
+        <div className="text-center py-8 text-sm text-gray-500">물가 정보가 없습니다.</div>
       )}
 
       {!isLoading && !displayError && displayPrices.length > 0 && (
@@ -74,17 +70,15 @@ export default function IngredientPrice({
                 className="p-3 rounded-xl border border-gray-200 bg-gray-50"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-medium text-gray-900">
-                    {item.name}
-                  </span>
+                  <span className="text-sm font-medium text-gray-900">{item.name}</span>
                   {item.changeRate !== undefined && (
                     <span
                       className={`text-xs font-semibold ${
                         item.changeRate > 0
                           ? "text-red-600"
                           : item.changeRate < 0
-                          ? "text-blue-600"
-                          : "text-gray-600"
+                            ? "text-blue-600"
+                            : "text-gray-600"
                       }`}
                     >
                       {item.changeRate > 0 ? "↑" : item.changeRate < 0 ? "↓" : "→"}{" "}
@@ -95,11 +89,11 @@ export default function IngredientPrice({
                 <div className="flex items-end justify-between">
                   <div>
                     <p className="text-lg font-bold text-gray-900">
-                      {typeof item.price === "number" 
-                        ? item.price.toLocaleString() 
+                      {typeof item.price === "number"
+                        ? item.price.toLocaleString()
                         : typeof item.price === "string" && !isNaN(Number(item.price))
-                        ? Number(item.price).toLocaleString()
-                        : "0"}
+                          ? Number(item.price).toLocaleString()
+                          : "0"}
                     </p>
                     <p className="text-xs text-gray-600">{item.unit || "단위 정보 없음"}</p>
                   </div>
@@ -120,4 +114,3 @@ export default function IngredientPrice({
     </aside>
   );
 }
-

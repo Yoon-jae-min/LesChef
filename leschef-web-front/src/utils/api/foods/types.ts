@@ -10,7 +10,7 @@ export type FoodItem = {
   unit: string;
   expirate: Date | string;
   daysUntilExpiry?: number;
-  status?: 'expired' | 'urgent' | 'warning' | 'notice' | 'safe';
+  status?: "expired" | "urgent" | "warning" | "notice" | "safe";
 };
 
 // 보관 장소 타입
@@ -54,4 +54,3 @@ export type ExpiryAlertResponse = {
   warningCount: number;
   noticeCount: number;
 };
-

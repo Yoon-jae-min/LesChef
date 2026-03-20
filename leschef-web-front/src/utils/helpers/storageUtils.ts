@@ -25,7 +25,8 @@ export const getDday = (dateStr: string): number | null => {
  * @returns 우선순위 라벨 및 스타일 클래스
  */
 export const getPriority = (dday: number | null): { label: string; tone: string } => {
-  if (dday === null) return { label: "정보 없음", tone: "bg-gray-100 text-gray-500 border-gray-200" };
+  if (dday === null)
+    return { label: "정보 없음", tone: "bg-gray-100 text-gray-500 border-gray-200" };
   if (dday < 0) return { label: "폐기 필요", tone: "bg-red-50 text-red-600 border-red-200" };
   if (dday <= 2) return { label: "긴급", tone: "bg-orange-50 text-orange-600 border-orange-200" };
   if (dday <= 5) return { label: "주의", tone: "bg-yellow-50 text-yellow-600 border-yellow-200" };
@@ -43,4 +44,3 @@ export const formatDday = (dday: number | null): string => {
   if (dday > 0) return `D-${dday}`;
   return `D+${Math.abs(dday)}`;
 };
-

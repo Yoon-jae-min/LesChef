@@ -6,11 +6,13 @@
 "use client";
 
 import React, { createContext, useContext, useState, useCallback, useMemo } from "react";
-import Notification, { type Notification as NotificationType } from "@/components/common/ui/Notification";
+import Notification, {
+  type Notification as NotificationType,
+} from "@/components/common/ui/Notification";
 
 interface NotificationContextType {
   notifications: NotificationType[];
-  addNotification: (notification: Omit<NotificationType, 'id'>) => void;
+  addNotification: (notification: Omit<NotificationType, "id">) => void;
   removeNotification: (id: string) => void;
   clearAll: () => void;
 }
@@ -20,7 +22,7 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 export function NotificationProvider({ children }: { children: React.ReactNode }) {
   const [notifications, setNotifications] = useState<NotificationType[]>([]);
 
-  const addNotification = useCallback((notification: Omit<NotificationType, 'id'>) => {
+  const addNotification = useCallback((notification: Omit<NotificationType, "id">) => {
     const id = `notification-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     const newNotification: NotificationType = {
       ...notification,
@@ -56,10 +58,7 @@ export function NotificationProvider({ children }: { children: React.ReactNode }
       <div className="fixed top-20 right-4 z-50 flex flex-col gap-3 pointer-events-none">
         {notifications.map((notification) => (
           <div key={notification.id} className="pointer-events-auto">
-            <Notification
-              notification={notification}
-              onClose={removeNotification}
-            />
+            <Notification notification={notification} onClose={removeNotification} />
           </div>
         ))}
       </div>
@@ -74,4 +73,3 @@ export function useNotification() {
   }
   return context;
 }
-

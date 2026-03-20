@@ -1,5 +1,5 @@
-import mongoose, { Schema, Model, Document, Types } from "mongoose";
-import { IBoardComment } from "../../types";
+import mongoose, { Schema, Model, Document, Types } from 'mongoose';
+import { IBoardComment } from '../../types';
 
 interface BoardCommentDocument extends IBoardComment, Document {
     boardId: Types.ObjectId;
@@ -8,28 +8,30 @@ interface BoardCommentDocument extends IBoardComment, Document {
 const BoardCommentSchema = new Schema<BoardCommentDocument>({
     boardId: {
         type: Schema.Types.ObjectId,
-        ref: "Board"
+        ref: 'Board',
     },
     nickName: {
-        type: String
+        type: String,
     },
     userId: {
-        type: String
+        type: String,
     },
     content: {
-        type: String
+        type: String,
     },
-    createdAt: { 
+    createdAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
+        default: () => new Date().setMilliseconds(0),
     },
     updatedAt: {
         type: Date,
-        default: () => new Date().setMilliseconds(0)
-    }
+        default: () => new Date().setMilliseconds(0),
+    },
 });
 
-const BoardComment: Model<BoardCommentDocument> = mongoose.model<BoardCommentDocument>("BoardComment", BoardCommentSchema);
+const BoardComment: Model<BoardCommentDocument> = mongoose.model<BoardCommentDocument>(
+    'BoardComment',
+    BoardCommentSchema
+);
 
 export default BoardComment;
-

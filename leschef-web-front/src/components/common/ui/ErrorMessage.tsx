@@ -37,7 +37,7 @@ export default function ErrorMessage({
         </span>
         <div className="flex-1">
           <p className="font-medium">{message}</p>
-          
+
           {/* 상세 정보 */}
           {showDetails && details.length > 0 && (
             <ul className="mt-2 ml-6 list-disc space-y-1 text-xs">
@@ -48,12 +48,10 @@ export default function ErrorMessage({
               ))}
             </ul>
           )}
-          
+
           {/* 액션 제안 */}
-          {showAction && action && (
-            <p className="mt-2 text-xs text-red-600">{action}</p>
-          )}
-          
+          {showAction && action && <p className="mt-2 text-xs text-red-600">{action}</p>}
+
           {/* 재시도 버튼 */}
           {onRetry && (
             <button
@@ -82,12 +80,8 @@ export function InlineErrorMessage({
   const { message } = formatErrorForUser(error);
 
   return (
-    <p
-      className={`text-xs text-red-600 ${className}`}
-      role="alert"
-    >
+    <p className={`text-xs text-red-600 ${className}`} role="alert">
       {message}
     </p>
   );
 }
-

@@ -32,4 +32,3 @@ export const unlinkSocial = async (provider: SocialProvider): Promise<void> => {
     throw new Error("연동 해제 중 네트워크 오류가 발생했습니다.");
   }
 };
-
