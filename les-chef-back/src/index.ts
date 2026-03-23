@@ -216,6 +216,7 @@ app.use('/customer/join', authLimiter);
 app.use('/customer/findId', authLimiter);
 app.use('/customer/verifyPasswordReset', authLimiter);
 app.use('/customer/resetPassword', authLimiter);
+app.use('/foods/upload-item-image', authLimiter);
 app.use('/recipe/write', uploadLimiter);
 app.use('/api', apiLimiter);
 

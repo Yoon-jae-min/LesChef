@@ -5,3 +5,4 @@
 export * from './foodsPlace';
 export * from './foodsContent';
 export * from './foodsExpiry';
+export { uploadFoodItemImage } from './foodsItemImageUpload';

@@ -10,7 +10,7 @@ import { RECIPE_CATEGORY_TO_API } from "@/constants/navigation/categories";
 export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
   // Next.js 15: params는 Promise이므로 await 필요
   const { category } = await params;
-  const categoryKey = RECIPE_CATEGORY_TO_API[category] ? category : "korean";
+  const categoryKey = category in RECIPE_CATEGORY_TO_API ? category : "korean";
   const apiCategory = RECIPE_CATEGORY_TO_API[categoryKey] || "korean";
 
   // 서버에서 초기 데이터 가져오기
@@ -19,7 +19,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
 
   try {
     initialData = await getRecipeListServer({
-      category: apiCategory as "korean" | "japanese" | "chinese" | "western" | "other",
+      category: apiCategory as "all" | "korean" | "japanese" | "chinese" | "western" | "other",
     });
   } catch (err) {
     if (process.env.NODE_ENV === "development") {

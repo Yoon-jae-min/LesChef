@@ -1,6 +1,6 @@
 /**
  * 식재료(Content) 관련 컨트롤러
- * 보관 장소 내 식재료의 CRUD 작업을 처리
+ * 이미지 필수(신규), 이름 선택
  */
 
 import asyncHandler from 'express-async-handler';
@@ -12,38 +12,72 @@ import { ApiErrorResponse, FoodsListResponse } from '../../types';
 import { RESOURCE_ERROR_MESSAGES } from '../../constants/error/errorMessages';
 import { getUserId } from '../../middleware/auth/auth';
 import { mapFoodsDataToStoragePlaces } from '../../utils/foods/foodsUtils';
+import { deleteFoodItemImageIfAny } from '../../utils/foods/foodsItemImageDelete';
+
+interface FoodItemSnapshot {
+    name: string;
+    imageUrl: string;
+    volume: number;
+    unit: string;
+    expirate: Date;
+}
+
+async function findFoodItemSnapshot(
+    userId: string,
+    contentId: Types.ObjectId
+): Promise<FoodItemSnapshot | null> {
+    const doc = await Foods.findOne({ userId }).lean<FoodsLean>();
+    if (!doc?.place) return null;
+    for (const pl of doc.place) {
+        for (const f of pl.foodList || []) {
+            const fid = f._id instanceof Types.ObjectId ? f._id.toString() : String(f._id || '');
+            if (fid === contentId.toString()) {
+                return {
+                    name: f.name || '',
+                    imageUrl: f.imageUrl || '',
+                    volume: f.volume ?? 0,
+                    unit: f.unit || '',
+                    expirate: new Date(f.expirate),
+                };
+            }
+        }
+    }
+    return null;
+}
 
 interface AddContentRequestBody {
     placeId?: string;
+    /** 선택 재료명 */
     unitName?: string;
+    /** 필수: POST /foods/upload-item-image 로 받은 URL */
+    imageUrl?: string;
     unitVol?: number;
     unitUnit?: string;
     unitDate?: string;
 }
 
-/**
- * 식재료 추가
- */
 export const addContent = asyncHandler(
     async (
         req: Request<{}, FoodsListResponse | ApiErrorResponse, AddContentRequestBody>,
         res: Response<FoodsListResponse | ApiErrorResponse>
     ) => {
-        const { placeId, unitName, unitVol, unitUnit, unitDate } = req.body;
+        const { placeId, unitName, imageUrl, unitVol, unitUnit, unitDate } = req.body;
         const userId = getUserId(req);
 
-        if (!placeId || !Types.ObjectId.isValid(placeId) || !unitName) {
+        const img = typeof imageUrl === 'string' ? imageUrl.trim() : '';
+        if (!placeId || !Types.ObjectId.isValid(placeId) || !img) {
             res.status(400).json({
                 error: true,
-                message: RESOURCE_ERROR_MESSAGES.FOODS.PLACE_AND_FOOD_NAME_REQUIRED,
+                message: '보관 장소와 이미지(imageUrl)는 필수입니다. 먼저 이미지를 업로드해주세요.',
             });
             return;
         }
 
         try {
             const newItem = {
-                name: unitName,
-                volume: unitVol || 0,
+                name: (unitName && String(unitName).trim()) || '',
+                imageUrl: img,
+                volume: unitVol ?? 0,
                 unit: unitUnit || '',
                 expirate: unitDate ? new Date(unitDate) : new Date(),
             };
@@ -57,6 +91,7 @@ export const addContent = asyncHandler(
             const sectionList = mapFoodsDataToStoragePlaces(foodsData, false);
 
             if (result.modifiedCount === 0) {
+                await deleteFoodItemImageIfAny(img);
                 res.status(404).json({
                     error: true,
                     message: RESOURCE_ERROR_MESSAGES.FOODS.PLACE_NOT_FOUND,
@@ -78,9 +113,6 @@ interface DeleteContentRequestBody {
     contentId?: string;
 }
 
-/**
- * 식재료 삭제
- */
 export const deleteContent = asyncHandler(
     async (
         req: Request<{}, FoodsListResponse | ApiErrorResponse, DeleteContentRequestBody>,
@@ -99,6 +131,9 @@ export const deleteContent = asyncHandler(
 
         try {
             const oid = new Types.ObjectId(contentId);
+            const beforeSnap = await findFoodItemSnapshot(userId, oid);
+            const prevUrl = beforeSnap?.imageUrl || '';
+
             const result = await Foods.updateOne(
                 { userId, 'place.foodList._id': oid },
                 { $pull: { 'place.$[pl].foodList': { _id: oid } } },
@@ -114,6 +149,7 @@ export const deleteContent = asyncHandler(
                     message: RESOURCE_ERROR_MESSAGES.FOODS.FOOD_NOT_FOUND,
                 });
             } else {
+                await deleteFoodItemImageIfAny(prevUrl);
                 res.status(200).json({
                     error: false,
                     result: 'success',
@@ -132,23 +168,22 @@ interface UpdateContentRequestBody {
     unit?: string;
     date?: string;
     contentId?: string;
+    /** 새 이미지로 교체 시에만 전달 */
+    imageUrl?: string;
 }
 
-/**
- * 식재료 수정
- */
 export const updateContent = asyncHandler(
     async (
         req: Request<{}, FoodsListResponse | ApiErrorResponse, UpdateContentRequestBody>,
         res: Response<FoodsListResponse | ApiErrorResponse>
     ) => {
-        const { name, vol, unit, date, contentId } = req.body;
+        const { name, vol, unit, date, contentId, imageUrl } = req.body;
         const userId = getUserId(req);
 
-        if (!contentId || !name) {
+        if (!contentId) {
             res.status(400).json({
                 error: true,
-                message: RESOURCE_ERROR_MESSAGES.FOODS.PLACE_FOOD_ID_NAME_REQUIRED,
+                message: '식재료 ID가 필요합니다.',
             });
             return;
         }
@@ -163,15 +198,41 @@ export const updateContent = asyncHandler(
 
         try {
             const oid = new Types.ObjectId(contentId);
+            const before = await findFoodItemSnapshot(userId, oid);
+            if (!before) {
+                res.status(404).json({
+                    error: true,
+                    message: RESOURCE_ERROR_MESSAGES.FOODS.FOOD_NOT_FOUND,
+                });
+                return;
+            }
+
+            const nextName = typeof name === 'string' ? name.trim() : before.name;
+            const nextVol = typeof vol === 'number' ? vol : before.volume;
+            const nextUnit = typeof unit === 'string' ? unit : before.unit;
+            const nextDate = date ? new Date(date) : before.expirate;
+            const nextImage =
+                typeof imageUrl === 'string' && imageUrl.trim()
+                    ? imageUrl.trim()
+                    : before.imageUrl;
+
+            if (!nextImage) {
+                res.status(400).json({
+                    error: true,
+                    message: '항목 이미지가 없습니다. 이미지를 업로드한 뒤 다시 시도해주세요.',
+                });
+                return;
+            }
 
             const result = await Foods.updateOne(
                 { userId, 'place.foodList._id': oid },
                 {
                     $set: {
-                        'place.$[p].foodList.$[f].name': name,
-                        'place.$[p].foodList.$[f].volume': vol || 0,
-                        'place.$[p].foodList.$[f].unit': unit || '',
-                        'place.$[p].foodList.$[f].expirate': date ? new Date(date) : new Date(),
+                        'place.$[p].foodList.$[f].name': nextName,
+                        'place.$[p].foodList.$[f].volume': nextVol,
+                        'place.$[p].foodList.$[f].unit': nextUnit,
+                        'place.$[p].foodList.$[f].expirate': nextDate,
+                        'place.$[p].foodList.$[f].imageUrl': nextImage,
                     },
                 },
                 {
@@ -188,6 +249,13 @@ export const updateContent = asyncHandler(
                     message: RESOURCE_ERROR_MESSAGES.FOODS.FOOD_NOT_FOUND,
                 });
             } else {
+                if (
+                    before.imageUrl &&
+                    nextImage &&
+                    before.imageUrl !== nextImage
+                ) {
+                    await deleteFoodItemImageIfAny(before.imageUrl);
+                }
                 res.status(200).json({
                     error: false,
                     result: true,

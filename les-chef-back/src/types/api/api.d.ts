@@ -56,7 +56,10 @@ export interface PaginatedResponse<T> {
 // 식재료 항목 타입
 export interface FoodItem {
     _id: string;
+    /** 선택 라벨 */
     name: string;
+    /** 이미지 URL 또는 `/Image/...` 경로 */
+    imageUrl: string;
     volume: number;
     unit: string;
     expirate: Date;

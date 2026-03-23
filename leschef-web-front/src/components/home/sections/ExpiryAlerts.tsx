@@ -6,11 +6,13 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useMemo } from "react";
 import useSWR from "swr";
 import { fetchExpiryAlerts, type ExpiryAlertResponse } from "@/utils/api/foods";
 import { TIMING } from "@/constants/system/timing";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
+import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 
 interface ExpiryAlertsProps {
   isLoggedIn?: boolean;
@@ -158,20 +160,33 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {priorityAlerts.map((alert, index) => {
             const daysUntilExpiry = alert.food.daysUntilExpiry ?? 0;
+            const title = alert.food.name?.trim() || "이름 없음";
+            const imgSrc = alert.food.imageUrl
+              ? resolveBackendAssetUrl(alert.food.imageUrl)
+              : "";
             return (
               <div
                 key={`${alert.food._id}-${index}`}
                 className={`rounded-2xl border p-4 ${getPriorityStyle(alert.priority)}`}
               >
-                <div className="flex items-start justify-between mb-2">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-1">
+                <div className="flex items-start gap-3 mb-2">
+                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-current/20 bg-white/40">
+                    {imgSrc ? (
+                      <Image src={imgSrc} alt={title} fill className="object-cover" sizes="64px" />
+                    ) : (
+                      <div className="flex h-full items-center justify-center text-[10px] text-gray-500">
+                        사진 없음
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1 flex-wrap">
                       <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/50">
                         {getPriorityLabel(alert.priority)}
                       </span>
                       <span className="text-xs text-gray-600">{alert.place}</span>
                     </div>
-                    <h3 className="font-semibold text-lg">{alert.food.name}</h3>
+                    <h3 className="font-semibold text-lg truncate">{title}</h3>
                     <p className="text-sm text-gray-600 mt-1">
                       {alert.food.volume} {alert.food.unit}
                     </p>

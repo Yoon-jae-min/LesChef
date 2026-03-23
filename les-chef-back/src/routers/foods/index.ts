@@ -1,4 +1,5 @@
 import express from 'express';
+import type { NextFunction, Request, Response } from 'express';
 import {
     getPlace,
     addPlace,
@@ -8,15 +9,30 @@ import {
     deleteContent,
     updateContent,
     getExpiryAlerts,
+    uploadFoodItemImage,
 } from '../../controllers/foods';
 import { requireAuth } from '../../middleware/auth/auth';
+import { foodsItemImageUpload } from '../../uploads/foodsItemImg';
 
 const router = express.Router();
 
-// 모든 식재료 관련 라우트는 인증 필요
 router.use(requireAuth);
 
+const runFoodsItemUpload = (req: Request, res: Response, next: NextFunction) => {
+    foodsItemImageUpload(req, res, (err: unknown) => {
+        if (err instanceof Error) {
+            res.status(400).json({
+                error: true,
+                message: err.message || '이미지 업로드에 실패했습니다.',
+            });
+            return;
+        }
+        next();
+    });
+};
+
 router
+    .post('/upload-item-image', runFoodsItemUpload, uploadFoodItemImage)
     .get('/place', getPlace)
     .post('/place', addPlace)
     .patch('/place', updatePlace)

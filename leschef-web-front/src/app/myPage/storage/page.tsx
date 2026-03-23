@@ -16,6 +16,7 @@ import {
   fetchExpiryAlerts,
   updateFoodItem,
   updateStoragePlace,
+  uploadFoodItemImage,
   type FoodItem as FoodItemType,
   type FoodsListResponse,
   type StoragePlace,
@@ -23,8 +24,16 @@ import {
 import ExpiryAlerts from "@/components/storage/summary/ExpiryAlerts";
 import Place from "@/components/storage/modals/Place";
 import RenamePlaceModal from "@/components/storage/modals/RenamePlaceModal";
-import ItemForm from "@/components/storage/modals/ItemForm";
+import ItemForm, { type ItemFormState } from "@/components/storage/modals/ItemForm";
 import FoodItem from "@/components/storage/card/FoodItem";
+
+const EMPTY_ITEM_FORM: ItemFormState = {
+  name: "",
+  volume: 1,
+  unit: "개",
+  expirate: "",
+  serverImageUrl: "",
+};
 
 export default function StoragePage() {
   const { data, error, isLoading, mutate } = useSWR<FoodsListResponse>(
@@ -84,46 +93,33 @@ export default function StoragePage() {
     return filteredItems.find((item) => item._id === editingFoodId) || null;
   }, [editingFoodId, filteredItems]);
 
-  const [form, setForm] = useState<{
-    name: string;
-    volume: number;
-    unit: string;
-    expirate: string;
-  }>({
-    name: "",
-    volume: 1,
-    unit: "개",
-    expirate: "",
-  });
+  const [form, setForm] = useState<ItemFormState>(EMPTY_ITEM_FORM);
+  const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
 
   const handleOpenFoodModal = (item?: FoodItemType) => {
+    setPendingImageFile(null);
+    setActionError(null);
     if (item) {
       setEditingFoodId(item._id);
       setForm({
-        name: item.name,
+        name: item.name ?? "",
         volume: item.volume ?? 0,
         unit: item.unit,
         expirate:
           typeof item.expirate === "string"
             ? item.expirate.slice(0, 10)
             : new Date(item.expirate).toISOString().slice(0, 10),
+        serverImageUrl: item.imageUrl?.trim() ?? "",
       });
     } else {
       setEditingFoodId(null);
-      setForm({
-        name: "",
-        volume: 1,
-        unit: "개",
-        expirate: "",
-      });
+      setForm({ ...EMPTY_ITEM_FORM });
     }
     setIsFoodModalOpen(true);
   };
 
-  const handleFormChange = (
-    field: "name" | "volume" | "unit" | "expirate",
-    value: string | number
-  ) => {
+  const handleFormChange = (field: keyof ItemFormState, value: string | number) => {
+    if (field === "serverImageUrl") return;
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
@@ -136,42 +132,52 @@ export default function StoragePage() {
         throw new Error("보관 장소를 먼저 추가해주세요.");
       }
 
-      const name = form.name.trim();
-      if (!name) throw new Error("재료명을 입력해주세요.");
+      const hasServerImage = Boolean(form.serverImageUrl?.trim());
 
-      // 동일 장소 내 재료명 중복 방지
-      const isDuplicateName = !editingItem && filteredItems.some((it) => it.name.trim() === name);
-      if (isDuplicateName) {
-        throw new Error("같은 보관 장소에 동일한 재료명이 이미 존재합니다.");
-      }
-
-      if (editingItem) {
+      if (!editingItem) {
+        if (!pendingImageFile) {
+          throw new Error("사진을 선택해주세요.");
+        }
+        const { imageUrl } = await uploadFoodItemImage(pendingImageFile);
         await mutate(
           () =>
-            updateFoodItem(
-              editingItem._id,
-              name,
-              Number(form.volume) || 0,
-              form.unit,
-              form.expirate
-            ),
+            addFoodItem({
+              placeId: activePlaceId,
+              imageUrl,
+              name: form.name.trim() || undefined,
+              volume: Number(form.volume) || 0,
+              unit: form.unit,
+              expiryDate: form.expirate,
+            }),
           { revalidate: false }
         );
       } else {
+        if (!hasServerImage && !pendingImageFile) {
+          throw new Error("사진이 없는 항목은 새 사진을 선택한 뒤 저장해주세요.");
+        }
+        let newImageUrl: string | undefined;
+        if (pendingImageFile) {
+          const { imageUrl } = await uploadFoodItemImage(pendingImageFile);
+          newImageUrl = imageUrl;
+        }
         await mutate(
           () =>
-            addFoodItem(activePlaceId, name, Number(form.volume) || 0, form.unit, form.expirate),
+            updateFoodItem({
+              contentId: editingItem._id,
+              name: form.name.trim(),
+              volume: Number(form.volume) || 0,
+              unit: form.unit,
+              date: form.expirate,
+              ...(newImageUrl ? { imageUrl: newImageUrl } : {}),
+            }),
           { revalidate: false }
         );
       }
 
       setIsFoodModalOpen(false);
-      setForm({
-        name: "",
-        volume: 1,
-        unit: "개",
-        expirate: "",
-      });
+      setEditingFoodId(null);
+      setPendingImageFile(null);
+      setForm({ ...EMPTY_ITEM_FORM });
     } catch (err) {
       setActionError(
         err instanceof Error ? err : new Error("재료 추가/수정 중 오류가 발생했습니다.")
@@ -465,15 +471,14 @@ export default function StoragePage() {
         onClose={() => {
           setIsFoodModalOpen(false);
           setActionError(null);
-          setForm({
-            name: "",
-            volume: 1,
-            unit: "개",
-            expirate: "",
-          });
+          setEditingFoodId(null);
+          setPendingImageFile(null);
+          setForm({ ...EMPTY_ITEM_FORM });
         }}
         form={form}
         onFormChange={handleFormChange}
+        pendingImageFile={pendingImageFile}
+        onPendingImageFileChange={setPendingImageFile}
         onSubmit={handleSubmit}
         editingItem={editingItem}
         activePlaceName={activePlace?.name ?? ""}

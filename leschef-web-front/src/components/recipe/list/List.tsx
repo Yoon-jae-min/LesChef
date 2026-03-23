@@ -15,6 +15,20 @@ import { TIMING } from "@/constants/system/timing";
 import { RECIPE_SORT_LABELS, DEFAULT_SORT_OPTION } from "@/constants/recipe/recipe";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
+/** URL 쿼리에서 레시피 검색어 추출: `keyword` 우선, 없으면 `ingredients`(쉼표 구분)를 공백으로 이어 키워드로 사용 */
+function keywordFromSearchParams(search: string): string {
+  const params = new URLSearchParams(search);
+  const direct = params.get("keyword")?.trim();
+  if (direct) return direct;
+  const raw = params.get("ingredients");
+  if (!raw) return "";
+  return raw
+    .split(",")
+    .map((s) => s.trim())
+    .filter(Boolean)
+    .join(" ");
+}
+
 interface ListProps {
   initialCategory: string;
   initialData?: RecipeListResponse | null; // 서버에서 가져온 초기 데이터
@@ -34,7 +48,7 @@ export default function List({ initialCategory, initialData, initialError }: Lis
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      const keyword = params.get("keyword") || "";
+      const keyword = keywordFromSearchParams(window.location.search);
       const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
       setSearchKeyword(keyword);
       setSortOption(sort);
@@ -46,7 +60,7 @@ export default function List({ initialCategory, initialData, initialError }: Lis
     const handlePopState = () => {
       if (typeof window !== "undefined") {
         const params = new URLSearchParams(window.location.search);
-        const keyword = params.get("keyword") || "";
+        const keyword = keywordFromSearchParams(window.location.search);
         const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
         setSearchKeyword(keyword);
         setSortOption(sort);
@@ -63,8 +77,10 @@ export default function List({ initialCategory, initialData, initialError }: Lis
     // URL 업데이트
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      if (keyword) {
-        params.set("keyword", keyword);
+      params.delete("ingredients");
+      const trimmed = keyword.trim();
+      if (trimmed) {
+        params.set("keyword", trimmed);
       } else {
         params.delete("keyword");
       }

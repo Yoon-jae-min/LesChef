@@ -123,6 +123,7 @@ export interface IFoods extends Document {
         name: string;
         foodList: Array<{
             name: string;
+            imageUrl?: string;
             volume: number;
             unit: string;
             expirate: Date;

@@ -6,9 +6,25 @@
 "use client";
 
 import Link from "next/link";
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 import SearchBar from "@/components/recipe/search/SearchBar";
 
 export default function HeroSection() {
+  const router = useRouter();
+
+  /** 메인 히어로 검색 → 레시피 목록으로 이동 (목록에서 keyword 쿼리로 조회) */
+  const handleHeroRecipeSearch = useCallback(
+    (keyword: string) => {
+      const params = new URLSearchParams();
+      const k = keyword.trim();
+      if (k) params.set("keyword", k);
+      const qs = params.toString();
+      router.push(qs ? `/recipe/all?${qs}` : "/recipe/all");
+    },
+    [router]
+  );
+
   return (
     <section className="relative bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 py-16 md:py-24 overflow-hidden">
       {/* 배경 장식 요소 */}
@@ -37,7 +53,7 @@ export default function HeroSection() {
 
           {/* 검색바 */}
           <div className="mb-8">
-            <SearchBar className="max-w-2xl mx-auto" />
+            <SearchBar className="max-w-2xl mx-auto" onSearch={handleHeroRecipeSearch} />
           </div>
 
           {/* CTA 버튼 */}

@@ -51,6 +51,7 @@ export function mapFoodsDataToStoragePlaces(
                 const baseFoodItem: FoodItem = {
                     _id: foodId,
                     name: food.name || '',
+                    imageUrl: food.imageUrl || '',
                     volume: food.volume || 0,
                     unit: food.unit || '',
                     expirate: expiryDate,

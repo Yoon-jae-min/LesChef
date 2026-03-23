@@ -7,6 +7,7 @@
  * 레시피 카테고리를 API 카테고리로 매핑
  */
 export const RECIPE_CATEGORY_TO_API: Record<string, string> = {
+  all: "all",
   korean: "korean",
   japanese: "japanese",
   chinese: "chinese",

@@ -1,25 +1,35 @@
 /**
- * 재료 추가/수정 모달 컴포넌트
+ * 보관함 항목 추가/수정 — 이미지 필수(신규), 이름 선택
  */
 
+"use client";
+
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import Storage from "./Storage";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 import type { FoodItem } from "@/utils/api/foods";
+import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 
 const UNITS = ["개", "팩", "봉지", "모", "컵", "병", "기타"];
 
-interface FoodItemForm {
+export type ItemFormState = {
   name: string;
   volume: number;
   unit: string;
   expirate: string;
-}
+  /** 서버에 이미 반영된 이미지 URL (수정 시) */
+  serverImageUrl: string;
+};
 
 interface ItemFormProps {
   open: boolean;
   onClose: () => void;
-  form: FoodItemForm;
-  onFormChange: (field: keyof FoodItemForm, value: string | number) => void;
+  form: ItemFormState;
+  onFormChange: (field: keyof ItemFormState, value: string | number) => void;
+  /** 로컬에서 고른 새 이미지 파일 (신규 필수·수정 시 교체) */
+  pendingImageFile: File | null;
+  onPendingImageFileChange: (file: File | null) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   editingItem: FoodItem | null;
   activePlaceName: string;
@@ -31,21 +41,46 @@ export default function ItemForm({
   onClose,
   form,
   onFormChange,
+  pendingImageFile,
+  onPendingImageFileChange,
   onSubmit,
   editingItem,
   activePlaceName,
   error,
 }: ItemFormProps) {
+  const [objectUrl, setObjectUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!pendingImageFile) {
+      setObjectUrl(null);
+      return;
+    }
+    const url = URL.createObjectURL(pendingImageFile);
+    setObjectUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [pendingImageFile]);
+
+  const previewSrc = objectUrl
+    ? objectUrl
+    : form.serverImageUrl
+      ? resolveBackendAssetUrl(form.serverImageUrl)
+      : "";
+
+  const isNew = !editingItem;
+  const hasServerImage = Boolean(form.serverImageUrl?.trim());
+  const hasImage = Boolean(pendingImageFile || hasServerImage);
+  const imageMissing = !hasImage;
+
   return (
     <Storage open={open} onClose={onClose}>
       <div className="mb-6">
         <p className="text-xs uppercase tracking-[0.4em] text-gray-400">Inventory</p>
         <h3 className="text-2xl font-semibold text-gray-900">
-          {editingItem ? "재료 수정" : "새 재료 추가"}
+          {editingItem ? "항목 수정" : "새 항목 추가"}
         </h3>
         <p className="text-sm text-gray-500">
           {activePlaceName
-            ? `${activePlaceName}에 보관 중인 재료 정보를 입력해주세요.`
+            ? `${activePlaceName}에 보관할 품목입니다. 사진은 필수이고, 이름은 선택입니다.`
             : "보관 장소를 먼저 추가해주세요."}
         </p>
       </div>
@@ -58,14 +93,54 @@ export default function ItemForm({
 
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">재료명</label>
+          <label className="text-sm font-medium text-gray-700">
+            사진 <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="file"
+            accept="image/jpeg,image/png,image/gif,image/webp"
+            className="w-full text-sm text-gray-700 file:mr-3 file:rounded-xl file:border file:border-gray-200 file:bg-gray-50 file:px-4 file:py-2"
+            onChange={(e) => {
+              const f = e.target.files?.[0] ?? null;
+              onPendingImageFileChange(f);
+            }}
+          />
+          <p className="text-xs text-gray-500">
+            웹에서는 기기에서 이미지를 선택합니다. (앱에서는 촬영·갤러리와 동일 API)
+          </p>
+          {imageMissing && (
+            <p className="text-xs text-amber-700">
+              {isNew
+                ? "새 항목은 사진을 선택해야 저장할 수 있습니다."
+                : "사진이 없는 기존 항목은 새 사진을 선택해야 수정할 수 있습니다."}
+            </p>
+          )}
+        </div>
+
+        {previewSrc ? (
+          <div className="relative h-40 w-full overflow-hidden rounded-2xl border border-gray-200 bg-gray-50">
+            <Image
+              src={previewSrc}
+              alt="미리보기"
+              fill
+              className="object-cover"
+              unoptimized={previewSrc.startsWith("blob:")}
+            />
+          </div>
+        ) : (
+          <div className="flex h-40 items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-gray-50 text-sm text-gray-500">
+            미리보기 없음
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <label className="text-sm font-medium text-gray-700">이름 (선택)</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => onFormChange("name", e.target.value)}
             className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm focus:border-gray-400 focus:ring-0"
-            placeholder="예) 양파"
-            required
+            placeholder="비워두면 사진·수량·유통기한만으로 표시"
           />
         </div>
 
@@ -111,9 +186,10 @@ export default function ItemForm({
 
         <button
           type="submit"
-          className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+          disabled={imageMissing}
+          className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {editingItem ? "재료 정보 업데이트" : "재료 추가하기"}
+          {editingItem ? "저장하기" : "추가하기"}
         </button>
       </form>
     </Storage>

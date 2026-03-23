@@ -74,6 +74,7 @@ const STRING_FIELDS_SKIP_HTML_ESCAPE = new Set<string>([
     'newPwd',
     'password',
     'resetToken',
+    'imageUrl',
 ]);
 
 /**

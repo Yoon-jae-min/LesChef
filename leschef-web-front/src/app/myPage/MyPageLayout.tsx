@@ -15,6 +15,7 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
 
   const tabs = [
     { label: "내 정보", path: "/myPage/info" },
+    { label: "알림", path: "/myPage/notifications/inbox" },
     { label: "보관함", path: "/myPage/storage" },
     { label: "찜 레시피", path: "/myPage/favorites" },
     { label: "나의 레시피", path: "/myPage/recipes" },
@@ -23,6 +24,7 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
   const activeTab = useMemo(() => {
     if (!pathname || pathname === "/myPage") return "보관함";
 
+    if (pathname.startsWith("/myPage/notifications")) return "알림";
     if (pathname.startsWith("/myPage/storage")) return "보관함";
     if (pathname.startsWith("/myPage/favorites")) return "찜 레시피";
     if (pathname.startsWith("/myPage/recipes")) return "나의 레시피";
@@ -34,6 +36,9 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
   const marginBottom = useMemo(() => {
     if (activeTab === "찜 레시피" || activeTab === "나의 레시피") {
       return "mb-3";
+    }
+    if (activeTab === "알림") {
+      return "mb-6";
     }
     if (activeTab === "보관함") {
       return "mb-6";

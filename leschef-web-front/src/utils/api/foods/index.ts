@@ -11,7 +11,14 @@ export type { FoodItem, StoragePlace, FoodsListResponse, ExpiryAlertResponse } f
 export { fetchFoodsList, addStoragePlace, updateStoragePlace, deleteStoragePlace } from "./place";
 
 // 식재료 함수들
-export { addFoodItem, updateFoodItem, deleteFoodItem } from "./content";
+export {
+  addFoodItem,
+  updateFoodItem,
+  deleteFoodItem,
+  type AddFoodItemParams,
+  type UpdateFoodItemParams,
+} from "./content";
+export { uploadFoodItemImage } from "./upload";
 
 // 유통기한 알림 함수
 export { fetchExpiryAlerts } from "./expiry";

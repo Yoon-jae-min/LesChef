@@ -2,10 +2,12 @@
  * 식재료 관리 API 타입 정의
  */
 
-// 식재료 항목 타입
 export type FoodItem = {
   _id: string;
+  /** 선택 라벨 (없으면 UI에서 '이름 없음' 등) */
   name: string;
+  /** 이미지 URL 또는 `/Image/...` (레거시 문서는 없을 수 있음) */
+  imageUrl?: string;
   volume: number;
   unit: string;
   expirate: Date | string;
@@ -13,14 +15,12 @@ export type FoodItem = {
   status?: "expired" | "urgent" | "warning" | "notice" | "safe";
 };
 
-// 보관 장소 타입
 export type StoragePlace = {
   _id: string;
   name: string;
   foodList: FoodItem[];
 };
 
-// 식재료 목록 응답 타입
 export type FoodsListResponse = {
   error: false;
   sectionList: StoragePlace[];
@@ -29,7 +29,6 @@ export type FoodsListResponse = {
   exist?: boolean;
 };
 
-// 유통기한 알림 응답 타입
 export type ExpiryAlertResponse = {
   error: false;
   expired: Array<{

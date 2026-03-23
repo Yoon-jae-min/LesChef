@@ -9,11 +9,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 import useSWR from "swr";
 import { fetchFoodsList, type FoodsListResponse, type StoragePlace } from "@/utils/api/foods";
-import {
-  fetchRecipeList,
-  type RecipeListResponse,
-  type RecipeListItem,
-} from "@/utils/api/recipeApi";
+import { fetchRecipeList, type RecipeListResponse } from "@/utils/api/recipeApi";
 import { TIMING } from "@/constants/system/timing";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 import RecipeCard from "@/components/recipe/card/RecipeCard";
@@ -33,19 +29,30 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
     revalidateOnFocus: false,
   });
 
-  // 보유 재료 이름 목록 추출 (메모이제이션으로 성능 최적화)
+  /** 전체 항목 수·이름 없음 개수 (맞춤 추천은 이름이 있는 항목만 키워드에 사용) */
+  const inventoryStats = useMemo(() => {
+    let total = 0;
+    let unnamed = 0;
+    if (!foodsData?.sectionList?.length) return { total: 0, unnamed: 0 };
+    foodsData.sectionList.forEach((place: StoragePlace) => {
+      place.foodList?.forEach((food) => {
+        total += 1;
+        if (!food.name?.trim()) unnamed += 1;
+      });
+    });
+    return { total, unnamed };
+  }, [foodsData?.sectionList]);
+
+  // 보유 재료 이름 목록 (비어 있지 않은 이름만 — 이미지만 있는 항목은 키워드 추천 제외)
   const ownedIngredients = useMemo(() => {
     if (!foodsData?.sectionList || foodsData.sectionList.length === 0) return [];
 
     const ingredients = new Set<string>();
     foodsData.sectionList.forEach((place: StoragePlace) => {
       place.foodList?.forEach((food) => {
-        if (food.name) {
-          // 재료명 정규화 (공백 제거, 소문자 변환)
-          const normalized = food.name.trim().toLowerCase();
-          if (normalized && normalized.length > 0) {
-            ingredients.add(normalized);
-          }
+        const normalized = food.name?.trim().toLowerCase() ?? "";
+        if (normalized.length > 0) {
+          ingredients.add(normalized);
         }
       });
     });
@@ -124,8 +131,8 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
     );
   }
 
-  // 보유 재료가 없을 때
-  if (!foodsLoading && ownedIngredients.length === 0) {
+  // 보관 항목이 하나도 없을 때
+  if (!foodsLoading && inventoryStats.total === 0) {
     return (
       <section className="py-8">
         <div className="max-w-7xl mx-auto px-6">
@@ -166,6 +173,41 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
     );
   }
 
+  // 항목은 있으나 이름이 있는 재료가 없을 때 (이미지만 등록된 경우 등)
+  if (!foodsLoading && inventoryStats.total > 0 && ownedIngredients.length === 0) {
+    return (
+      <section className="py-8">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">보유 재료로 만들 수 있는 레시피</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                맞춤 추천은 <span className="font-medium text-gray-700">이름이 있는 재료</span>를
+                기준으로 검색합니다.
+              </p>
+            </div>
+          </div>
+          <div className="rounded-3xl border border-amber-200 bg-amber-50 p-8 text-center">
+            <p className="text-gray-800 mb-2 font-medium">
+              이름이 있는 재료가 없어 레시피를 찾아드리기 어려워요.
+            </p>
+            <p className="text-sm text-amber-900/90 mb-6">
+              보관함에서 재료에{" "}
+              <span className="font-semibold">이름을 입력</span>하면 맞춤 추천에 반영돼요. (나중에
+              자동 이름 기능을 붙일 수도 있어요.)
+            </p>
+            <Link
+              href="/myPage/storage"
+              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors"
+            >
+              보관함에서 이름 입력하기
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   if (error) {
     return (
       <section className="py-8">
@@ -189,7 +231,7 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
               <h2 className="text-2xl font-bold text-gray-900">보유 재료로 만들 수 있는 레시피</h2>
             </div>
             <p className="text-sm text-gray-500 mt-1">
-              보유한 {ownedIngredients.length}가지 재료로 만들 수 있는 레시피를 추천해드립니다.
+              이름이 있는 재료 {ownedIngredients.length}가지로 검색해 추천했어요.
             </p>
           </div>
           {recipes.length > 0 && (
@@ -209,6 +251,17 @@ export default function Recommended({ isLoggedIn = false }: RecommendedProps) {
             </Link>
           )}
         </div>
+
+        {inventoryStats.unnamed > 0 && (
+          <div className="mb-4 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+            <span className="font-medium">이름이 없는 재료 {inventoryStats.unnamed}개</span>는 검색
+            키워드에 포함되지 않아요.{" "}
+            <Link href="/myPage/storage" className="font-semibold text-orange-700 underline-offset-2 hover:underline">
+              보관함에서 이름을 입력
+            </Link>
+            하면 맞춤 추천에 반영돼요.
+          </div>
+        )}
 
         {isLoading ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
