@@ -26,12 +26,12 @@ export default function BoardWritePage() {
 
   const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
 
-  // 게시글 제출 함수 (나중에 버튼에 연결할 때 사용)
   const handleSubmitBoard = async () => {
     try {
       const response = await createBoard({
         title,
         content,
+        boardType: boardType === "free" ? "free" : "notice",
       });
 
       await assertApiJsonSuccess(response, "ok");
@@ -54,50 +54,73 @@ export default function BoardWritePage() {
   return (
     <div className="min-h-screen bg-white">
       <Top />
-      <main className="max-w-4xl mx-auto px-8 py-12">
-        <div className="mb-8 rounded-[32px] border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-          <div className="flex items-center gap-3 mb-2">
-            <span className="px-3 py-1 rounded-full bg-gray-100 text-sm font-medium text-gray-600">
-              {categoryName}
-            </span>
-            <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">
-              Board Write
-            </p>
-          </div>
-          <h1 className="text-2xl font-semibold text-gray-900">게시글 작성</h1>
-          <p className="text-xs text-gray-500 mt-1">커뮤니티에 글을 작성해보세요.</p>
+      <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
+        <header className="mb-8 text-center sm:mb-10">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+            Board Write
+          </p>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            게시글 작성
+          </h1>
+          <p className="mx-auto mt-2 max-w-md text-sm text-stone-600">
+            커뮤니티에 글을 남겨 보세요.
+          </p>
+        </header>
+
+        <div className="mb-8 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-4 shadow-sm ring-1 ring-stone-900/[0.03] sm:px-6">
+          <span
+            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+              boardType === "free"
+                ? "bg-stone-100 text-stone-800"
+                : "bg-orange-100 text-orange-900"
+            }`}
+          >
+            {categoryName}
+          </span>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+          <div className="rounded-[28px] border border-stone-200/90 bg-white/95 p-6 shadow-sm ring-1 ring-stone-900/[0.03] sm:p-8">
             <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">제목</label>
+                <label
+                  htmlFor="board-write-title"
+                  className="mb-2 block text-sm font-medium text-stone-800"
+                >
+                  제목
+                </label>
                 <input
+                  id="board-write-title"
                   type="text"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="제목을 입력하세요"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
                   required
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">내용</label>
+                <label
+                  htmlFor="board-write-body"
+                  className="mb-2 block text-sm font-medium text-stone-800"
+                >
+                  내용
+                </label>
                 <textarea
+                  id="board-write-body"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="내용을 입력하세요..."
                   rows={15}
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0 resize-none"
+                  className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
                   required
                 />
               </div>
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
             <button
               type="button"
               onClick={() => {
@@ -105,13 +128,13 @@ export default function BoardWritePage() {
                   window.history.back();
                 }
               }}
-              className="rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+              className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               취소
             </button>
             <button
               type="submit"
-              className="rounded-2xl bg-gray-700 px-6 py-3 text-sm font-semibold text-white hover:bg-gray-800 transition"
+              className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               게시글 등록
             </button>

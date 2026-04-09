@@ -6,6 +6,7 @@
 
 import { cookies } from "next/headers";
 import { API_CONFIG } from "@/config/apiConfig";
+import type { IngredientPriceResponse } from "@/utils/api/ingredientPrice";
 
 // API 베이스 URL
 const API_BASE_URL = API_CONFIG.BASE_URL;
@@ -90,32 +91,43 @@ export async function getRecipeDetailServer(recipeId: string) {
 
 /**
  * 식재료 물가 정보 조회 (서버 컴포넌트용)
+ * 백엔드 미기동·URL 오류 등으로 fetch 가 실패해도 예외를 던지지 않고 null 반환 (홈 RSC 깨짐 방지)
  */
-export async function getIngredientPricesServer() {
+export async function getIngredientPricesServer(): Promise<IngredientPriceResponse | null> {
   try {
-    const response = await serverFetch(`${API_BASE_URL}/ingredient-price`);
+    const response = await serverFetch(`${API_BASE_URL}/ingredient-price`, {
+      signal: AbortSignal.timeout(12_000),
+    });
 
     if (!response.ok) {
-      throw new Error(`식재료 물가 정보 조회 실패: ${response.status}`);
+      if (process.env.NODE_ENV === "development") {
+        console.error("서버에서 식재료 물가 정보 조회 실패:", response.status);
+      }
+      return null;
     }
 
-    return await response.json();
+    return (await response.json()) as IngredientPriceResponse;
   } catch (error) {
     if (process.env.NODE_ENV === "development") {
       console.error("서버에서 식재료 물가 정보 조회 실패:", error);
     }
-    throw error;
+    return null;
   }
 }
 
 /**
  * 게시글 리스트 조회 (서버 컴포넌트용)
  */
-export async function getBoardListServer(params: { page?: number; limit?: number }) {
+export async function getBoardListServer(params: {
+  page?: number;
+  limit?: number;
+  type?: "notice" | "free";
+}) {
   try {
     const query = new URLSearchParams();
     if (params.page) query.set("page", String(params.page));
     if (params.limit) query.set("limit", String(params.limit));
+    if (params.type) query.set("type", params.type);
 
     const response = await serverFetch(`${BOARD_API_BASE_URL}/list?${query.toString()}`);
 

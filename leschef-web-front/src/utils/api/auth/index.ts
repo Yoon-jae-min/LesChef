@@ -2,12 +2,18 @@
  * 인증 API — UI·훅에서는 `@/utils/api/auth` 만 import 하는 것을 권장합니다.
  */
 
-export type { SignupData, LoginData, LoginResponse, UserInfoResponse } from "./types";
+export type {
+  SignupData,
+  LoginData,
+  LoginResponse,
+  UserInfoResponse,
+  UpdateUserProfileParams,
+} from "./types";
 
 export { signup, checkIdDuplicate, sendVerificationCode, verifyEmailCode } from "./signup";
 export { login, logout } from "./login";
 export { checkAuth } from "./check";
-export { fetchUserInfo } from "./user";
+export { fetchUserInfo, updateUserProfile } from "./user";
 export { changePassword, type ChangePasswordParams } from "./password";
 export { unlinkSocial } from "./socialLink";
 

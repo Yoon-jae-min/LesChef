@@ -10,8 +10,8 @@ const API_BASE_URL = API_CONFIG.FOODS_API;
 
 export type AddFoodItemParams = {
   placeId: string;
-  imageUrl: string;
-  /** 선택 */
+  /** 업로드한 경우에만 전달 — 없으면 이름만으로 등록 */
+  imageUrl?: string;
   name?: string;
   volume: number;
   unit: string;
@@ -20,8 +20,13 @@ export type AddFoodItemParams = {
 
 export async function addFoodItem(params: AddFoodItemParams): Promise<FoodsListResponse> {
   const { placeId, imageUrl, name, volume, unit, expiryDate } = params;
-  if (!placeId || !imageUrl?.trim()) {
-    throw new Error("보관 장소와 이미지가 필요합니다.");
+  const img = (imageUrl ?? "").trim();
+  const itemName = (name ?? "").trim();
+  if (!placeId) {
+    throw new Error("보관 장소가 필요합니다.");
+  }
+  if (!img && !itemName) {
+    throw new Error("사진 또는 이름 중 하나는 입력해주세요.");
   }
 
   return fetchJson<FoodsListResponse>(`${API_BASE_URL}/content`, {
@@ -29,8 +34,8 @@ export async function addFoodItem(params: AddFoodItemParams): Promise<FoodsListR
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       placeId,
-      imageUrl: imageUrl.trim(),
-      unitName: name?.trim() || "",
+      imageUrl: img,
+      unitName: itemName,
       unitVol: volume,
       unitUnit: unit,
       unitDate: expiryDate,

@@ -5,6 +5,7 @@ import Ingredient from "@/components/recipe/form/Ingredient";
 import Step from "@/components/recipe/form/Step";
 import { useRecipeForm } from "@/hooks/useRecipeForm";
 import { createRecipe } from "@/utils/api/recipeApi";
+import { recipeSubCategoryForApi } from "@/constants/recipe/recipe";
 import { reportActionFailure } from "@/utils/helpers/actionFailure";
 import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
 
@@ -44,7 +45,7 @@ export default function RecipeWritePage() {
           portionUnit: formState.portionUnit,
           cookLevel: formState.cookLevel,
           majorCategory: formState.majorCategory,
-          subCategory: formState.subCategory,
+          subCategory: recipeSubCategoryForApi(formState.subCategory),
           recipeImg: formState.recipeImgPreview || "",
         },
         ingredientGroups: formState.ingredientGroups,
@@ -71,16 +72,18 @@ export default function RecipeWritePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      <main className="mx-auto max-w-4xl px-8 py-12">
-        <div className="mb-8 rounded-[32px] border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">
-            Recipe Write
+      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <header className="mb-8 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:px-6 sm:py-6">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+            Recipe
           </p>
-          <h1 className="mt-1 text-2xl font-semibold text-gray-900">레시피 작성</h1>
-          <p className="mt-1 text-xs text-gray-500">나만의 레시피를 공유해보세요.</p>
-        </div>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            레시피 작성
+          </h1>
+          <p className="mt-1.5 text-sm text-stone-600">나만의 레시피를 공유해 보세요.</p>
+        </header>
 
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
           <BasicInfo
             recipeName={formState.recipeName}
             cookTime={formState.cookTime}
@@ -119,7 +122,7 @@ export default function RecipeWritePage() {
             onImageChange={(e, stepIndex) => handleImageChange(e, "step", stepIndex)}
           />
 
-          <div className="flex items-center justify-end gap-4">
+          <div className="flex flex-col-reverse gap-3 border-t border-stone-200/80 pt-8 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
             <button
               type="button"
               onClick={() => {
@@ -127,13 +130,13 @@ export default function RecipeWritePage() {
                   window.history.back();
                 }
               }}
-              className="rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+              className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2"
             >
               취소
             </button>
             <button
               type="submit"
-              className="rounded-2xl bg-gray-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+              className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               레시피 등록
             </button>

@@ -26,9 +26,12 @@ export default function HeroSection() {
   );
 
   return (
-    <section className="relative bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 py-16 md:py-24 overflow-hidden">
-      {/* 배경 장식 요소 */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+    <section
+      className="relative bg-gradient-to-br from-orange-50 via-yellow-50 to-red-50 py-16 md:py-24 overflow-hidden"
+      aria-label="LesChef 소개"
+    >
+      {/* 배경 장식 요소 (스크린 리더는 무시) */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden>
         <div className="absolute top-20 left-10 w-4 h-4 bg-orange-200 rounded-full animate-float [animation-delay:0s] opacity-60"></div>
         <div className="absolute top-40 right-20 w-6 h-6 bg-yellow-200 rounded-full animate-float [animation-delay:1s] opacity-60"></div>
         <div className="absolute bottom-32 left-1/4 w-3 h-3 bg-red-200 rounded-full animate-float [animation-delay:2s] opacity-60"></div>
@@ -48,7 +51,7 @@ export default function HeroSection() {
           <p className="text-lg md:text-xl text-gray-700 mb-8">
             유통기한 알림으로 낭비를 줄이고,
             <br className="hidden md:block" />
-            보유 재료로 만들 수 있는 레시피를 찾아보세요
+            검색으로 레시피를 찾아보세요
           </p>
 
           {/* 검색바 */}
@@ -60,13 +63,13 @@ export default function HeroSection() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/myPage/storage"
-              className="px-8 py-3 bg-orange-600 text-white font-semibold rounded-2xl shadow-lg hover:bg-orange-700 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+              className="px-8 py-3 bg-orange-600 text-white font-semibold rounded-2xl shadow-lg hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               식재료 관리하기
             </Link>
             <Link
               href="/recipe/all"
-              className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-2xl border-2 border-orange-600 hover:bg-orange-50 transition-colors focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+              className="px-8 py-3 bg-white text-orange-600 font-semibold rounded-2xl border-2 border-orange-600 hover:bg-orange-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               레시피 둘러보기
             </Link>

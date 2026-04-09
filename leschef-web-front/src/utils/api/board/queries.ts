@@ -18,6 +18,7 @@ export const fetchBoardList = async (params: BoardListParams = {}): Promise<Boar
     const query = new URLSearchParams();
     if (params.page) query.set("page", String(params.page));
     if (params.limit) query.set("limit", String(params.limit));
+    if (params.type) query.set("type", params.type);
 
     const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
       method: "GET",

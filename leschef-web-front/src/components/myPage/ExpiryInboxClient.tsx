@@ -85,22 +85,24 @@ export default function ExpiryInboxClient() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.4em] text-gray-400">Inbox</p>
-          <h2 className="text-3xl font-semibold text-gray-900">유통기한 알림 기록</h2>
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">Inbox</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            유통기한 알림 기록
+          </h2>
+          <p className="mt-1 text-sm text-stone-600">
             화면 우측 토스트는 장소·건수 요약만 보여주고, 여기서 항목별로 확인할 수 있어요.
           </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
             href="/myPage/notifications"
-            className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50"
+            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             알림 설정
           </Link>
           <Link
             href="/myPage/storage"
-            className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-700"
+            className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             보관함
           </Link>
@@ -108,7 +110,7 @@ export default function ExpiryInboxClient() {
             type="button"
             onClick={handleClear}
             disabled={items.length === 0}
-            className="inline-flex items-center justify-center rounded-2xl border border-red-200 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 disabled:opacity-40"
+            className="inline-flex items-center justify-center rounded-2xl border border-red-200/90 bg-white px-4 py-2.5 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-40"
           >
             기록 비우기
           </button>
@@ -116,7 +118,7 @@ export default function ExpiryInboxClient() {
       </div>
 
       {items.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-gray-300 bg-gray-50 px-6 py-16 text-center text-gray-600">
+        <div className="rounded-[28px] border border-dashed border-stone-300/90 bg-stone-50/60 px-6 py-16 text-center text-sm text-stone-600">
           아직 저장된 유통기한 알림이 없어요. 메인에서 로그인 상태로 두면 새 알림이 쌓입니다.
         </div>
       ) : (
@@ -127,13 +129,13 @@ export default function ExpiryInboxClient() {
             return (
               <li
                 key={entry.id}
-                className="flex gap-4 rounded-3xl border border-gray-200 bg-white p-4 shadow-[4px_4px_0_rgba(0,0,0,0.04)]"
+                className="flex gap-4 rounded-[24px] border border-stone-200/90 bg-white/95 p-4 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03]"
               >
-                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-gray-100 bg-gray-100">
+                <div className="relative h-20 w-20 shrink-0 overflow-hidden rounded-2xl border border-stone-100 bg-stone-100">
                   {img ? (
                     <Image src={img} alt={title} fill className="object-cover" sizes="80px" />
                   ) : (
-                    <div className="flex h-full items-center justify-center text-[10px] text-gray-400">
+                    <div className="flex h-full items-center justify-center text-[10px] text-stone-400">
                       사진 없음
                     </div>
                   )}
@@ -143,18 +145,18 @@ export default function ExpiryInboxClient() {
                     <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${bucketStyle(entry.bucket)}`}>
                       {bucketLabel(entry.bucket)}
                     </span>
-                    <span className="text-sm text-gray-500">{entry.place.trim() || "보관함"}</span>
+                    <span className="text-sm text-stone-500">{entry.place.trim() || "보관함"}</span>
                   </div>
-                  <p className="mt-1 font-semibold text-gray-900 truncate">{title}</p>
-                  <p className="mt-2 text-sm font-medium text-gray-800">{formatDday(entry.daysUntilExpiry)}</p>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="mt-1 truncate font-semibold text-stone-900">{title}</p>
+                  <p className="mt-2 text-sm font-medium text-stone-800">{formatDday(entry.daysUntilExpiry)}</p>
+                  <p className="mt-1 text-xs text-stone-400">
                     {new Date(entry.createdAt).toLocaleString("ko-KR")}
                   </p>
                 </div>
                 <button
                   type="button"
                   onClick={() => handleRemove(entry.id)}
-                  className="self-start shrink-0 rounded-xl border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50"
+                  className="shrink-0 self-start rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
                 >
                   삭제
                 </button>

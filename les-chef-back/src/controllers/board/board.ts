@@ -21,23 +21,45 @@ import {
 interface BoardListQuery {
     page?: string;
     limit?: string;
+    /** 공지(notice) | 자유(free), 프론트와 동일 */
+    type?: string;
 }
 
-// 단일 리스트 API (현재 카테고리 분류 필드는 없으므로 전체 목록)
+function parseBoardListType(type?: string): 'notice' | 'free' {
+    const t = (type || 'notice').toLowerCase();
+    return t === 'free' ? 'free' : 'notice';
+}
+
+/** 자유글만 / 공지+레거시(필드 없음) */
+function boardListFilter(boardType: 'notice' | 'free'): Record<string, unknown> {
+    if (boardType === 'free') {
+        return { boardType: 'free' };
+    }
+    return {
+        $or: [
+            { boardType: 'notice' },
+            { boardType: { $exists: false } },
+            { boardType: null },
+        ],
+    };
+}
+
 export const listBoards = asyncHandler(
     async (
         req: Request<{}, PaginatedResponse<IBoard> | ApiErrorResponse, {}, BoardListQuery>,
         res: Response<PaginatedResponse<IBoard> | ApiErrorResponse>
     ) => {
         try {
-            const { page = '1', limit = '20' } = req.query;
+            const { page = '1', limit = '20', type } = req.query;
             const pageNum = Math.max(parseInt(page) || 1, 1);
             const limitNum = Math.max(parseInt(limit) || 20, 1);
             const skip = (pageNum - 1) * limitNum;
+            const listType = parseBoardListType(type);
+            const filter = boardListFilter(listType);
 
             const [total, list] = await Promise.all([
-                Board.countDocuments({}),
-                Board.find({}, { content: 0 })
+                Board.countDocuments(filter),
+                Board.find(filter, { content: 0 })
                     .sort({ createdAt: -1 })
                     .skip(skip)
                     .limit(limitNum)
@@ -60,6 +82,9 @@ export const listBoards = asyncHandler(
 interface PostWritingRequestBody {
     title?: string;
     content?: string;
+    /** 공지(notice) | 자유(free) */
+    boardType?: string;
+    type?: string;
 }
 
 export const postWriting = asyncHandler(
@@ -76,6 +101,11 @@ export const postWriting = asyncHandler(
         }
 
         const { title, content } = req.body;
+        const rawBoardType = req.body.boardType ?? req.body.type;
+        const boardType: 'notice' | 'free' =
+            typeof rawBoardType === 'string' && rawBoardType.toLowerCase() === 'free'
+                ? 'free'
+                : 'notice';
         const userId = req.session.user.id;
         const userNickName = req.session.user.nickName;
 
@@ -93,6 +123,7 @@ export const postWriting = asyncHandler(
                 userId: userId,
                 nickName: userNickName,
                 content: content,
+                boardType,
             });
 
             res.status(200).json({

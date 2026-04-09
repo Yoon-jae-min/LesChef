@@ -7,7 +7,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import useSWR from "swr";
 import { fetchExpiryAlerts, type ExpiryAlertResponse } from "@/utils/api/foods";
 import { TIMING } from "@/constants/system/timing";
@@ -19,6 +19,7 @@ interface ExpiryAlertsProps {
 }
 
 export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) {
+  const sectionTitleId = useId();
   const { data, error, isLoading } = useSWR<ExpiryAlertResponse>(
     isLoggedIn ? "/foods/expiry-alerts" : null,
     () => fetchExpiryAlerts("all"),
@@ -56,14 +57,16 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
 
   if (!isLoggedIn) {
     return (
-      <section className="py-8">
+      <section className="py-8" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">유통기한 알림</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            유통기한 알림
+          </h2>
           <div className="rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
             <p className="text-gray-600 mb-4">로그인하시면 식재료의 유통기한을 관리해드려요!</p>
             <Link
               href="/login"
-              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors"
+              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               로그인하기
             </Link>
@@ -75,9 +78,11 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
 
   if (error) {
     return (
-      <section className="py-8">
+      <section className="py-8" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">유통기한 알림</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            유통기한 알림
+          </h2>
           <ErrorMessage error={error} showDetails={false} showAction={false} />
         </div>
       </section>
@@ -86,9 +91,16 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
 
   if (isLoading) {
     return (
-      <section className="py-8">
+      <section
+        className="py-8"
+        aria-labelledby={sectionTitleId}
+        aria-busy="true"
+        aria-live="polite"
+      >
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">유통기한 알림</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            유통기한 알림
+          </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, i) => (
               <div
@@ -104,11 +116,18 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
 
   if (!hasAlerts) {
     return (
-      <section className="py-8">
+      <section className="py-8" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">유통기한 알림</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            유통기한 알림
+          </h2>
           <div className="rounded-3xl border border-gray-200 bg-green-50 p-6 text-center">
-            <p className="text-gray-600">유통기한이 임박한 식재료가 없습니다. 🎉</p>
+            <p className="text-gray-600">
+              유통기한이 임박한 식재료가 없습니다.{" "}
+              <span aria-hidden>
+                🎉
+              </span>
+            </p>
           </div>
         </div>
       </section>
@@ -142,16 +161,18 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
   };
 
   return (
-    <section className="py-8">
+    <section className="py-8" aria-labelledby={sectionTitleId}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-gray-900">유통기한 알림</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900">
+            유통기한 알림
+          </h2>
           <Link
             href="/myPage/storage"
-            className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1"
+            className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             전체보기
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
@@ -210,7 +231,7 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
           <div className="mt-4 text-center">
             <Link
               href="/myPage/storage"
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors"
+              className="text-sm text-gray-600 hover:text-gray-900 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
             >
               외 {alerts.totalCount - 6}개의 알림 더보기
             </Link>

@@ -2,9 +2,9 @@ import mongoose, { Schema, Model, Document, Types } from 'mongoose';
 import { IFoods } from '../../types';
 
 export interface FoodItemSchema {
-    /** 선택(비우면 이미지·수량으로만 표시) */
+    /** 비우려면 사진(imageUrl)이 있어야 함 — 신규는 이름·사진 중 하나 이상 */
     name: string;
-    /** 필수(신규 등록 시 API에서 검증). 레거시 문서는 빈 문자열 가능 */
+    /** 비우려면 이름이 있어야 함 — 신규는 이름·사진 중 하나 이상 */
     imageUrl: string;
     volume: number;
     unit: string;

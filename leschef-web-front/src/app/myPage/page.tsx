@@ -4,18 +4,21 @@
 export const dynamic = "force-dynamic";
 
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function MyPageDefault() {
+  const router = useRouter();
+
   useEffect(() => {
-    // Redirect to info page as default
-    if (typeof window !== "undefined") {
-      window.location.replace("/myPage/info");
-    }
-  }, []);
+    router.replace("/myPage/info");
+  }, [router]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <p className="text-gray-400">Loading...</p>
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-3 px-4">
+      <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+      <p className="text-sm text-stone-500" role="status" aria-live="polite">
+        이동 중…
+      </p>
     </div>
   );
 }

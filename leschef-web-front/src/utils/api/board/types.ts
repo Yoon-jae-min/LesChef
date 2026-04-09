@@ -5,6 +5,8 @@
 export type BoardWriteData = {
   title: string;
   content: string;
+  /** 공지(notice) | 자유(free) */
+  boardType?: "notice" | "free";
   id?: string; // 사용자 ID (서버에서 세션으로 가져올 수도 있음)
   nickName?: string; // 사용자 닉네임 (서버에서 세션으로 가져올 수도 있음)
 };
@@ -18,6 +20,8 @@ export type BoardEditData = {
 export type BoardListParams = {
   page?: number;
   limit?: number;
+  /** 공지(notice) | 자유(free) */
+  type?: "notice" | "free";
 };
 
 export type BoardListResponse = {
@@ -27,6 +31,7 @@ export type BoardListResponse = {
     nickName?: string;
     userId?: string;
     viewCount?: number;
+    boardType?: "notice" | "free";
     createdAt?: string;
     updatedAt?: string;
   }>;
@@ -43,6 +48,7 @@ export type BoardDetailResponse = {
     userId?: string;
     viewCount?: number;
     content: string;
+    boardType?: "notice" | "free";
     createdAt?: string;
     updatedAt?: string;
   };

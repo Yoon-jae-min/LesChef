@@ -95,6 +95,8 @@ export interface IBoard extends Document {
     userId: string;
     nickName: string;
     viewCount: number;
+    /** 저장 후에는 항상 있음. 마이그레이션 전 문서는 없을 수 있음 */
+    boardType?: 'notice' | 'free';
     createdAt: Date;
     updatedAt: Date;
 }

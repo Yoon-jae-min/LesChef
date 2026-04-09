@@ -66,25 +66,29 @@ export default function NotificationSettingsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.4em] text-gray-400">Settings</p>
-          <h2 className="text-3xl font-semibold text-gray-900">알림 설정</h2>
-          <p className="text-sm text-gray-500">유통기한 알림 설정을 관리하세요.</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+            Settings
+          </p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            알림 설정
+          </h2>
+          <p className="mt-1 text-sm text-stone-600">유통기한 알림을 내게 맞게 조정해요.</p>
         </div>
         <Link
           href="/myPage/notifications/inbox"
-          className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-50 w-fit"
+          className="inline-flex w-fit items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
         >
           유통기한 알림 기록 보기
         </Link>
       </div>
 
-      <div className="rounded-3xl border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+      <div className="rounded-[28px] border border-stone-200/90 bg-white/95 p-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:p-8">
         {/* 알림 활성화 */}
-        <div className="mb-8 pb-8 border-b border-gray-200">
+        <div className="mb-8 border-b border-stone-200/90 pb-8">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-1">알림 활성화</h3>
-              <p className="text-sm text-gray-500">유통기한 알림 기능을 켜거나 끕니다.</p>
+              <h3 className="mb-1 text-lg font-semibold text-stone-900">알림 활성화</h3>
+              <p className="text-sm text-stone-600">유통기한 알림 기능을 켜거나 끕니다.</p>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -101,10 +105,10 @@ export default function NotificationSettingsPage() {
         {/* 알림 유형 설정 */}
         {settings.enabled && (
           <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">알림 유형</h3>
+            <h3 className="mb-4 text-lg font-semibold text-stone-900">알림 유형</h3>
 
             {/* 만료 알림 */}
-            <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-red-50/50">
+            <div className="flex items-center justify-between rounded-2xl border border-red-200/80 bg-red-50/60 p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center">
                   <svg
@@ -124,8 +128,8 @@ export default function NotificationSettingsPage() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">만료 알림</h4>
-                  <p className="text-sm text-gray-500">식재료가 만료되었을 때 알림</p>
+                  <h4 className="font-semibold text-stone-900">만료 알림</h4>
+                  <p className="text-sm text-stone-600">식재료가 만료되었을 때 알림</p>
                 </div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -140,7 +144,7 @@ export default function NotificationSettingsPage() {
             </div>
 
             {/* 긴급 알림 (1일 전) */}
-            <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-orange-50/50">
+            <div className="flex items-center justify-between rounded-2xl border border-orange-200/80 bg-orange-50/50 p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
                   <svg
@@ -160,8 +164,8 @@ export default function NotificationSettingsPage() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">긴급 알림 (1일 전)</h4>
-                  <p className="text-sm text-gray-500">식재료가 1일 후 만료될 때 알림</p>
+                  <h4 className="font-semibold text-stone-900">긴급 알림 (1일 전)</h4>
+                  <p className="text-sm text-stone-600">식재료가 1일 후 만료될 때 알림</p>
                 </div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -176,7 +180,7 @@ export default function NotificationSettingsPage() {
             </div>
 
             {/* 경고 알림 (3일 전) */}
-            <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-yellow-50/50">
+            <div className="flex items-center justify-between rounded-2xl border border-amber-200/80 bg-amber-50/50 p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-yellow-100 flex items-center justify-center">
                   <svg
@@ -196,8 +200,8 @@ export default function NotificationSettingsPage() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">경고 알림 (3일 전)</h4>
-                  <p className="text-sm text-gray-500">식재료가 3일 후 만료될 때 알림</p>
+                  <h4 className="font-semibold text-stone-900">경고 알림 (3일 전)</h4>
+                  <p className="text-sm text-stone-600">식재료가 3일 후 만료될 때 알림</p>
                 </div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -212,7 +216,7 @@ export default function NotificationSettingsPage() {
             </div>
 
             {/* 알림 알림 (7일 전) */}
-            <div className="flex items-center justify-between p-4 rounded-2xl border border-gray-200 bg-blue-50/50">
+            <div className="flex items-center justify-between rounded-2xl border border-sky-200/80 bg-sky-50/50 p-4">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
                   <svg
@@ -228,8 +232,8 @@ export default function NotificationSettingsPage() {
                   </svg>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-900">알림 알림 (7일 전)</h4>
-                  <p className="text-sm text-gray-500">식재료가 7일 후 만료될 때 알림</p>
+                  <h4 className="font-semibold text-stone-900">알림 알림 (7일 전)</h4>
+                  <p className="text-sm text-stone-600">식재료가 7일 후 만료될 때 알림</p>
                 </div>
               </div>
               <label className="relative inline-flex items-center cursor-pointer">
@@ -247,12 +251,12 @@ export default function NotificationSettingsPage() {
 
         {/* 자동 닫기 설정 */}
         {settings.enabled && (
-          <div className="mt-8 pt-8 border-t border-gray-200">
+          <div className="mt-8 border-t border-stone-200/90 pt-8">
             <div className="mb-6">
-              <div className="flex items-center justify-between mb-4">
+              <div className="mb-4 flex items-center justify-between">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-1">자동 닫기</h3>
-                  <p className="text-sm text-gray-500">알림이 자동으로 닫히는 시간을 설정합니다.</p>
+                  <h3 className="mb-1 text-lg font-semibold text-stone-900">자동 닫기</h3>
+                  <p className="text-sm text-stone-600">알림이 자동으로 닫히는 시간을 설정합니다.</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -267,7 +271,7 @@ export default function NotificationSettingsPage() {
 
               {settings.autoClose && (
                 <div className="mt-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <label className="mb-2 block text-sm font-medium text-stone-800">
                     자동 닫기 시간: {settings.autoCloseDuration / 1000}초
                   </label>
                   <input
@@ -277,9 +281,9 @@ export default function NotificationSettingsPage() {
                     step="1000"
                     value={settings.autoCloseDuration}
                     onChange={(e) => handleChange("autoCloseDuration", Number(e.target.value))}
-                    className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-orange-600"
                   />
-                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <div className="mt-1 flex justify-between text-xs text-stone-500">
                     <span>3초</span>
                     <span>5초</span>
                     <span>7초</span>
@@ -292,17 +296,19 @@ export default function NotificationSettingsPage() {
         )}
 
         {/* 저장 버튼 */}
-        <div className="mt-8 pt-8 border-t border-gray-200 flex justify-end gap-4">
+        <div className="mt-8 flex justify-end gap-3 border-t border-stone-200/90 pt-8 sm:gap-4">
           <button
+            type="button"
             onClick={handleReset}
-            className="px-6 py-3 rounded-2xl border border-gray-200 text-sm font-semibold text-gray-700 hover:bg-gray-50 transition-colors"
+            className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition-colors hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             기본값으로 초기화
           </button>
           <button
+            type="button"
             onClick={handleSave}
             disabled={!hasChanges}
-            className="px-6 py-3 rounded-2xl bg-orange-600 text-white text-sm font-semibold hover:bg-orange-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             설정 저장
           </button>

@@ -9,7 +9,6 @@ import Top from "@/components/common/navigation/Top";
 import HeroSection from "./sections/HeroSection";
 import ExpiryAlerts from "./sections/ExpiryAlerts";
 import FoodInventory from "./sections/FoodInventory";
-import Recommended from "./sections/Recommended";
 import RecipeSection from "./sections/RecipeSection";
 import CategoryPreview from "./sections/CategoryPreview";
 import IngredientPrice from "./sidebar/IngredientPrice";
@@ -78,8 +77,16 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
   if (isSnsCallback) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-gray-500 text-sm">
-          <div className="h-8 w-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+        <div
+          className="flex flex-col items-center gap-3 text-gray-500 text-sm"
+          role="status"
+          aria-live="polite"
+          aria-busy="true"
+        >
+          <div
+            className="h-8 w-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"
+            aria-hidden
+          />
           <span>SNS 로그인 처리 중입니다...</span>
         </div>
       </div>
@@ -95,8 +102,16 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
       <div className="min-h-screen bg-white flex flex-col">
         <Top />
         <div className="flex-1 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3 text-gray-500 text-sm">
-            <div className="h-8 w-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin" />
+          <div
+            className="flex flex-col items-center gap-3 text-gray-500 text-sm"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+          >
+            <div
+              className="h-8 w-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"
+              aria-hidden
+            />
             <span>로그인 상태를 확인하고 있어요...</span>
           </div>
         </div>
@@ -106,13 +121,19 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
 
   return (
     <div className="min-h-screen bg-white">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[100] focus:rounded-xl focus:bg-white focus:px-4 focus:py-3 focus:text-sm focus:font-semibold focus:text-gray-900 focus:shadow-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2"
+      >
+        본문으로 건너뛰기
+      </a>
       <Top />
 
       {/* 히어로 섹션 */}
       <HeroSection />
 
       {/* 메인 콘텐츠 영역 */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
+      <main id="main-content" className="max-w-7xl mx-auto px-6 py-12 outline-none" tabIndex={-1}>
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* 메인 콘텐츠 (3열) */}
           <div className="lg:col-span-3 space-y-8">
@@ -122,16 +143,21 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
             {/* 보유 재료 요약 섹션 */}
             <FoodInventory isLoggedIn={isLoggedIn} />
 
-            {/* 보유 재료로 만들 수 있는 레시피 (강조) */}
-            <Recommended isLoggedIn={isLoggedIn} />
-
             {/* 레시피 섹션 (서브 - 더 작게) */}
-            <div className="pt-12 border-t-2 border-gray-300">
+            <div
+              className="pt-12 border-t-2 border-gray-200"
+              aria-labelledby="home-recipe-explore-heading"
+            >
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-gray-500 uppercase tracking-wide">
+                <h2
+                  id="home-recipe-explore-heading"
+                  className="text-xl font-semibold text-gray-800 tracking-tight"
+                >
                   레시피 둘러보기
                 </h2>
-                <p className="text-sm text-gray-400 mt-1">다양한 레시피를 탐색해보세요</p>
+                <p className="text-sm text-gray-600 mt-1.5">
+                  다양한 레시피를 탐색해 보세요
+                </p>
               </div>
 
               <div className="space-y-6">
@@ -164,7 +190,7 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
             <IngredientPrice initialData={priceInitialData} initialError={priceInitialError} />
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 }

@@ -2,79 +2,95 @@
 
 import TabNavigation from "@/components/common/navigation/TabNavigation";
 import FilterTabs from "@/components/common/ui/FilterTabs";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
+import {
+  FAVORITES_CUISINE_TABS,
+  FAVORITES_DISPLAY_TO_SLUG,
+  FAVORITES_SLUG_TO_DISPLAY,
+  FAVORITES_SUB_CATEGORY_QUERY,
+  favoritesSubFiltersForMajor,
+  normalizeFavoritesSubSelection,
+} from "@/constants/recipe/favoritesFilters";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const CUISINE_TABS = ["한식", "일식", "중식", "양식", "기타"] as const;
-const CATEGORY_TO_DISPLAY: Record<string, string> = {
-  korean: "한식",
-  japanese: "일식",
-  chinese: "중식",
-  western: "양식",
-  etc: "기타",
-};
-
-const DISPLAY_TO_CATEGORY: Record<string, string> = {
-  한식: "korean",
-  일식: "japanese",
-  중식: "chinese",
-  양식: "western",
-  기타: "etc",
-};
-
-const CUISINE_TO_SUBFILTERS: Record<(typeof CUISINE_TABS)[number], readonly string[]> = {
-  한식: ["전체", "국, 찌개", "밥, 면", "반찬", "기타"],
-  일식: ["전체", "국, 전골", "면", "밥", "기타"],
-  중식: ["전체", "튀김, 찜", "면", "밥", "기타"],
-  양식: ["전체", "스프, 스튜", "면", "빵", "기타"],
-  기타: [],
-} as const;
-
-export default function FavoritesCategoryLayout({ children }: { children: React.ReactNode }) {
+function FavoritesCategoryLayoutInner({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [activeSub, setActiveSub] = useState<string>("전체");
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  // Get current category from pathname
-  const currentCategory = pathname.split("/").pop() || "korean";
-  const currentDisplay = CATEGORY_TO_DISPLAY[currentCategory] || "한식";
-  const subFiltersForActive =
-    CUISINE_TO_SUBFILTERS[currentDisplay as keyof typeof CUISINE_TO_SUBFILTERS] || [];
+  const slug = pathname.split("/").pop() || "korean";
+  const currentDisplay = FAVORITES_SLUG_TO_DISPLAY[slug] || "한식";
+  const subFilters = favoritesSubFiltersForMajor(currentDisplay);
+  const subFromUrl = searchParams.get(FAVORITES_SUB_CATEGORY_QUERY);
+  const activeSub = normalizeFavoritesSubSelection(currentDisplay, subFromUrl);
 
   const handleTabChange = (tab: string) => {
-    const newCategory = DISPLAY_TO_CATEGORY[tab];
-    if (newCategory) {
-      window.location.href = `/myPage/favorites/${newCategory}`;
+    const newSlug = FAVORITES_DISPLAY_TO_SLUG[tab];
+    if (newSlug) {
+      router.push(`/myPage/favorites/${newSlug}`);
     }
+  };
+
+  const handleSubChange = (item: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (!item || item === "전체") {
+      params.delete(FAVORITES_SUB_CATEGORY_QUERY);
+    } else {
+      params.set(FAVORITES_SUB_CATEGORY_QUERY, item);
+    }
+    const q = params.toString();
+    router.push(q ? `${pathname}?${q}` : pathname);
   };
 
   return (
     <>
       <div className="mb-6">
         <TabNavigation
-          tabs={[...CUISINE_TABS]}
+          tabs={[...FAVORITES_CUISINE_TABS]}
           activeTab={currentDisplay}
           onTabChange={handleTabChange}
         />
       </div>
 
-      <div className="mb-6 rounded-3xl border border-gray-200 bg-gray-50 px-4 py-4">
+      <div className="mb-6 rounded-[28px] border border-stone-200/90 bg-stone-50/70 px-4 py-4 shadow-sm ring-1 ring-stone-900/[0.03]">
         <FilterTabs
-          items={[...subFiltersForActive]}
+          items={subFilters}
           activeItem={activeSub}
-          onItemChange={setActiveSub}
+          onItemChange={handleSubChange}
           variant="default"
         />
       </div>
 
-      <div className="mb-6 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-        <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">Favorites</p>
+      <div className="mb-6 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:px-6 sm:py-5">
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">Favorites</p>
         <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-          <h2 className="text-2xl font-semibold text-gray-900">찜한 레시피 목록</h2>
-          <span className="text-xs text-gray-500">저장한 레시피를 빠르게 확인해 보세요.</span>
+          <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
+            찜한 레시피 목록
+          </h2>
+          <span className="text-xs text-stone-600">저장한 레시피를 빠르게 확인해 보세요.</span>
         </div>
       </div>
 
       {children}
     </>
+  );
+}
+
+function FavoritesLayoutFallback() {
+  return (
+    <div className="space-y-6">
+      <div className="h-12 animate-pulse rounded-2xl bg-stone-100" />
+      <div className="h-14 animate-pulse rounded-[28px] bg-stone-100" />
+      <div className="h-24 animate-pulse rounded-[28px] bg-stone-100" />
+      <div className="min-h-[200px] rounded-[28px] border border-dashed border-stone-200 bg-stone-50/80" />
+    </div>
+  );
+}
+
+export default function FavoritesCategoryLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <Suspense fallback={<FavoritesLayoutFallback />}>
+      <FavoritesCategoryLayoutInner>{children}</FavoritesCategoryLayoutInner>
+    </Suspense>
   );
 }

@@ -189,25 +189,33 @@ export default function Review({ recipeId }: ReviewProps) {
   );
 
   return (
-    <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-      <h2 className="text-2xl font-bold text-black pb-1 mb-4 text-center">
-        <span className="border-b-2 border-gray-300 px-1">Review</span>
+    <section
+      className="rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:p-6"
+      aria-labelledby="recipe-review-heading"
+    >
+      <h2
+        id="recipe-review-heading"
+        className="mb-4 text-center text-xl font-bold tracking-tight text-stone-900 sm:mb-5 sm:text-2xl"
+      >
+        <span className="inline-block border-b-2 border-orange-400/80 pb-1">리뷰</span>
       </h2>
 
       {/* 요약 정보 */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="mb-5 flex flex-col gap-2 rounded-2xl border border-stone-100 bg-stone-50/80 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-yellow-400 text-xl">★</span>
-          <span className="text-lg font-semibold text-gray-900">
+          <span className="text-xl text-amber-400" aria-hidden>
+            ★
+          </span>
+          <span className="text-lg font-semibold tabular-nums text-stone-900">
             {roundedAverage || "평가 없음"}
           </span>
-          {count > 0 && <span className="text-sm text-gray-500">({count}명)</span>}
+          {count > 0 && (
+            <span className="text-sm text-stone-500">({count}명 참여)</span>
+          )}
         </div>
-        {isLoggedIn ? (
-          <span className="text-xs text-gray-500">로그인 상태입니다. 리뷰를 작성해보세요.</span>
-        ) : (
-          <span className="text-xs text-gray-500">로그인 후 리뷰를 작성할 수 있습니다.</span>
-        )}
+        <p className="text-xs text-stone-500 sm:text-right">
+          {isLoggedIn ? "리뷰를 남겨 다른 분께 도움을 주세요." : "로그인 후 리뷰를 작성할 수 있습니다."}
+        </p>
       </div>
 
       {/* 리뷰 작성 폼 */}
@@ -223,6 +231,6 @@ export default function Review({ recipeId }: ReviewProps) {
 
       {/* 리뷰 목록 */}
       <ReviewList reviews={reviews} loading={loading} error={error} />
-    </div>
+    </section>
   );
 }

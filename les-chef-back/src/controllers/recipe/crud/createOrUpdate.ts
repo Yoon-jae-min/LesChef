@@ -24,6 +24,7 @@ import {
     uploadBufferToObjectStorage,
     deleteObjectByPublicUrlIfManaged,
 } from '../../../utils/storage/objectStorage';
+import { recipeListCategoryKey, type RecipeListCategory } from '../../../uploads/recipeImg';
 
 interface CreateOrUpdateRequestBody {
     recipeInfo?: string;
@@ -59,6 +60,43 @@ interface ParsedStep {
     stepNum?: number;
     stepWay?: string;
     stepImg?: string;
+}
+
+/** multer 임시 파일 → public/Image/RecipeImage/InfoImg/step/{카테고리}/{recipeId}/ 또는 S3 동일 키 */
+async function finalizeRecipeStepImageFromTemp(params: {
+    tempPath: string;
+    categoryKey: RecipeListCategory;
+    recipeId: string;
+    mimetype?: string;
+}): Promise<string> {
+    const { tempPath, categoryKey, recipeId, mimetype } = params;
+    const basename = path.basename(tempPath);
+    const segments = ['Image', 'RecipeImage', 'InfoImg', 'step', categoryKey, recipeId];
+
+    if (isS3Storage()) {
+        const body = await fs.readFile(tempPath);
+        const objectKey = [...segments, basename].join('/');
+        const url = await uploadBufferToObjectStorage({
+            objectKey,
+            body,
+            contentType: mimetype || 'image/jpeg',
+        });
+        await fs.unlink(tempPath).catch(() => {});
+        return url;
+    }
+
+    const publicRoot = path.join(__dirname, '..', '..', '..', '..', 'public');
+    const destDir = path.join(publicRoot, ...segments);
+    await fs.mkdir(destDir, { recursive: true });
+    const destPath = path.join(destDir, basename);
+    await fs.copyFile(tempPath, destPath);
+    await fs.unlink(tempPath).catch(() => {});
+    try {
+        await generateRecipeStepThumbnail(destPath, destDir);
+    } catch (thumbError) {
+        logger.warn('단계 썸네일 생성 실패', { error: thumbError });
+    }
+    return `/${segments.join('/')}/${basename}`;
 }
 
 export const createOrUpdate = asyncHandler(
@@ -147,7 +185,6 @@ export const createOrUpdate = asyncHandler(
                 return;
             }
             let isShare = true;
-            let recipeId: string | Types.ObjectId | null = null;
 
             if (userInfo.checkAdmin) {
                 isShare = false;
@@ -196,71 +233,23 @@ export const createOrUpdate = asyncHandler(
                 }
             }
 
-            // 레시피 단계 이미지 처리 (로컬: 썸네일 / S3: 업로드)
-            const uploadedFiles =
+            const categoryKey = recipeListCategoryKey(parsedRecipeInfo.majorCategory);
+
+            const uploadedStepFiles =
                 (
                     req.files as
                         | {
                               recipeStepImgFiles?: Array<{
-                                  newPath?: string;
                                   path?: string;
                                   mimetype?: string;
                               }>;
                           }
                         | undefined
                 )?.recipeStepImgFiles || [];
-            let count = 0;
-            for (const step of parsedRecipeSteps) {
-                if (step.stepImg === '') {
-                    const stepFile = uploadedFiles[count];
-                    if (stepFile?.newPath && stepFile.path) {
-                        if (isS3Storage()) {
-                            const key = stepFile.newPath.replace(/^\/+/, '');
-                            const body = await fs.readFile(stepFile.path);
-                            step.stepImg = await uploadBufferToObjectStorage({
-                                objectKey: key,
-                                body,
-                                contentType: stepFile.mimetype || 'image/jpeg',
-                            });
-                            await fs.unlink(stepFile.path).catch(() => {});
-                        } else {
-                            step.stepImg = stepFile.newPath.startsWith('/')
-                                ? stepFile.newPath
-                                : `/${stepFile.newPath}`;
-                            try {
-                                const outputDir = path.dirname(stepFile.path);
-                                await generateRecipeStepThumbnail(stepFile.path, outputDir);
-                            } catch (thumbError) {
-                                logger.warn(`단계 ${step.stepNum} 썸네일 생성 실패`, {
-                                    error: thumbError,
-                                });
-                            }
-                        }
-                        count++;
-                    } else {
-                        throw new Error(`단계 ${step.stepNum}의 이미지가 누락되었습니다.`);
-                    }
-                }
-            }
 
-            if (!parsedIsEdit) {
-                const infoAdd = await Recipe.create({
-                    recipeName: parsedRecipeInfo.recipeName,
-                    cookTime: parsedRecipeInfo.cookTime,
-                    portion: parsedRecipeInfo.portion,
-                    portionUnit: parsedRecipeInfo.portionUnit,
-                    cookLevel: parsedRecipeInfo.cookLevel,
-                    userId: userInfo.id,
-                    userNickName: userInfo.nickName,
-                    majorCategory: parsedRecipeInfo.majorCategory,
-                    subCategory: parsedRecipeInfo.subCategory,
-                    recipeImg: parsedRecipeInfo.recipeImg,
-                    viewCount: parsedRecipeInfo.viewCount || 0,
-                    isShare: isShare,
-                });
-                recipeId = (infoAdd._id as Types.ObjectId).toString(); // 이후 재료/단계에 동일 id 사용
-            } else {
-                // 수정 모드에서 기존 레시피 확인
+            let recipeId: Types.ObjectId | string;
+
+            if (parsedIsEdit) {
                 if (!parsedRecipeInfo._id) {
                     res.status(400).json({
                         error: true,
@@ -280,7 +269,45 @@ export const createOrUpdate = asyncHandler(
                     });
                     return;
                 }
+                recipeId = parsedRecipeInfo._id;
+            } else {
+                const infoAdd = await Recipe.create({
+                    recipeName: parsedRecipeInfo.recipeName,
+                    cookTime: parsedRecipeInfo.cookTime,
+                    portion: parsedRecipeInfo.portion,
+                    portionUnit: parsedRecipeInfo.portionUnit,
+                    cookLevel: parsedRecipeInfo.cookLevel,
+                    userId: userInfo.id,
+                    userNickName: userInfo.nickName,
+                    majorCategory: parsedRecipeInfo.majorCategory,
+                    subCategory: parsedRecipeInfo.subCategory,
+                    recipeImg: parsedRecipeInfo.recipeImg,
+                    viewCount: parsedRecipeInfo.viewCount || 0,
+                    isShare: isShare,
+                });
+                recipeId = infoAdd._id as Types.ObjectId;
+            }
 
+            const recipeIdStr = typeof recipeId === 'string' ? recipeId : recipeId.toString();
+
+            let stepFileIndex = 0;
+            for (const step of parsedRecipeSteps) {
+                if (step.stepImg === '') {
+                    const stepFile = uploadedStepFiles[stepFileIndex];
+                    stepFileIndex += 1;
+                    if (!stepFile?.path) {
+                        throw new Error(`단계 ${step.stepNum}의 이미지가 누락되었습니다.`);
+                    }
+                    step.stepImg = await finalizeRecipeStepImageFromTemp({
+                        tempPath: stepFile.path,
+                        categoryKey,
+                        recipeId: recipeIdStr,
+                        mimetype: stepFile.mimetype,
+                    });
+                }
+            }
+
+            if (parsedIsEdit) {
                 for (const imgUrl of deleteImgsArray) {
                     if (!imgUrl) continue;
                     if (imgUrl.startsWith('http://') || imgUrl.startsWith('https://')) {
@@ -329,7 +356,6 @@ export const createOrUpdate = asyncHandler(
                 );
                 await RecipeStep.deleteMany({ recipeId: parsedRecipeInfo._id });
                 await RecipeIngredient.deleteMany({ recipeId: parsedRecipeInfo._id });
-                recipeId = parsedRecipeInfo._id;
             }
 
             // 프론트에서 온 recipeId는 사용하지 않고 서버에서 관리한 recipeId로 통일

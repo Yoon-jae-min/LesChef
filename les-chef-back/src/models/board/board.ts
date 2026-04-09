@@ -18,6 +18,11 @@ const BoardSchema = new Schema<IBoard>({
     content: {
         type: String,
     },
+    boardType: {
+        type: String,
+        enum: ['notice', 'free'],
+        default: 'notice',
+    },
     createdAt: {
         type: Date,
         default: () => new Date().setMilliseconds(0),

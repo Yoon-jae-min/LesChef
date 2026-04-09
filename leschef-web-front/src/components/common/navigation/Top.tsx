@@ -9,6 +9,7 @@ import { logout } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { NAVIGATION_ITEMS, getActiveMenuId } from "@/constants/navigation/navigation";
 import { StorageIcon, RecipeIcon, MyPageIcon, BoardIcon } from "./NavigationIcons";
+import TopNotificationPopover from "./TopNotificationPopover";
 
 function Top(): React.JSX.Element {
   const pathname = usePathname();
@@ -101,6 +102,7 @@ function Top(): React.JSX.Element {
           <div className="flex items-center h-full lg:-translate-x-8">
             <Link
               href="/"
+              title="홈"
               className="flex items-center h-full group"
               onClick={() => sessionStorage.setItem("fromLogoClick", "true")}
             >
@@ -140,6 +142,7 @@ function Top(): React.JSX.Element {
                 <Link
                   key={item.id}
                   href={item.href}
+                  title={item.label}
                   className={`w-8 h-8 flex items-center justify-center cursor-pointer rounded-xl transition-all ${
                     isActive ? "bg-orange-100" : "hover:bg-gray-100"
                   }`}
@@ -149,12 +152,16 @@ function Top(): React.JSX.Element {
                 </Link>
               );
             })}
+          </div>
 
-            {/* 로그인/로그아웃 아이콘 */}
+          {/* 알림 · 로그인 — 검색창(또는 검색 아이콘) 바로 왼쪽 */}
+          <div className="ml-auto flex items-center gap-2 md:gap-3 mr-3 lg:translate-x-8 shrink-0">
+            {isAuthReady && isLoggedIn && !isLoggingOut && <TopNotificationPopover />}
             {isAuthReady && !isLoggingOut && (
               <button
                 type="button"
                 onClick={handleAuthAction}
+                title={isLoggedIn ? "로그아웃" : "로그인"}
                 className="w-8 h-8 flex items-center justify-center cursor-pointer hover:bg-gray-100 rounded-xl transition-all"
                 aria-label={isLoggedIn ? "로그아웃" : "로그인 페이지로 이동"}
                 data-auth-trigger="top"
@@ -186,48 +193,49 @@ function Top(): React.JSX.Element {
                 )}
               </button>
             )}
-          </div>
 
-          {/* 검색바 - 데스크톱에서만 표시 */}
-          <div className="hidden md:flex items-center ml-auto md:ml-4 lg:ml-auto lg:translate-x-8 mr-3">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="검색..."
-                className="w-48 md:w-56 lg:w-72 px-4 py-2 pl-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-900 placeholder:text-gray-500"
-              />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  className="w-4 h-4 text-gray-400"
-                >
-                  <circle cx="11" cy="11" r="8" />
-                  <path d="m21 21-4.35-4.35" />
-                </svg>
+            {/* 검색바 - md 이상 */}
+            <div className="hidden md:flex items-center">
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="검색..."
+                  className="w-48 md:w-56 lg:w-72 px-4 py-2 pl-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-900 placeholder:text-gray-600"
+                />
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    className="w-4 h-4 text-gray-400"
+                  >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                  </svg>
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* 검색 아이콘 - 모바일에서만 표시 */}
-          <button
-            onClick={handleToggleSearch}
-            className="lg:hidden flex items-center ml-auto w-8 h-8 justify-center hover:bg-gray-100 rounded-xl transition-all"
-            aria-label="검색"
-          >
-            <svg
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              className="w-5 h-5 text-gray-600"
+            {/* 검색 아이콘 - lg 미만 (기존과 동일) */}
+            <button
+              onClick={handleToggleSearch}
+              title="검색"
+              className="lg:hidden flex items-center w-8 h-8 justify-center hover:bg-gray-100 rounded-xl transition-all"
+              aria-label="검색"
             >
-              <circle cx="11" cy="11" r="8" />
-              <path d="m21 21-4.35-4.35" />
-            </svg>
-          </button>
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                className="w-5 h-5 text-gray-600"
+              >
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.35-4.35" />
+              </svg>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -239,7 +247,7 @@ function Top(): React.JSX.Element {
               <input
                 type="text"
                 placeholder="검색..."
-                className="w-full px-4 py-3 pl-12 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-900 placeholder:text-gray-500"
+                className="w-full px-4 py-3 pl-12 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-gray-300 text-sm text-gray-900 placeholder:text-gray-600"
                 autoFocus
               />
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">

@@ -73,10 +73,18 @@ app.use(
     })
 );
 
+// 개발 등: 인증서 경로가 있어도 HTTP만 쓰고 싶을 때 .env 에 DISABLE_HTTPS=1 (또는 true)
+const disableHttps =
+    process.env.DISABLE_HTTPS === '1' ||
+    process.env.DISABLE_HTTPS === 'true' ||
+    process.env.DISABLE_HTTPS === 'yes';
+
 // SSL 인증서 파일 확인 및 옵션 설정
 let httpsOptions: { key: Buffer; cert: Buffer } | null = null;
 
-if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
+if (disableHttps) {
+    logger.info('ℹ️  DISABLE_HTTPS 가 설정되어 HTTP 모드로 실행합니다. (SSL 경로는 사용하지 않음)');
+} else if (process.env.SSL_KEY_PATH && process.env.SSL_CERT_PATH) {
     const keyPath = path.isAbsolute(process.env.SSL_KEY_PATH)
         ? process.env.SSL_KEY_PATH
         : path.join(__dirname, '..', process.env.SSL_KEY_PATH);

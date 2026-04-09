@@ -6,7 +6,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo } from "react";
+import { useId, useMemo } from "react";
 import useSWR from "swr";
 import { fetchFoodsList, type FoodsListResponse, type StoragePlace } from "@/utils/api/foods";
 import { TIMING } from "@/constants/system/timing";
@@ -17,6 +17,8 @@ interface FoodInventoryProps {
 }
 
 export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps) {
+  const sectionTitleId = useId();
+  const subsectionTitleId = useId();
   const { data, error, isLoading } = useSWR<FoodsListResponse>(
     isLoggedIn ? "/foods/place" : null,
     () => fetchFoodsList(),
@@ -35,16 +37,18 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
 
   if (!isLoggedIn) {
     return (
-      <section className="py-8">
+      <section className="py-8" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">보유 재료 요약</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            보유 재료 요약
+          </h2>
           <div className="rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
             <p className="text-gray-600 mb-4">
               로그인하시면 우리 집 식재료 현황을 한눈에 볼 수 있어요!
             </p>
             <Link
               href="/login"
-              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors"
+              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               로그인하고 냉장고 채우기
             </Link>
@@ -56,9 +60,11 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
 
   if (error) {
     return (
-      <section className="py-8">
+      <section className="py-8" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">보유 재료 요약</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            보유 재료 요약
+          </h2>
           <ErrorMessage error={error} showDetails={false} showAction={false} />
         </div>
       </section>
@@ -67,9 +73,16 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
 
   if (isLoading) {
     return (
-      <section className="py-8">
+      <section
+        className="py-8"
+        aria-labelledby={sectionTitleId}
+        aria-busy="true"
+        aria-live="polite"
+      >
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">보유 재료 요약</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            보유 재료 요약
+          </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
@@ -85,13 +98,15 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
 
   if (places.length === 0) {
     return (
-      <section className="py-8">
+      <section className="py-8" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">보유 재료 요약</h2>
+            <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900">
+              보유 재료 요약
+            </h2>
             <Link
               href="/myPage/storage"
-              className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors"
+              className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               식재료 관리하기
             </Link>
@@ -100,7 +115,7 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
             <p className="text-gray-600 mb-4">등록된 식재료가 없습니다.</p>
             <Link
               href="/myPage/storage"
-              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors"
+              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               식재료 등록하기
             </Link>
@@ -111,16 +126,18 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
   }
 
   return (
-    <section className="py-8">
+    <section className="py-8" aria-labelledby={sectionTitleId}>
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-2xl font-bold text-gray-900">보유 재료 요약</h2>
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900">
+            보유 재료 요약
+          </h2>
           <Link
             href="/myPage/storage"
-            className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1"
+            className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             전체보기
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
@@ -136,6 +153,7 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
+                aria-hidden
               >
                 <path
                   strokeLinecap="round"
@@ -162,6 +180,7 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
+                  aria-hidden
                 >
                   <path
                     strokeLinecap="round"
@@ -180,13 +199,19 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
         {/* 보관 장소 목록 */}
         {places.length > 0 && (
           <div className="rounded-2xl border border-gray-200 bg-white p-6">
-            <h3 className="text-lg font-semibold text-gray-900 mb-4">보관 장소별 식재료</h3>
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            <h3 id={subsectionTitleId} className="text-lg font-semibold text-gray-900 mb-4">
+              보관 장소별 식재료
+            </h3>
+            <div
+              className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3"
+              aria-labelledby={subsectionTitleId}
+            >
               {places.map((place) => (
                 <Link
                   key={place._id}
                   href="/myPage/storage"
-                  className="flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                  className="flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                  aria-label={`${place.name}, ${place.foodList?.length || 0}개 · 식재료 관리`}
                 >
                   <div>
                     <p className="font-medium text-gray-900">{place.name}</p>
@@ -197,6 +222,7 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
+                    aria-hidden
                   >
                     <path
                       strokeLinecap="round"

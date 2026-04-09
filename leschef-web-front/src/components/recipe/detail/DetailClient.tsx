@@ -134,18 +134,29 @@ function DetailClient({ recipeId, initialData, initialError }: DetailClientProps
       <Top />
 
       {loading && !initialData && (
-        <div className="max-w-4xl mx-auto px-6 py-8 text-sm text-gray-500">
-          레시피를 불러오는 중입니다...
+        <div className="mx-auto flex max-w-4xl items-center justify-center gap-3 px-6 py-12 text-sm text-stone-600">
+          <div
+            className="h-8 w-8 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500"
+            aria-hidden
+          />
+          <p role="status" aria-live="polite">
+            레시피를 불러오는 중입니다...
+          </p>
         </div>
       )}
       {displayError && !loading && (
-        <div className="max-w-4xl mx-auto px-6 py-8 text-sm text-red-600 bg-red-50 border border-red-200 rounded-2xl">
-          {displayError instanceof Error ? displayError.message : "레시피를 불러오지 못했습니다."}
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
+          <div
+            className="rounded-2xl border border-red-200/80 bg-red-50 px-5 py-4 text-sm text-red-800 shadow-sm"
+            role="alert"
+          >
+            {displayError instanceof Error ? displayError.message : "레시피를 불러오지 못했습니다."}
+          </div>
         </div>
       )}
 
-      <main className="max-w-2xl lg:max-w-6xl mx-auto px-8 py-8 lg:h-[calc(100vh-80px)] lg:overflow-hidden">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:h-full">
+      <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-6xl lg:h-[calc(100vh-80px)] lg:overflow-hidden lg:px-8 lg:py-10">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16 lg:h-full">
           {/* 왼쪽: 레시피 메인 정보 */}
           <DetailMeta
             recipeMeta={recipeMeta}

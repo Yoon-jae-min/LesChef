@@ -5,6 +5,7 @@
 "use client";
 
 import Link from "next/link";
+import { useId } from "react";
 import useSWR from "swr";
 import {
   getIngredientPrices,
@@ -20,6 +21,7 @@ interface IngredientPriceProps {
 }
 
 export default function IngredientPrice({ initialData, initialError }: IngredientPriceProps) {
+  const headingId = useId();
   const {
     data: priceData,
     error: priceError,
@@ -37,11 +39,16 @@ export default function IngredientPrice({ initialData, initialError }: Ingredien
   const displayPrices = ingredientPrices.slice(0, 5);
 
   return (
-    <aside className="bg-white rounded-[32px] border border-gray-200 shadow-[6px_6px_0_rgba(0,0,0,0.05)] p-6 sticky top-6">
-      <h3 className="text-xl font-bold text-gray-900 mb-4">식재료 물가</h3>
+    <aside
+      className="bg-white rounded-[32px] border border-gray-200 shadow-[6px_6px_0_rgba(0,0,0,0.05)] p-6 sticky top-6"
+      aria-labelledby={headingId}
+    >
+      <h3 id={headingId} className="text-xl font-bold text-gray-900 mb-4">
+        식재료 물가
+      </h3>
 
       {isLoading && !initialData && (
-        <div className="space-y-3">
+        <div className="space-y-3" aria-busy="true" aria-live="polite">
           {Array.from({ length: 3 }).map((_, i) => (
             <div key={i} className="h-16 bg-gray-100 rounded-xl animate-pulse" />
           ))}
@@ -81,7 +88,17 @@ export default function IngredientPrice({ initialData, initialError }: Ingredien
                             : "text-gray-600"
                       }`}
                     >
-                      {item.changeRate > 0 ? "↑" : item.changeRate < 0 ? "↓" : "→"}{" "}
+                      <span aria-hidden>
+                        {item.changeRate > 0 ? "↑" : item.changeRate < 0 ? "↓" : "→"}{" "}
+                      </span>
+                      <span className="sr-only">
+                        {item.changeRate > 0
+                          ? "상승"
+                          : item.changeRate < 0
+                            ? "하락"
+                            : "변동 없음"}
+                        ,{" "}
+                      </span>
                       {Math.abs(item.changeRate || 0).toFixed(1)}%
                     </span>
                   )}
@@ -104,9 +121,9 @@ export default function IngredientPrice({ initialData, initialError }: Ingredien
           {ingredientPrices.length > 5 && (
             <Link
               href="/ingredient-price"
-              className="block text-center text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors py-2 border-t border-gray-200"
+              className="block text-center text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors py-2 border-t border-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
-              전체 물가 보기 →
+              전체 물가 보기<span aria-hidden> →</span>
             </Link>
           )}
         </>

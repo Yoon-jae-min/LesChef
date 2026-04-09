@@ -1,6 +1,6 @@
 /**
  * 식재료(Content) 관련 컨트롤러
- * 이미지 필수(신규), 이름 선택
+ * 신규: 사진 또는 이름 중 최소 하나 필수
  */
 
 import asyncHandler from 'express-async-handler';
@@ -47,9 +47,9 @@ async function findFoodItemSnapshot(
 
 interface AddContentRequestBody {
     placeId?: string;
-    /** 선택 재료명 */
+    /** 재료명 — 사진이 없을 때는 필수에 가깝게(둘 중 하나 필수) */
     unitName?: string;
-    /** 필수: POST /foods/upload-item-image 로 받은 URL */
+    /** 선택: POST /foods/upload-item-image 로 받은 URL (없으면 이름만으로 등록) */
     imageUrl?: string;
     unitVol?: number;
     unitUnit?: string;
@@ -65,17 +65,25 @@ export const addContent = asyncHandler(
         const userId = getUserId(req);
 
         const img = typeof imageUrl === 'string' ? imageUrl.trim() : '';
-        if (!placeId || !Types.ObjectId.isValid(placeId) || !img) {
+        const itemName = (unitName && String(unitName).trim()) || '';
+        if (!placeId || !Types.ObjectId.isValid(placeId)) {
             res.status(400).json({
                 error: true,
-                message: '보관 장소와 이미지(imageUrl)는 필수입니다. 먼저 이미지를 업로드해주세요.',
+                message: '유효한 보관 장소(placeId)가 필요합니다.',
+            });
+            return;
+        }
+        if (!img && !itemName) {
+            res.status(400).json({
+                error: true,
+                message: '사진(imageUrl) 또는 재료 이름(unitName) 중 하나는 입력해주세요.',
             });
             return;
         }
 
         try {
             const newItem = {
-                name: (unitName && String(unitName).trim()) || '',
+                name: itemName,
                 imageUrl: img,
                 volume: unitVol ?? 0,
                 unit: unitUnit || '',
@@ -216,10 +224,13 @@ export const updateContent = asyncHandler(
                     ? imageUrl.trim()
                     : before.imageUrl;
 
-            if (!nextImage) {
+            const nextNameTrimmed = nextName.trim();
+            const nextImageTrimmed =
+                typeof nextImage === 'string' ? nextImage.trim() : '';
+            if (!nextNameTrimmed && !nextImageTrimmed) {
                 res.status(400).json({
                     error: true,
-                    message: '항목 이미지가 없습니다. 이미지를 업로드한 뒤 다시 시도해주세요.',
+                    message: '이름과 사진을 모두 비울 수 없습니다. 둘 중 하나는 유지해주세요.',
                 });
                 return;
             }
@@ -228,11 +239,11 @@ export const updateContent = asyncHandler(
                 { userId, 'place.foodList._id': oid },
                 {
                     $set: {
-                        'place.$[p].foodList.$[f].name': nextName,
+                        'place.$[p].foodList.$[f].name': nextNameTrimmed,
                         'place.$[p].foodList.$[f].volume': nextVol,
                         'place.$[p].foodList.$[f].unit': nextUnit,
                         'place.$[p].foodList.$[f].expirate': nextDate,
-                        'place.$[p].foodList.$[f].imageUrl': nextImage,
+                        'place.$[p].foodList.$[f].imageUrl': nextImageTrimmed,
                     },
                 },
                 {
@@ -249,11 +260,8 @@ export const updateContent = asyncHandler(
                     message: RESOURCE_ERROR_MESSAGES.FOODS.FOOD_NOT_FOUND,
                 });
             } else {
-                if (
-                    before.imageUrl &&
-                    nextImage &&
-                    before.imageUrl !== nextImage
-                ) {
+                const prevImg = (before.imageUrl || '').trim();
+                if (prevImg && prevImg !== nextImageTrimmed) {
                     await deleteFoodItemImageIfAny(before.imageUrl);
                 }
                 res.status(200).json({

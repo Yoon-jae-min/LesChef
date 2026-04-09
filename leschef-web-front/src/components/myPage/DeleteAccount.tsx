@@ -58,8 +58,8 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-[32px] border border-gray-200 p-8 max-w-md w-full shadow-[6px_6px_0_rgba(0,0,0,0.05)] max-h-[90vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/45 p-4 backdrop-blur-[2px]">
+      <div className="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-[28px] border border-stone-200/90 bg-white p-8 shadow-xl shadow-stone-900/10 ring-1 ring-stone-900/[0.04]">
         {/* 1단계: 경고 */}
         {deleteStep === "warning" && (
           <>
@@ -79,33 +79,33 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">회원 탈퇴</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center">
+              <h3 className="mb-2 text-center text-2xl font-semibold text-stone-900">회원 탈퇴</h3>
+              <p className="mb-4 text-center text-sm text-stone-600">
                 정말로 회원 탈퇴를 하시겠습니까?
               </p>
-              <div className="rounded-2xl bg-red-50 border border-red-200 p-4 mb-4">
-                <p className="text-sm text-red-800 font-medium mb-2">탈퇴 시 삭제되는 정보:</p>
-                <ul className="text-xs text-red-700 space-y-1 list-disc list-inside">
+              <div className="mb-4 rounded-2xl border border-red-200/90 bg-red-50 p-4">
+                <p className="mb-2 text-sm font-medium text-red-800">탈퇴 시 삭제되는 정보:</p>
+                <ul className="list-inside list-disc space-y-1 text-xs text-red-700">
                   <li>계정 정보 및 프로필</li>
                   <li>작성한 레시피 및 게시글</li>
                   <li>보관함 재료 정보</li>
                   <li>즐겨찾기 및 저장된 레시피</li>
                 </ul>
-                <p className="text-xs text-red-800 font-medium mt-3">
-                  ⚠️ 모든 데이터는 복구할 수 없습니다.
-                </p>
+                <p className="mt-3 text-xs font-medium text-red-800">주의: 모든 데이터는 복구할 수 없습니다.</p>
               </div>
             </div>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={handleClose}
-                className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 취소
               </button>
               <button
+                type="button"
                 onClick={() => setDeleteStep("password")}
-                className="flex-1 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 hover:border-red-300 hover:bg-red-100 transition"
+                className="flex-1 rounded-2xl border border-red-200/90 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
               >
                 계속하기
               </button>
@@ -116,11 +116,11 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
         {/* 2단계: 비밀번호 확인 */}
         {deleteStep === "password" && (
           <>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">비밀번호 확인</h3>
-            <p className="text-sm text-gray-600 mb-6">보안을 위해 비밀번호를 입력해주세요.</p>
+            <h3 className="mb-2 text-2xl font-semibold text-stone-900">비밀번호 확인</h3>
+            <p className="mb-6 text-sm text-stone-600">보안을 위해 비밀번호를 입력해주세요.</p>
             <div className="space-y-4 mb-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">비밀번호</label>
+                <label className="mb-2 block text-sm font-medium text-stone-800">비밀번호</label>
                 <input
                   type="password"
                   value={password}
@@ -129,22 +129,24 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                     setPasswordError("");
                   }}
                   placeholder="비밀번호를 입력하세요"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-                  onKeyPress={(e) => e.key === "Enter" && handlePasswordCheck()}
+                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  onKeyDown={(e) => e.key === "Enter" && handlePasswordCheck()}
                 />
                 {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
               </div>
             </div>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setDeleteStep("warning")}
-                className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 이전
               </button>
               <button
+                type="button"
                 onClick={handlePasswordCheck}
-                className="flex-1 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 hover:border-red-300 hover:bg-red-100 transition"
+                className="flex-1 rounded-2xl border border-red-200/90 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
               >
                 확인
               </button>
@@ -155,15 +157,15 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
         {/* 3단계: 탈퇴 사유 */}
         {deleteStep === "reason" && (
           <>
-            <h3 className="text-2xl font-semibold text-gray-900 mb-2">탈퇴 사유</h3>
-            <p className="text-sm text-gray-600 mb-6">
+            <h3 className="mb-2 text-2xl font-semibold text-stone-900">탈퇴 사유</h3>
+            <p className="mb-6 text-sm text-stone-600">
               서비스 개선을 위해 탈퇴 사유를 알려주세요. (선택사항)
             </p>
             <div className="space-y-3 mb-6">
               {DELETE_REASONS.map((reason) => (
                 <label
                   key={reason}
-                  className="flex items-center gap-3 p-3 rounded-2xl border border-gray-200 hover:border-gray-300 cursor-pointer transition"
+                  className="flex cursor-pointer items-center gap-3 rounded-2xl border border-stone-200 bg-white p-3 transition hover:border-stone-300"
                 >
                   <input
                     type="radio"
@@ -178,7 +180,7 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                     }}
                     className="h-4 w-4 text-red-600 focus:ring-red-500"
                   />
-                  <span className="text-sm text-gray-700">{reason}</span>
+                  <span className="text-sm text-stone-700">{reason}</span>
                 </label>
               ))}
               {deleteReason === "기타" && (
@@ -187,21 +189,23 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                   onChange={(e) => setCustomReason(e.target.value)}
                   placeholder="탈퇴 사유를 입력해주세요"
                   rows={3}
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0 resize-none"
+                  className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
                 />
               )}
             </div>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setDeleteStep("password")}
-                className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 이전
               </button>
               <button
+                type="button"
                 onClick={handleReasonSubmit}
                 disabled={!deleteReason}
-                className="flex-1 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 hover:border-red-300 hover:bg-red-100 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="flex-1 rounded-2xl border border-red-200/90 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 다음
               </button>
@@ -228,11 +232,11 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                   />
                 </svg>
               </div>
-              <h3 className="text-2xl font-semibold text-gray-900 mb-2 text-center">최종 확인</h3>
-              <p className="text-sm text-gray-600 mb-4 text-center">정말로 탈퇴하시겠습니까?</p>
-              <div className="rounded-2xl bg-gray-50 border border-gray-200 p-4">
-                <p className="text-xs text-gray-600 mb-2">선택하신 탈퇴 사유:</p>
-                <p className="text-sm text-gray-900 font-medium">
+              <h3 className="mb-2 text-center text-2xl font-semibold text-stone-900">최종 확인</h3>
+              <p className="mb-4 text-center text-sm text-stone-600">정말로 탈퇴하시겠습니까?</p>
+              <div className="rounded-2xl border border-stone-200/90 bg-stone-50/80 p-4">
+                <p className="mb-2 text-xs text-stone-600">선택하신 탈퇴 사유:</p>
+                <p className="text-sm font-medium text-stone-900">
                   {deleteReason}
                   {deleteReason === "기타" && customReason && ` - ${customReason}`}
                 </p>
@@ -240,14 +244,16 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
             </div>
             <div className="flex gap-3">
               <button
+                type="button"
                 onClick={() => setDeleteStep("reason")}
-                className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 이전
               </button>
               <button
+                type="button"
                 onClick={handleDeleteAccount}
-                className="flex-1 rounded-2xl border border-red-200 bg-red-600 px-4 py-3 text-sm font-medium text-white hover:bg-red-700 transition"
+                className="flex-1 rounded-2xl border border-red-600 bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
               >
                 탈퇴하기
               </button>

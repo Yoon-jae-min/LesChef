@@ -6,7 +6,11 @@
 import { useState, useCallback } from "react";
 import type { Ingredient, IngredientGroup, RecipeStep } from "@/utils/api/recipeApi";
 import type { RecipeDetailResponse } from "@/types/recipe";
-import { RECIPE_DEFAULTS } from "@/constants/recipe/recipe";
+import {
+  RECIPE_DEFAULTS,
+  RECIPE_SUBCATEGORIES_BY_MAJOR,
+  recipeSubCategoryFromApi,
+} from "@/constants/recipe/recipe";
 import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 
 export type RecipeFormState = {
@@ -30,7 +34,7 @@ const INITIAL_STATE: RecipeFormState = {
   portionUnit: RECIPE_DEFAULTS.PORTION_UNIT,
   cookLevel: RECIPE_DEFAULTS.COOK_LEVEL,
   majorCategory: RECIPE_DEFAULTS.MAJOR_CATEGORY,
-  subCategory: "",
+  subCategory: RECIPE_DEFAULTS.SUB_CATEGORY,
   recipeImg: null,
   recipeImgPreview: "",
   ingredientGroups: [
@@ -116,43 +120,57 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
     }));
   }, []);
 
-  // 재료 추가
+  // 재료 추가 (불변 업데이트 — Strict Mode에서 업데이터 2회 호출 시 중복 추가 방지)
   const addIngredient = useCallback((groupIndex: number) => {
-    setFormState((prev) => {
-      const newGroups = [...prev.ingredientGroups];
-      newGroups[groupIndex].ingredients.push({
-        ingredientName: "",
-        volume: 0,
-        unit: RECIPE_DEFAULTS.INGREDIENT_UNIT,
-      });
-      return { ...prev, ingredientGroups: newGroups };
-    });
+    setFormState((prev) => ({
+      ...prev,
+      ingredientGroups: prev.ingredientGroups.map((g, i) =>
+        i === groupIndex
+          ? {
+              ...g,
+              ingredients: [
+                ...g.ingredients,
+                {
+                  ingredientName: "",
+                  volume: 0,
+                  unit: RECIPE_DEFAULTS.INGREDIENT_UNIT,
+                },
+              ],
+            }
+          : g
+      ),
+    }));
   }, []);
 
   // 재료 제거
   const removeIngredient = useCallback((groupIndex: number, ingredientIndex: number) => {
     setFormState((prev) => {
-      const newGroups = [...prev.ingredientGroups];
-      newGroups[groupIndex].ingredients.splice(ingredientIndex, 1);
-      if (newGroups[groupIndex].ingredients.length === 0) {
-        newGroups.splice(groupIndex, 1);
-      }
-      return { ...prev, ingredientGroups: newGroups };
+      const group = prev.ingredientGroups[groupIndex];
+      if (!group) return prev;
+      const nextIngredients = group.ingredients.filter((_, i) => i !== ingredientIndex);
+      const ingredientGroups =
+        nextIngredients.length === 0
+          ? prev.ingredientGroups.filter((_, i) => i !== groupIndex)
+          : prev.ingredientGroups.map((g, i) =>
+              i === groupIndex ? { ...g, ingredients: nextIngredients } : g
+            );
+      return { ...prev, ingredientGroups };
     });
   }, []);
 
   // 재료 그룹 필드 업데이트
   const updateIngredientGroup = useCallback(
     (groupIndex: number, field: "sortType" | "ingredients", value: string | Ingredient[]) => {
-      setFormState((prev) => {
-        const newGroups = [...prev.ingredientGroups];
-        if (field === "sortType") {
-          newGroups[groupIndex].sortType = value as string;
-        } else {
-          newGroups[groupIndex].ingredients = value as Ingredient[];
-        }
-        return { ...prev, ingredientGroups: newGroups };
-      });
+      setFormState((prev) => ({
+        ...prev,
+        ingredientGroups: prev.ingredientGroups.map((g, i) => {
+          if (i !== groupIndex) return g;
+          if (field === "sortType") {
+            return { ...g, sortType: value as string };
+          }
+          return { ...g, ingredients: value as Ingredient[] };
+        }),
+      }));
     },
     []
   );
@@ -165,11 +183,18 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
       field: keyof Ingredient,
       value: string | number
     ) => {
-      setFormState((prev) => {
-        const newGroups = [...prev.ingredientGroups];
-        newGroups[groupIndex].ingredients[ingredientIndex][field] = value as never;
-        return { ...prev, ingredientGroups: newGroups };
-      });
+      setFormState((prev) => ({
+        ...prev,
+        ingredientGroups: prev.ingredientGroups.map((g, gi) => {
+          if (gi !== groupIndex) return g;
+          return {
+            ...g,
+            ingredients: g.ingredients.map((ing, ii) =>
+              ii === ingredientIndex ? { ...ing, [field]: value } : ing
+            ),
+          };
+        }),
+      }));
     },
     []
   );
@@ -204,11 +229,12 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
   // 조리 단계 필드 업데이트
   const updateStep = useCallback(
     (index: number, field: keyof RecipeStep, value: string | number | File | null) => {
-      setFormState((prev) => {
-        const newSteps = [...prev.steps];
-        newSteps[index][field] = value as never;
-        return { ...prev, steps: newSteps };
-      });
+      setFormState((prev) => ({
+        ...prev,
+        steps: prev.steps.map((step, i) =>
+          i === index ? { ...step, [field]: value } : step
+        ),
+      }));
     },
     []
   );
@@ -283,14 +309,22 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
           }))
         : INITIAL_STATE.steps;
 
+    const major = r.majorCategory || RECIPE_DEFAULTS.MAJOR_CATEGORY;
+    const allowed =
+      RECIPE_SUBCATEGORIES_BY_MAJOR[
+        major as keyof typeof RECIPE_SUBCATEGORIES_BY_MAJOR
+      ] ?? RECIPE_SUBCATEGORIES_BY_MAJOR["한식"];
+    const rawSub = recipeSubCategoryFromApi(r.subCategory);
+    const subResolved = allowed.includes(rawSub) ? rawSub : RECIPE_DEFAULTS.SUB_CATEGORY;
+
     setFormState({
       recipeName: r.recipeName || "",
       cookTime: typeof r.cookTime === "number" ? r.cookTime : RECIPE_DEFAULTS.COOK_TIME,
       portion: typeof r.portion === "number" ? r.portion : RECIPE_DEFAULTS.PORTION,
       portionUnit: r.portionUnit || RECIPE_DEFAULTS.PORTION_UNIT,
       cookLevel: r.cookLevel || RECIPE_DEFAULTS.COOK_LEVEL,
-      majorCategory: r.majorCategory || RECIPE_DEFAULTS.MAJOR_CATEGORY,
-      subCategory: r.subCategory || "",
+      majorCategory: major,
+      subCategory: subResolved,
       recipeImg: null,
       recipeImgPreview: resolveBackendAssetUrl(r.recipeImg || ""),
       ingredientGroups,

@@ -7,8 +7,11 @@ export default function MyPageLayout({ children }: { children: ReactNode }) {
     <Suspense
       fallback={
         <div className="relative min-h-screen bg-white">
-          <div className="flex items-center justify-center min-h-screen">
-            <p className="text-gray-400">Loading...</p>
+          <div className="flex min-h-screen flex-col items-center justify-center gap-3 px-4">
+            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+            <p className="text-sm text-stone-500" role="status">
+              불러오는 중…
+            </p>
           </div>
         </div>
       }

@@ -1,5 +1,5 @@
 /**
- * 보관함 항목 추가/수정 — 이미지 필수(신규), 이름 선택
+ * 보관함 항목 추가/수정 — 사진 또는 이름 중 최소 하나
  */
 
 "use client";
@@ -27,7 +27,7 @@ interface ItemFormProps {
   onClose: () => void;
   form: ItemFormState;
   onFormChange: (field: keyof ItemFormState, value: string | number) => void;
-  /** 로컬에서 고른 새 이미지 파일 (신규 필수·수정 시 교체) */
+  /** 로컬에서 고른 새 이미지 파일 (선택) */
   pendingImageFile: File | null;
   onPendingImageFileChange: (file: File | null) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
@@ -69,7 +69,10 @@ export default function ItemForm({
   const isNew = !editingItem;
   const hasServerImage = Boolean(form.serverImageUrl?.trim());
   const hasImage = Boolean(pendingImageFile || hasServerImage);
-  const imageMissing = !hasImage;
+  const nameFilled = Boolean(form.name?.trim());
+  /** 신규: 사진 또는 이름 / 수정: (기존·신규) 사진이 있거나 이름이 있어야 저장 가능 */
+  const canSubmit = hasImage || nameFilled;
+  const requirementHint = !canSubmit;
 
   return (
     <Storage open={open} onClose={onClose}>
@@ -80,7 +83,7 @@ export default function ItemForm({
         </h3>
         <p className="text-sm text-gray-500">
           {activePlaceName
-            ? `${activePlaceName}에 보관할 품목입니다. 사진은 필수이고, 이름은 선택입니다.`
+            ? `${activePlaceName}에 보관할 품목입니다. 사진과 이름 중 최소 하나는 입력해주세요.`
             : "보관 장소를 먼저 추가해주세요."}
         </p>
       </div>
@@ -93,9 +96,7 @@ export default function ItemForm({
 
       <form className="space-y-5" onSubmit={onSubmit}>
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">
-            사진 <span className="text-red-500">*</span>
-          </label>
+          <label className="text-sm font-medium text-gray-700">사진 (선택)</label>
           <input
             type="file"
             accept="image/jpeg,image/png,image/gif,image/webp"
@@ -108,11 +109,11 @@ export default function ItemForm({
           <p className="text-xs text-gray-500">
             웹에서는 기기에서 이미지를 선택합니다. (앱에서는 촬영·갤러리와 동일 API)
           </p>
-          {imageMissing && (
+          {requirementHint && (
             <p className="text-xs text-amber-700">
               {isNew
-                ? "새 항목은 사진을 선택해야 저장할 수 있습니다."
-                : "사진이 없는 기존 항목은 새 사진을 선택해야 수정할 수 있습니다."}
+                ? "사진을 넣지 않으면 재료 이름을 입력해주세요."
+                : "사진이 없으면 이름을 입력한 뒤 저장할 수 있습니다."}
             </p>
           )}
         </div>
@@ -134,13 +135,13 @@ export default function ItemForm({
         )}
 
         <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">이름 (선택)</label>
+          <label className="text-sm font-medium text-gray-700">이름 (사진 없을 때 필수)</label>
           <input
             type="text"
             value={form.name}
             onChange={(e) => onFormChange("name", e.target.value)}
             className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm focus:border-gray-400 focus:ring-0"
-            placeholder="비워두면 사진·수량·유통기한만으로 표시"
+            placeholder="사진만 넣어도 되고, 둘 다 넣어도 됩니다"
           />
         </div>
 
@@ -186,7 +187,7 @@ export default function ItemForm({
 
         <button
           type="submit"
-          disabled={imageMissing}
+          disabled={!canSubmit}
           className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
           {editingItem ? "저장하기" : "추가하기"}

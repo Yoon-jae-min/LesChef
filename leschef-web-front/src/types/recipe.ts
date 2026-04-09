@@ -65,6 +65,8 @@ export type RecipeListItem = {
   subCategory?: string;
   recipeImg?: string;
   viewCount?: number;
+  averageRating?: number;
+  reviewCount?: number;
 };
 
 export type RecipeListResponse = {

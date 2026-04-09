@@ -133,18 +133,23 @@ export default function StoragePage() {
       }
 
       const hasServerImage = Boolean(form.serverImageUrl?.trim());
+      const trimmedName = form.name.trim();
 
       if (!editingItem) {
-        if (!pendingImageFile) {
-          throw new Error("사진을 선택해주세요.");
+        if (!pendingImageFile && !trimmedName) {
+          throw new Error("사진 또는 이름 중 하나는 입력해주세요.");
         }
-        const { imageUrl } = await uploadFoodItemImage(pendingImageFile);
+        let imageUrl: string | undefined;
+        if (pendingImageFile) {
+          const uploaded = await uploadFoodItemImage(pendingImageFile);
+          imageUrl = uploaded.imageUrl;
+        }
         await mutate(
           () =>
             addFoodItem({
               placeId: activePlaceId,
-              imageUrl,
-              name: form.name.trim() || undefined,
+              ...(imageUrl ? { imageUrl } : {}),
+              name: trimmedName || undefined,
               volume: Number(form.volume) || 0,
               unit: form.unit,
               expiryDate: form.expirate,
@@ -152,8 +157,8 @@ export default function StoragePage() {
           { revalidate: false }
         );
       } else {
-        if (!hasServerImage && !pendingImageFile) {
-          throw new Error("사진이 없는 항목은 새 사진을 선택한 뒤 저장해주세요.");
+        if (!hasServerImage && !pendingImageFile && !trimmedName) {
+          throw new Error("사진이 없을 때는 이름을 입력해주세요.");
         }
         let newImageUrl: string | undefined;
         if (pendingImageFile) {
@@ -164,7 +169,7 @@ export default function StoragePage() {
           () =>
             updateFoodItem({
               contentId: editingItem._id,
-              name: form.name.trim(),
+              name: trimmedName,
               volume: Number(form.volume) || 0,
               unit: form.unit,
               date: form.expirate,
@@ -276,9 +281,11 @@ export default function StoragePage() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium uppercase tracking-[0.4em] text-gray-400">My Fridge</p>
-          <h2 className="text-3xl font-semibold text-gray-900">보관 재료 인벤토리</h2>
-          <p className="text-sm text-gray-500">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">My Fridge</p>
+          <h2 className="mt-1 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            보관 재료 인벤토리
+          </h2>
+          <p className="mt-1 text-sm text-stone-600">
             재료가 얼마나 남았는지, 언제 써야 하는지 한눈에 확인하세요.
           </p>
         </div>
@@ -286,7 +293,7 @@ export default function StoragePage() {
           <button
             type="button"
             onClick={() => setIsPlaceModalOpen(true)}
-            className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition"
+            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             장소 추가
           </button>
@@ -294,7 +301,7 @@ export default function StoragePage() {
             type="button"
             onClick={openRenamePlaceModal}
             disabled={!activePlaceId}
-            className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gray-50 transition disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             이름 변경
           </button>
@@ -305,7 +312,7 @@ export default function StoragePage() {
               setShowDeletePlaceConfirm(true);
             }}
             disabled={!activePlaceId}
-            className="inline-flex items-center justify-center rounded-2xl border border-red-200 px-4 py-3 text-sm font-semibold text-red-600 hover:bg-red-50 transition disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center rounded-2xl border border-red-200/90 bg-white px-4 py-3 text-sm font-semibold text-red-600 shadow-sm transition hover:bg-red-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             장소 삭제
           </button>
@@ -313,7 +320,7 @@ export default function StoragePage() {
             type="button"
             onClick={() => handleOpenFoodModal()}
             disabled={!activePlaceId}
-            className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-900 hover:-translate-y-0.5 hover:bg-gray-700 hover:text-white transition disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:transform-none"
+            className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-orange-600"
           >
             재료 추가하기
           </button>
@@ -333,8 +340,13 @@ export default function StoragePage() {
       )}
 
       {isLoading && (
-        <div className="rounded-3xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center text-gray-500">
-          불러오는 중...
+        <div
+          className="flex flex-col items-center justify-center gap-3 rounded-[28px] border border-dashed border-stone-300/90 bg-white/90 px-6 py-14 text-center shadow-sm"
+          role="status"
+          aria-live="polite"
+        >
+          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+          <p className="text-sm text-stone-600">불러오는 중…</p>
         </div>
       )}
 
@@ -347,10 +359,10 @@ export default function StoragePage() {
                 key={p._id}
                 type="button"
                 onClick={() => setActivePlaceId(p._id)}
-                className={`rounded-full border px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm whitespace-nowrap transition-colors ${
+                className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs transition-colors sm:px-4 sm:py-2 sm:text-sm ${
                   isActive
-                    ? "border-gray-700 bg-gray-700 text-white"
-                    : "border-gray-300 bg-white text-gray-700 hover:bg-gray-100"
+                    ? "border-orange-600 bg-orange-600 text-white shadow-sm"
+                    : "border-stone-200 bg-white text-stone-700 shadow-sm hover:border-stone-300 hover:bg-stone-50"
                 }`}
                 aria-pressed={isActive}
               >
@@ -362,12 +374,12 @@ export default function StoragePage() {
       )}
 
       {!isLoading && !error && places.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center text-gray-500">
+        <div className="rounded-[28px] border border-dashed border-stone-300/90 bg-stone-50/60 px-6 py-12 text-center text-sm text-stone-600">
           아직 등록된 보관 장소가 없어요. 상단의{" "}
-          <span className="font-medium text-gray-700">장소 추가</span>로 시작해보세요.
+          <span className="font-medium text-stone-800">장소 추가</span>로 시작해보세요.
         </div>
       ) : !isLoading && !error && filteredItems.length === 0 ? (
-        <div className="rounded-3xl border border-dashed border-gray-300 bg-white px-6 py-12 text-center text-gray-500">
+        <div className="rounded-[28px] border border-dashed border-stone-300/90 bg-stone-50/60 px-6 py-12 text-center text-sm text-stone-600">
           아직 {activePlace?.name ?? "이 장소"}에 등록된 재료가 없어요.
         </div>
       ) : !isLoading && !error ? (
@@ -412,32 +424,32 @@ export default function StoragePage() {
       />
 
       {showDeletePlaceConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/45 p-4 backdrop-blur-[2px]">
           <div
-            className="w-full max-w-md rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]"
+            className="w-full max-w-md rounded-[28px] border border-stone-200/90 bg-white p-8 shadow-xl shadow-stone-900/10 ring-1 ring-stone-900/[0.04]"
             role="dialog"
             aria-modal="true"
             aria-labelledby="delete-place-title"
           >
             <h3
               id="delete-place-title"
-              className="text-xl font-semibold text-gray-900 text-center mb-2"
+              className="mb-2 text-center text-xl font-semibold text-stone-900"
             >
               보관 장소 삭제
             </h3>
-            <p className="text-sm text-gray-600 text-center mb-2">
-              <span className="font-semibold text-gray-900">{activePlace?.name ?? ""}</span> 장소를
+            <p className="mb-2 text-center text-sm text-stone-600">
+              <span className="font-semibold text-stone-900">{activePlace?.name ?? ""}</span> 장소를
               삭제할까요?
             </p>
             {activePlaceItemCount > 0 ? (
-              <p className="text-sm text-red-600 text-center mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3">
+              <p className="mb-6 rounded-2xl border border-red-100 bg-red-50 px-4 py-3 text-center text-sm text-red-700">
                 이 장소에 등록된 재료 <strong>{activePlaceItemCount}개</strong>도 함께 삭제됩니다.
               </p>
             ) : (
-              <p className="text-sm text-gray-500 text-center mb-6">등록된 재료가 없습니다.</p>
+              <p className="mb-6 text-center text-sm text-stone-500">등록된 재료가 없습니다.</p>
             )}
             {actionError && showDeletePlaceConfirm && (
-              <p className="text-sm text-red-600 text-center mb-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-2">
+              <p className="mb-4 rounded-2xl border border-red-100 bg-red-50 px-4 py-2 text-center text-sm text-red-600">
                 {actionError.message}
               </p>
             )}
@@ -449,7 +461,7 @@ export default function StoragePage() {
                   setShowDeletePlaceConfirm(false);
                   setActionError(null);
                 }}
-                className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 취소
               </button>
@@ -457,7 +469,7 @@ export default function StoragePage() {
                 type="button"
                 disabled={placeActionLoading}
                 onClick={() => void handleConfirmDeletePlace()}
-                className="flex-1 rounded-2xl border border-red-200 bg-red-600 px-4 py-3 text-sm font-medium text-white hover:bg-red-700 transition disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-red-600 bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 {placeActionLoading ? "삭제 중…" : "삭제하기"}
               </button>

@@ -5,6 +5,26 @@
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
 /**
+ * API(JSON)로 받은 유통기한을 화면용 `YYYY-MM-DD`로 맞춤.
+ * 서버의 `Date`는 JSON에서 `2026-07-24T00:00:00.000Z`처럼 ISO 문자열로 직렬화되며,
+ * `Z`는 UTC(그리니치) 기준임을 뜻합니다. 날짜만 쓰는 입력이면 앞 10자리가 곧 달력 날짜입니다.
+ */
+export function formatExpiryYmd(value: Date | string | null | undefined): string {
+  if (value == null || value === "") return "";
+  if (typeof value === "string") {
+    const isoDate = value.match(/^(\d{4}-\d{2}-\d{2})/);
+    if (isoDate) return isoDate[1];
+    const parsed = new Date(value);
+    if (!Number.isNaN(parsed.getTime())) return parsed.toISOString().slice(0, 10);
+    return value.slice(0, 10);
+  }
+  if (value instanceof Date && !Number.isNaN(value.getTime())) {
+    return value.toISOString().slice(0, 10);
+  }
+  return "";
+}
+
+/**
  * 유통기한까지 남은 일수 계산 (D-Day)
  * @param dateStr 날짜 문자열 (YYYY-MM-DD 형식)
  * @returns 남은 일수 (null: 유효하지 않은 날짜)

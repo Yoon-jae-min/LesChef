@@ -258,6 +258,26 @@ export const infoChg = asyncHandler(
                 return;
             }
 
+            if (req.session.user) {
+                req.session.user.nickName = nickName;
+            }
+            try {
+                await new Promise<void>((resolve, reject) => {
+                    req.session.save((err) => {
+                        if (err) reject(err);
+                        else resolve();
+                    });
+                });
+            } catch (saveErr) {
+                logger.error('프로필 수정 후 세션 저장 오류', { error: saveErr });
+                res.status(500).json({
+                    error: true,
+                    message: '프로필은 저장되었으나 세션 갱신에 실패했습니다. 다시 로그인해 주세요.',
+                    result: false,
+                });
+                return;
+            }
+
             res.status(200).json({
                 error: false,
                 message: 'success',

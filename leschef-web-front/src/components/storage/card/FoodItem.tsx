@@ -3,8 +3,9 @@
  */
 
 import Image from "next/image";
+import Link from "next/link";
 import type { FoodItem } from "@/utils/api/foods";
-import { getDday, getPriority, formatDday } from "@/utils/helpers/storageUtils";
+import { getDday, getPriority, formatDday, formatExpiryYmd } from "@/utils/helpers/storageUtils";
 import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 
 interface FoodItemProps {
@@ -14,15 +15,15 @@ interface FoodItemProps {
 }
 
 export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
-  const expirateStr =
-    typeof item.expirate === "string"
-      ? item.expirate
-      : new Date(item.expirate).toISOString().slice(0, 10);
+  const expirateStr = formatExpiryYmd(item.expirate);
   const dday =
     typeof item.daysUntilExpiry === "number" ? item.daysUntilExpiry : getDday(expirateStr);
   const priority = getPriority(dday);
 
-  const title = item.name?.trim() || "이름 없음";
+  const nameTrimmed = item.name?.trim() ?? "";
+  const title = nameTrimmed || "이름 없음";
+  const canFindRecipes = nameTrimmed.length > 0;
+  const recipeSearchHref = `/recipe/all?keyword=${encodeURIComponent(nameTrimmed)}`;
   const imgSrc = item.imageUrl ? resolveBackendAssetUrl(item.imageUrl) : "";
 
   return (
@@ -89,12 +90,24 @@ export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
         >
           삭제
         </button>
-        <button
-          type="button"
-          className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-green-500 hover:text-green-600"
-        >
-          레시피 찾기
-        </button>
+        {canFindRecipes ? (
+          <Link
+            href={recipeSearchHref}
+            className="inline-flex items-center justify-center rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-green-500 hover:text-green-600 text-center"
+          >
+            레시피 찾기
+          </Link>
+        ) : (
+          <button
+            type="button"
+            disabled
+            title="이름을 입력하면 레시피 검색에 사용할 수 있어요."
+            aria-label="이름을 입력하면 레시피 검색에 사용할 수 있어요."
+            className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed opacity-60"
+          >
+            레시피 찾기
+          </button>
+        )}
       </div>
     </div>
   );

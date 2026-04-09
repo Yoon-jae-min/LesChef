@@ -21,10 +21,10 @@ const ALLOWED_EXTENSIONS: string[] = ['.jpg', '.jpeg', '.png', '.gif', '.webp'];
 // 최대 파일 크기 (10MB)
 const MAX_FILE_SIZE: number = 10 * 1024 * 1024;
 
-type CategoryType = 'korean' | 'japanese' | 'chinese' | 'western' | 'other';
+export type RecipeListCategory = 'korean' | 'japanese' | 'chinese' | 'western' | 'other';
 
-const categoryTrans = (category: string): CategoryType => {
-    const categoryMap: Record<string, CategoryType> = {
+const categoryTrans = (category: string): RecipeListCategory => {
+    const categoryMap: Record<string, RecipeListCategory> = {
         한식: 'korean',
         일식: 'japanese',
         중식: 'chinese',
@@ -34,6 +34,11 @@ const categoryTrans = (category: string): CategoryType => {
 
     return categoryMap[category] || 'other';
 };
+
+/** 대표·단계 이미지 경로에 쓰는 카테고리 폴더명 (한글 카테고리 → 영문) */
+export function recipeListCategoryKey(majorCategory: string | undefined): RecipeListCategory {
+    return categoryTrans(majorCategory || '기타');
+}
 
 const sanitizeFileName = (fileName: string): string => {
     return fileName
@@ -104,10 +109,8 @@ const diskStorageLocal = multer.diskStorage({
                     `../../public/Image/RecipeImage/ListImg/${category}`
                 );
             } else if (file.fieldname === 'recipeStepImgFiles') {
-                destPath = path.join(
-                    __dirname,
-                    `../../public/Image/RecipeImage/InfoImg/step/${category}`
-                );
+                // 레시피 ID는 multer 시점에 없을 수 있어 임시 디렉터리에만 저장 → 컨트롤러에서 step/{카테고리}/{recipeId}/ 로 이동
+                destPath = os.tmpdir();
             } else {
                 return cb(new Error('잘못된 파일 필드명입니다.'), '');
             }
@@ -115,8 +118,10 @@ const diskStorageLocal = multer.diskStorage({
             const normalizedPath = path.normalize(destPath);
             const basePath = path.normalize(path.join(__dirname, '../../public'));
 
-            if (!normalizedPath.startsWith(basePath)) {
-                return cb(new Error('잘못된 파일 경로입니다.'), '');
+            if (file.fieldname === 'recipeImgFile') {
+                if (!normalizedPath.startsWith(basePath)) {
+                    return cb(new Error('잘못된 파일 경로입니다.'), '');
+                }
             }
 
             fs.mkdirSync(normalizedPath, { recursive: true });
@@ -141,7 +146,7 @@ const diskStorageLocal = multer.diskStorage({
             if (file.fieldname === 'recipeImgFile') {
                 fileWithPath.newPath = `/Image/RecipeImage/ListImg/${category}/${uniqueName}`;
             } else if (file.fieldname === 'recipeStepImgFiles') {
-                fileWithPath.newPath = `/Image/RecipeImage/InfoImg/step/${category}/${uniqueName}`;
+                fileWithPath.newPath = undefined;
             }
 
             cb(null, uniqueName);
@@ -176,7 +181,7 @@ const diskStorageTempForS3 = multer.diskStorage({
             if (file.fieldname === 'recipeImgFile') {
                 fileWithPath.newPath = `Image/RecipeImage/ListImg/${category}/${uniqueName}`;
             } else if (file.fieldname === 'recipeStepImgFiles') {
-                fileWithPath.newPath = `Image/RecipeImage/InfoImg/step/${category}/${uniqueName}`;
+                fileWithPath.newPath = undefined;
             }
 
             cb(null, uniqueName);

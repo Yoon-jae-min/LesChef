@@ -34,3 +34,8 @@ export type UserInfoResponse = {
   naverLinked?: boolean;
   text: boolean;
 };
+
+export type UpdateUserProfileParams = {
+  nickName: string;
+  tel?: string;
+};

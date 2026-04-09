@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useId } from "react";
 
 interface SearchBarProps {
   onSearch?: (keyword: string) => void;
@@ -16,6 +16,7 @@ export default function SearchBar({
   initialKeyword = "",
   className = "",
 }: SearchBarProps) {
+  const searchFieldId = useId();
   const [keyword, setKeyword] = useState(initialKeyword);
 
   // URL 파라미터에서 검색어 가져오기
@@ -70,15 +71,21 @@ export default function SearchBar({
 
   return (
     <div className={`relative ${className}`}>
+      <label htmlFor={searchFieldId} className="sr-only">
+        레시피 검색
+      </label>
       <input
-        type="text"
+        id={searchFieldId}
+        type="search"
         value={keyword}
         onChange={(e) => setKeyword(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="레시피 이름, 재료명, 태그로 검색..."
-        className="w-full px-4 py-2 pl-10 pr-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm text-gray-900 placeholder:text-gray-500"
+        enterKeyHint="search"
+        autoComplete="off"
+        className="w-full px-4 py-2 pl-10 pr-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 text-sm text-gray-900 placeholder:text-gray-600"
       />
-      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden>
         <svg
           viewBox="0 0 24 24"
           fill="none"
@@ -92,9 +99,10 @@ export default function SearchBar({
       </div>
       {keyword && (
         <button
+          type="button"
           onClick={handleSearchClick}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-200 rounded-r-2xl transition-colors"
-          aria-label="검색"
+          className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-200 rounded-r-2xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset"
+          aria-label="검색 실행"
         >
           <svg
             viewBox="0 0 24 24"

@@ -6,6 +6,7 @@
 "use client";
 
 import Link from "next/link";
+import { useId } from "react";
 import useSWR from "swr";
 import RecipeCard from "@/components/recipe/card/RecipeCard";
 import {
@@ -33,6 +34,7 @@ export default function RecipeSection({
   showViewAll = true,
   viewAllHref,
 }: RecipeSectionProps) {
+  const sectionTitleId = useId();
   const { data, error, isLoading } = useSWR<RecipeListResponse>(
     [`recipe-section-${sort}-${category}`, category, sort, limit],
     () => fetchRecipeList({ category, sort, limit }),
@@ -46,9 +48,11 @@ export default function RecipeSection({
 
   if (error) {
     return (
-      <section className="py-12">
+      <section className="py-12" aria-labelledby={sectionTitleId}>
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">{title}</h2>
+          <h2 id={sectionTitleId} className="text-3xl font-bold text-gray-900 mb-6">
+            {title}
+          </h2>
           <ErrorMessage error={error} showDetails={false} showAction={false} />
         </div>
       </section>
@@ -56,18 +60,30 @@ export default function RecipeSection({
   }
 
   return (
-    <section className="py-12">
+    <section
+      className="py-12"
+      aria-labelledby={sectionTitleId}
+      {...(isLoading ? { "aria-busy": true, "aria-live": "polite" as const } : {})}
+    >
       <div className="max-w-7xl mx-auto px-6">
         {/* 섹션 헤더 */}
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">{title}</h2>
+          <h2 id={sectionTitleId} className="text-3xl font-bold text-gray-900">
+            {title}
+          </h2>
           {showViewAll && recipes.length > 0 && (
             <Link
               href={viewAllHref || `/recipe/${category}?sort=${sort}`}
-              className="text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1"
+              className="text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
             >
               전체보기
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg
+                className="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                aria-hidden
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"

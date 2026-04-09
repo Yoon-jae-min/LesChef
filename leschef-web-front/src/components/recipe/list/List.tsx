@@ -15,61 +15,65 @@ import { TIMING } from "@/constants/system/timing";
 import { RECIPE_SORT_LABELS, DEFAULT_SORT_OPTION } from "@/constants/recipe/recipe";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
-/** URL 쿼리에서 레시피 검색어 추출: `keyword` 우선, 없으면 `ingredients`(쉼표 구분)를 공백으로 이어 키워드로 사용 */
+/** URL 쿼리에서 레시피 검색어 (`keyword`만 사용) */
 function keywordFromSearchParams(search: string): string {
   const params = new URLSearchParams(search);
-  const direct = params.get("keyword")?.trim();
-  if (direct) return direct;
-  const raw = params.get("ingredients");
-  if (!raw) return "";
-  return raw
-    .split(",")
-    .map((s) => s.trim())
-    .filter(Boolean)
-    .join(" ");
+  return params.get("keyword")?.trim() || "";
 }
 
 interface ListProps {
   initialCategory: string;
   initialData?: RecipeListResponse | null; // 서버에서 가져온 초기 데이터
   initialError?: string | null; // 서버에서 발생한 에러
+  /** URL·서버와 맞춘 초기 서브 카테고리(전체가 아닐 때만) */
+  initialSubCategory?: string;
 }
 
 /**
  * 레시피 목록 클라이언트 컴포넌트
  * 서버에서 가져온 초기 데이터를 사용하고, SWR로 실시간 업데이트
  */
-export default function List({ initialCategory, initialData, initialError }: ListProps) {
+function subCategoryFromSearch(search: string): string {
+  const raw = new URLSearchParams(search).get("subCategory")?.trim();
+  return raw && raw.length > 0 && raw !== "전체" ? raw : "";
+}
+
+export default function List({
+  initialCategory,
+  initialData,
+  initialError,
+  initialSubCategory,
+}: ListProps) {
   const apiCategory = RECIPE_CATEGORY_TO_API[initialCategory] || "korean";
   const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [sortOption, setSortOption] = useState<RecipeSortOption>(DEFAULT_SORT_OPTION);
+  const [subCategory, setSubCategory] = useState<string>(() => {
+    const fromServer = initialSubCategory?.trim();
+    if (fromServer && fromServer !== "전체") return fromServer;
+    return "";
+  });
 
-  // URL에서 검색어 및 정렬 옵션 가져오기
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const keyword = keywordFromSearchParams(window.location.search);
-      const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
-      setSearchKeyword(keyword);
-      setSortOption(sort);
-    }
+  const syncFromUrl = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const search = window.location.search;
+    const params = new URLSearchParams(search);
+    const keyword = keywordFromSearchParams(search);
+    const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
+    setSearchKeyword(keyword);
+    setSortOption(sort);
+    setSubCategory(subCategoryFromSearch(search));
   }, []);
 
-  // URL 변경 감지
+  // URL에서 검색어·정렬·서브 카테고리
   useEffect(() => {
-    const handlePopState = () => {
-      if (typeof window !== "undefined") {
-        const params = new URLSearchParams(window.location.search);
-        const keyword = keywordFromSearchParams(window.location.search);
-        const sort = (params.get("sort") as RecipeSortOption) || DEFAULT_SORT_OPTION;
-        setSearchKeyword(keyword);
-        setSortOption(sort);
-      }
-    };
+    syncFromUrl();
+  }, [syncFromUrl]);
 
+  useEffect(() => {
+    const handlePopState = () => syncFromUrl();
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [syncFromUrl]);
 
   // 검색 핸들러
   const handleSearch = useCallback((keyword: string) => {
@@ -77,7 +81,7 @@ export default function List({ initialCategory, initialData, initialError }: Lis
     // URL 업데이트
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      params.delete("ingredients");
+      params.delete("ingredients"); // 예전 링크 호환(무시)
       const trimmed = keyword.trim();
       if (trimmed) {
         params.set("keyword", trimmed);
@@ -112,78 +116,60 @@ export default function List({ initialCategory, initialData, initialError }: Lis
   const {
     data,
     error,
-    isLoading: loading,
+    isLoading,
   } = useSWR<RecipeListResponse>(
-    ["recipe-list", apiCategory, searchKeyword, sortOption], // 캐시 키: 카테고리, 검색어, 정렬 옵션별로 별도 캐시
+    ["recipe-list", apiCategory, searchKeyword, sortOption, subCategory],
     () =>
       fetchRecipeList({
         category: apiCategory as RecipeListParams["category"],
         keyword: searchKeyword || undefined,
         sort: sortOption,
+        subCategory: subCategory || undefined,
       }),
     {
       dedupingInterval: TIMING.FIVE_MINUTES, // 5분 동안 중복 요청 방지
       fallbackData:
-        searchKeyword || sortOption !== DEFAULT_SORT_OPTION ? undefined : initialData || undefined, // 검색어나 정렬 옵션이 있을 때는 초기 데이터 사용 안 함
+        searchKeyword ||
+        sortOption !== DEFAULT_SORT_OPTION ||
+        (subCategory && subCategory.length > 0)
+          ? undefined
+          : initialData || undefined,
     }
   );
 
-  // 서버 에러가 있으면 우선 표시
   const displayError = error || (initialError ? new Error(initialError) : null);
-  const recipes = data?.list || initialData?.list || [];
-
-  if (loading) {
-    return (
-      <div className="col-span-full flex items-center justify-center py-16 text-sm text-gray-500">
-        레시피를 불러오는 중입니다...
-      </div>
-    );
-  }
-
-  if (displayError) {
-    return (
-      <div className="col-span-full">
-        <ErrorMessage
-          error={displayError}
-          showDetails={false}
-          showAction={true}
-          onRetry={() => {
-            // SWR 재시도 (캐시 무효화 후 재요청)
-            window.location.reload();
-          }}
-        />
-      </div>
-    );
-  }
-
-  if (recipes.length === 0) {
-    return (
-      <div className="col-span-full flex items-center justify-center py-16 text-sm text-gray-500">
-        레시피가 없습니다.
-      </div>
-    );
-  }
+  /** 캐시·fallback 없이 첫 응답 대기 중이면 목록 영역만 스켈레톤 */
+  const awaitingList = isLoading && !data;
+  const recipes = data?.list ?? initialData?.list ?? [];
+  const totalCount =
+    data?.total ?? (!awaitingList ? (initialData?.total ?? 0) : undefined);
 
   return (
     <>
-      {/* 검색바 및 정렬 옵션 */}
-      <div className="col-span-full mb-4 space-y-3">
+      <div className="col-span-full mb-6 space-y-4 rounded-2xl border border-stone-200/90 bg-white/95 p-4 shadow-sm sm:p-5">
         <SearchBar onSearch={handleSearch} initialKeyword={searchKeyword} />
 
-        {/* 정렬 옵션 선택 */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-sm text-gray-600">
-            총 {data?.total || initialData?.total || 0}개의 레시피
-          </div>
-          <div className="flex items-center gap-2">
-            <label htmlFor="sort-select" className="text-sm font-medium text-gray-700">
-              정렬:
+        <div className="flex flex-col gap-4 border-t border-stone-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-sm text-stone-600">
+            총{" "}
+            {typeof totalCount === "number" ? (
+              <span className="inline-flex min-w-[2ch] items-center justify-center rounded-md bg-orange-50 px-1.5 py-0.5 font-semibold tabular-nums text-orange-800">
+                {totalCount}
+              </span>
+            ) : (
+              <span className="text-stone-400">…</span>
+            )}
+            <span className="ml-1">개의 레시피</span>
+          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <label htmlFor="sort-select" className="text-sm font-medium text-stone-700">
+              정렬
             </label>
             <select
               id="sort-select"
               value={sortOption}
               onChange={(e) => handleSortChange(e.target.value as RecipeSortOption)}
-              className="rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
+              className="min-h-10 cursor-pointer rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-800 shadow-sm transition-colors hover:border-orange-200 hover:bg-orange-50/40 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1"
             >
               {Object.entries(RECIPE_SORT_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -195,17 +181,66 @@ export default function List({ initialCategory, initialData, initialError }: Lis
         </div>
       </div>
 
-      {/* 검색 결과 표시 */}
       {searchKeyword && (
-        <div className="col-span-full mb-2 text-sm text-gray-600">
-          &quot;{searchKeyword}&quot; 검색 결과: {data?.total || 0}개
+        <div className="col-span-full mb-3 rounded-xl border border-orange-100 bg-orange-50/70 px-4 py-2.5 text-sm text-stone-700">
+          <span className="font-medium text-stone-800">&quot;{searchKeyword}&quot;</span> 검색 결과:{" "}
+          {awaitingList ? <span className="text-stone-400">…</span> : data?.total ?? 0}개
         </div>
       )}
 
-      {/* 레시피 목록 */}
-      {recipes.map((recipe) => (
-        <RecipeCard key={recipe._id || recipe.recipeName} recipe={recipe} />
-      ))}
+      {subCategory && (
+        <div className="col-span-full mb-3 rounded-xl border border-stone-200 bg-stone-50/80 px-4 py-2.5 text-sm text-stone-700">
+          서브 카테고리{" "}
+          <span className="font-semibold text-stone-900">{subCategory}</span> ·{" "}
+          {awaitingList ? <span className="text-stone-400">…</span> : (data?.total ?? 0)}개
+        </div>
+      )}
+
+      {displayError && (
+        <div className="col-span-full">
+          <ErrorMessage
+            error={displayError}
+            showDetails={false}
+            showAction={true}
+            onRetry={() => {
+              window.location.reload();
+            }}
+          />
+        </div>
+      )}
+
+      {!displayError && awaitingList && (
+        <div
+          className="col-span-full grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-8"
+          aria-busy="true"
+          aria-live="polite"
+        >
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-72 animate-pulse rounded-[28px] border border-stone-200/80 bg-gradient-to-br from-stone-100 to-stone-50"
+            />
+          ))}
+        </div>
+      )}
+
+      {!displayError && !awaitingList && recipes.length === 0 && (
+        <div className="col-span-full rounded-3xl border border-dashed border-stone-300 bg-white/90 px-6 py-14 text-center shadow-sm">
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-2xl text-orange-600" aria-hidden>🥘</div>
+          <p className="font-medium text-stone-900">조건에 맞는 레시피가 없습니다.</p>
+          <p className="mx-auto mt-2 max-w-md text-sm text-stone-600">
+            검색어를 바꾸거나, 정렬·카테고리·서브 필터를 조정해 다시 찾아보세요.
+          </p>
+        </div>
+      )}
+
+      {!displayError && !awaitingList && recipes.length > 0 && (
+        <>
+          {recipes.map((recipe) => (
+            <RecipeCard key={recipe._id || recipe.recipeName} recipe={recipe} />
+          ))}
+        </>
+      )}
     </>
   );
 }

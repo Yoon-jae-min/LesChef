@@ -10,57 +10,75 @@ interface DetailStepsProps {
   steps: RecipeDetailResponse["recipeSteps"];
 }
 
+const sectionShell =
+  "rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:p-6";
+
 export default function DetailSteps({ steps }: DetailStepsProps) {
   if (steps.length === 0) {
     return (
-      <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-        <h2 className="text-2xl font-bold text-black pb-1 mb-4 text-center">
-          <span className="border-b-2 border-gray-300 px-1">Step</span>
+      <section className={sectionShell} aria-labelledby="recipe-steps-heading">
+        <h2
+          id="recipe-steps-heading"
+          className="mb-4 text-center text-xl font-bold tracking-tight text-stone-900 sm:mb-5 sm:text-2xl"
+        >
+          <span className="inline-block border-b-2 border-orange-400/80 pb-1">조리 순서</span>
         </h2>
-        <div className="text-center text-sm text-gray-500 py-4">조리 단계가 없습니다.</div>
-      </div>
+        <p className="py-4 text-center text-sm text-stone-500">조리 단계가 없습니다.</p>
+      </section>
     );
   }
 
   return (
-    <div className="rounded-[32px] border border-gray-200 bg-white p-6 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-      <h2 className="text-2xl font-bold text-black pb-1 mb-4 text-center">
-        <span className="border-b-2 border-gray-300 px-1">Step</span>
+    <section className={sectionShell} aria-labelledby="recipe-steps-heading">
+      <h2
+        id="recipe-steps-heading"
+        className="mb-5 text-center text-xl font-bold tracking-tight text-stone-900 sm:text-2xl"
+      >
+        <span className="inline-block border-b-2 border-orange-400/80 pb-1">조리 순서</span>
       </h2>
 
-      <div className="space-y-4">
+      <ol className="space-y-4">
         {steps.map((step) => (
-          <div
+          <li
             key={step.stepNum}
-            className="border border-gray-200 rounded-2xl p-4 bg-gradient-to-br from-gray-50 to-white"
+            className="rounded-2xl border border-stone-200/80 bg-gradient-to-br from-stone-50/80 to-white p-4 shadow-sm sm:p-5"
           >
-            <div className="flex items-start space-x-6">
-              <div className="w-24 h-24 relative flex-shrink-0 rounded-xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-5">
+              <div className="relative mx-auto h-28 w-full max-w-[11rem] shrink-0 overflow-hidden rounded-xl border border-stone-200/90 bg-gradient-to-br from-stone-100 to-stone-200 sm:mx-0 sm:h-24 sm:w-24">
                 {step.stepImg && step.stepImg !== "" ? (
                   <Image
                     src={resolveBackendAssetUrl(step.stepImg)}
-                    alt={`step-${step.stepNum}`}
+                    alt={`${step.stepNum}단계 조리 이미지`}
                     fill
-                    sizes="96px"
+                    sizes="112px"
                     className="object-cover transition-opacity duration-300"
                     loading="lazy"
                     placeholder="blur"
                     blurDataURL={generateImagePlaceholder(96, 96)}
                   />
                 ) : (
-                  <span className="text-2xl text-gray-400">📷</span>
+                  <div className="flex h-full w-full items-center justify-center">
+                    <span className="text-2xl text-stone-400" aria-hidden>
+                      📷
+                    </span>
+                  </div>
                 )}
               </div>
-              <div className="flex-1">
-                <h3 className="text-lg font-semibold text-black mb-3">Step. {step.stepNum}</h3>
-                <div className="w-full min-h-[60px] border-2 border-dashed border-gray-300 rounded-xl flex items-center px-4 bg-white">
-                  <span className="text-gray-700 text-base">{step.stepWay || "내용"}</span>
+              <div className="min-w-0 flex-1">
+                <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold text-stone-900">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-orange-800">
+                    {step.stepNum}
+                  </span>
+                  <span>단계 {step.stepNum}</span>
+                </h3>
+                <div className="min-h-[3.5rem] rounded-xl border border-dashed border-stone-200 bg-white px-4 py-3">
+                  <p className="text-base leading-relaxed text-stone-700">{step.stepWay || "내용"}</p>
                 </div>
               </div>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
-    </div>
+      </ol>
+    </section>
   );
 }

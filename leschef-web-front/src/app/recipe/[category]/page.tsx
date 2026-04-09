@@ -7,9 +7,18 @@ import { RECIPE_CATEGORY_TO_API } from "@/constants/navigation/categories";
  * 서버에서 초기 데이터를 가져와서 렌더링
  * 클라이언트 컴포넌트는 실시간 업데이트를 위해 사용
  */
-export default async function CategoryPage({ params }: { params: Promise<{ category: string }> }) {
+export default async function CategoryPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ category: string }>;
+  searchParams?: Promise<{ subCategory?: string }>;
+}) {
   // Next.js 15: params는 Promise이므로 await 필요
   const { category } = await params;
+  const sp = (await searchParams) ?? {};
+  const subCategoryParam = typeof sp.subCategory === "string" ? sp.subCategory.trim() : "";
+
   const categoryKey = category in RECIPE_CATEGORY_TO_API ? category : "korean";
   const apiCategory = RECIPE_CATEGORY_TO_API[categoryKey] || "korean";
 
@@ -20,6 +29,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   try {
     initialData = await getRecipeListServer({
       category: apiCategory as "all" | "korean" | "japanese" | "chinese" | "western" | "other",
+      ...(subCategoryParam ? { subCategory: subCategoryParam } : {}),
     });
   } catch (err) {
     if (process.env.NODE_ENV === "development") {
@@ -29,8 +39,13 @@ export default async function CategoryPage({ params }: { params: Promise<{ categ
   }
 
   return (
-    <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      <List initialCategory={categoryKey} initialData={initialData} initialError={error} />
+    <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 lg:gap-8">
+      <List
+        initialCategory={categoryKey}
+        initialData={initialData}
+        initialError={error}
+        initialSubCategory={subCategoryParam || undefined}
+      />
     </section>
   );
 }

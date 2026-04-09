@@ -3,9 +3,9 @@
 import Top from "@/components/common/navigation/Top";
 import TabNavigation from "@/components/common/navigation/TabNavigation";
 import FilterTabs from "@/components/common/ui/FilterTabs";
-import { usePathname } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
-import { checkLoginStatus } from "@/utils/helpers/authUtils";
+import { RECIPE_SUBCATEGORIES_BY_MAJOR } from "@/constants/recipe/recipe";
+import { usePathname, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 
 const CUISINE_TABS = ["전체", "한식", "일식", "중식", "양식", "기타"] as const;
 const CATEGORY_TO_DISPLAY: Record<string, string> = {
@@ -28,51 +28,81 @@ const DISPLAY_TO_CATEGORY: Record<string, string> = {
 
 const CUISINE_TO_SUBFILTERS: Record<(typeof CUISINE_TABS)[number], readonly string[]> = {
   전체: [],
-  한식: ["전체", "국, 찌개", "밥, 면", "반찬", "기타"],
-  일식: ["전체", "국, 전골", "면", "밥", "기타"],
-  중식: ["전체", "튀김, 찜", "면", "밥", "기타"],
-  양식: ["전체", "스프, 스튜", "면", "빵", "기타"],
+  한식: RECIPE_SUBCATEGORIES_BY_MAJOR.한식,
+  일식: RECIPE_SUBCATEGORIES_BY_MAJOR.일식,
+  중식: RECIPE_SUBCATEGORIES_BY_MAJOR.중식,
+  양식: RECIPE_SUBCATEGORIES_BY_MAJOR.양식,
   기타: [],
 } as const;
 
 export default function RecipeCategoryLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeSub, setActiveSub] = useState<string>("전체");
-  const [matchMode, setMatchMode] = useState<"bestMatch" | "needFew">("bestMatch");
-  const [includeMyInventory, setIncludeMyInventory] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  // Get current category from pathname
   const currentCategory = pathname.split("/").pop() || "korean";
   const currentDisplay = CATEGORY_TO_DISPLAY[currentCategory] || "한식";
   const subFiltersForActive =
     CUISINE_TO_SUBFILTERS[currentDisplay as keyof typeof CUISINE_TO_SUBFILTERS] || [];
 
-  useEffect(() => {
-    const loggedIn =
-      typeof window !== "undefined" && localStorage.getItem("leschef_is_logged_in") === "true";
-    setIsLoggedIn(loggedIn);
-    setIncludeMyInventory(loggedIn);
+  const syncSubFromUrl = useCallback(() => {
+    if (typeof window === "undefined") return;
+    const raw = new URLSearchParams(window.location.search).get("subCategory")?.trim();
+    setActiveSub(raw && raw.length > 0 ? raw : "전체");
   }, []);
-  const modeLabel = useMemo(
-    () =>
-      matchMode === "bestMatch" ? "내 재료와 많이 겹치는 순" : "부족 재료 1~2개만 사면 되는 순",
-    [matchMode]
-  );
+
+  /** URL ?subCategory= 과 탭 동기화 (카테고리 변경·뒤로가기 등) */
+  useEffect(() => {
+    syncSubFromUrl();
+  }, [pathname, syncSubFromUrl]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onPop = () => syncSubFromUrl();
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [syncSubFromUrl]);
+
+  const handleSubChange = useCallback((sub: string) => {
+    setActiveSub(sub);
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    if (sub === "전체") {
+      params.delete("subCategory");
+    } else {
+      params.set("subCategory", sub);
+    }
+    const base = window.location.pathname;
+    const qs = params.toString();
+    window.history.pushState({}, "", qs ? `${base}?${qs}` : base);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+  }, []);
 
   const handleTabChange = (tab: string) => {
+    if (tab === currentDisplay) return;
     const newCategory = DISPLAY_TO_CATEGORY[tab];
     if (newCategory) {
-      window.location.href = `/recipe/${newCategory}`;
+      router.push(`/recipe/${newCategory}`);
     }
   };
 
   return (
     <div className="min-h-screen bg-white">
       <Top />
-      <main className="max-w-6xl mx-auto px-8 py-8">
-        {/* 상단 카테고리 탭 */}
-        <div className="mb-6">
+      <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
+        <header className="mb-8 text-center sm:mb-10">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+            Recipe
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+            레시피 찾기
+          </h1>
+          <p className="mx-auto mt-2 max-w-xl text-sm text-stone-600">
+            요리 종류와 세부 카테고리로 빠르게 골라보세요.
+          </p>
+        </header>
+
+        <div className="mb-8 sm:mb-10">
           <TabNavigation
             tabs={[...CUISINE_TABS]}
             activeTab={currentDisplay}
@@ -80,87 +110,20 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
           />
         </div>
 
-        {/* 서브 필터 pill */}
         {subFiltersForActive.length > 0 ? (
-          <div className="mb-6 rounded-3xl border border-gray-200 bg-gray-50 px-4 py-4">
+          <div className="mb-8 rounded-3xl border border-stone-200/80 bg-white/90 px-4 py-4 shadow-sm backdrop-blur-sm sm:px-5 sm:py-5">
+            <p className="sr-only">세부 카테고리 필터</p>
             <FilterTabs
               items={[...subFiltersForActive]}
               activeItem={activeSub}
-              onItemChange={setActiveSub}
+              onItemChange={handleSubChange}
               variant="default"
             />
           </div>
         ) : (
-          <div className="h-4" />
+          <div className="h-2 sm:h-4" aria-hidden />
         )}
 
-        <div className="mb-8 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">
-            Smart Filter
-          </p>
-          <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2 className="text-2xl font-semibold text-gray-900">내 재료 기반 레시피 추천</h2>
-            <span className="text-xs text-gray-500">
-              {isLoggedIn
-                ? "보관 재료 정보를 활용해 정렬할 수 있습니다."
-                : "로그인 후 매칭 옵션을 이용해 보세요."}
-            </span>
-          </div>
-        </div>
-
-        {/* 정렬/옵션 툴바 */}
-        <section className="mb-8 space-y-4 rounded-3xl border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
-            <div className="flex flex-wrap gap-2">
-              <button
-                type="button"
-                onClick={() => setMatchMode("bestMatch")}
-                disabled={!isLoggedIn}
-                className={`rounded-2xl border px-4 py-2 text-xs font-semibold transition ${
-                  matchMode === "bestMatch"
-                    ? "border-gray-300 bg-gray-700 text-white"
-                    : "border-gray-200 text-gray-600 hover:border-gray-400 hover:text-black"
-                } ${!isLoggedIn ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                내 재료 매칭 우선
-              </button>
-              <button
-                type="button"
-                onClick={() => setMatchMode("needFew")}
-                disabled={!isLoggedIn}
-                className={`rounded-2xl border px-4 py-2 text-xs font-semibold transition ${
-                  matchMode === "needFew"
-                    ? "border-gray-300 bg-gray-700 text-white"
-                    : "border-gray-200 text-gray-600 hover:border-gray-400 hover:text-black"
-                } ${!isLoggedIn ? "opacity-50 cursor-not-allowed" : ""}`}
-              >
-                부족 재료 1~2개
-              </button>
-            </div>
-            <p className="text-xs text-gray-500">
-              정렬 기준: <span className="font-semibold text-gray-900">{modeLabel}</span>
-            </p>
-          </div>
-
-          <label className="inline-flex items-center gap-2 text-xs font-medium text-gray-600">
-            <input
-              type="checkbox"
-              className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
-              checked={includeMyInventory}
-              onChange={() => setIncludeMyInventory((prev) => !prev)}
-              disabled={!isLoggedIn}
-            />
-            내 보관 재료와 비교
-          </label>
-
-          {!isLoggedIn && (
-            <div className="rounded-2xl border border-dashed border-gray-300 bg-gray-50 px-4 py-3 text-xs text-gray-500">
-              로그인하면 내 보관 재료를 기반으로 한 맞춤 정렬 옵션을 사용할 수 있어요.
-            </div>
-          )}
-        </section>
-
-        {/* 카테고리별 컨텐츠 */}
         {children}
       </main>
     </div>

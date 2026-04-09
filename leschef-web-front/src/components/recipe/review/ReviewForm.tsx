@@ -80,18 +80,22 @@ export default function ReviewForm({
   };
 
   return (
-    <div className="mb-6 rounded-2xl border border-gray-200 bg-gray-50 p-4">
-      <div className="flex items-center justify-between mb-3">
-        <span className="text-sm font-medium text-gray-800">나의 평점</span>
-        <div className="flex items-center gap-1">
+    <div className="mb-6 rounded-2xl border border-stone-200/90 bg-stone-50/60 p-4 sm:p-5">
+      <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <span className="text-sm font-semibold text-stone-800">나의 평점</span>
+        <div className="flex items-center gap-0.5" role="group" aria-label="별점 선택 1에서 5까지">
           {[1, 2, 3, 4, 5].map((star) => (
             <button
               key={star}
               type="button"
               onClick={() => isLoggedIn && setMyRating(star)}
-              className="text-xl focus:outline-none"
+              disabled={!isLoggedIn || isSubmitting}
+              aria-label={`${star}점`}
+              className="rounded-lg p-1 text-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
             >
-              <span className={star <= myRating ? "text-yellow-400" : "text-gray-300"}>★</span>
+              <span className={star <= myRating ? "text-amber-400" : "text-stone-300"} aria-hidden>
+                ★
+              </span>
             </button>
           ))}
         </div>
@@ -106,17 +110,17 @@ export default function ReviewForm({
         }
         disabled={!isLoggedIn || isSubmitting}
         maxLength={1000}
-        className="w-full min-h-[80px] px-3 py-2 text-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-400 bg-white disabled:bg-gray-100"
+        className="min-h-[88px] w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 disabled:bg-stone-100"
       />
-      <div className="mt-3 flex items-center justify-between">
-        <span className="text-xs text-gray-400">{myComment.length} / 1000자</span>
-        <div className="flex items-center gap-2">
+      <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <span className="text-xs text-stone-400">{myComment.length} / 1000자</span>
+        <div className="flex flex-wrap items-center justify-end gap-2">
           {myReview && (
             <button
               type="button"
               onClick={handleDelete}
               disabled={isSubmitting}
-              className="px-3 py-1.5 text-xs rounded-xl border border-gray-300 text-gray-600 hover:bg-gray-100 disabled:opacity-60"
+              className="rounded-xl border border-stone-200 bg-white px-3 py-2 text-xs font-medium text-stone-600 transition hover:bg-stone-50 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2"
             >
               내 리뷰 삭제
             </button>
@@ -125,7 +129,7 @@ export default function ReviewForm({
             type="button"
             onClick={handleSubmit}
             disabled={!isLoggedIn || isSubmitting || myRating === 0}
-            className="px-4 py-1.5 text-xs rounded-xl bg-orange-500 text-white font-medium hover:bg-orange-600 disabled:opacity-60 disabled:cursor-not-allowed"
+            className="rounded-xl bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
           >
             {myReview ? "리뷰 수정" : "리뷰 등록"}
           </button>

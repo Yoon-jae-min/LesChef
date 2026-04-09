@@ -36,11 +36,11 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
     <Link
       key={recipeId || recipe.recipeName}
       href={recipeId ? `/recipe/detail?id=${recipeId}` : "/recipe"}
-      className="group flex flex-col rounded-[32px] border border-gray-200 bg-white p-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)] transition hover:-translate-y-1 hover:shadow-[8px_8px_0_rgba(0,0,0,0.05)] focus:outline-none focus:ring-2 focus:ring-gray-300"
+      className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition duration-200 hover:-translate-y-0.5 hover:border-orange-200/80 hover:shadow-md hover:shadow-orange-900/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
       aria-label={`${recipe.recipeName} 상세로 이동`}
     >
-      <div className="relative overflow-hidden rounded-[24px] border border-gray-200 bg-gray-50">
-        <div className="aspect-[5/3] w-full relative bg-gradient-to-br from-white to-gray-100">
+      <div className="relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-stone-50">
+        <div className="relative aspect-[5/3] w-full bg-gradient-to-br from-white to-stone-100">
           {recipe.recipeImg ? (
             <Image
               src={recipeImgUrl}
@@ -63,8 +63,10 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
               }}
             />
           ) : (
-            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs text-gray-400">
-              <span className="text-3xl">📷</span>
+            <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-xs text-stone-400">
+              <span className="text-3xl" aria-hidden>
+                📷
+              </span>
               <span>레시피 이미지</span>
             </div>
           )}
@@ -72,44 +74,50 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       </div>
 
       {isLoggedIn ? (
-        <div className="relative mt-4 flex items-center justify-between rounded-[24px] border border-gray-200 bg-gradient-to-br from-gray-50 to-gray-100 px-5 py-6">
-          <span className="text-4xl">🍳</span>
-          <div className="text-right text-black">
-            <p className="text-xs uppercase tracking-[0.4em] text-gray-600">View</p>
-            <p className="text-3xl font-semibold">{recipe.viewCount ?? 0}</p>
-            <p className="text-xs text-gray-700">조회수</p>
+        <div className="relative mt-4 flex items-center justify-between rounded-[22px] border border-stone-200/90 bg-gradient-to-br from-orange-50/50 via-white to-stone-50 px-5 py-5">
+          <span className="text-4xl" aria-hidden>
+            🍳
+          </span>
+          <div className="text-right text-stone-900">
+            <p className="text-xs uppercase tracking-[0.35em] text-stone-500">View</p>
+            <p className="text-3xl font-semibold tabular-nums">{recipe.viewCount ?? 0}</p>
+            <p className="text-xs text-stone-600">조회수</p>
           </div>
-          <div className="absolute inset-0 rounded-[24px] border border-gray-200/30" />
+          <div className="pointer-events-none absolute inset-0 rounded-[22px] border border-white/60" />
         </div>
       ) : (
-        <div className="mt-4 rounded-[24px] border border-dashed border-gray-200 bg-gray-50 px-5 py-4 text-xs text-gray-500">
+        <div className="mt-4 rounded-[22px] border border-dashed border-stone-200 bg-stone-50/80 px-5 py-4 text-xs text-stone-600">
           로그인하면 내 재료와의 매칭 정도를 확인할 수 있어요.
         </div>
       )}
 
-      <div className="mt-4 flex items-center justify-between text-xs text-gray-500">
-        <span className="rounded-full bg-gray-100 px-3 py-1 font-medium text-gray-600">
+      <div className="mt-4 flex items-center justify-between text-xs text-stone-500">
+        <span className="rounded-full bg-stone-100 px-3 py-1 font-medium text-stone-700">
           {levelLabel}
         </span>
-        <span className="font-medium text-gray-800">{cookTimeLabel}</span>
+        <span className="font-medium text-stone-800">{cookTimeLabel}</span>
       </div>
 
-      <h3 className="mt-3 text-xl font-semibold text-gray-900">{recipe.recipeName}</h3>
+      <h3 className="mt-3 text-lg font-semibold leading-snug text-stone-900 sm:text-xl">
+        {recipe.recipeName}
+      </h3>
 
       <div className="mt-2 flex flex-wrap gap-2">
         {tags.map((tag) => (
           <span
             key={tag}
-            className="rounded-full border border-gray-200 px-3 py-1 text-xs text-gray-600"
+            className="rounded-full border border-stone-200/90 bg-stone-50/50 px-3 py-1 text-xs text-stone-600"
           >
             #{tag}
           </span>
         ))}
       </div>
 
-      <div className="mt-4 flex items-center justify-between text-[11px] text-gray-500">
+      <div className="mt-4 flex items-center justify-between text-[11px] text-stone-500">
         <span>레시피 상세 보기</span>
-        <span className="font-semibold text-gray-800">→</span>
+        <span className="font-semibold text-orange-600 transition-colors group-hover:text-orange-700" aria-hidden>
+          →
+        </span>
       </div>
     </Link>
   );

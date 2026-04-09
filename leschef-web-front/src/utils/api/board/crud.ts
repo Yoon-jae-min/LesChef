@@ -14,7 +14,7 @@ const API_BASE_URL = API_CONFIG.BOARD_API;
  * @returns Promise<Response>
  */
 export const createBoard = async (data: BoardWriteData): Promise<Response> => {
-  const { title, content } = data;
+  const { title, content, boardType } = data;
 
   if (!title || !content) {
     throw new Error("제목과 내용은 필수입니다.");
@@ -29,6 +29,7 @@ export const createBoard = async (data: BoardWriteData): Promise<Response> => {
       body: JSON.stringify({
         title,
         content,
+        ...(boardType ? { boardType } : {}),
       }),
       credentials: "include", // 세션 쿠키를 포함하기 위해
     });

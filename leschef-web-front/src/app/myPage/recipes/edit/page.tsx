@@ -7,6 +7,7 @@ import Top from "@/components/common/navigation/Top";
 import { useEffect, useState } from "react";
 import { fetchRecipeForEdit, updateRecipe } from "@/utils/api/recipeApi";
 import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
+import { recipeSubCategoryForApi } from "@/constants/recipe/recipe";
 import { reportActionFailure } from "@/utils/helpers/actionFailure";
 import { useRecipeForm } from "@/hooks/useRecipeForm";
 import BasicInfo from "@/components/recipe/form/BasicInfo";
@@ -88,7 +89,7 @@ function RecipeEditPageContent() {
           portionUnit: formState.portionUnit,
           cookLevel: formState.cookLevel,
           majorCategory: formState.majorCategory,
-          subCategory: formState.subCategory,
+          subCategory: recipeSubCategoryForApi(formState.subCategory),
           recipeImg: formState.recipeImgPreview || "",
           _id: recipeId,
         },
@@ -118,21 +119,29 @@ function RecipeEditPageContent() {
   return (
     <div className="min-h-screen bg-white">
       <Top />
-      <main className="max-w-4xl mx-auto px-8 py-12">
-        <div className="mb-8 rounded-[32px] border border-gray-200 bg-white px-6 py-5 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-          <p className="text-xs font-medium uppercase tracking-[0.4em] text-gray-400">
-            Recipe Edit
+      <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
+        <header className="mb-8 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:px-6 sm:py-6">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+            Recipe
           </p>
-          <h1 className="text-2xl font-semibold text-gray-900 mt-1">레시피 수정</h1>
-          <p className="text-xs text-gray-500 mt-1">레시피 정보를 수정해보세요.</p>
-        </div>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
+            레시피 수정
+          </h1>
+          <p className="mt-1.5 text-sm text-stone-600">레시피 정보를 수정해 보세요.</p>
+        </header>
 
         {!loadReady ? (
-          <div className="flex min-h-[40vh] items-center justify-center text-sm text-gray-500">
-            레시피를 불러오는 중입니다…
+          <div className="flex min-h-[40vh] flex-col items-center justify-center gap-3 text-sm text-stone-600">
+            <div
+              className="h-8 w-8 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500"
+              aria-hidden
+            />
+            <p role="status" aria-live="polite">
+              레시피를 불러오는 중입니다…
+            </p>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="space-y-8">
+          <form onSubmit={handleSubmit} className="space-y-8 sm:space-y-10">
             <BasicInfo
               recipeName={formState.recipeName}
               cookTime={formState.cookTime}
@@ -171,7 +180,7 @@ function RecipeEditPageContent() {
               onImageChange={(e, stepIndex) => handleImageChange(e, "step", stepIndex)}
             />
 
-            <div className="flex items-center justify-end gap-4">
+            <div className="flex flex-col-reverse gap-3 border-t border-stone-200/80 pt-8 sm:flex-row sm:items-center sm:justify-end sm:gap-4">
               <button
                 type="button"
                 onClick={() => {
@@ -179,13 +188,13 @@ function RecipeEditPageContent() {
                     window.history.back();
                   }
                 }}
-                className="rounded-2xl border border-gray-200 px-6 py-3 text-sm font-semibold text-gray-700 hover:border-gray-400 hover:bg-gray-50 transition"
+                className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-stone-400 focus-visible:ring-offset-2"
               >
                 취소
               </button>
               <button
                 type="submit"
-                className="rounded-2xl bg-gray-700 px-6 py-3 text-sm font-semibold text-white hover:bg-gray-800 transition"
+                className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 수정 완료
               </button>

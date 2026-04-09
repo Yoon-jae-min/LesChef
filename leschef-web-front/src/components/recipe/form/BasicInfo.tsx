@@ -3,8 +3,8 @@
  * 레시피 작성/수정 페이지에서 공통으로 사용
  */
 
-import Image from "next/image";
-import { RECIPE_OPTIONS } from "@/constants/recipe/recipe";
+import { useEffect } from "react";
+import { RECIPE_OPTIONS, RECIPE_SUBCATEGORIES_BY_MAJOR } from "@/constants/recipe/recipe";
 
 interface BasicInfoProps {
   recipeName: string;
@@ -43,12 +43,37 @@ export default function BasicInfo({
   onSubCategoryChange,
   onImageChange,
 }: BasicInfoProps) {
+  const subCategoryOptions =
+    RECIPE_SUBCATEGORIES_BY_MAJOR[
+      majorCategory as keyof typeof RECIPE_SUBCATEGORIES_BY_MAJOR
+    ] ?? RECIPE_SUBCATEGORIES_BY_MAJOR["한식"];
+
+  useEffect(() => {
+    const opts =
+      RECIPE_SUBCATEGORIES_BY_MAJOR[
+        majorCategory as keyof typeof RECIPE_SUBCATEGORIES_BY_MAJOR
+      ] ?? RECIPE_SUBCATEGORIES_BY_MAJOR["한식"];
+    if (!opts.includes(subCategory)) {
+      onSubCategoryChange(opts[0] ?? "전체");
+    }
+  }, [majorCategory, subCategory, onSubCategoryChange]);
+
+  const fieldBase =
+    "w-full rounded-2xl border px-4 py-3 text-sm text-stone-900 placeholder:text-stone-500 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
+  const fieldNormal = `${fieldBase} border-stone-200 focus-visible:border-orange-400 focus-visible:ring-orange-500`;
+  const fieldError = `${fieldBase} border-red-300 focus-visible:border-red-500 focus-visible:ring-red-400`;
+
   return (
-    <section className="rounded-[32px] border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-      <h2 className="text-xl font-semibold text-gray-900 mb-6">기본 정보</h2>
+    <section
+      className="rounded-[28px] border border-stone-200/90 bg-white/95 p-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:p-8"
+      aria-labelledby="recipe-form-basic-heading"
+    >
+      <h2 id="recipe-form-basic-heading" className="mb-6 text-xl font-bold tracking-tight text-stone-900">
+        기본 정보
+      </h2>
       <div className="space-y-5">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="mb-2 block text-sm font-medium text-stone-700">
             레시피 이름 <span className="text-red-500">*</span>
           </label>
           <input
@@ -56,11 +81,7 @@ export default function BasicInfo({
             value={recipeName}
             onChange={(e) => onRecipeNameChange(e.target.value)}
             placeholder="예) 김치볶음밥"
-            className={`w-full rounded-2xl border px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:ring-0 ${
-              recipeName.trim().length === 0
-                ? "border-red-300 focus:border-red-500"
-                : "border-gray-200 focus:border-gray-400"
-            }`}
+            className={recipeName.trim().length === 0 ? fieldError : fieldNormal}
             required
           />
           {recipeName.trim().length === 0 && (
@@ -68,24 +89,24 @@ export default function BasicInfo({
           )}
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">조리 시간 (분)</label>
+            <label className="mb-2 block text-sm font-medium text-stone-700">조리 시간 (분)</label>
             <input
               type="number"
               value={cookTime}
               onChange={(e) => onCookTimeChange(Number(e.target.value))}
               min={1}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:border-gray-400 focus:ring-0"
+              className={fieldNormal}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">난이도</label>
+            <label className="mb-2 block text-sm font-medium text-stone-700">난이도</label>
             <select
               value={cookLevel}
               onChange={(e) => onCookLevelChange(e.target.value)}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:border-gray-400 focus:ring-0"
+              className={`${fieldNormal} cursor-pointer bg-white`}
             >
               {RECIPE_OPTIONS.COOK_LEVELS.map((level) => (
                 <option key={level} value={level}>
@@ -96,24 +117,24 @@ export default function BasicInfo({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">분량</label>
+            <label className="mb-2 block text-sm font-medium text-stone-700">분량</label>
             <input
               type="number"
               value={portion}
               onChange={(e) => onPortionChange(Number(e.target.value))}
               min={1}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:border-gray-400 focus:ring-0"
+              className={fieldNormal}
               required
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">단위</label>
+            <label className="mb-2 block text-sm font-medium text-stone-700">단위</label>
             <select
               value={portionUnit}
               onChange={(e) => onPortionUnitChange(e.target.value)}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:border-gray-400 focus:ring-0"
+              className={`${fieldNormal} cursor-pointer bg-white`}
             >
               {RECIPE_OPTIONS.PORTION_UNITS.map((unit) => (
                 <option key={unit} value={unit}>
@@ -124,13 +145,21 @@ export default function BasicInfo({
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">카테고리</label>
+            <label className="mb-2 block text-sm font-medium text-stone-700">카테고리</label>
             <select
               value={majorCategory}
-              onChange={(e) => onMajorCategoryChange(e.target.value)}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:border-gray-400 focus:ring-0"
+              onChange={(e) => {
+                const nextMajor = e.target.value;
+                onMajorCategoryChange(nextMajor);
+                const subs =
+                  RECIPE_SUBCATEGORIES_BY_MAJOR[
+                    nextMajor as keyof typeof RECIPE_SUBCATEGORIES_BY_MAJOR
+                  ] ?? RECIPE_SUBCATEGORIES_BY_MAJOR["한식"];
+                onSubCategoryChange(subs[0] ?? "전체");
+              }}
+              className={`${fieldNormal} cursor-pointer bg-white`}
             >
               {RECIPE_OPTIONS.MAJOR_CATEGORIES.map((category) => (
                 <option key={category} value={category}>
@@ -140,33 +169,39 @@ export default function BasicInfo({
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">세부 카테고리</label>
-            <input
-              type="text"
+            <label className="mb-2 block text-sm font-medium text-stone-700">세부 카테고리</label>
+            <select
               value={subCategory}
               onChange={(e) => onSubCategoryChange(e.target.value)}
-              placeholder="예) 볶음, 찜, 구이"
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
-            />
+              className={`${fieldNormal} cursor-pointer bg-white`}
+            >
+              {subCategoryOptions.map((sub) => (
+                <option key={sub} value={sub}>
+                  {sub}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">대표 이미지</label>
+          <label className="mb-2 block text-sm font-medium text-stone-700">대표 이미지</label>
           <div className="space-y-3">
             {recipeImgPreview ? (
-              <div className="relative w-full h-64 rounded-2xl border border-gray-200 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100">
+              <div className="relative h-64 w-full overflow-hidden rounded-2xl border border-stone-200/90 bg-gradient-to-br from-stone-50 to-stone-100">
                 {/* 박스 크기는 고정, 이미지가 비율 유지하며 안에 다 들어오도록 */}
                 <img
                   src={recipeImgPreview}
                   alt="레시피 미리보기"
-                  className="w-full h-full object-contain block"
+                  className="block h-full w-full object-contain"
                 />
               </div>
             ) : (
-              <div className="relative w-full h-64 rounded-2xl border-2 border-dashed border-gray-300 overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 flex items-center justify-center">
-                <div className="flex flex-col items-center justify-center gap-2 text-gray-400">
-                  <span className="text-4xl">📷</span>
+              <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-stone-300 bg-gradient-to-br from-stone-50 to-orange-50/30">
+                <div className="flex flex-col items-center justify-center gap-2 text-stone-400">
+                  <span className="text-4xl" aria-hidden>
+                    📷
+                  </span>
                   <span className="text-sm">이미지를 업로드하세요</span>
                 </div>
               </div>
@@ -175,7 +210,7 @@ export default function BasicInfo({
               type="file"
               accept="image/*"
               onChange={onImageChange}
-              className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 focus:border-gray-400 focus:ring-0"
+              className={`${fieldNormal} file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-orange-800 hover:file:bg-orange-100`}
             />
           </div>
         </div>

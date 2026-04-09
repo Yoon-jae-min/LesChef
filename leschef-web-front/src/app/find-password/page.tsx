@@ -170,7 +170,7 @@ function FindPasswordPageContent() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
                     autoComplete="email"
                   />
@@ -183,7 +183,7 @@ function FindPasswordPageContent() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="가입 시 등록한 이름"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
                     autoComplete="name"
                   />
@@ -196,7 +196,7 @@ function FindPasswordPageContent() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="010-1234-5678"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
                     autoComplete="tel"
                   />
@@ -227,7 +227,7 @@ function FindPasswordPageContent() {
                     value={newPwd}
                     onChange={(e) => setNewPwd(e.target.value)}
                     placeholder="영문+숫자, 8자 이상"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
                     autoComplete="new-password"
                   />
@@ -240,7 +240,7 @@ function FindPasswordPageContent() {
                     value={newPwd2}
                     onChange={(e) => setNewPwd2(e.target.value)}
                     placeholder="한 번 더 입력"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-gray-400 focus:ring-0"
+                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
                     autoComplete="new-password"
                   />
