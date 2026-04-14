@@ -159,6 +159,37 @@ export const validateEmailOrId = (value: unknown): boolean => {
 };
 
 /**
+ * 로그인용 아이디 (이메일 아님): 영문·숫자만, 3~50자, @ 불가
+ */
+export const validateLoginId = (value: unknown): boolean => {
+    if (!value || typeof value !== 'string') {
+        return false;
+    }
+    const v = value.trim();
+    if (v.length < 3 || v.length > 50) {
+        return false;
+    }
+    if (v.includes('@')) {
+        return false;
+    }
+    return /^[a-zA-Z0-9]+$/.test(v);
+};
+
+/**
+ * 이메일 주소 형식 (회원가입 이메일 필드용)
+ */
+export const isValidEmailAddress = (value: unknown): boolean => {
+    if (!value || typeof value !== 'string') {
+        return false;
+    }
+    const v = value.trim();
+    if (v.length < 5 || v.length > 254) {
+        return false;
+    }
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+};
+
+/**
  * 비밀번호 강도 검증
  */
 export const validatePassword = (password: unknown): { valid: boolean; message?: string } => {

@@ -6,13 +6,14 @@ export const dynamic = "force-dynamic";
 import Link from "next/link";
 import Top from "@/components/common/navigation/Top";
 import { useState, useEffect } from "react";
-import { signup, sendVerificationCode, verifyEmailCode } from "@/utils/api/auth";
+import { signup, checkIdDuplicate, sendVerificationCode, verifyEmailCode } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 
-const isDev = process.env.NODE_ENV !== "production";
+const LOGIN_ID_REGEX = /^[a-zA-Z0-9]{3,50}$/;
 
 export default function SignupPage() {
+  const [loginId, setLoginId] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,6 +31,10 @@ export default function SignupPage() {
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const [verificationError, setVerificationError] = useState<string | null>(null);
+
+  const [availableIdTrim, setAvailableIdTrim] = useState<string | null>(null);
+  const [idAvailabilityNote, setIdAvailabilityNote] = useState<string | null>(null);
+  const [isIdChecking, setIsIdChecking] = useState(false);
 
   // URL 파라미터에서 return 경로 가져오기
   useEffect(() => {
@@ -51,11 +56,6 @@ export default function SignupPage() {
 
   // 이메일 인증 코드 발송
   const handleSendVerificationCode = async () => {
-    // 개발 모드에서는 실제 발송 기능 비활성화
-    if (isDev) {
-      setVerificationError("개발 중에는 이메일 인증 없이 회원가입 가능합니다.");
-      return;
-    }
     if (!email) {
       setVerificationError("이메일을 입력해주세요.");
       return;
@@ -114,9 +114,29 @@ export default function SignupPage() {
   const handleSignup = async () => {
     setError(null);
 
-    // 이메일 인증 확인
-    if (!isDev && !isEmailVerified) {
+    // 이메일 인증 확인 (로컬 npm run dev 포함 동일)
+    if (!isEmailVerified) {
       setError("이메일 인증을 완료해주세요.");
+      return;
+    }
+
+    const idTrim = loginId.trim();
+    if (!idTrim || !LOGIN_ID_REGEX.test(idTrim)) {
+      const idRuleMsg = "아이디는 3~50자이며, 영문과 숫자만 사용할 수 있습니다.";
+      alert(idRuleMsg);
+      setError(idRuleMsg);
+      return;
+    }
+
+    if (availableIdTrim !== idTrim) {
+      setError("아이디 중복 확인을 완료해주세요.");
+      return;
+    }
+
+    const emailTrim = email.trim();
+    const signupEmailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!signupEmailRegex.test(emailTrim)) {
+      setError("올바른 이메일 주소를 입력해주세요.");
       return;
     }
 
@@ -138,10 +158,10 @@ export default function SignupPage() {
 
     try {
       const response = await signup({
-        id: email, // 이메일을 아이디로 사용
+        id: idTrim,
+        email: emailTrim,
         pwd: password,
         nickName: nickname,
-        // name과 tel은 선택사항이므로 필요시 추가
       });
 
       if (response.ok) {
@@ -173,6 +193,37 @@ export default function SignupPage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     await handleSignup();
+  };
+
+  const handleCheckIdDuplicate = async () => {
+    const idTrim = loginId.trim();
+    setError(null);
+    if (!idTrim || !LOGIN_ID_REGEX.test(idTrim)) {
+      setAvailableIdTrim(null);
+      setIdAvailabilityNote("영문·숫자 3~50자 형식으로 입력한 뒤 중복 확인을 해주세요.");
+      return;
+    }
+
+    setIsIdChecking(true);
+    setIdAvailabilityNote(null);
+    try {
+      const raw = (await checkIdDuplicate(idTrim)).trim();
+      if (raw === "중복") {
+        setAvailableIdTrim(null);
+        setIdAvailabilityNote("이미 사용 중인 아이디입니다.");
+      } else if (raw === "중복 아님") {
+        setAvailableIdTrim(idTrim);
+        setIdAvailabilityNote("사용 가능한 아이디입니다.");
+      } else {
+        setAvailableIdTrim(null);
+        setIdAvailabilityNote("응답을 확인할 수 없습니다. 다시 시도해주세요.");
+      }
+    } catch (e) {
+      setAvailableIdTrim(null);
+      setIdAvailabilityNote(e instanceof Error ? e.message : "중복 확인에 실패했습니다.");
+    } finally {
+      setIsIdChecking(false);
+    }
   };
 
   return (
@@ -226,7 +277,46 @@ export default function SignupPage() {
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">이메일</label>
+                <label className="text-sm font-medium text-gray-700">아이디 (로그인용)</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={loginId}
+                    onChange={(e) => {
+                      setLoginId(e.target.value.slice(0, 50));
+                      setAvailableIdTrim(null);
+                      setIdAvailabilityNote(null);
+                    }}
+                    placeholder="영문,숫자(3~50자)"
+                    className="min-w-0 flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    required
+                    maxLength={50}
+                    autoComplete="username"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleCheckIdDuplicate}
+                    disabled={isIdChecking}
+                    className="shrink-0 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-800 hover:border-gray-400 hover:text-black disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap"
+                  >
+                    {isIdChecking ? "확인 중…" : "중복 확인"}
+                  </button>
+                </div>
+                {idAvailabilityNote && (
+                  <p
+                    className={`text-xs ${
+                      availableIdTrim === loginId.trim()
+                        ? "text-green-600"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {idAvailabilityNote}
+                  </p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">이메일 (인증·연락용) · 필수</label>
                 <div className="flex gap-2">
                   <input
                     type="email"
@@ -245,23 +335,24 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={handleSendVerificationCode}
-                    disabled={isDev || isSendingCode || countdown > 0 || isEmailVerified}
+                    disabled={isSendingCode || countdown > 0 || isEmailVerified}
                     className="px-4 py-3 rounded-2xl bg-gray-800 text-white text-sm font-medium hover:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap"
                   >
-                    {isDev
-                      ? "개발 중 비활성"
-                      : isSendingCode
-                        ? "발송 중..."
-                        : countdown > 0
-                          ? `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`
-                          : isEmailVerified
-                            ? "인증 완료"
-                            : "인증 코드 발송"}
+                    {isSendingCode
+                      ? "발송 중..."
+                      : countdown > 0
+                        ? `${Math.floor(countdown / 60)}:${String(countdown % 60).padStart(2, "0")}`
+                        : isEmailVerified
+                          ? "인증 완료"
+                          : "인증 코드 발송"}
                   </button>
                 </div>
                 {isEmailVerified && (
                   <p className="text-xs text-green-600">✓ 이메일 인증이 완료되었습니다.</p>
                 )}
+                <p className="text-xs text-gray-500">
+                  인증 코드로 본인 이메일을 확인합니다. (실제로 메일을 받을 수 있는 주소)
+                </p>
               </div>
 
               {/* 인증 코드 입력 */}
@@ -308,7 +399,7 @@ export default function SignupPage() {
                   placeholder="닉네임을 입력해주세요"
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                   required
-                  autoComplete="username"
+                  autoComplete="nickname"
                 />
               </div>
 

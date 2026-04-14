@@ -3,7 +3,8 @@
  */
 
 export type SignupData = {
-  id: string; // 이메일 또는 아이디
+  id: string; // 로그인 아이디 (@ 불가)
+  email: string; // 연락·인증용 이메일
   pwd: string; // 비밀번호
   name?: string; // 이름 (선택)
   nickName: string; // 닉네임
@@ -11,7 +12,7 @@ export type SignupData = {
 };
 
 export type LoginData = {
-  customerId: string; // 이메일 또는 아이디
+  customerId: string; // 로그인 아이디
   customerPwd: string; // 비밀번호
 };
 
@@ -29,6 +30,8 @@ export type UserInfoResponse = {
   name: string;
   tel: string;
   checkAdmin: boolean;
+  /** 일반 가입 `common`, SNS는 `kakao` | `google` | `naver` 등 */
+  userType?: string;
   kakaoLinked?: boolean;
   googleLinked?: boolean;
   naverLinked?: boolean;

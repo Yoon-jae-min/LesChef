@@ -5,11 +5,13 @@ import User from '../../../models/user/userModel';
 import Recipe from '../../../models/recipe/core/recipe';
 import EmailVerification from '../../../models/user/emailVerificationModel';
 import { unlinkKakaoUser } from '../../../utils/external/kakao';
+import { deleteFoodsDataForUser } from '../../../utils/foods/foodsItemImageDelete';
 import logger from '../../../utils/system/logger';
 import {
-    validateEmailOrId,
+    validateLoginId,
     validatePassword,
     validateNickname,
+    isValidEmailAddress,
 } from '../../../middleware/security/security';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../../types';
 
@@ -17,34 +19,47 @@ const isDev = process.env.NODE_ENV !== 'production';
 
 interface JoinRequestBody {
     id?: string;
+    email?: string;
     pwd?: string;
     name?: string;
     nickName?: string;
     tel?: string;
 }
 
+const normalizeEmail = (raw: string): string => raw.trim().toLowerCase();
+
 export const postJoin = asyncHandler(
     async (
         req: Request<{}, ApiSuccessResponse | ApiErrorResponse, JoinRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        const { id, pwd, name, nickName, tel } = req.body;
+        const { id, email, pwd, name, nickName, tel } = req.body;
 
         // 필수 필드 검증
-        if (!id || !pwd || !nickName) {
+        if (!id || !email || !pwd || !nickName) {
             res.status(400).json({
                 error: true,
-                message: '아이디, 비밀번호, 닉네임은 필수입니다.',
+                message: '아이디, 이메일, 비밀번호, 닉네임은 필수입니다.',
             });
             return;
         }
 
-        // 아이디 형식 검증
-        if (!validateEmailOrId(id)) {
+        const idTrim = id.trim();
+        const emailNorm = normalizeEmail(email);
+
+        if (!validateLoginId(idTrim)) {
             res.status(400).json({
                 error: true,
                 message:
-                    '아이디는 3자 이상 50자 이하의 영문, 숫자, 특수문자(@._-)만 사용 가능합니다.',
+                    '아이디는 3자 이상 50자 이하이며, 영문과 숫자만 사용할 수 있고 이메일 형식(@)은 사용할 수 없습니다.',
+            });
+            return;
+        }
+
+        if (!isValidEmailAddress(emailNorm)) {
+            res.status(400).json({
+                error: true,
+                message: '올바른 이메일 주소를 입력해주세요.',
             });
             return;
         }
@@ -69,49 +84,42 @@ export const postJoin = asyncHandler(
             return;
         }
 
-        // 아이디 중복 확인
-        const existingUser = await User.findOne({ id: id });
-        if (existingUser) {
+        const existingByIdOrEmail = await User.findOne({
+            $or: [{ id: idTrim }, { email: emailNorm }],
+        });
+        if (existingByIdOrEmail) {
+            const takenById = existingByIdOrEmail.id === idTrim;
             res.status(409).json({
                 error: true,
-                message: '이미 사용 중인 아이디입니다.',
+                message: takenById
+                    ? '이미 사용 중인 아이디입니다.'
+                    : '이미 사용 중인 이메일입니다.',
             });
             return;
         }
 
-        /**
-         * 이메일 인증 확인
-         * - 개발 단계에서는 회원가입 흐름을 막지 않기 위해 SKIP
-         * - 운영 환경(production)에서는 기존 로직 그대로 강제
-         */
-        if (!isDev) {
-            // 이메일 형식인지 확인 (간단한 체크)
-            const isEmailFormat = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(id);
-            if (isEmailFormat) {
-                const emailVerification = await EmailVerification.findOne({
-                    email: id,
-                    verified: true,
-                });
+        const emailVerification = await EmailVerification.findOne({
+            email: emailNorm,
+            verified: true,
+        });
 
-                if (!emailVerification) {
-                    res.status(400).json({
-                        error: true,
-                        message:
-                            '이메일 인증이 완료되지 않았습니다. 인증 코드를 발송하고 인증을 완료해주세요.',
-                    });
-                    return;
-                }
-
-                // 인증 완료 후 인증 레코드 삭제 (보안상 한 번만 사용)
-                await EmailVerification.deleteOne({ _id: emailVerification._id });
-            }
+        if (!emailVerification) {
+            res.status(400).json({
+                error: true,
+                message:
+                    '이메일 인증이 완료되지 않았습니다. 인증 코드를 발송하고 인증을 완료해주세요.',
+            });
+            return;
         }
+
+        await EmailVerification.deleteOne({ _id: emailVerification._id });
 
         try {
             const secure_pwd = await bcrypt.hash(pwd, 10);
 
             await User.create({
-                id,
+                id: idTrim,
+                email: emailNorm,
                 pwd: secure_pwd,
                 name: name || 'user',
                 nickName,
@@ -129,8 +137,23 @@ export const postJoin = asyncHandler(
     }
 );
 
+interface DeleteUserRequestBody {
+    password?: string;
+    reason?: string;
+    customReason?: string;
+}
+
+const SESSION_COOKIE_CLEAR_OPTS = {
+    path: '/' as const,
+    signed: true as const,
+    ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
+};
+
 export const delUser = asyncHandler(
-    async (req: Request, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
+    async (
+        req: Request<{}, ApiSuccessResponse | ApiErrorResponse, DeleteUserRequestBody>,
+        res: Response<ApiSuccessResponse | ApiErrorResponse>
+    ) => {
         if (!req.session?.user?.id) {
             res.status(401).json({
                 error: true,
@@ -140,7 +163,6 @@ export const delUser = asyncHandler(
         }
 
         const userId = req.session.user.id;
-        const userType = req.session.user.userType;
 
         try {
             const user = await User.findOne({ id: userId }).lean();
@@ -152,6 +174,44 @@ export const delUser = asyncHandler(
                     result: false,
                 });
                 return;
+            }
+
+            const accountUserType = user.userType || 'common';
+            const needsPassword = accountUserType === 'common';
+
+            if (needsPassword) {
+                const pwd = req.body?.password;
+                if (!pwd || typeof pwd !== 'string') {
+                    res.status(400).json({
+                        error: true,
+                        message: '비밀번호를 입력해주세요.',
+                        result: false,
+                    });
+                    return;
+                }
+                const match = await bcrypt.compare(pwd, user.pwd);
+                if (!match) {
+                    res.status(401).json({
+                        error: true,
+                        message: '비밀번호가 일치하지 않습니다.',
+                        result: false,
+                    });
+                    return;
+                }
+            }
+
+            const reasonRaw = req.body?.reason;
+            const customRaw = req.body?.customReason;
+            const reason =
+                typeof reasonRaw === 'string' ? reasonRaw.trim().slice(0, 200) : '';
+            const customReason =
+                typeof customRaw === 'string' ? customRaw.trim().slice(0, 500) : '';
+            if (reason || customReason) {
+                logger.info('회원 탈퇴 사유', {
+                    userId,
+                    reason: reason || undefined,
+                    customReason: customReason || undefined,
+                });
             }
 
             const result = await User.deleteOne({ id: userId });
@@ -169,31 +229,27 @@ export const delUser = asyncHandler(
                 await Recipe.updateMany({ userId }, { $set: { userId: null } });
             }
 
-            // 카카오 로그인 사용자인 경우 카카오 API 호출
-            if (userType !== 'common') {
+            await deleteFoodsDataForUser(userId);
+
+            // 카카오 연동이 있는 경우에만 카카오 API 연동 해제 시도 (id 형식 제약으로 실패할 수 있음)
+            if (user.kakaoId && userId.startsWith('kakao_')) {
                 try {
                     await unlinkKakaoUser(userId);
                 } catch (kakaoErr) {
                     if (isDev) {
                         logger.error('카카오 연동 해제 오류:', { error: kakaoErr });
                     }
-                    // 카카오 연동 해제 실패해도 회원 탈퇴는 진행
                 }
             }
 
             req.session.destroy((err) => {
                 if (err) {
-                    if (isDev) {
-                        logger.error('세션 삭제 오류:', { error: err });
-                    }
-                    res.status(500).json({
-                        error: true,
-                        message: '세션 삭제 중 오류가 발생했습니다.',
-                        result: false,
-                    });
-                    return;
+                    logger.warn(
+                        '세션 저장소 삭제 실패(회원 DB 삭제는 완료). 쿠키를 지우고 성공 응답을 보냅니다.',
+                        { error: err }
+                    );
                 }
-                res.clearCookie('connect.sid');
+                res.clearCookie('sessionId', SESSION_COOKIE_CLEAR_OPTS);
                 res.status(200).json({
                     error: false,
                     message: '회원 탈퇴가 완료되었습니다.',

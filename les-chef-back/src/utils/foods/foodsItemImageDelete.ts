@@ -4,6 +4,7 @@
 
 import fs from 'fs/promises';
 import path from 'path';
+import Foods, { FoodsLean } from '../../models/foods/foodsModel';
 import { deleteObjectByPublicUrlIfManaged } from '../storage/objectStorage';
 import logger from '../system/logger';
 
@@ -30,4 +31,18 @@ export async function deleteFoodItemImageIfAny(imageUrl: string | undefined | nu
             /* 없으면 무시 */
         }
     }
+}
+
+/** Deletes pantry foods documents for this login id; removes linked item images first. */
+export async function deleteFoodsDataForUser(userId: string): Promise<void> {
+    const docs = await Foods.find({ userId }).lean<FoodsLean[]>();
+    for (const doc of docs) {
+        if (!doc.place?.length) continue;
+        for (const pl of doc.place) {
+            for (const f of pl.foodList || []) {
+                await deleteFoodItemImageIfAny(f.imageUrl);
+            }
+        }
+    }
+    await Foods.deleteMany({ userId });
 }

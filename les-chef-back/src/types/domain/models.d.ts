@@ -7,6 +7,8 @@ import { Document, Model, Types } from 'mongoose';
 // 사용자 모델 타입
 export interface IUser extends Document {
     id: string;
+    /** 일반 가입 시 연락·인증용 (소문자 정규화 권장). SNS만 가입 시 없을 수 있음 */
+    email?: string;
     pwd: string;
     name?: string;
     nickName?: string;

@@ -11,7 +11,7 @@ import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
+  const [loginId, setLoginId] = useState("");
   const [password, setPassword] = useState("");
   const [saveSession, setSaveSession] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +53,7 @@ export default function LoginPage() {
 
     try {
       const result = await login({
-        customerId: email, // 이메일을 customerId로 사용
+        customerId: loginId.trim(),
         customerPwd: password,
       });
 
@@ -154,12 +154,12 @@ export default function LoginPage() {
 
             <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">이메일</label>
+                <label className="text-sm font-medium text-gray-700">아이디</label>
                 <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="you@example.com"
+                  type="text"
+                  value={loginId}
+                  onChange={(e) => setLoginId(e.target.value)}
+                  placeholder="회원가입 시 설정한 아이디"
                   className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                   required
                   autoComplete="username"

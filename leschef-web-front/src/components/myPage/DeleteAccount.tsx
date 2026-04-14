@@ -1,10 +1,17 @@
 "use client";
 
 import { useState } from "react";
+import {
+  verifyPasswordForSession,
+  deleteAccount,
+} from "@/utils/api/auth";
+import { clearAuthStorage } from "@/utils/helpers/authUtils";
 
 interface DeleteAccountProps {
   isOpen: boolean;
   onClose: () => void;
+  /** `fetchUserInfo`의 `userType`. 없으면 일반 회원으로 간주해 비밀번호 단계를 거칩니다. */
+  accountUserType?: string;
 }
 
 type DeleteStep = "warning" | "password" | "reason" | "final";
@@ -17,19 +24,42 @@ const DELETE_REASONS = [
   "기타",
 ] as const;
 
-export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
+export default function DeleteAccount({
+  isOpen,
+  onClose,
+  accountUserType,
+}: DeleteAccountProps) {
   const [deleteStep, setDeleteStep] = useState<DeleteStep>("warning");
   const [password, setPassword] = useState("");
   const [deleteReason, setDeleteReason] = useState("");
   const [customReason, setCustomReason] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [checkingPassword, setCheckingPassword] = useState(false);
+  const [deleting, setDeleting] = useState(false);
 
-  const handlePasswordCheck = () => {
+  const requiresLocalPassword = (accountUserType || "common") === "common";
+
+  const handlePasswordCheck = async () => {
     setPasswordError("");
 
-    // 비밀번호 확인 엔드포인트 연결 필요
-    // 성공 시:
-    setDeleteStep("reason");
+    if (!password.trim()) {
+      setPasswordError("비밀번호를 입력해주세요.");
+      return;
+    }
+
+    setCheckingPassword(true);
+    try {
+      const ok = await verifyPasswordForSession(password);
+      if (!ok) {
+        setPasswordError("비밀번호가 일치하지 않습니다.");
+        return;
+      }
+      setDeleteStep("reason");
+    } catch {
+      setPasswordError("비밀번호 확인 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.");
+    } finally {
+      setCheckingPassword(false);
+    }
   };
 
   const handleReasonSubmit = () => {
@@ -39,11 +69,27 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
     setDeleteStep("final");
   };
 
-  const handleDeleteAccount = () => {
-    // 실제 서버로 탈퇴 요청 (/customer/delete) 필요
-    alert("회원 탈퇴 API 연동 후 처리됩니다.");
-    // API 연동 후 성공 시:
-    // onClose();
+  const handleDeleteAccount = async () => {
+    setDeleting(true);
+    try {
+      const reasonLabel = deleteReason || "";
+      const extra =
+        deleteReason === "기타" && customReason.trim() ? customReason.trim() : undefined;
+
+      await deleteAccount({
+        password: requiresLocalPassword ? password : undefined,
+        reason: reasonLabel || undefined,
+        customReason: extra,
+      });
+
+      clearAuthStorage();
+      handleClose();
+      window.location.assign("/");
+    } catch (e) {
+      alert(e instanceof Error ? e.message : "회원 탈퇴 처리 중 오류가 발생했습니다.");
+    } finally {
+      setDeleting(false);
+    }
   };
 
   const handleClose = () => {
@@ -52,7 +98,17 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
     setDeleteReason("");
     setCustomReason("");
     setPasswordError("");
+    setCheckingPassword(false);
+    setDeleting(false);
     onClose();
+  };
+
+  const goNextFromWarning = () => {
+    if (requiresLocalPassword) {
+      setDeleteStep("password");
+    } else {
+      setDeleteStep("reason");
+    }
   };
 
   if (!isOpen) return null;
@@ -104,7 +160,7 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
               </button>
               <button
                 type="button"
-                onClick={() => setDeleteStep("password")}
+                onClick={goNextFromWarning}
                 className="flex-1 rounded-2xl border border-red-200/90 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
               >
                 계속하기
@@ -113,7 +169,7 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
           </>
         )}
 
-        {/* 2단계: 비밀번호 확인 */}
+        {/* 2단계: 비밀번호 확인 (일반 회원만) */}
         {deleteStep === "password" && (
           <>
             <h3 className="mb-2 text-2xl font-semibold text-stone-900">비밀번호 확인</h3>
@@ -129,8 +185,9 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
                     setPasswordError("");
                   }}
                   placeholder="비밀번호를 입력하세요"
-                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
-                  onKeyDown={(e) => e.key === "Enter" && handlePasswordCheck()}
+                  disabled={checkingPassword}
+                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25 disabled:opacity-60"
+                  onKeyDown={(e) => e.key === "Enter" && !checkingPassword && void handlePasswordCheck()}
                 />
                 {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
               </div>
@@ -139,16 +196,18 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
               <button
                 type="button"
                 onClick={() => setDeleteStep("warning")}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                disabled={checkingPassword}
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 이전
               </button>
               <button
                 type="button"
-                onClick={handlePasswordCheck}
-                className="flex-1 rounded-2xl border border-red-200/90 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                onClick={() => void handlePasswordCheck()}
+                disabled={checkingPassword}
+                className="flex-1 rounded-2xl border border-red-200/90 bg-red-50 px-4 py-3 text-sm font-medium text-red-600 shadow-sm transition hover:border-red-300 hover:bg-red-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                확인
+                {checkingPassword ? "확인 중…" : "확인"}
               </button>
             </div>
           </>
@@ -196,7 +255,9 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
             <div className="flex gap-3">
               <button
                 type="button"
-                onClick={() => setDeleteStep("password")}
+                onClick={() =>
+                  setDeleteStep(requiresLocalPassword ? "password" : "warning")
+                }
                 className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 이전
@@ -246,16 +307,18 @@ export default function DeleteAccount({ isOpen, onClose }: DeleteAccountProps) {
               <button
                 type="button"
                 onClick={() => setDeleteStep("reason")}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                disabled={deleting}
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 이전
               </button>
               <button
                 type="button"
-                onClick={handleDeleteAccount}
-                className="flex-1 rounded-2xl border border-red-600 bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                onClick={() => void handleDeleteAccount()}
+                disabled={deleting}
+                className="flex-1 rounded-2xl border border-red-600 bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                탈퇴하기
+                {deleting ? "처리 중…" : "탈퇴하기"}
               </button>
             </div>
           </>

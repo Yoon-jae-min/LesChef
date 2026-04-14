@@ -14,10 +14,10 @@ const API_BASE_URL = API_CONFIG.CUSTOMER_API;
  * @returns Promise<Response>
  */
 export const signup = async (data: SignupData): Promise<Response> => {
-  const { id, pwd, name, nickName, tel } = data;
+  const { id, email, pwd, name, nickName, tel } = data;
 
-  if (!id || !pwd || !nickName) {
-    throw new Error("아이디, 비밀번호, 닉네임은 필수입니다.");
+  if (!id || !email || !pwd || !nickName) {
+    throw new Error("아이디, 이메일, 비밀번호, 닉네임은 필수입니다.");
   }
 
   try {
@@ -28,6 +28,7 @@ export const signup = async (data: SignupData): Promise<Response> => {
       },
       body: JSON.stringify({
         id,
+        email,
         pwd,
         name: name || "user", // 기본값
         nickName,
@@ -73,12 +74,19 @@ export const checkIdDuplicate = async (id: string): Promise<string> => {
       credentials: "include",
     });
 
+    const bodyText = await response.text();
     if (!response.ok) {
-      throw new Error(`아이디 중복 확인 실패: ${response.status}`);
+      let errorMessage = `아이디 중복 확인 실패: ${response.status}`;
+      try {
+        const errJson = JSON.parse(bodyText) as { message?: string };
+        if (errJson.message) errorMessage = errJson.message;
+      } catch {
+        if (bodyText) errorMessage = bodyText;
+      }
+      throw new Error(errorMessage);
     }
 
-    const result = await response.text();
-    return result;
+    return bodyText;
   } catch (error) {
     if (error instanceof Error) {
       throw error;

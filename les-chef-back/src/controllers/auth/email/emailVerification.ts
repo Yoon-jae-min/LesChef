@@ -7,7 +7,7 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import EmailVerification from '../../../models/user/emailVerificationModel';
 import { sendVerificationCode } from '../../../utils/email/emailService';
-import { validateEmailOrId } from '../../../middleware/security/security';
+import { isValidEmailAddress } from '../../../middleware/security/security';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../../types';
 import logger from '../../../utils/system/logger';
 
@@ -19,6 +19,8 @@ const isDev = process.env.NODE_ENV !== 'production';
 const generateVerificationCode = (): string => {
     return Math.floor(100000 + Math.random() * 900000).toString();
 };
+
+const normalizeEmail = (raw: string): string => raw.trim().toLowerCase();
 
 /**
  * 인증 코드 발송
@@ -40,8 +42,10 @@ export const sendVerificationCodeController = asyncHandler(
             return;
         }
 
+        const emailNorm = normalizeEmail(email);
+
         // 이메일 형식 검증
-        if (!validateEmailOrId(email)) {
+        if (!isValidEmailAddress(emailNorm)) {
             res.status(400).json({
                 error: true,
                 message: '올바른 이메일 형식이 아닙니다.',
@@ -52,7 +56,7 @@ export const sendVerificationCodeController = asyncHandler(
         try {
             // 기존 미인증 코드 삭제 (같은 이메일로 여러 번 요청한 경우)
             await EmailVerification.deleteMany({
-                email: email,
+                email: emailNorm,
                 verified: false,
             });
 
@@ -62,14 +66,14 @@ export const sendVerificationCodeController = asyncHandler(
 
             // DB에 저장
             await EmailVerification.create({
-                email: email,
+                email: emailNorm,
                 code: code,
                 expiresAt: expiresAt,
                 verified: false,
             });
 
             // 이메일 발송
-            await sendVerificationCode(email, code);
+            await sendVerificationCode(emailNorm, code);
 
             res.status(200).json({
                 error: false,
@@ -77,7 +81,7 @@ export const sendVerificationCodeController = asyncHandler(
             });
         } catch (error) {
             if (isDev) {
-                logger.error('인증 코드 발송 실패', { error, email });
+                logger.error('인증 코드 발송 실패', { error, email: emailNorm });
             }
             res.status(500).json({
                 error: true,
@@ -107,10 +111,12 @@ export const verifyEmailCodeController = asyncHandler(
             return;
         }
 
+        const emailNorm = normalizeEmail(email);
+
         try {
             // 인증 코드 조회
             const verification = await EmailVerification.findOne({
-                email: email,
+                email: emailNorm,
                 code: code,
                 verified: false,
             });
@@ -144,7 +150,7 @@ export const verifyEmailCodeController = asyncHandler(
             });
         } catch (error) {
             if (isDev) {
-                logger.error('인증 코드 검증 실패', { error, email });
+                logger.error('인증 코드 검증 실패', { error, email: emailNorm });
             }
             res.status(500).json({
                 error: true,

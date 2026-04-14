@@ -83,3 +83,82 @@ export const updateUserProfile = async (params: UpdateUserProfileParams): Promis
     throw new Error("프로필 수정 중 네트워크 오류가 발생했습니다.");
   }
 };
+
+export type DeleteAccountParams = {
+  /** 일반 회원(`userType === 'common'`) 탈퇴 시 필수 */
+  password?: string;
+  reason?: string;
+  customReason?: string;
+};
+
+/**
+ * 로그인 세션 기준 비밀번호 확인 (탈퇴 전 단계)
+ */
+export async function verifyPasswordForSession(password: string): Promise<boolean> {
+  const trimmed = password.trim();
+  if (!trimmed) {
+    return false;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/check`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ password: trimmed }),
+  });
+
+  let data: { error?: boolean; message?: string; result?: boolean } = {};
+  try {
+    data = (await response.json()) as typeof data;
+  } catch {
+    return false;
+  }
+
+  if (!response.ok) {
+    return false;
+  }
+
+  if (data.error === true) {
+    return false;
+  }
+
+  return data.result === true;
+}
+
+/**
+ * 회원 탈퇴 (세션 쿠키 무효화)
+ */
+export async function deleteAccount(params: DeleteAccountParams): Promise<void> {
+  const body: Record<string, string> = {};
+  if (params.password !== undefined && params.password !== "") {
+    body.password = params.password;
+  }
+  if (params.reason?.trim()) {
+    body.reason = params.reason.trim();
+  }
+  if (params.customReason?.trim()) {
+    body.customReason = params.customReason.trim();
+  }
+
+  const response = await fetch(`${API_BASE_URL}/delete`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+
+  let data: { error?: boolean; message?: string } = {};
+  try {
+    data = (await response.json()) as typeof data;
+  } catch {
+    /* ignore */
+  }
+
+  if (!response.ok) {
+    throw new Error(data.message || `회원 탈퇴 실패 (${response.status})`);
+  }
+
+  if (data.error !== false) {
+    throw new Error(data.message || "회원 탈퇴에 실패했습니다.");
+  }
+}

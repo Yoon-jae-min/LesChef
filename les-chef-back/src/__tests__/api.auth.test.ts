@@ -11,8 +11,23 @@ import request from 'supertest';
 import express from 'express';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
+import mongoose from 'mongoose';
 import authRouter from '../routers/auth';
 import { SESSION_MAX_AGE_MS } from '../constants';
+import EmailVerification from '../models/user/emailVerificationModel';
+
+const mongoUri = process.env.DB_CONNECT || 'mongodb://localhost:27017/test';
+
+/** 회원가입 전 이메일 인증 완료 상태를 DB에 반영 (통합 테스트용) */
+const seedVerifiedEmailForJoin = async (email: string): Promise<void> => {
+    await EmailVerification.deleteMany({ email });
+    await EmailVerification.create({
+        email,
+        code: '123456',
+        expiresAt: new Date(Date.now() + 10 * 60 * 1000),
+        verified: true,
+    });
+};
 
 // 테스트용 Express 앱 생성
 const createTestApp = () => {
@@ -50,15 +65,24 @@ const runAuthApiIntegration = process.env.RUN_AUTH_API_INTEGRATION === '1';
     jest.setTimeout(30_000);
 
     beforeAll(async () => {
+        if (mongoose.connection.readyState === 0) {
+            await mongoose.connect(mongoUri);
+        }
         app = createTestApp();
     });
 
     describe('POST /customer/join (회원가입)', () => {
         it('올바른 데이터로 회원가입이 성공해야 함', async () => {
+            const ts = Date.now();
+            const id = `joinuser${ts}`;
+            const email = `join${ts}@example.com`;
+            await seedVerifiedEmailForJoin(email);
+
             const response = await request(app)
                 .post('/customer/join')
                 .send({
-                    id: `test${Date.now()}@example.com`,
+                    id,
+                    email,
                     pwd: 'testPassword123',
                     nickName: '테스트유저',
                 })
@@ -68,12 +92,27 @@ const runAuthApiIntegration = process.env.RUN_AUTH_API_INTEGRATION === '1';
             expect(response.body.message).toBe('ok');
         });
 
+        it('로그인 아이디에 @ 가 있으면 400 에러를 반환해야 함', async () => {
+            const response = await request(app)
+                .post('/customer/join')
+                .send({
+                    id: 'bad@id',
+                    email: 'ok@example.com',
+                    pwd: 'testPassword123',
+                    nickName: '테스트유저',
+                })
+                .expect(400);
+
+            expect(response.body.error).toBe(true);
+            expect(response.body.message).toContain('아이디');
+        });
+
         it('필수 필드가 없으면 400 에러를 반환해야 함', async () => {
             const response = await request(app)
                 .post('/customer/join')
                 .send({
-                    id: 'test@example.com',
-                    // pwd 누락
+                    id: 'missingpwduser',
+                    // email, pwd 누락
                     nickName: '테스트유저',
                 })
                 .expect(400);
@@ -83,23 +122,26 @@ const runAuthApiIntegration = process.env.RUN_AUTH_API_INTEGRATION === '1';
         });
 
         it('중복된 아이디로 회원가입 시 409 에러를 반환해야 함', async () => {
-            const testId = `duplicate${Date.now()}@example.com`;
+            const ts = Date.now();
+            const testId = `dupuser${ts}`;
+            const testEmail = `dup${ts}@example.com`;
+            await seedVerifiedEmailForJoin(testEmail);
 
-            // 첫 번째 회원가입
             await request(app)
                 .post('/customer/join')
                 .send({
                     id: testId,
+                    email: testEmail,
                     pwd: 'testPassword123',
                     nickName: '첫번째유저',
                 })
                 .expect(200);
 
-            // 두 번째 회원가입 (중복)
             const response = await request(app)
                 .post('/customer/join')
                 .send({
                     id: testId,
+                    email: testEmail,
                     pwd: 'testPassword123',
                     nickName: '두번째유저',
                 })
@@ -113,7 +155,8 @@ const runAuthApiIntegration = process.env.RUN_AUTH_API_INTEGRATION === '1';
             const response = await request(app)
                 .post('/customer/join')
                 .send({
-                    id: 'test@example.com',
+                    id: 'pwdshortuser',
+                    email: 'pwdshort@example.com',
                     pwd: '12345', // 8자 미만
                     nickName: '테스트유저',
                 })
@@ -125,14 +168,16 @@ const runAuthApiIntegration = process.env.RUN_AUTH_API_INTEGRATION === '1';
     });
 
     describe('POST /customer/login (로그인)', () => {
+        const ts = Date.now();
         const testUser = {
-            id: `logintest${Date.now()}@example.com`,
+            id: `logintest${ts}`,
+            email: `logintest${ts}@example.com`,
             pwd: 'testPassword123',
             nickName: '로그인테스트',
         };
 
         beforeAll(async () => {
-            // 테스트용 사용자 생성
+            await seedVerifiedEmailForJoin(testUser.email);
             await request(app).post('/customer/join').send(testUser);
         });
 
@@ -165,7 +210,7 @@ const runAuthApiIntegration = process.env.RUN_AUTH_API_INTEGRATION === '1';
             const response = await request(app)
                 .post('/customer/login')
                 .send({
-                    customerId: 'nonexistent@example.com',
+                    customerId: 'nonexistent_user_id',
                     customerPwd: 'anyPassword',
                 })
                 .expect(401);

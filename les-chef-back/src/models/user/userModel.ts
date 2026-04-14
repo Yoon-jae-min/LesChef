@@ -6,6 +6,12 @@ const userSchema = new Schema<IUser>({
         type: String,
         required: [true, '아이디를 입력해주세요.'],
     },
+    email: {
+        type: String,
+        trim: true,
+        sparse: true,
+        unique: true,
+    },
     pwd: {
         type: String,
         required: [true, '패스워드를 입력해주세요.'],

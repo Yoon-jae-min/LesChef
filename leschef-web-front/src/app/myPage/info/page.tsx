@@ -986,7 +986,11 @@ function InfoPageContent() {
       )}
 
       {/* 회원 탈퇴 확인 모달 */}
-      <DeleteAccount isOpen={showDeleteConfirm} onClose={() => setShowDeleteConfirm(false)} />
+      <DeleteAccount
+        isOpen={showDeleteConfirm}
+        onClose={() => setShowDeleteConfirm(false)}
+        accountUserType={userInfo?.userType}
+      />
     </div>
   );
 }

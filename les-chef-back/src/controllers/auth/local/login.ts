@@ -2,7 +2,7 @@ import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 import User from '../../../models/user/userModel';
-import { validateEmailOrId, validatePassword } from '../../../middleware/security/security';
+import { validateLoginId, validatePassword } from '../../../middleware/security/security';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../../types';
 import logger from '../../../utils/system/logger';
 
@@ -37,8 +37,8 @@ export const postLogin = asyncHandler(
                 return;
             }
 
-            // 아이디 형식 검증
-            if (!validateEmailOrId(customerId)) {
+            // 아이디 형식 검증 (이메일과 별도인 로그인 아이디)
+            if (!validateLoginId(customerId)) {
                 res.status(400).json({
                     error: true,
                     message: '아이디 형식이 올바르지 않습니다.',
@@ -46,8 +46,10 @@ export const postLogin = asyncHandler(
                 return;
             }
 
+            const idTrim = customerId.trim();
+
             // MongoDB Injection 방지 - Mongoose는 자동으로 처리하지만 명시적으로 검증
-            const findUser = await User.findOne({ id: customerId }).lean();
+            const findUser = await User.findOne({ id: idTrim }).lean();
 
             // 사용자 검증 (타이밍 공격 방지를 위해 항상 bcrypt.compare 실행)
             if (!findUser) {
@@ -118,7 +120,11 @@ export const getLogout = (
             });
             return;
         }
-        res.clearCookie('connect.sid');
+        res.clearCookie('sessionId', {
+            path: '/',
+            signed: true,
+            ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
+        });
         res.status(200).json({
             error: false,
             message: 'Logged out',
@@ -138,7 +144,11 @@ export const getAuth = (
                 loggedIn: true,
             });
         } else {
-            res.clearCookie('connect.sid');
+            res.clearCookie('sessionId', {
+                path: '/',
+                signed: true,
+                ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
+            });
             res.status(200).json({
                 error: false,
                 loggedIn: false,
@@ -146,11 +156,13 @@ export const getAuth = (
         }
     } catch (error) {
         logger.error('인증 확인 오류', { error });
-        res.status(500).json({
-            error: true,
-            message: '인증 확인 중 오류가 발생했습니다.',
-            loggedIn: false,
-        });
+        if (!res.headersSent) {
+            res.status(500).json({
+                error: true,
+                message: '인증 확인 중 오류가 발생했습니다.',
+                loggedIn: false,
+            });
+        }
     }
 };
 
@@ -185,6 +197,7 @@ export const getInfo = asyncHandler(
                 name: userData.name,
                 tel: userData.tel,
                 checkAdmin: userData.checkAdmin,
+                userType: userData.userType || 'common',
                 kakaoLinked: !!userData.kakaoId,
                 googleLinked: !!userData.googleId,
                 naverLinked: !!userData.naverId,
@@ -301,8 +314,16 @@ export const idCheck = asyncHandler(async (req: Request, res: Response) => {
         return;
     }
 
+    if (!validateLoginId(id)) {
+        res.status(400).json({
+            error: true,
+            message: '아이디 형식이 올바르지 않습니다.',
+        });
+        return;
+    }
+
     try {
-        const user = await User.findOne({ id: id });
+        const user = await User.findOne({ id: id.trim() });
 
         if (user) {
             res.status(200).send('중복');

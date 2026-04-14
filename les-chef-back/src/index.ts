@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from 'express';
+import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import path from 'path';
 import https from 'https';
@@ -152,6 +153,9 @@ logger.info('세션 쿠키 옵션', {
     sameSite: cookieSameSite,
     COOKIE_SECURE: process.env.COOKIE_SECURE ?? '(미설정 → HTTPS 여부 반영)',
 });
+
+/** 서명 쿠키(sessionId)의 clearCookie / res.cookie — express-session의 signed와 동일 시크릿 */
+app.use(cookieParser(process.env.SESSION_SECRET_KEY as string));
 
 // 세션 설정
 const mongoStore = MongoStore.create({
