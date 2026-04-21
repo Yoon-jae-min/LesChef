@@ -29,6 +29,11 @@ const recommendedEnvVars: string[] = [
     'KAKAO_API_URL',
 ];
 
+function parseBool(v: string | undefined, defaultValue: boolean): boolean {
+    if (v === undefined || v === '') return defaultValue;
+    return ['1', 'true', 'yes', 'on'].includes(v.toLowerCase());
+}
+
 const validateEnvVars = (): void => {
     const missing: string[] = [];
 
@@ -40,7 +45,9 @@ const validateEnvVars = (): void => {
     });
 
     // 프로덕션 환경에서만 SSL 관련 변수 필수
-    if (!isDev) {
+    // (단, Render처럼 TLS를 프록시에서 종료하고 앱은 HTTP로만 실행하는 경우 DISABLE_HTTPS=1로 예외 처리)
+    const disableHttps = parseBool(process.env.DISABLE_HTTPS, false);
+    if (!isDev && !disableHttps) {
         productionOnlyEnvVars.forEach((varName) => {
             if (!process.env[varName]) {
                 missing.push(varName);

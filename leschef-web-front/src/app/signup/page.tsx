@@ -146,7 +146,7 @@ export default function SignupPage() {
       return;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       setError("비밀번호는 최소 8자 이상이어야 합니다.");
       return;
     }
@@ -413,7 +413,7 @@ export default function SignupPage() {
                     placeholder="비밀번호를 입력해주세요 (최소 8자)"
                     className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
-                    minLength={6}
+                    minLength={8}
                     autoComplete="new-password"
                   />
                   <button
@@ -436,7 +436,7 @@ export default function SignupPage() {
                     placeholder="비밀번호를 다시 입력해주세요"
                     className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
                     required
-                    minLength={6}
+                    minLength={8}
                     autoComplete="new-password"
                   />
                   <button
