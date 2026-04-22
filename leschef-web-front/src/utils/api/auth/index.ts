@@ -13,6 +13,7 @@ export type {
 export { signup, checkIdDuplicate, sendVerificationCode, verifyEmailCode } from "./signup";
 export { login, logout } from "./login";
 export { checkAuth } from "./check";
+export { refreshTokens } from "./refresh";
 export {
   fetchUserInfo,
   updateUserProfile,

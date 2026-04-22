@@ -19,7 +19,9 @@ import {
     findIdByProfile,
     verifyPasswordReset,
     completePasswordReset,
+    postRefresh,
 } from '../../controllers/auth';
+import { requireAuth } from '../../middleware/auth/auth';
 
 const router = express.Router();
 
@@ -29,14 +31,15 @@ router
     .post('/resetPassword', completePasswordReset)
     .get('/logout', getLogout)
     .get('/auth', getAuth)
-    .get('/info', getInfo)
-    .patch('/info', infoChg)
+    .post('/refresh', postRefresh)
+    .get('/info', requireAuth, getInfo)
+    .patch('/info', requireAuth, infoChg)
     .get('/check', idCheck)
-    .post('/pwdChg', pwdChg)
-    .post('/check', pwCheck)
+    .post('/pwdChg', requireAuth, pwdChg)
+    .post('/check', requireAuth, pwCheck)
     .post('/login', postLogin)
     .post('/join', postJoin)
-    .delete('/delete', delUser)
+    .delete('/delete', requireAuth, delUser)
     .post('/unlink/:provider', unlinkSocialAccount)
     .get('/kakaoLogin', kakaoLogin)
     .get('/googleLogin', googleLogin)

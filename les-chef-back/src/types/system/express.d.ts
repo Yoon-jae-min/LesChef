@@ -1,3 +1,16 @@
+import type { AccessTokenPayload } from '../../utils/auth/token';
+
+declare global {
+    namespace Express {
+        interface Request {
+            /** Set by JWT auth middleware */
+            auth?: AccessTokenPayload;
+        }
+    }
+}
+
+export {};
+
 /**
  * Express 타입 확장
  * 세션, 요청, 응답 등에 대한 커스텀 타입 정의

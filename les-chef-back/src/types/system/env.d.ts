@@ -7,11 +7,14 @@ declare namespace NodeJS {
         // 데이터베이스
         DB_CONNECT: string;
 
-        // 세션
-        SESSION_SECRET_KEY: string;
-
         // CORS
         CORS_ORIGIN: string;
+
+        // JWT
+        JWT_ACCESS_SECRET: string;
+        JWT_REFRESH_SECRET: string;
+        /** 비밀번호 재설정(비로그인) 토큰 서명용. 미설정 시 JWT_ACCESS_SECRET 사용 */
+        JWT_PASSWORD_RESET_SECRET?: string;
 
         // 서버 설정
         SERVER_URL?: string;
@@ -51,7 +54,7 @@ declare namespace NodeJS {
         NAVER_CLIENT_ID?: string;
         NAVER_CLIENT_SECRET?: string;
 
-        // 쿠키 도메인
+        // 쿠키 도메인 (JWT 완전 전환 후에는 보통 불필요)
         COOKIE_DOMAIN?: string;
 
         // 이메일 발송 설정

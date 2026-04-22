@@ -10,7 +10,12 @@ dotenv.config();
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-const requiredEnvVars: string[] = ['DB_CONNECT', 'SESSION_SECRET_KEY', 'CORS_ORIGIN'];
+const requiredEnvVars: string[] = [
+    'DB_CONNECT',
+    'CORS_ORIGIN',
+    'JWT_ACCESS_SECRET',
+    'JWT_REFRESH_SECRET',
+];
 
 // 프로덕션에서만 필수인 환경 변수
 const productionOnlyEnvVars: string[] = ['SSL_KEY_PATH', 'SSL_CERT_PATH'];
@@ -60,15 +65,23 @@ const validateEnvVars = (): void => {
         process.exit(1);
     }
 
-    // SESSION_SECRET_KEY 강도 검증 (프로덕션은 미달 시 기동 중단)
-    if (process.env.SESSION_SECRET_KEY && process.env.SESSION_SECRET_KEY.length < 32) {
-        if (isDev) {
-            logger.warn('⚠️  SESSION_SECRET_KEY는 최소 32자 이상을 권장합니다.');
-        } else {
-            logger.error('❌ 프로덕션에서는 SESSION_SECRET_KEY를 32자 이상으로 설정해야 합니다.');
-            process.exit(1);
+    // JWT secret 강도 검증 (프로덕션은 미달 시 기동 중단)
+    const jwtSecrets = [
+        ['JWT_ACCESS_SECRET', process.env.JWT_ACCESS_SECRET],
+        ['JWT_REFRESH_SECRET', process.env.JWT_REFRESH_SECRET],
+        ['JWT_PASSWORD_RESET_SECRET', process.env.JWT_PASSWORD_RESET_SECRET],
+    ] as const;
+    jwtSecrets.forEach(([name, value]) => {
+        if (!value) return;
+        if (value.length < 32) {
+            if (isDev) {
+                logger.warn(`⚠️  ${name} 는 최소 32자 이상을 권장합니다.`);
+            } else {
+                logger.error(`❌ 프로덕션에서는 ${name} 를 32자 이상으로 설정해야 합니다.`);
+                process.exit(1);
+            }
         }
-    }
+    });
 
     // CORS_ORIGIN 형식 검증
     if (process.env.CORS_ORIGIN) {

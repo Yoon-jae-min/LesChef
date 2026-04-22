@@ -5,6 +5,16 @@ import User from '../../../models/user/userModel';
 import { validateLoginId, validatePassword } from '../../../middleware/security/security';
 import { ApiSuccessResponse, ApiErrorResponse } from '../../../types';
 import logger from '../../../utils/system/logger';
+import RefreshToken from '../../../models/auth/refreshTokenModel';
+import {
+    getAccessTtlSeconds,
+    getRefreshTtlSeconds,
+    makeRefreshJti,
+    signAccessToken,
+    signRefreshToken,
+    verifyAccessToken,
+    verifyRefreshToken,
+} from '../../../utils/auth/token';
 
 interface LoginRequestBody {
     customerId?: string;
@@ -17,6 +27,9 @@ interface LoginSuccessResponse extends ApiSuccessResponse {
     name?: string;
     nickName?: string;
     tel?: string;
+    accessToken?: string;
+    refreshToken?: string;
+    accessTokenExpiresInSeconds?: number;
 }
 
 //postLogin
@@ -71,30 +84,34 @@ export const postLogin = asyncHandler(
                 return;
             }
 
-            req.session.user = {
-                id: findUser.id,
-                nickName: findUser.nickName || 'user',
-                userType: 'common',
-            };
+            // JWT 발급 (Access + Refresh)
+            const refreshJti = makeRefreshJti();
+            const now = Date.now();
+            const refreshExpiresAt = new Date(now + getRefreshTtlSeconds() * 1000);
 
-            // 세션 저장 후 응답
-            req.session.save((err) => {
-                if (err) {
-                    logger.error('세션 저장 오류', { error: err });
-                    res.status(500).json({
-                        error: true,
-                        message: '세션 저장 중 오류가 발생했습니다.',
-                    });
-                    return;
-                }
-                res.status(200).json({
-                    error: false,
-                    text: 'login Success',
-                    id: findUser.id,
-                    name: findUser.name,
-                    nickName: findUser.nickName,
-                    tel: findUser.tel,
-                });
+            await RefreshToken.create({
+                userId: findUser.id,
+                jti: refreshJti,
+                expiresAt: refreshExpiresAt,
+            });
+
+            const accessToken = signAccessToken({
+                sub: findUser.id,
+                userType: findUser.userType || 'common',
+                nickName: findUser.nickName || 'user',
+            });
+            const refreshToken = signRefreshToken({ sub: findUser.id, jti: refreshJti });
+
+            res.status(200).json({
+                error: false,
+                text: 'login Success',
+                id: findUser.id,
+                name: findUser.name,
+                nickName: findUser.nickName,
+                tel: findUser.tel,
+                accessToken,
+                refreshToken,
+                accessTokenExpiresInSeconds: getAccessTtlSeconds(),
             });
         } catch (error) {
             logger.error('로그인 처리 중 오류', { error });
@@ -111,25 +128,23 @@ export const getLogout = (
     req: Request,
     res: Response<ApiSuccessResponse | ApiErrorResponse>
 ): void => {
-    req.session.destroy((err) => {
-        if (err) {
-            logger.error('로그아웃 오류', { error: err });
-            res.status(500).json({
-                error: true,
-                message: '로그아웃 중 오류가 발생했습니다.',
-            });
-            return;
-        }
-        res.clearCookie('sessionId', {
-            path: '/',
-            signed: true,
-            ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
-        });
-        res.status(200).json({
-            error: false,
-            message: 'Logged out',
-        });
-    });
+    // JWT 방식: 프론트에서 refreshToken 을 보내면 해당 refresh 를 폐기
+    // (기존 세션 방식도 병행 가능하도록 쿠키/세션은 건드리지 않음)
+    const refreshToken = (req.headers['x-refresh-token'] as string | undefined) || undefined;
+    if (!refreshToken) {
+        res.status(200).json({ error: false, message: 'Logged out' });
+        return;
+    }
+    try {
+        const payload = verifyRefreshToken(refreshToken);
+        void RefreshToken.updateOne(
+            { jti: payload.jti, userId: payload.sub },
+            { $set: { revokedAt: new Date() } }
+        ).exec();
+    } catch {
+        // ignore
+    }
+    res.status(200).json({ error: false, message: 'Logged out' });
 };
 
 //getAuth
@@ -146,16 +161,26 @@ export const getAuth = (
         res.setHeader('Pragma', 'no-cache');
         res.setHeader('Expires', '0');
 
-        if (req.session?.user) {
+        const auth = req.headers.authorization;
+        const token =
+            typeof auth === 'string' && auth.startsWith('Bearer ') ? auth.slice('Bearer '.length) : '';
+        if (token) {
+            try {
+                verifyAccessToken(token);
+                res.status(200).json({ error: false, loggedIn: true });
+                return;
+            } catch {
+                // fallthrough
+            }
+        }
+
+        // 세션 방식 호환 (기존 클라이언트가 있으면 true)
+        if ((req as any).session?.user) {
             res.status(200).json({
                 error: false,
                 loggedIn: true,
             });
         } else {
-            res.clearCookie('sessionId', {
-                path: '/',
-                ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
-            });
             res.status(200).json({
                 error: false,
                 loggedIn: false,
@@ -173,20 +198,73 @@ export const getAuth = (
     }
 };
 
+// POST /customer/refresh  (body: { refreshToken })
+export const postRefresh = asyncHandler(
+    async (
+        req: Request<{}, (ApiSuccessResponse & { accessToken: string; refreshToken: string }) | ApiErrorResponse, any>,
+        res: Response<(ApiSuccessResponse & { accessToken: string; refreshToken: string }) | ApiErrorResponse>
+    ) => {
+        const refreshToken = req.body?.refreshToken;
+        if (!refreshToken || typeof refreshToken !== 'string') {
+            res.status(400).json({ error: true, message: 'refreshToken 이 필요합니다.' });
+            return;
+        }
+
+        let payload: { sub: string; jti: string };
+        try {
+            payload = verifyRefreshToken(refreshToken);
+        } catch {
+            res.status(401).json({ error: true, message: 'refreshToken 이 유효하지 않습니다.' });
+            return;
+        }
+
+        const tokenDoc = await RefreshToken.findOne({ jti: payload.jti, userId: payload.sub }).lean();
+        if (!tokenDoc || tokenDoc.revokedAt || new Date(tokenDoc.expiresAt).getTime() <= Date.now()) {
+            res.status(401).json({ error: true, message: 'refreshToken 이 만료/폐기되었습니다.' });
+            return;
+        }
+
+        // rotation: revoke old and issue new
+        const newJti = makeRefreshJti();
+        const refreshExpiresAt = new Date(Date.now() + getRefreshTtlSeconds() * 1000);
+
+        await RefreshToken.updateOne(
+            { jti: payload.jti },
+            { $set: { revokedAt: new Date(), replacedByJti: newJti } }
+        );
+        await RefreshToken.create({
+            userId: payload.sub,
+            jti: newJti,
+            expiresAt: refreshExpiresAt,
+        });
+
+        const user = await User.findOne({ id: payload.sub }).lean();
+        const accessToken = signAccessToken({
+            sub: payload.sub,
+            userType: user?.userType || 'common',
+            nickName: user?.nickName || 'user',
+        });
+        const newRefreshToken = signRefreshToken({ sub: payload.sub, jti: newJti });
+
+        res.status(200).json({
+            error: false,
+            accessToken,
+            refreshToken: newRefreshToken,
+        });
+    }
+);
+
 //유저 정보 조회
 export const getInfo = asyncHandler(
     async (req: Request, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
-        if (!req.session?.user?.id) {
-            res.status(401).json({
-                error: true,
-                text: false,
-                message: '로그인이 필요합니다.',
-            });
+        const userId = req.auth?.sub;
+        if (!userId) {
+            res.status(401).json({ error: true, text: false, message: '로그인이 필요합니다.' });
             return;
         }
 
         try {
-            const userData = await User.findOne({ id: req.session.user.id });
+            const userData = await User.findOne({ id: userId });
 
             if (!userData) {
                 res.status(404).json({
@@ -227,7 +305,8 @@ export const infoChg = asyncHandler(
         req: Request<{}, ApiSuccessResponse | ApiErrorResponse, InfoChgRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user?.id) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -236,7 +315,6 @@ export const infoChg = asyncHandler(
             return;
         }
 
-        const userId = req.session.user.id;
         const { nickName, tel } = req.body;
 
         if (!nickName) {
@@ -273,26 +351,6 @@ export const infoChg = asyncHandler(
                 res.status(400).json({
                     error: true,
                     message: '변경된 내용이 없습니다.',
-                    result: false,
-                });
-                return;
-            }
-
-            if (req.session.user) {
-                req.session.user.nickName = nickName;
-            }
-            try {
-                await new Promise<void>((resolve, reject) => {
-                    req.session.save((err) => {
-                        if (err) reject(err);
-                        else resolve();
-                    });
-                });
-            } catch (saveErr) {
-                logger.error('프로필 수정 후 세션 저장 오류', { error: saveErr });
-                res.status(500).json({
-                    error: true,
-                    message: '프로필은 저장되었으나 세션 갱신에 실패했습니다. 다시 로그인해 주세요.',
                     result: false,
                 });
                 return;
@@ -353,7 +411,7 @@ export const pwdChg = asyncHandler(
         req: Request<{}, ApiSuccessResponse | ApiErrorResponse, PwdChgRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        const userId = req.session?.user?.id;
+        const userId = req.auth?.sub;
         if (!userId) {
             res.status(401).json({
                 error: true,
@@ -435,7 +493,7 @@ export const pwCheck = asyncHandler(
         req: Request<{}, ApiSuccessResponse | ApiErrorResponse, PwCheckRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        const userId = req.session?.user?.id;
+        const userId = req.auth?.sub;
         if (!userId) {
             res.status(401).send({ error: true, message: 'session error' });
             return;

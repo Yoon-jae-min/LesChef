@@ -45,10 +45,8 @@ function maskLoginId(id: string): string {
 }
 
 function signPasswordResetToken(userLoginId: string): string {
-    const secret = process.env.SESSION_SECRET_KEY;
-    if (!secret) {
-        throw new Error('SESSION_SECRET_KEY가 설정되지 않았습니다.');
-    }
+    const secret = process.env.JWT_PASSWORD_RESET_SECRET || process.env.JWT_ACCESS_SECRET;
+    if (!secret) throw new Error('JWT_PASSWORD_RESET_SECRET 또는 JWT_ACCESS_SECRET 가 필요합니다.');
     return jwt.sign(
         { typ: 'pwd_reset', sub: userLoginId },
         secret,
@@ -57,7 +55,7 @@ function signPasswordResetToken(userLoginId: string): string {
 }
 
 function verifyPasswordResetToken(token: string): string | null {
-    const secret = process.env.SESSION_SECRET_KEY;
+    const secret = process.env.JWT_PASSWORD_RESET_SECRET || process.env.JWT_ACCESS_SECRET;
     if (!secret) return null;
     try {
         const decoded = jwt.verify(token, secret) as jwt.JwtPayload;

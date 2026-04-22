@@ -4,6 +4,8 @@
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
+import { getAccessToken } from "@/utils/helpers/tokenStorage";
+import { refreshTokens } from "./refresh";
 
 const API_BASE_URL = API_CONFIG.CUSTOMER_API;
 
@@ -13,10 +15,18 @@ const API_BASE_URL = API_CONFIG.CUSTOMER_API;
  */
 export const checkAuth = async (): Promise<{ loggedIn: boolean }> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/auth`, {
-      method: "GET",
-      credentials: "include",
-    });
+    const accessToken = getAccessToken();
+    const doRequest = async (token: string | null) =>
+      fetch(`${API_BASE_URL}/auth`, {
+        method: "GET",
+        headers: token ? { Authorization: `Bearer ${token}` } : undefined,
+      });
+
+    let response = await doRequest(accessToken);
+    if (response.status === 401) {
+      const refreshed = await refreshTokens();
+      response = await doRequest(refreshed?.accessToken ?? null);
+    }
 
     if (!response.ok) {
       // 인증 확인 실패는 로그인 안 된 것으로 처리

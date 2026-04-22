@@ -6,6 +6,7 @@ export {
     postLogin,
     getLogout,
     getAuth,
+    postRefresh,
     getInfo,
     infoChg,
     idCheck,

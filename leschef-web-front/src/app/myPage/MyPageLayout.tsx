@@ -4,7 +4,6 @@ import Top from "@/components/common/navigation/Top";
 import TabNavigation from "@/components/common/navigation/TabNavigation";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, Suspense } from "react";
-import { checkLoginStatus } from "@/utils/helpers/authUtils";
 import { checkAuth } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
@@ -53,16 +52,10 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
 
   useEffect(() => {
     const verifyAuth = async () => {
-      // 1차: 서버 세션 기준으로 인증 상태 확인
+      // 서버 토큰(Access/Refresh) 기준으로 인증 상태 확인
       const authResult = await checkAuth();
       const serverLoggedIn = authResult.loggedIn === true;
-
-      // 2차: 클라이언트 플래그와 동기화
-      const clientLoggedIn = checkLoginStatus();
-
-      const loggedIn = serverLoggedIn && clientLoggedIn;
-
-      if (!loggedIn) {
+      if (!serverLoggedIn) {
         if (typeof window !== "undefined") {
           const attemptedPath = window.location.pathname + window.location.search;
           sessionStorage.setItem(STORAGE_KEYS.FROM_SOURCE, "mypage");

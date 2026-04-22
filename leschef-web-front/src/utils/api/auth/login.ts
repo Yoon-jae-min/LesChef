@@ -5,6 +5,8 @@
 
 import { API_CONFIG } from "@/config/apiConfig";
 import type { LoginData, LoginResponse } from "./types";
+import { setTokens } from "@/utils/helpers/tokenStorage";
+import { getRefreshToken, clearTokens } from "@/utils/helpers/tokenStorage";
 
 const API_BASE_URL = API_CONFIG.CUSTOMER_API;
 
@@ -30,7 +32,6 @@ export const login = async (data: LoginData): Promise<LoginResponse> => {
         customerId,
         customerPwd,
       }),
-      credentials: "include", // 세션 쿠키를 포함하기 위해
     });
 
     if (!response.ok) {
@@ -45,7 +46,10 @@ export const login = async (data: LoginData): Promise<LoginResponse> => {
       throw new Error(errorMessage);
     }
 
-    const result: LoginResponse = await response.json();
+    const result: LoginResponse & { accessToken?: string; refreshToken?: string } = await response.json();
+    if (result.accessToken && result.refreshToken) {
+      setTokens({ accessToken: result.accessToken, refreshToken: result.refreshToken });
+    }
     return result;
   } catch (error) {
     if (error instanceof Error) {
@@ -61,9 +65,10 @@ export const login = async (data: LoginData): Promise<LoginResponse> => {
  */
 export const logout = async (): Promise<Response> => {
   try {
+    const refreshToken = getRefreshToken();
     const response = await fetch(`${API_BASE_URL}/logout`, {
       method: "GET",
-      credentials: "include",
+      headers: refreshToken ? { "X-Refresh-Token": refreshToken } : undefined,
     });
 
     if (!response.ok) {
@@ -78,8 +83,10 @@ export const logout = async (): Promise<Response> => {
       throw new Error(errorMessage);
     }
 
+    clearTokens();
     return response;
   } catch (error) {
+    clearTokens();
     if (error instanceof Error) {
       throw error;
     }

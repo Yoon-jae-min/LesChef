@@ -1,16 +1,12 @@
 import express, { Request, Response, NextFunction } from 'express';
-import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import path from 'path';
 import https from 'https';
 import http from 'http';
 import fs from 'fs';
-import MongoStore from 'connect-mongo';
 import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import { dbConnect } from './config/dbConnect';
-import { SESSION_TTL_SECONDS, SESSION_MAX_AGE_MS } from './constants';
 import logger from './utils/system/logger';
 import errorHandler from './middleware/error/errorHandler';
 import {
@@ -44,7 +40,7 @@ const app = express();
 /**
  * Render/Vercel 같은 환경에서 TLS는 프록시에서 종료되고,
  * Node 앱은 HTTP로 요청을 받는 경우가 많습니다.
- * secure 쿠키가 정상 동작하도록 프록시를 신뢰합니다.
+ * req.ip / https 판별 등을 위해 프록시를 신뢰합니다.
  */
 app.set('trust proxy', 1);
 
@@ -126,9 +122,6 @@ if (disableHttps) {
     logger.info('ℹ️  SSL 인증서 경로가 설정되지 않았습니다. HTTP 모드로 실행합니다.');
 }
 
-/** SSL 파일을 읽었을 때만 true → HTTPS + 쿠키 Secure */
-const useHttps = httpsOptions !== null;
-
 const portRaw = process.env.PORT ?? '3001';
 const PORT = parseInt(portRaw, 10);
 if (Number.isNaN(PORT) || PORT < 1 || PORT > 65535) {
@@ -136,71 +129,10 @@ if (Number.isNaN(PORT) || PORT < 1 || PORT > 65535) {
     process.exit(1);
 }
 
-function parseCookieSameSite(): 'lax' | 'strict' | 'none' {
-    const v = (process.env.COOKIE_SAMESITE || 'lax').toLowerCase();
-    if (v === 'strict' || v === 'none' || v === 'lax') return v;
-    logger.warn('⚠️  COOKIE_SAMESITE 값이 유효하지 않아 lax 를 사용합니다.', {
-        value: process.env.COOKIE_SAMESITE,
-    });
-    return 'lax';
-}
+/** SSL 파일을 읽었을 때만 true → HTTPS */
+const useHttps = httpsOptions !== null;
 
-let cookieSameSite = parseCookieSameSite();
-let cookieSecure: boolean;
-const secureOverride = process.env.COOKIE_SECURE;
-if (secureOverride === 'true' || secureOverride === '1') {
-    cookieSecure = true;
-} else if (secureOverride === 'false' || secureOverride === '0') {
-    cookieSecure = false;
-} else {
-    cookieSecure = useHttps;
-}
-if (cookieSameSite === 'none' && !cookieSecure) {
-    logger.warn(
-        '⚠️  sameSite=none 은 Secure 쿠키가 필요합니다. cookie.secure 를 true 로 설정합니다.'
-    );
-    cookieSecure = true;
-}
-
-logger.info('세션 쿠키 옵션', {
-    secure: cookieSecure,
-    sameSite: cookieSameSite,
-    COOKIE_SECURE: process.env.COOKIE_SECURE ?? '(미설정 → HTTPS 여부 반영)',
-});
-
-/** 서명 쿠키(sessionId)의 clearCookie / res.cookie — express-session의 signed와 동일 시크릿 */
-app.use(cookieParser(process.env.SESSION_SECRET_KEY as string));
-
-// 세션 설정
-const mongoStore = MongoStore.create({
-    mongoUrl: process.env.DB_CONNECT,
-    ttl: SESSION_TTL_SECONDS,
-    collectionName: 'sessions',
-});
-
-app.use(
-    session({
-        store: mongoStore,
-        secret: process.env.SESSION_SECRET_KEY,
-        resave: false,
-        saveUninitialized: false,
-        name: 'sessionId', // 기본 'connect.sid' 대신 커스텀 이름 사용
-        cookie: {
-            secure: cookieSecure,
-            maxAge: SESSION_MAX_AGE_MS, // 1시간
-            httpOnly: true, // XSS 방지
-            sameSite: cookieSameSite,
-            signed: true, // 쿠키 서명
-            domain: process.env.COOKIE_DOMAIN || undefined, // 도메인 제한 (필요시)
-        },
-        // 세션 고정 공격 방지
-        genid: () => {
-            return require('crypto').randomBytes(16).toString('hex');
-        },
-    })
-);
-
-// CORS 설정 (세션 이후에 위치)
+// CORS 설정
 const corsOptions: cors.CorsOptions = {
     origin: (origin, callback) => {
         // Allow non-browser requests (curl, server-to-server) with no Origin header.
@@ -210,7 +142,7 @@ const corsOptions: cors.CorsOptions = {
     },
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
-    credentials: true,
+    credentials: false,
     optionsSuccessStatus: 204,
 };
 

@@ -5,6 +5,13 @@ import { Request, Response } from 'express';
 import User from '../../../models/user/userModel';
 import { getKakaoToken, getKakaoUserInfo } from '../../../utils/external/kakao';
 import logger from '../../../utils/system/logger';
+import RefreshToken from '../../../models/auth/refreshTokenModel';
+import {
+    getRefreshTtlSeconds,
+    makeRefreshJti,
+    signAccessToken,
+    signRefreshToken,
+} from '../../../utils/auth/token';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
@@ -153,31 +160,36 @@ export const kakaoLogin = asyncHandler(async (req: Request, res: Response) => {
                 user = await User.findOne({ id: finalUserId }).lean();
             }
 
-            req.session.user = {
-                id: finalUserId,
-                nickName: user ? user.nickName : kakaoNickname,
-                userType: 'kakao',
-            };
-
-            req.session.save((err) => {
-                if (err) {
-                    if (isDev) {
-                        logger.error('세션 저장 오류:', { error: err });
-                    }
-                    res.status(500).send('세션 저장 중 오류가 발생했습니다.');
-                    return;
-                }
-                const userId = finalUserId;
-                const name = user ? user.name : 'user';
-                const nickName = user ? user.nickName : kakaoNickname;
-                const tel = user ? user.tel : '';
-
-                // 프론트엔드 주소로 리다이렉트 (없으면 SERVER_ADDRESS fallback)
-                const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
-                res.redirect(
-                    `${redirectBase}/?userId=${userId}&name=${name}&nickName=${nickName}&tel=${tel}`
-                );
+            const refreshJti = makeRefreshJti();
+            const refreshExpiresAt = new Date(Date.now() + getRefreshTtlSeconds() * 1000);
+            await RefreshToken.create({
+                userId: finalUserId,
+                jti: refreshJti,
+                expiresAt: refreshExpiresAt,
             });
+
+            const accessToken = signAccessToken({
+                sub: finalUserId,
+                userType: user?.userType || 'kakao',
+                nickName: user ? user.nickName : kakaoNickname,
+            });
+            const refreshToken = signRefreshToken({ sub: finalUserId, jti: refreshJti });
+
+            const userId = finalUserId;
+            const name = (user ? user.name : 'user') || '';
+            const nickName = (user ? user.nickName : kakaoNickname) || '';
+            const tel = (user ? user.tel : '') || '';
+
+            const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+            res.redirect(
+                `${redirectBase}/social/callback#accessToken=${encodeURIComponent(
+                    accessToken
+                )}&refreshToken=${encodeURIComponent(refreshToken)}&userId=${encodeURIComponent(
+                    userId
+                )}&name=${encodeURIComponent(name)}&nickName=${encodeURIComponent(
+                    nickName
+                )}&tel=${encodeURIComponent(tel)}`
+            );
         } else {
             res.status(400).send('카카오 인증 코드가 없습니다.');
         }

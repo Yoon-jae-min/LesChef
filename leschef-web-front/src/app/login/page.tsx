@@ -59,7 +59,6 @@ export default function LoginPage() {
 
       if (result.text === "login Success") {
         // 로그인 성공 시 처리
-        // 세션 쿠키가 자동으로 설정되므로 별도로 저장할 필요 없음
         setError(null);
 
         if (typeof window !== "undefined") {
