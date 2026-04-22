@@ -138,6 +138,14 @@ export const getAuth = (
     res: Response<(ApiSuccessResponse & { loggedIn: boolean }) | ApiErrorResponse>
 ): void => {
     try {
+        // Auth 상태는 캐시되면 안 됩니다. (브라우저/프록시가 304를 만들면 프론트에서 로그인 판정이 깨짐)
+        res.setHeader(
+            'Cache-Control',
+            'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0'
+        );
+        res.setHeader('Pragma', 'no-cache');
+        res.setHeader('Expires', '0');
+
         if (req.session?.user) {
             res.status(200).json({
                 error: false,
@@ -146,7 +154,6 @@ export const getAuth = (
         } else {
             res.clearCookie('sessionId', {
                 path: '/',
-                signed: true,
                 ...(process.env.COOKIE_DOMAIN ? { domain: process.env.COOKIE_DOMAIN } : {}),
             });
             res.status(200).json({

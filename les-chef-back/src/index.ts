@@ -41,11 +41,25 @@ dbConnect().catch((error: Error) => {
 });
 
 const app = express();
+/**
+ * Render/Vercel 같은 환경에서 TLS는 프록시에서 종료되고,
+ * Node 앱은 HTTP로 요청을 받는 경우가 많습니다.
+ * secure 쿠키가 정상 동작하도록 프록시를 신뢰합니다.
+ */
+app.set('trust proxy', 1);
 
 const corsOriginUrls = (process.env.CORS_ORIGIN || '')
     .split(',')
     .map((o) => o.trim())
     .filter(Boolean);
+const allowedOrigins =
+    corsOriginUrls.length > 0
+        ? corsOriginUrls
+        : [
+              // Fallback so deploys don't silently break when CORS_ORIGIN is missing/misconfigured.
+              // Prefer setting CORS_ORIGIN explicitly in production.
+              'https://leschef-web.vercel.app',
+          ];
 const connectSrcDirectives = ["'self'", ...corsOriginUrls];
 const helmetCspDisabled =
     process.env.HELMET_CSP === '0' ||
@@ -187,14 +201,22 @@ app.use(
 );
 
 // CORS 설정 (세션 이후에 위치)
-app.use(
-    cors({
-        origin: process.env.CORS_ORIGIN.split(','),
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
-        credentials: true,
-    })
-);
+const corsOptions: cors.CorsOptions = {
+    origin: (origin, callback) => {
+        // Allow non-browser requests (curl, server-to-server) with no Origin header.
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) return callback(null, true);
+        return callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
+    optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+// Ensure all preflight requests get a CORS response.
+app.options('*', cors(corsOptions));
 
 // JSON 파싱 미들웨어 (크기 제한)
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
