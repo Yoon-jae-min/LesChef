@@ -3,6 +3,7 @@
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.FOODS_API;
 
@@ -15,10 +16,9 @@ export async function uploadFoodItemImage(file: File): Promise<{ imageUrl: strin
   const formData = new FormData();
   formData.append("itemImage", file);
 
-  const response = await fetch(`${API_BASE_URL}/upload-item-image`, {
+  const response = await authFetch(`${API_BASE_URL}/upload-item-image`, {
     method: "POST",
     body: formData,
-    credentials: "include",
   });
 
   let data: unknown = null;

@@ -22,7 +22,6 @@ export const fetchBoardList = async (params: BoardListParams = {}): Promise<Boar
 
     const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -59,7 +58,6 @@ export const fetchBoardDetail = async (id: string): Promise<BoardDetailResponse>
   try {
     const response = await fetch(`${API_BASE_URL}/watch?id=${encodeURIComponent(id)}`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {

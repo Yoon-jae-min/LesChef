@@ -4,6 +4,7 @@
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 import { handleApiError } from "@/utils/helpers/error";
 import type {
   RecipeListParams,
@@ -39,7 +40,6 @@ export const fetchRecipeList = async (
 
     const response = await fetch(`${API_BASE_URL}/list?${query.toString()}`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -66,7 +66,6 @@ export const fetchRecipeDetailById = async (recipeId: string): Promise<RecipeDet
   try {
     const response = await fetch(`${API_BASE_URL}/info?id=${encodeURIComponent(recipeId)}`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -99,11 +98,10 @@ export const fetchRecipeForEdit = async (recipeId: string): Promise<RecipeDetail
   }
 
   try {
-    const response = await fetch(
+    const response = await authFetch(
       `${API_BASE_URL}/info?id=${encodeURIComponent(recipeId)}&forEdit=1`,
       {
         method: "GET",
-        credentials: "include",
       }
     );
 
@@ -130,9 +128,8 @@ export const fetchRecipeForEdit = async (recipeId: string): Promise<RecipeDetail
  */
 export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/myList`, {
+    const response = await authFetch(`${API_BASE_URL}/myList`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -161,9 +158,8 @@ export const fetchMyRecipeList = async (): Promise<MyRecipeListResponse> => {
  */
 export const fetchWishRecipeList = async (): Promise<WishRecipeListResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/wishList`, {
+    const response = await authFetch(`${API_BASE_URL}/wishList`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {
