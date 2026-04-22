@@ -4,6 +4,7 @@
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.BASE_URL;
 
@@ -30,12 +31,11 @@ export type IngredientPriceResponse = {
  */
 export const getIngredientPrices = async (): Promise<IngredientPriceResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/ingredient-price`, {
+    const response = await authFetch(`${API_BASE_URL}/ingredient-price`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: "include", // 세션 쿠키 포함 (필요한 경우)
     });
 
     if (!response.ok) {

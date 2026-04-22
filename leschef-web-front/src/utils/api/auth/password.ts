@@ -3,6 +3,7 @@
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.CUSTOMER_API;
 
@@ -18,12 +19,11 @@ export type ChangePasswordParams = {
 export async function changePassword(params: ChangePasswordParams): Promise<void> {
   const { currentPwd, newPwd } = params;
 
-  const response = await fetch(`${API_BASE_URL}/pwdChg`, {
+  const response = await authFetch(`${API_BASE_URL}/pwdChg`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    credentials: "include",
     body: JSON.stringify({ currentPwd, newPwd }),
   });
 

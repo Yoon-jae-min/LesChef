@@ -5,6 +5,7 @@
 
 import { API_CONFIG } from "@/config/apiConfig";
 import type { BoardWriteData, BoardEditData } from "./types";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.BOARD_API;
 
@@ -21,7 +22,7 @@ export const createBoard = async (data: BoardWriteData): Promise<Response> => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/write`, {
+    const response = await authFetch(`${API_BASE_URL}/write`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -31,7 +32,6 @@ export const createBoard = async (data: BoardWriteData): Promise<Response> => {
         content,
         ...(boardType ? { boardType } : {}),
       }),
-      credentials: "include", // 세션 쿠키를 포함하기 위해
     });
 
     if (!response.ok) {
@@ -68,7 +68,7 @@ export const updateBoard = async (data: BoardEditData): Promise<Response> => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await authFetch(`${API_BASE_URL}/${id}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,6 @@ export const updateBoard = async (data: BoardEditData): Promise<Response> => {
         title,
         content,
       }),
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -112,9 +111,8 @@ export const deleteBoard = async (id: string): Promise<Response> => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/${id}`, {
+    const response = await authFetch(`${API_BASE_URL}/${id}`, {
       method: "DELETE",
-      credentials: "include",
     });
 
     if (!response.ok) {

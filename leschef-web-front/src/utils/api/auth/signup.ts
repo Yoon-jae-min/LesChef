@@ -34,7 +34,6 @@ export const signup = async (data: SignupData): Promise<Response> => {
         nickName,
         tel: tel || "", // 기본값
       }),
-      credentials: "include", // 세션 쿠키를 포함하기 위해
     });
 
     if (!response.ok) {
@@ -71,7 +70,6 @@ export const checkIdDuplicate = async (id: string): Promise<string> => {
   try {
     const response = await fetch(`${API_BASE_URL}/check?id=${encodeURIComponent(id)}`, {
       method: "GET",
-      credentials: "include",
     });
 
     const bodyText = await response.text();
@@ -112,7 +110,6 @@ export const sendVerificationCode = async (email: string): Promise<Response> => 
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email }),
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -154,7 +151,6 @@ export const verifyEmailCode = async (email: string, code: string): Promise<Resp
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ email, code }),
-      credentials: "include",
     });
 
     if (!response.ok) {

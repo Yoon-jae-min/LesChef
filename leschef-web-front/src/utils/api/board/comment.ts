@@ -4,6 +4,7 @@
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.BOARD_API;
 
@@ -25,7 +26,7 @@ export const createBoardComment = async (data: {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/commentWrite`, {
+    const response = await authFetch(`${API_BASE_URL}/commentWrite`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +35,6 @@ export const createBoardComment = async (data: {
         boardId,
         content,
       }),
-      credentials: "include",
     });
 
     if (!response.ok) {

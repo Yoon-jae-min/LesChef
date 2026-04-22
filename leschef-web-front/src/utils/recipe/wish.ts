@@ -4,6 +4,7 @@
 
 import { API_CONFIG } from "@/config/apiConfig";
 import type { ToggleWishResponse } from "@/types/recipe";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.RECIPE_API;
 
@@ -16,13 +17,12 @@ export const toggleRecipeWish = async (recipeId: string): Promise<ToggleWishResp
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/clickwish`, {
+    const response = await authFetch(`${API_BASE_URL}/clickwish`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ recipeId }),
-      credentials: "include",
     });
 
     if (!response.ok) {

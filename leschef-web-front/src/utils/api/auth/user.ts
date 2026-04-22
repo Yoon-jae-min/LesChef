@@ -5,6 +5,7 @@
 
 import { API_CONFIG } from "@/config/apiConfig";
 import type { UserInfoResponse, UpdateUserProfileParams } from "./types";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.CUSTOMER_API;
 
@@ -14,9 +15,8 @@ const API_BASE_URL = API_CONFIG.CUSTOMER_API;
  */
 export const fetchUserInfo = async (): Promise<UserInfoResponse> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/info`, {
+    const response = await authFetch(`${API_BASE_URL}/info`, {
       method: "GET",
-      credentials: "include",
     });
 
     if (!response.ok) {
@@ -50,10 +50,9 @@ export const updateUserProfile = async (params: UpdateUserProfileParams): Promis
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/info`, {
+    const response = await authFetch(`${API_BASE_URL}/info`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      credentials: "include",
       body: JSON.stringify({
         nickName,
         tel: params.tel?.trim() ?? "",
@@ -100,10 +99,9 @@ export async function verifyPasswordForSession(password: string): Promise<boolea
     return false;
   }
 
-  const response = await fetch(`${API_BASE_URL}/check`, {
+  const response = await authFetch(`${API_BASE_URL}/check`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
     body: JSON.stringify({ password: trimmed }),
   });
 
@@ -140,10 +138,9 @@ export async function deleteAccount(params: DeleteAccountParams): Promise<void> 
     body.customReason = params.customReason.trim();
   }
 
-  const response = await fetch(`${API_BASE_URL}/delete`, {
+  const response = await authFetch(`${API_BASE_URL}/delete`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
-    credentials: "include",
     body: JSON.stringify(body),
   });
 

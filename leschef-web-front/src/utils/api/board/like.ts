@@ -5,6 +5,7 @@
 
 import { API_CONFIG } from "@/config/apiConfig";
 import type { ToggleBoardLikeResponse } from "./types";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.BOARD_API;
 
@@ -19,13 +20,12 @@ export const toggleBoardLike = async (boardId: string): Promise<ToggleBoardLikeR
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/like`, {
+    const response = await authFetch(`${API_BASE_URL}/like`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ boardId }),
-      credentials: "include",
     });
 
     if (!response.ok) {

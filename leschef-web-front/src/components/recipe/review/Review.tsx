@@ -4,6 +4,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { checkLoginStatus, getCurrentUserId } from "@/utils/helpers/authUtils";
 import { TIMING } from "@/constants/system/timing";
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 import ReviewForm, { type RecipeReview } from "./ReviewForm";
 import ReviewList from "./ReviewList";
 
@@ -59,9 +60,8 @@ export default function Review({ recipeId }: ReviewProps) {
       const url = new URL(`${REVIEW_API_BASE}/reviews`);
       url.searchParams.set("recipeId", recipeId);
 
-      const response = await fetch(url.toString(), {
+      const response = await authFetch(url.toString(), {
         method: "GET",
-        credentials: "include",
       });
 
       if (!response.ok) {
@@ -97,12 +97,11 @@ export default function Review({ recipeId }: ReviewProps) {
     async (rating: number, comment: string) => {
       setIsSubmitting(true);
       try {
-        const response = await fetch(`${REVIEW_API_BASE}/review`, {
+        const response = await authFetch(`${REVIEW_API_BASE}/review`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          credentials: "include",
           body: JSON.stringify({
             recipeId,
             rating,
@@ -144,12 +143,11 @@ export default function Review({ recipeId }: ReviewProps) {
   const handleDelete = useCallback(async () => {
     setIsSubmitting(true);
     try {
-      const response = await fetch(`${REVIEW_API_BASE}/review`, {
+      const response = await authFetch(`${REVIEW_API_BASE}/review`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        credentials: "include",
         body: JSON.stringify({ recipeId }),
       });
 

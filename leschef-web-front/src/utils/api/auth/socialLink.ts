@@ -1,4 +1,5 @@
 import { API_CONFIG } from "@/config/apiConfig";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.CUSTOMER_API;
 
@@ -9,9 +10,8 @@ export type SocialProvider = "kakao" | "google" | "naver";
  */
 export const unlinkSocial = async (provider: SocialProvider): Promise<void> => {
   try {
-    const response = await fetch(`${API_BASE_URL}/unlink/${provider}`, {
+    const response = await authFetch(`${API_BASE_URL}/unlink/${provider}`, {
       method: "POST",
-      credentials: "include",
     });
 
     if (!response.ok) {

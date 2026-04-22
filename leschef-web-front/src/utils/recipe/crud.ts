@@ -7,6 +7,7 @@ import { API_CONFIG } from "@/config/apiConfig";
 import { handleApiError } from "@/utils/helpers/error";
 import type { RecipeSubmitData, RecipeInfo } from "@/types/recipe";
 import { transformIngredients, transformSteps } from "./transformers";
+import { authFetch } from "@/utils/api/authFetch";
 
 const API_BASE_URL = API_CONFIG.RECIPE_API;
 
@@ -66,11 +67,10 @@ export const submitRecipe = async (data: RecipeSubmitData): Promise<Response> =>
 
   // 서버로 전송
   try {
-    const response = await fetch(`${API_BASE_URL}/write`, {
+    const response = await authFetch(`${API_BASE_URL}/write`, {
       method: "POST",
       body: formData,
       // FormData를 사용할 때는 Content-Type을 설정하지 않음 (브라우저가 자동으로 설정)
-      credentials: "include", // 세션 쿠키를 포함하기 위해
     });
 
     if (!response.ok) {
@@ -121,9 +121,8 @@ export const deleteRecipe = async (recipeId: string): Promise<Response> => {
   }
 
   try {
-    const response = await fetch(`${API_BASE_URL}/${recipeId}`, {
+    const response = await authFetch(`${API_BASE_URL}/${recipeId}`, {
       method: "DELETE",
-      credentials: "include",
     });
 
     if (!response.ok) {

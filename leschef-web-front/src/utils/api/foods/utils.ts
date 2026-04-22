@@ -6,9 +6,9 @@
  * JSON 응답을 가져오는 공통 함수
  */
 export async function fetchJson<T>(url: string, options: RequestInit = {}): Promise<T> {
-  const response = await fetch(url, {
+  const { authFetch } = await import("@/utils/api/authFetch");
+  const response = await authFetch(url, {
     ...options,
-    credentials: "include",
     headers: {
       ...(options.headers || {}),
     },
