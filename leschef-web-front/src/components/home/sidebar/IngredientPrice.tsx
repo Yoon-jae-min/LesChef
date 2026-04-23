@@ -26,10 +26,15 @@ export default function IngredientPrice({ initialData, initialError }: Ingredien
     data: priceData,
     error: priceError,
     isLoading,
+    mutate,
   } = useSWR<IngredientPriceResponse>("/ingredient-price", getIngredientPrices, {
     revalidateOnFocus: false,
     dedupingInterval: TIMING.ONE_HOUR,
     fallbackData: initialData || undefined,
+    shouldRetryOnError: true,
+    errorRetryCount: 4,
+    errorRetryInterval: 1500,
+    revalidateOnReconnect: true,
   });
 
   const ingredientPrices = priceData?.data || initialData?.data || [];
@@ -60,7 +65,8 @@ export default function IngredientPrice({ initialData, initialError }: Ingredien
           error={displayError}
           className="text-xs"
           showDetails={false}
-          showAction={false}
+          showAction={true}
+          onRetry={() => void mutate()}
         />
       )}
 

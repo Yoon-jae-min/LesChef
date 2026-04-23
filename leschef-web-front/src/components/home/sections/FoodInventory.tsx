@@ -19,12 +19,16 @@ interface FoodInventoryProps {
 export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps) {
   const sectionTitleId = useId();
   const subsectionTitleId = useId();
-  const { data, error, isLoading } = useSWR<FoodsListResponse>(
+  const { data, error, isLoading, mutate } = useSWR<FoodsListResponse>(
     isLoggedIn ? "/foods/place" : null,
     () => fetchFoodsList(),
     {
       dedupingInterval: TIMING.ONE_MINUTE,
       revalidateOnFocus: false,
+      shouldRetryOnError: true,
+      errorRetryCount: 3,
+      errorRetryInterval: 1500,
+      revalidateOnReconnect: true,
     }
   );
 
@@ -65,7 +69,12 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
           <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
             보유 재료 요약
           </h2>
-          <ErrorMessage error={error} showDetails={false} showAction={false} />
+          <ErrorMessage
+            error={error}
+            showDetails={false}
+            showAction={true}
+            onRetry={() => void mutate()}
+          />
         </div>
       </section>
     );

@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { fetchBoardList, type BoardListResponse } from "@/utils/api/board";
 import { BOARD_CATEGORY_LABEL } from "@/constants/navigation/categories";
 import { checkLoginStatus, getCurrentUserId } from "@/utils/helpers/authUtils";
+import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
 interface BoardListProps {
   initialCategory: "notice" | "free";
@@ -67,11 +68,16 @@ export default function BoardList({
     data,
     error,
     isLoading: loading,
+    mutate,
   } = useSWR<BoardListResponse>(
     ["board-list", listType, page, pageSize],
     () => fetchBoardList({ page, limit: pageSize, type: listType }),
     {
       fallbackData: initialData || undefined, // 서버에서 가져온 초기 데이터 사용
+      shouldRetryOnError: true,
+      errorRetryCount: 3,
+      errorRetryInterval: 1500,
+      revalidateOnReconnect: true,
     }
   );
 
@@ -96,10 +102,13 @@ export default function BoardList({
           </div>
         )}
         {displayError && !loading && (
-          <div className="col-span-full rounded-[20px] border border-red-200/90 bg-red-50/90 px-5 py-4 text-sm text-red-800 shadow-sm ring-1 ring-red-900/5">
-            {displayError instanceof Error
-              ? displayError.message
-              : "게시글을 불러오지 못했습니다."}
+          <div className="col-span-full">
+            <ErrorMessage
+              error={displayError}
+              showDetails={false}
+              showAction={true}
+              onRetry={() => void mutate()}
+            />
           </div>
         )}
         {!loading && !displayError && posts.length === 0 && (

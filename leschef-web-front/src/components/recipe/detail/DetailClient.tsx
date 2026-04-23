@@ -15,6 +15,7 @@ import Review from "../review/Review";
 import DetailMeta from "./DetailMeta";
 import Ingredients from "./Ingredients";
 import DetailSteps from "./DetailSteps";
+import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
 interface DetailClientProps {
   recipeId: string;
@@ -146,12 +147,12 @@ function DetailClient({ recipeId, initialData, initialError }: DetailClientProps
       )}
       {displayError && !loading && (
         <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6">
-          <div
-            className="rounded-2xl border border-red-200/80 bg-red-50 px-5 py-4 text-sm text-red-800 shadow-sm"
-            role="alert"
-          >
-            {displayError instanceof Error ? displayError.message : "레시피를 불러오지 못했습니다."}
-          </div>
+          <ErrorMessage
+            error={displayError}
+            showDetails={false}
+            showAction={true}
+            onRetry={() => void mutate()}
+          />
         </div>
       )}
 

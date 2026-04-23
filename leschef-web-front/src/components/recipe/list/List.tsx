@@ -117,6 +117,7 @@ export default function List({
     data,
     error,
     isLoading,
+    mutate,
   } = useSWR<RecipeListResponse>(
     ["recipe-list", apiCategory, searchKeyword, sortOption, subCategory],
     () =>
@@ -128,6 +129,10 @@ export default function List({
       }),
     {
       dedupingInterval: TIMING.FIVE_MINUTES, // 5분 동안 중복 요청 방지
+      shouldRetryOnError: true,
+      errorRetryCount: 3,
+      errorRetryInterval: 1500,
+      revalidateOnReconnect: true,
       fallbackData:
         searchKeyword ||
         sortOption !== DEFAULT_SORT_OPTION ||
@@ -202,9 +207,7 @@ export default function List({
             error={displayError}
             showDetails={false}
             showAction={true}
-            onRetry={() => {
-              window.location.reload();
-            }}
+            onRetry={() => void mutate()}
           />
         </div>
       )}

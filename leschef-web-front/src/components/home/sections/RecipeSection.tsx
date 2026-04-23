@@ -35,12 +35,16 @@ export default function RecipeSection({
   viewAllHref,
 }: RecipeSectionProps) {
   const sectionTitleId = useId();
-  const { data, error, isLoading } = useSWR<RecipeListResponse>(
+  const { data, error, isLoading, mutate } = useSWR<RecipeListResponse>(
     [`recipe-section-${sort}-${category}`, category, sort, limit],
     () => fetchRecipeList({ category, sort, limit }),
     {
       dedupingInterval: TIMING.FIVE_MINUTES,
       revalidateOnFocus: false,
+      shouldRetryOnError: true,
+      errorRetryCount: 3,
+      errorRetryInterval: 1500,
+      revalidateOnReconnect: true,
     }
   );
 
@@ -53,7 +57,12 @@ export default function RecipeSection({
           <h2 id={sectionTitleId} className="text-3xl font-bold text-gray-900 mb-6">
             {title}
           </h2>
-          <ErrorMessage error={error} showDetails={false} showAction={false} />
+          <ErrorMessage
+            error={error}
+            showDetails={false}
+            showAction={true}
+            onRetry={() => void mutate()}
+          />
         </div>
       </section>
     );

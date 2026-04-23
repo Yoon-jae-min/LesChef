@@ -10,6 +10,7 @@ import { useComments } from "@/hooks/useComments";
 import { useLike } from "@/hooks/useLike";
 import { checkLoginStatus, getCurrentUserId } from "@/utils/helpers/authUtils";
 import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
+import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
 interface BoardDetailProps {
   postId: string;
@@ -132,11 +133,12 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
       )}
       {displayError && !loading && (
         <div className="mx-auto max-w-4xl px-6 py-8">
-          <div className="rounded-[20px] border border-red-200/90 bg-red-50/90 px-5 py-4 text-sm text-red-800 shadow-sm ring-1 ring-red-900/5">
-            {displayError instanceof Error
-              ? displayError.message
-              : "게시글을 불러오지 못했습니다."}
-          </div>
+          <ErrorMessage
+            error={displayError}
+            showDetails={false}
+            showAction={true}
+            onRetry={() => void mutate()}
+          />
         </div>
       )}
 
