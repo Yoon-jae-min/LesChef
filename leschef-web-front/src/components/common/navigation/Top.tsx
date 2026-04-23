@@ -15,6 +15,7 @@ function Top(): React.JSX.Element {
   const pathname = usePathname();
   const { mutate } = useSWRConfig();
   const [isSearchExpanded, setIsSearchExpanded] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isAuthReady, setIsAuthReady] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
@@ -30,6 +31,12 @@ function Top(): React.JSX.Element {
     window.addEventListener("storage", checkLogin);
     return () => window.removeEventListener("storage", checkLogin);
   }, []);
+
+  // 라우트가 바뀌면 모바일 메뉴/검색은 닫기
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setIsSearchExpanded(false);
+  }, [pathname]);
 
   // 현재 경로 계산
   const getCurrentPath = useCallback(() => {
@@ -94,12 +101,51 @@ function Top(): React.JSX.Element {
     setIsSearchExpanded((prev) => !prev);
   }, []);
 
+  const handleToggleMobileMenu = useCallback(() => {
+    setIsMobileMenuOpen((prev) => !prev);
+  }, []);
+
   return (
     <>
       <header className="w-full bg-white border-b border-gray-200 py-2 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center max-w-6xl mx-auto h-14 px-4 lg:px-8">
           {/* 로고 */}
           <div className="flex items-center h-full lg:-translate-x-8">
+            {/* 모바일 메뉴 버튼 */}
+            <button
+              type="button"
+              onClick={handleToggleMobileMenu}
+              className="md:hidden w-8 h-8 flex items-center justify-center hover:bg-gray-100 rounded-xl transition-all ml-1 mr-1"
+              aria-label={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+              aria-expanded={isMobileMenuOpen}
+              aria-controls="top-mobile-menu"
+              title={isMobileMenuOpen ? "메뉴 닫기" : "메뉴 열기"}
+            >
+              {isMobileMenuOpen ? (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  className="w-6 h-6 text-gray-700"
+                >
+                  <path d="M6 6l12 12" strokeLinecap="round" />
+                  <path d="M18 6L6 18" strokeLinecap="round" />
+                </svg>
+              ) : (
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                  className="w-6 h-6 text-gray-700"
+                >
+                  <path d="M4 7h16" strokeLinecap="round" />
+                  <path d="M4 12h16" strokeLinecap="round" />
+                  <path d="M4 17h16" strokeLinecap="round" />
+                </svg>
+              )}
+            </button>
             <Link
               href="/"
               title="홈"
@@ -107,14 +153,14 @@ function Top(): React.JSX.Element {
               onClick={() => sessionStorage.setItem("fromLogoClick", "true")}
             >
               {/* LesChef 텍스트 로고 */}
-              <span className="text-3xl font-bold tracking-normal leading-none text-gray-900 group-hover:text-orange-500 transition-colors duration-200 ml-3 mr-3">
+              <span className="text-3xl font-bold tracking-normal leading-none text-gray-900 group-hover:text-orange-500 transition-colors duration-200 ml-2 mr-3">
                 LesChef
               </span>
             </Link>
           </div>
 
           {/* 네비게이션 메뉴 아이콘들 */}
-          <div className="flex items-center space-x-4 md:space-x-6 lg:space-x-8 ml-4 md:ml-8 lg:ml-16 lg:-translate-x-8">
+          <div className="hidden md:flex items-center space-x-4 md:space-x-6 lg:space-x-8 ml-4 md:ml-8 lg:ml-16 lg:-translate-x-8">
             {NAVIGATION_ITEMS.map((item) => {
               const isActive = getActiveMenuId(pathname || "") === item.id;
               const iconClassName = isActive ? "w-6 h-6 text-orange-600" : "w-6 h-6 text-gray-600";
@@ -238,6 +284,77 @@ function Top(): React.JSX.Element {
           </div>
         </div>
       </header>
+
+      {/* 모바일 메뉴 드롭다운 */}
+      {isMobileMenuOpen && (
+        <div
+          id="top-mobile-menu"
+          className="md:hidden w-full bg-white border-b border-gray-200 shadow-sm"
+        >
+          <div className="max-w-6xl mx-auto px-4 py-3">
+            <nav className="grid grid-cols-1 gap-1">
+              {NAVIGATION_ITEMS.map((item) => {
+                const isActive = getActiveMenuId(pathname || "") === item.id;
+
+                let IconComponent: React.ComponentType<{ className?: string }>;
+                switch (item.iconId) {
+                  case "storage":
+                    IconComponent = StorageIcon;
+                    break;
+                  case "recipe":
+                    IconComponent = RecipeIcon;
+                    break;
+                  case "mypage":
+                    IconComponent = MyPageIcon;
+                    break;
+                  case "board":
+                    IconComponent = BoardIcon;
+                    break;
+                  default:
+                    IconComponent = RecipeIcon;
+                }
+
+                return (
+                  <Link
+                    key={item.id}
+                    href={item.href}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className={`flex items-center gap-3 rounded-2xl px-3 py-2 transition-colors ${
+                      isActive ? "bg-orange-50" : "hover:bg-gray-100"
+                    }`}
+                    aria-label={item.ariaLabel}
+                    title={item.label}
+                  >
+                    <div
+                      className={`w-9 h-9 flex items-center justify-center rounded-xl ${
+                        isActive ? "bg-orange-100" : "bg-gray-50"
+                      }`}
+                    >
+                      <IconComponent
+                        className={isActive ? "w-5 h-5 text-orange-600" : "w-5 h-5 text-gray-700"}
+                      />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span
+                        className={`text-sm font-medium ${
+                          isActive ? "text-orange-700" : "text-gray-900"
+                        }`}
+                      >
+                        {item.label}
+                      </span>
+                      {isActive && (
+                        <span className="text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
+                          현재
+                        </span>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      )}
 
       {/* 확장된 검색바 - 모바일에서만 표시 */}
       {isSearchExpanded && (
