@@ -31,10 +31,8 @@ import ingredientPrice from './routers/ingredientPrice';
 import { healthCheck } from './controllers/health';
 
 // MongoDB 연결
-dbConnect().catch((error: Error) => {
-    logger.error('❌ DB connection error:', { error });
-    process.exit(1); // 연결 실패 시 프로세스 종료
-});
+// NOTE: DB 연결이 느린 환경에서는 "첫 요청"이 DB 연결 완료까지 기다리며
+// 체감 로딩이 길어질 수 있습니다. 서버가 요청을 받기 전에 DB를 먼저 연결합니다.
 
 const app = express();
 /**
@@ -229,11 +227,27 @@ const publicBase =
     (useHttps ? `https://localhost:${PORT}` : `http://localhost:${PORT}`);
 
 if (useHttps && httpsOptions) {
-    https.createServer(httpsOptions, app).listen(PORT, bindHost, () => {
-        logger.info(`✅ HTTPS 서버 실행 중 — PORT=${PORT}, host=${bindHost}`, { publicBase });
-    });
+    (async () => {
+        try {
+            await dbConnect();
+            https.createServer(httpsOptions, app).listen(PORT, bindHost, () => {
+                logger.info(`✅ HTTPS 서버 실행 중 — PORT=${PORT}, host=${bindHost}`, { publicBase });
+            });
+        } catch (error) {
+            logger.error('❌ DB connection error:', { error });
+            process.exit(1);
+        }
+    })();
 } else {
-    http.createServer(app).listen(PORT, bindHost, () => {
-        logger.info(`✅ HTTP 서버 실행 중 — PORT=${PORT}, host=${bindHost}`, { publicBase });
-    });
+    (async () => {
+        try {
+            await dbConnect();
+            http.createServer(app).listen(PORT, bindHost, () => {
+                logger.info(`✅ HTTP 서버 실행 중 — PORT=${PORT}, host=${bindHost}`, { publicBase });
+            });
+        } catch (error) {
+            logger.error('❌ DB connection error:', { error });
+            process.exit(1);
+        }
+    })();
 }
