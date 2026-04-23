@@ -36,10 +36,16 @@ export default function IngredientPriceFullView({
     data: priceData,
     error: priceError,
     isLoading,
+    mutate,
   } = useSWR<IngredientPriceResponse>("/ingredient-price", getIngredientPrices, {
     revalidateOnFocus: false,
     dedupingInterval: TIMING.ONE_HOUR,
     fallbackData: initialData || undefined,
+    // 첫 요청이 네트워크/콜드스타트로 실패해도 새로고침 없이 자동 복구
+    shouldRetryOnError: true,
+    errorRetryCount: 4,
+    errorRetryInterval: 1500,
+    revalidateOnReconnect: true,
   });
 
   const ingredientPrices = priceData?.data ?? initialData?.data ?? [];
@@ -81,7 +87,16 @@ export default function IngredientPriceFullView({
         )}
 
         {displayError && !isLoading && (
-          <ErrorMessage error={displayError} showDetails={false} showAction={false} />
+          <div className="space-y-4">
+            <ErrorMessage error={displayError} showDetails={false} showAction={false} />
+            <button
+              type="button"
+              onClick={() => void mutate()}
+              className="inline-flex items-center justify-center rounded-2xl bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-800 transition-colors"
+            >
+              다시 시도
+            </button>
+          </div>
         )}
 
         {!isLoading && !displayError && ingredientPrices.length === 0 && (
