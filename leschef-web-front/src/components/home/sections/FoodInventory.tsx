@@ -14,9 +14,10 @@ import ErrorMessage from "@/components/common/ui/ErrorMessage";
 
 interface FoodInventoryProps {
   isLoggedIn?: boolean;
+  authLoading?: boolean;
 }
 
-export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps) {
+export default function FoodInventory({ isLoggedIn = false, authLoading = false }: FoodInventoryProps) {
   const sectionTitleId = useId();
   const subsectionTitleId = useId();
   const { data, error, isLoading, mutate } = useSWR<FoodsListResponse>(
@@ -38,6 +39,32 @@ export default function FoodInventory({ isLoggedIn = false }: FoodInventoryProps
   const totalFoods = useMemo(() => {
     return places.reduce((sum, place) => sum + (place.foodList?.length || 0), 0);
   }, [places]);
+
+  // 인증 확인 중에는 "로그인하세요"를 먼저 보여주지 않고, 섹션 스켈레톤으로 대기
+  if (authLoading) {
+    return (
+      <section
+        className="py-8"
+        aria-labelledby={sectionTitleId}
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            보유 재료 요약
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-gray-200 bg-gray-50 p-6 animate-pulse h-32"
+              ></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!isLoggedIn) {
     return (

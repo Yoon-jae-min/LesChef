@@ -16,9 +16,10 @@ import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 
 interface ExpiryAlertsProps {
   isLoggedIn?: boolean;
+  authLoading?: boolean;
 }
 
-export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) {
+export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }: ExpiryAlertsProps) {
   const sectionTitleId = useId();
   const { data, error, isLoading } = useSWR<ExpiryAlertResponse>(
     isLoggedIn ? "/foods/expiry-alerts" : null,
@@ -54,6 +55,32 @@ export default function ExpiryAlerts({ isLoggedIn = false }: ExpiryAlertsProps) 
       ...(alerts.notice || []).map((item) => ({ ...item, priority: "notice" as const })),
     ].slice(0, 6); // 최대 6개만 표시
   }, [alerts, hasAlerts]);
+
+  // 인증 확인 중에는 "로그인하세요"를 먼저 보여주지 않고, 섹션 스켈레톤으로 대기
+  if (authLoading) {
+    return (
+      <section
+        className="py-8"
+        aria-labelledby={sectionTitleId}
+        aria-busy="true"
+        aria-live="polite"
+      >
+        <div className="max-w-7xl mx-auto px-6">
+          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
+            유통기한 알림
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div
+                key={i}
+                className="rounded-2xl border border-gray-200 bg-gray-50 p-4 animate-pulse h-32"
+              ></div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   if (!isLoggedIn) {
     return (

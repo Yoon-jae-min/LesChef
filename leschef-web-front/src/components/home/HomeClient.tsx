@@ -96,29 +96,6 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
   // 유통기한 알림 모니터링 (백그라운드에서 실행 - 로그인 시에만)
   useExpiryAlerts(isLoggedIn);
 
-  // 옵션 2: 인증 상태가 준비되기 전까지 전체 페이지를 로딩 화면으로 보여주기
-  if (isAuthLoading) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col">
-        <Top />
-        <div className="flex-1 flex items-center justify-center">
-          <div
-            className="flex flex-col items-center gap-3 text-gray-500 text-sm"
-            role="status"
-            aria-live="polite"
-            aria-busy="true"
-          >
-            <div
-              className="h-8 w-8 border-2 border-gray-300 border-t-gray-600 rounded-full animate-spin"
-              aria-hidden
-            />
-            <span>로그인 상태를 확인하고 있어요...</span>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-white">
       <a
@@ -138,10 +115,10 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
           {/* 메인 콘텐츠 (3열) */}
           <div className="lg:col-span-3 space-y-8">
             {/* 유통기한 임박 알림 섹션 */}
-            <ExpiryAlerts isLoggedIn={isLoggedIn} />
+            <ExpiryAlerts isLoggedIn={isLoggedIn} authLoading={isAuthLoading} />
 
             {/* 보유 재료 요약 섹션 */}
-            <FoodInventory isLoggedIn={isLoggedIn} />
+            <FoodInventory isLoggedIn={isLoggedIn} authLoading={isAuthLoading} />
 
             {/* 레시피 섹션 (서브 - 더 작게) */}
             <div
