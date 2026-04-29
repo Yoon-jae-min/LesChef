@@ -69,7 +69,7 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
                   <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-orange-800">
                     {step.stepNum}
                   </span>
-                  <span>단계 {step.stepNum}</span>
+                  <span>단계</span>
                 </h3>
                 <div className="min-h-[3.5rem] rounded-xl border border-dashed border-stone-200 bg-white px-4 py-3">
                   <p className="text-base leading-relaxed text-stone-700">{step.stepWay || "내용"}</p>

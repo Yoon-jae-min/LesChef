@@ -52,7 +52,7 @@ export default function Step({
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-orange-600 text-sm font-bold text-white shadow-sm">
                 {step.stepNum}
               </span>
-              <h3 className="text-base font-semibold text-stone-900">단계 {step.stepNum}</h3>
+              <h3 className="text-base font-semibold text-stone-900">단계</h3>
               {steps.length > 1 && (
                 <button
                   type="button"
