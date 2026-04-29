@@ -22,7 +22,9 @@ export const writeComment = asyncHandler(
         req: Request<{}, ApiSuccessResponse | ApiErrorResponse, WriteCommentRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        const userNickName = req.auth?.nickName;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -31,8 +33,6 @@ export const writeComment = asyncHandler(
         }
 
         const { boardId, content } = req.body;
-        const userId = req.session.user.id;
-        const userNickName = req.session.user.nickName;
 
         if (!boardId || !content) {
             res.status(400).json({
@@ -55,7 +55,7 @@ export const writeComment = asyncHandler(
         try {
             const comment = await Comment.create({
                 boardId: boardId,
-                nickName: userNickName,
+                nickName: userNickName || 'user',
                 userId: userId,
                 content: content,
             });

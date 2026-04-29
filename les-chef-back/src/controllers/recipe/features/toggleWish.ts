@@ -21,8 +21,8 @@ export const toggleWish = asyncHandler(
         req: Request<{}, ToggleWishResponse | ApiErrorResponse, ToggleWishRequestBody>,
         res: Response<ToggleWishResponse | ApiErrorResponse>
     ) => {
-        // 세션 검증
-        if (!req.session?.user?.id) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -40,7 +40,7 @@ export const toggleWish = asyncHandler(
             return;
         }
 
-        const user = await User.findOne({ id: req.session.user.id });
+        const user = await User.findOne({ id: userId });
 
         if (!user) {
             res.status(404).json({

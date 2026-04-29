@@ -53,6 +53,8 @@ export interface IRecipeIngredient extends Document {
         ingredientName: string;
         volume: number;
         unit: string;
+        /** 숫자 대신 "약간/적당량/기호에 따라" 등 텍스트 수량 */
+        amountText?: string;
     }>;
     createdAt: Date;
     updatedAt: Date;

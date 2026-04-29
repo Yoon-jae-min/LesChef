@@ -45,6 +45,7 @@ const INITIAL_STATE: RecipeFormState = {
           ingredientName: "",
           volume: 0,
           unit: RECIPE_DEFAULTS.INGREDIENT_UNIT,
+          amountText: "",
         },
       ],
     },
@@ -113,6 +114,7 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
               ingredientName: "",
               volume: 0,
               unit: RECIPE_DEFAULTS.INGREDIENT_UNIT,
+              amountText: "",
             },
           ],
         },
@@ -134,6 +136,7 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
                   ingredientName: "",
                   volume: 0,
                   unit: RECIPE_DEFAULTS.INGREDIENT_UNIT,
+                  amountText: "",
                 },
               ],
             }
@@ -295,6 +298,7 @@ export function useRecipeForm(initialState?: Partial<RecipeFormState>) {
               ingredientName: u.ingredientName || "",
               volume: typeof u.volume === "number" ? u.volume : Number(u.volume) || 0,
               unit: u.unit || RECIPE_DEFAULTS.INGREDIENT_UNIT,
+              amountText: (u as any).amountText || "",
             })),
           }))
         : INITIAL_STATE.ingredientGroups;

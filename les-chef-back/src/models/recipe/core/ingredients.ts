@@ -24,6 +24,9 @@ const RecipeIngredientSchema = new Schema<RecipeIngredientDocument>({
             unit: {
                 type: String,
             },
+            amountText: {
+                type: String,
+            },
         },
     ],
     createdAt: {

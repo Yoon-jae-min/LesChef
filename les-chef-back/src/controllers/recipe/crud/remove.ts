@@ -25,7 +25,8 @@ function isAbsoluteHttpUrl(s: string): boolean {
 
 export const removeRecipe = asyncHandler(
     async (req: Request<{ id?: string }>, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -48,7 +49,7 @@ export const removeRecipe = asyncHandler(
             });
             return;
         }
-        if (String(recipeInfo.userId) !== String(req.session.user.id)) {
+        if (String(recipeInfo.userId) !== String(userId)) {
             res.status(403).json({
                 error: true,
                 message: '본인이 작성한 레시피만 삭제할 수 있습니다.',

@@ -16,6 +16,7 @@ export const transformIngredients = (
     ingredientName: string;
     volume: number;
     unit: string;
+    amountText?: string;
   }>;
 }> => {
   return ingredientGroups.map((group) => ({
@@ -24,6 +25,7 @@ export const transformIngredients = (
       ingredientName: ingredient.ingredientName,
       volume: ingredient.volume,
       unit: ingredient.unit,
+      amountText: ingredient.amountText?.trim() ? ingredient.amountText.trim() : undefined,
     })),
   }));
 };

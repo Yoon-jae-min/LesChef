@@ -6,6 +6,12 @@ export type Ingredient = {
   ingredientName: string;
   volume: number;
   unit: string;
+  /**
+   * 숫자로 표현하기 어려운 수량(예: "약간", "적당량", "기호에 따라", "한 줌")
+   * - 값이 있으면 상세 화면에서는 volume/unit 대신 amountText를 우선 표시
+   * - 작성 폼에서는 "약간" 모드에서 사용
+   */
+  amountText?: string;
 };
 
 export type IngredientGroup = {
@@ -96,6 +102,7 @@ export type RecipeDetailResponse = {
       ingredientName: string;
       volume: number;
       unit: string;
+      amountText?: string;
     }>;
   }>;
   recipeSteps: Array<{

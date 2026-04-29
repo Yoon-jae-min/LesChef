@@ -26,7 +26,8 @@ export const toggleBoardLike = asyncHandler(
         req: Request<{}, ToggleBoardLikeResponse | ApiErrorResponse, ToggleBoardLikeRequestBody>,
         res: Response<ToggleBoardLikeResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -54,11 +55,11 @@ export const toggleBoardLike = asyncHandler(
         }
 
         try {
-            const exist = await BoardLike.findOne({ boardId, userId: req.session.user.id }).lean();
+            const exist = await BoardLike.findOne({ boardId, userId }).lean();
             if (exist) {
                 await BoardLike.deleteOne({ _id: exist._id });
             } else {
-                await BoardLike.create({ boardId, userId: req.session.user.id });
+                await BoardLike.create({ boardId, userId });
             }
 
             const likeCount = await BoardLike.countDocuments({ boardId });

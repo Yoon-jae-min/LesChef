@@ -92,7 +92,9 @@ export const postWriting = asyncHandler(
         req: Request<{}, ApiSuccessResponse | ApiErrorResponse, PostWritingRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        const userNickName = req.auth?.nickName;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -106,9 +108,6 @@ export const postWriting = asyncHandler(
             typeof rawBoardType === 'string' && rawBoardType.toLowerCase() === 'free'
                 ? 'free'
                 : 'notice';
-        const userId = req.session.user.id;
-        const userNickName = req.session.user.nickName;
-
         if (!title || !content) {
             res.status(400).json({
                 error: true,
@@ -121,7 +120,7 @@ export const postWriting = asyncHandler(
             await Board.create({
                 title: title,
                 userId: userId,
-                nickName: userNickName,
+                nickName: userNickName || 'user',
                 content: content,
                 boardType,
             });
@@ -177,10 +176,10 @@ export const getBoard = asyncHandler(
         // 좋아요 정보
         const likeCount = await BoardLike.countDocuments({ boardId: id });
         let liked = false;
-        if (req.session?.user) {
+        if (req.auth?.sub) {
             const exist = await BoardLike.findOne({
                 boardId: id,
-                userId: req.session.user.id,
+                userId: req.auth.sub,
             }).lean();
             liked = !!exist;
         }
@@ -200,7 +199,8 @@ export const getBoard = asyncHandler(
  */
 export const deleteBoard = asyncHandler(
     async (req: Request<{ id?: string }>, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -228,8 +228,8 @@ export const deleteBoard = asyncHandler(
         }
 
         // 본인 게시글만 삭제 가능 (관리자는 예외)
-        const user = await User.findOne({ id: req.session.user.id });
-        if (board.userId !== req.session.user.id && (!user || !user.checkAdmin)) {
+        const user = await User.findOne({ id: userId });
+        if (board.userId !== userId && (!user || !user.checkAdmin)) {
             res.status(403).json({
                 error: true,
                 message: '본인이 작성한 게시글만 삭제할 수 있습니다.',
@@ -265,7 +265,8 @@ export const editBoard = asyncHandler(
         req: Request<{ id?: string }, ApiSuccessResponse | ApiErrorResponse, EditBoardRequestBody>,
         res: Response<ApiSuccessResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -303,8 +304,8 @@ export const editBoard = asyncHandler(
         }
 
         // 본인 게시글만 수정 가능 (관리자는 예외)
-        const user = await User.findOne({ id: req.session.user.id });
-        if (board.userId !== req.session.user.id && (!user || !user.checkAdmin)) {
+        const user = await User.findOne({ id: userId });
+        if (board.userId !== userId && (!user || !user.checkAdmin)) {
             res.status(403).json({
                 error: true,
                 message: '본인이 작성한 게시글만 수정할 수 있습니다.',

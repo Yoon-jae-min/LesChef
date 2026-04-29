@@ -89,7 +89,8 @@ export const upsertReview = asyncHandler(
         req: Request<{}, UpsertReviewResponse | ApiErrorResponse, UpsertReviewRequestBody>,
         res: Response<UpsertReviewResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -125,8 +126,7 @@ export const upsertReview = asyncHandler(
             return;
         }
 
-        const userId = req.session.user.id;
-        const userNickName = req.session.user.nickName || '익명';
+        const userNickName = req.auth?.nickName || '익명';
 
         const now = new Date().setMilliseconds(0);
 
@@ -176,7 +176,8 @@ export const deleteReview = asyncHandler(
         req: Request<{}, DeleteReviewResponse | ApiErrorResponse, DeleteReviewRequestBody>,
         res: Response<DeleteReviewResponse | ApiErrorResponse>
     ) => {
-        if (!req.session?.user) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -193,8 +194,6 @@ export const deleteReview = asyncHandler(
             });
             return;
         }
-
-        const userId = req.session.user.id;
 
         const deleted = await RecipeReview.findOneAndDelete({ recipeId, userId }).lean();
 

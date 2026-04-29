@@ -49,10 +49,14 @@ export default function Ingredients({ ingredients }: IngredientsProps) {
                 className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-stone-200/80 bg-stone-50/50 px-4 py-3 text-base"
               >
                 <span className="min-w-0 flex-1 font-medium text-stone-900">{item.ingredientName}</span>
-                <span className="flex items-center gap-4 tabular-nums">
-                  <span className="font-medium text-stone-800">{item.volume}</span>
-                  <span className="min-w-[3rem] text-right font-medium text-stone-700">{item.unit}</span>
-                </span>
+                {item.amountText?.trim() ? (
+                  <span className="tabular-nums font-medium text-stone-800">{item.amountText}</span>
+                ) : (
+                  <span className="flex items-center gap-4 tabular-nums">
+                    <span className="font-medium text-stone-800">{item.volume}</span>
+                    <span className="min-w-[3rem] text-right font-medium text-stone-700">{item.unit}</span>
+                  </span>
+                )}
               </li>
             ))}
           </ul>

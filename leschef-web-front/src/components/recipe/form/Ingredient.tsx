@@ -3,6 +3,7 @@
  * 레시피 작성/수정 페이지에서 공통으로 사용
  */
 
+import { useMemo, useState } from "react";
 import type { IngredientGroup } from "@/utils/api/recipeApi";
 
 interface IngredientProps {
@@ -14,7 +15,7 @@ interface IngredientProps {
   onUpdateIngredient: (
     groupIndex: number,
     ingredientIndex: number,
-    field: "ingredientName" | "volume" | "unit",
+    field: "ingredientName" | "volume" | "unit" | "amountText",
     value: string | number
   ) => void;
 }
@@ -29,6 +30,23 @@ export default function Ingredient({
 }: IngredientProps) {
   const inputClass =
     "rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-500 transition focus:outline-none focus-visible:border-orange-400 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2";
+
+  /**
+   * 수량(volume) UX:
+   * - 포커스 중에는 빈 값("") 허용
+   * - 값이 0인 상태에서 포커스하면 기본 0을 지워서 바로 입력 가능
+   * - 빈 값 상태로 blur 하면 0으로 복구
+   */
+  const [draftVolumes, setDraftVolumes] = useState<Record<string, string>>({});
+  const draftKey = useMemo(
+    () => (groupIndex: number, ingredientIndex: number) => `${groupIndex}:${ingredientIndex}`,
+    []
+  );
+
+  const quickAmountTexts = useMemo(
+    () => ["약간", "적당량", "기호에 따라", "한 줌"] as const,
+    []
+  );
 
   return (
     <section
@@ -73,6 +91,10 @@ export default function Ingredient({
 
             <div className="space-y-3">
               {group.ingredients.map((ingredient, ingredientIndex) => (
+                (() => {
+                  const isTextMode = Boolean(ingredient.amountText && ingredient.amountText.trim());
+                  const k = draftKey(groupIndex, ingredientIndex);
+                  return (
                 <div
                   key={ingredientIndex}
                   className="flex flex-col gap-3 rounded-xl border border-stone-200/80 bg-white p-3 sm:flex-row sm:items-center sm:gap-3 sm:p-2 sm:pr-2"
@@ -92,31 +114,108 @@ export default function Ingredient({
                     className={`min-w-0 flex-1 ${inputClass}`}
                   />
                   <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
-                    <input
-                      type="number"
-                      value={ingredient.volume}
-                      onChange={(e) =>
-                        onUpdateIngredient(
-                          groupIndex,
-                          ingredientIndex,
-                          "volume",
-                          Number(e.target.value)
-                        )
-                      }
-                      placeholder="수량"
-                      min={0}
-                      step={0.1}
-                      className={`w-full tabular-nums sm:w-24 ${inputClass}`}
-                    />
-                    <input
-                      type="text"
-                      value={ingredient.unit}
-                      onChange={(e) =>
-                        onUpdateIngredient(groupIndex, ingredientIndex, "unit", e.target.value)
-                      }
-                      placeholder="단위"
-                      className={`w-full sm:w-24 ${inputClass}`}
-                    />
+                    <div className="flex w-full items-center justify-between gap-2 sm:w-auto">
+                      <div className="inline-flex overflow-hidden rounded-xl border border-stone-200 bg-white">
+                        <button
+                          type="button"
+                          onClick={() => onUpdateIngredient(groupIndex, ingredientIndex, "amountText", "")}
+                          className={`px-3 py-2 text-xs font-semibold transition ${
+                            !isTextMode
+                              ? "bg-orange-600 text-white"
+                              : "bg-white text-stone-600 hover:bg-stone-50"
+                          }`}
+                        >
+                          숫자
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!ingredient.amountText?.trim()) {
+                              onUpdateIngredient(groupIndex, ingredientIndex, "amountText", "약간");
+                            }
+                          }}
+                          className={`px-3 py-2 text-xs font-semibold transition ${
+                            isTextMode
+                              ? "bg-orange-600 text-white"
+                              : "bg-white text-stone-600 hover:bg-stone-50"
+                          }`}
+                        >
+                          약간
+                        </button>
+                      </div>
+                    </div>
+
+                    {isTextMode ? (
+                      <div className="flex w-full flex-col gap-2 sm:w-auto">
+                        <input
+                          type="text"
+                          value={ingredient.amountText ?? ""}
+                          onChange={(e) =>
+                            onUpdateIngredient(groupIndex, ingredientIndex, "amountText", e.target.value)
+                          }
+                          placeholder="예) 약간, 적당량, 기호에 따라"
+                          className={`w-full sm:w-56 ${inputClass}`}
+                        />
+                        <div className="flex flex-wrap gap-1">
+                          {quickAmountTexts.map((t) => (
+                            <button
+                              key={t}
+                              type="button"
+                              onClick={() => onUpdateIngredient(groupIndex, ingredientIndex, "amountText", t)}
+                              className="rounded-full border border-orange-200 bg-orange-50 px-2.5 py-1 text-[11px] font-semibold text-orange-900 hover:bg-orange-100"
+                            >
+                              {t}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <input
+                          type="number"
+                          value={draftVolumes[k] ?? ingredient.volume}
+                          onFocus={() => {
+                            setDraftVolumes((prev) => {
+                              if (prev[k] !== undefined) return prev; // 이미 편집 중이면 유지
+                              return ingredient.volume === 0 ? { ...prev, [k]: "" } : prev;
+                            });
+                          }}
+                          onChange={(e) =>
+                            (() => {
+                              const next = e.target.value; // "" | "0" | "0.5" ...
+                              setDraftVolumes((prev) => ({ ...prev, [k]: next }));
+                              if (next === "") return; // 포커스 중 빈 값 허용
+                              onUpdateIngredient(groupIndex, ingredientIndex, "volume", Number(next));
+                            })()
+                          }
+                          onBlur={() => {
+                            const draft = draftVolumes[k];
+                            if (draft === "") {
+                              onUpdateIngredient(groupIndex, ingredientIndex, "volume", 0);
+                            } else if (typeof draft === "string" && draft !== undefined) {
+                              onUpdateIngredient(groupIndex, ingredientIndex, "volume", Number(draft));
+                            }
+                            setDraftVolumes((prev) => {
+                              const { [k]: _, ...rest } = prev;
+                              return rest;
+                            });
+                          }}
+                          placeholder="수량"
+                          min={0}
+                          step={0.1}
+                          className={`w-full tabular-nums sm:w-24 ${inputClass}`}
+                        />
+                        <input
+                          type="text"
+                          value={ingredient.unit}
+                          onChange={(e) =>
+                            onUpdateIngredient(groupIndex, ingredientIndex, "unit", e.target.value)
+                          }
+                          placeholder="단위"
+                          className={`w-full sm:w-24 ${inputClass}`}
+                        />
+                      </>
+                    )}
                     <button
                       type="button"
                       onClick={() => onRemoveIngredient(groupIndex, ingredientIndex)}
@@ -126,6 +225,8 @@ export default function Ingredient({
                     </button>
                   </div>
                 </div>
+                  );
+                })()
               ))}
             </div>
           </div>

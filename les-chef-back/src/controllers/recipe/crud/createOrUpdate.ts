@@ -53,6 +53,7 @@ interface ParsedIngredient {
         ingredientName?: string;
         volume?: number;
         unit?: string;
+        amountText?: string;
     }>;
 }
 
@@ -101,8 +102,8 @@ async function finalizeRecipeStepImageFromTemp(params: {
 
 export const createOrUpdate = asyncHandler(
     async (req: MulterRequest, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
-        // 세션 검증
-        if (!req.session?.user?.id) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -175,7 +176,7 @@ export const createOrUpdate = asyncHandler(
                 Boolean
             ) as string[];
 
-            const userInfo = await User.findOne({ id: req.session.user.id }).lean();
+            const userInfo = await User.findOne({ id: userId }).lean();
 
             if (!userInfo) {
                 res.status(404).json({
@@ -366,6 +367,7 @@ export const createOrUpdate = asyncHandler(
                     ingredientName: unit.ingredientName,
                     volume: unit.volume,
                     unit: unit.unit,
+                    amountText: unit.amountText,
                 })),
             }));
 

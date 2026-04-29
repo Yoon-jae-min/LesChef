@@ -363,15 +363,15 @@ export const recipeInfo = asyncHandler(
             }
 
             if (forEditMode) {
-                if (!req.session?.user?.id) {
+                if (!req.auth?.sub) {
                     res.status(401).json({
                         error: true,
                         message: '로그인이 필요합니다.',
                     });
                     return;
                 }
-                if (recipe.userId !== req.session.user.id) {
-                    const sessionUser = await User.findOne({ id: req.session.user.id });
+                if (recipe.userId !== req.auth.sub) {
+                    const sessionUser = await User.findOne({ id: req.auth.sub });
                     if (!sessionUser?.checkAdmin) {
                         res.status(403).json({
                             error: true,
@@ -394,8 +394,8 @@ export const recipeInfo = asyncHandler(
                 RecipeStep.find({ recipeId: recipe._id }).sort({ stepNum: 1 }).lean(),
             ]);
 
-            if (req.session?.user?.id) {
-                const user = await User.findOne({ id: req.session.user.id });
+            if (req.auth?.sub) {
+                const user = await User.findOne({ id: req.auth.sub });
 
                 if (user) {
                     const recipeWishList = await RecipeWishList.findOne({ userId: user._id });
