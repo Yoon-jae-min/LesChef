@@ -232,7 +232,8 @@ export const listRecipes = asyncHandler(
 
 export const myList = asyncHandler(
     async (req: Request, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
-        if (!req.session?.user?.id) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -241,7 +242,7 @@ export const myList = asyncHandler(
         }
 
         try {
-            const user = await User.findOne({ id: req.session.user.id });
+            const user = await User.findOne({ id: userId });
 
             if (!user) {
                 res.status(404).json({
@@ -257,7 +258,7 @@ export const myList = asyncHandler(
                 recipeList = (await Recipe.find({}).lean()) as IRecipe[];
             } else {
                 recipeList = (await Recipe.find({
-                    userId: req.session.user.id,
+                    userId: userId,
                 }).lean()) as IRecipe[];
             }
 
@@ -273,7 +274,8 @@ export const myList = asyncHandler(
 
 export const wishList = asyncHandler(
     async (req: Request, res: Response<ApiSuccessResponse | ApiErrorResponse>) => {
-        if (!req.session?.user?.id) {
+        const userId = req.auth?.sub;
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -282,7 +284,7 @@ export const wishList = asyncHandler(
         }
 
         try {
-            const user = await User.findOne({ id: req.session.user.id });
+            const user = await User.findOne({ id: userId });
 
             if (!user) {
                 res.status(404).json({
