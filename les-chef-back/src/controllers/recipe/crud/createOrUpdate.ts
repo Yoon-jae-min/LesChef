@@ -192,7 +192,13 @@ export const createOrUpdate = asyncHandler(
             }
 
             // 레시피 대표 이미지 처리 (로컬: 썸네일 생성 / S3: 객체 스토리지 업로드)
-            if (parsedRecipeInfo.recipeImg === '') {
+            // NOTE: 프론트에서 preview(data URL)를 보내면 업로드가 스킵될 수 있으므로 방어적으로 처리
+            if (
+                parsedRecipeInfo.recipeImg === '' ||
+                (typeof parsedRecipeInfo.recipeImg === 'string' &&
+                    parsedRecipeInfo.recipeImg.startsWith('data:'))
+            ) {
+                parsedRecipeInfo.recipeImg = '';
                 const files = req.files as
                     | {
                           recipeImgFile?: Array<{

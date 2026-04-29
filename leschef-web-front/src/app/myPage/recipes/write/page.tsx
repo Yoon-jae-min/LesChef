@@ -46,7 +46,8 @@ export default function RecipeWritePage() {
           cookLevel: formState.cookLevel,
           majorCategory: formState.majorCategory,
           subCategory: recipeSubCategoryForApi(formState.subCategory),
-          recipeImg: formState.recipeImgPreview || "",
+          // 파일을 올리는 경우 preview(data URL)를 보내면 백엔드가 업로드를 스킵하고 DB에 data URL을 저장할 수 있음
+          recipeImg: formState.recipeImg ? "" : formState.recipeImgPreview || "",
         },
         ingredientGroups: formState.ingredientGroups,
         steps: formState.steps,

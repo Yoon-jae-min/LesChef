@@ -90,7 +90,8 @@ function RecipeEditPageContent() {
           cookLevel: formState.cookLevel,
           majorCategory: formState.majorCategory,
           subCategory: recipeSubCategoryForApi(formState.subCategory),
-          recipeImg: formState.recipeImgPreview || "",
+          // 새 파일을 올리는 경우 preview(data URL)를 보내면 백엔드 업로드가 스킵될 수 있음
+          recipeImg: formState.recipeImg ? "" : formState.recipeImgPreview || "",
           _id: recipeId,
         },
         ingredientGroups: formState.ingredientGroups,
