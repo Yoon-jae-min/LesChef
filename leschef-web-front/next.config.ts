@@ -5,7 +5,12 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "**",
+        // Cloudflare R2 public domain (ex: pub-xxxx.r2.dev)
+        hostname: "*.r2.dev",
+      },
+      {
+        protocol: "https",
+        hostname: "r2.dev",
       },
       {
         protocol: "http",

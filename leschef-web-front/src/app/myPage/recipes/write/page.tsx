@@ -8,12 +8,14 @@ import { createRecipe } from "@/utils/api/recipeApi";
 import { recipeSubCategoryForApi } from "@/constants/recipe/recipe";
 import { reportActionFailure } from "@/utils/helpers/actionFailure";
 import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
+import { useState } from "react";
 
 /**
  * 레시피 작성 (클라이언트 페이지)
  * 상단 네비는 `myPage/layout` 등 상위 레이아웃에서 처리합니다.
  */
 export default function RecipeWritePage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     formState,
     updateField,
@@ -30,12 +32,14 @@ export default function RecipeWritePage() {
   } = useRecipeForm();
 
   const handleSubmitRecipe = async () => {
+    if (isSubmitting) return;
     const validation = validateRecipe();
     if (!validation.isValid) {
       alert(validation.errorMessage);
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await createRecipe({
         recipeInfo: {
@@ -63,6 +67,8 @@ export default function RecipeWritePage() {
         console.error("레시피 작성 실패:", error);
       }
       reportActionFailure(error, { redirect: "back" });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -137,9 +143,20 @@ export default function RecipeWritePage() {
             </button>
             <button
               type="submit"
-              className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              disabled={isSubmitting}
+              className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+                isSubmitting
+                  ? "cursor-not-allowed bg-orange-400 text-white"
+                  : "bg-orange-600 text-white hover:bg-orange-700"
+              }`}
             >
-              레시피 등록
+              {isSubmitting && (
+                <span
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                  aria-hidden
+                />
+              )}
+              {isSubmitting ? "등록 중…" : "레시피 등록"}
             </button>
           </div>
         </form>

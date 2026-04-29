@@ -14,6 +14,7 @@ export default function BoardWritePage() {
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // URL 파라미터에서 boardType 가져오기
   useEffect(() => {
@@ -27,6 +28,8 @@ export default function BoardWritePage() {
   const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
 
   const handleSubmitBoard = async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     try {
       const response = await createBoard({
         title,
@@ -43,6 +46,8 @@ export default function BoardWritePage() {
         console.error("게시글 작성 실패:", error);
       }
       reportActionFailure(error, { redirect: "back" });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -134,9 +139,20 @@ export default function BoardWritePage() {
             </button>
             <button
               type="submit"
-              className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              disabled={isSubmitting}
+              className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+                isSubmitting
+                  ? "cursor-not-allowed bg-orange-400"
+                  : "bg-orange-600 hover:bg-orange-700"
+              }`}
             >
-              게시글 등록
+              {isSubmitting && (
+                <span
+                  className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                  aria-hidden
+                />
+              )}
+              {isSubmitting ? "등록 중…" : "게시글 등록"}
             </button>
           </div>
         </form>

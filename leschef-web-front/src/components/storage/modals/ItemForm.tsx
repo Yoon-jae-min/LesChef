@@ -31,6 +31,7 @@ interface ItemFormProps {
   pendingImageFile: File | null;
   onPendingImageFileChange: (file: File | null) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
+  isSubmitting?: boolean;
   editingItem: FoodItem | null;
   activePlaceName: string;
   error: Error | null;
@@ -44,6 +45,7 @@ export default function ItemForm({
   pendingImageFile,
   onPendingImageFileChange,
   onSubmit,
+  isSubmitting = false,
   editingItem,
   activePlaceName,
   error,
@@ -187,10 +189,16 @@ export default function ItemForm({
 
         <button
           type="submit"
-          disabled={!canSubmit}
-          className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={!canSubmit || isSubmitting}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {editingItem ? "저장하기" : "추가하기"}
+          {isSubmitting && (
+            <span
+              className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+              aria-hidden
+            />
+          )}
+          {editingItem ? (isSubmitting ? "저장 중…" : "저장하기") : isSubmitting ? "추가 중…" : "추가하기"}
         </button>
       </form>
     </Storage>

@@ -162,6 +162,23 @@ function InfoPageContent() {
   const [confirmPwd, setConfirmPwd] = useState("");
   const [pwdSubmitting, setPwdSubmitting] = useState(false);
   const [nickname, setNickname] = useState("user");
+  const [unlinking, setUnlinking] = useState<{ kakao: boolean; google: boolean; naver: boolean }>(
+    { kakao: false, google: false, naver: false }
+  );
+
+  const handleUnlink = async (provider: "kakao" | "google" | "naver") => {
+    if (unlinking[provider]) return;
+    if (!confirm("계정 연동을 해제하시겠습니까?")) return;
+    setUnlinking((p) => ({ ...p, [provider]: true }));
+    try {
+      await unlinkSocial(provider);
+      window.location.reload();
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "연동 해제에 실패했습니다.");
+    } finally {
+      setUnlinking((p) => ({ ...p, [provider]: false }));
+    }
+  };
 
   const openPasswordModal = () => {
     setCurrentPwd("");
@@ -497,11 +514,7 @@ function InfoPageContent() {
               type="button"
               onClick={() => {
                 if (userInfo?.kakaoLinked) {
-                  if (confirm("카카오 계정 연동을 해제하시겠습니까?")) {
-                    unlinkSocial("kakao")
-                      .then(() => window.location.reload())
-                      .catch((err) => console.error(err));
-                  }
+                  void handleUnlink("kakao");
                 } else {
                   try {
                     const url = getKakaoLoginUrl("link");
@@ -511,23 +524,20 @@ function InfoPageContent() {
                   }
                 }
               }}
+              disabled={unlinking.kakao}
               className={`w-full rounded-2xl px-4 py-3 text-sm font-medium transition ${
                 userInfo?.kakaoLinked
                   ? "border border-green-200 bg-green-50 text-green-700"
                   : "border border-stone-200/90 text-stone-700 hover:border-stone-400 hover:text-stone-900"
               }`}
             >
-              {userInfo?.kakaoLinked ? "카카오 연동 해제" : "카카오 계정 연동"}
+              {userInfo?.kakaoLinked ? (unlinking.kakao ? "해제 중…" : "카카오 연동 해제") : "카카오 계정 연동"}
             </button>
             <button
               type="button"
               onClick={() => {
                 if (userInfo?.googleLinked) {
-                  if (confirm("구글 계정 연동을 해제하시겠습니까?")) {
-                    unlinkSocial("google")
-                      .then(() => window.location.reload())
-                      .catch((err) => console.error(err));
-                  }
+                  void handleUnlink("google");
                 } else {
                   try {
                     const url = getGoogleLoginUrl("link");
@@ -537,23 +547,20 @@ function InfoPageContent() {
                   }
                 }
               }}
+              disabled={unlinking.google}
               className={`w-full rounded-2xl px-4 py-3 text-sm font-medium transition ${
                 userInfo?.googleLinked
                   ? "border border-green-200 bg-green-50 text-green-700"
                   : "border border-stone-200/90 text-stone-700 hover:border-stone-400 hover:text-stone-900"
               }`}
             >
-              {userInfo?.googleLinked ? "구글 연동 해제" : "구글 계정 연동"}
+              {userInfo?.googleLinked ? (unlinking.google ? "해제 중…" : "구글 연동 해제") : "구글 계정 연동"}
             </button>
             <button
               type="button"
               onClick={() => {
                 if (userInfo?.naverLinked) {
-                  if (confirm("네이버 계정 연동을 해제하시겠습니까?")) {
-                    unlinkSocial("naver")
-                      .then(() => window.location.reload())
-                      .catch((err) => console.error(err));
-                  }
+                  void handleUnlink("naver");
                 } else {
                   try {
                     const url = getNaverLoginUrl("link");
@@ -563,13 +570,14 @@ function InfoPageContent() {
                   }
                 }
               }}
+              disabled={unlinking.naver}
               className={`w-full rounded-2xl px-4 py-3 text-sm font-medium transition ${
                 userInfo?.naverLinked
                   ? "border border-green-200 bg-green-50 text-green-700"
                   : "border border-stone-200/90 text-stone-700 hover:border-stone-400 hover:text-stone-900"
               }`}
             >
-              {userInfo?.naverLinked ? "네이버 연동 해제" : "네이버 계정 연동"}
+              {userInfo?.naverLinked ? (unlinking.naver ? "해제 중…" : "네이버 연동 해제") : "네이버 계정 연동"}
             </button>
           </div>
         </div>

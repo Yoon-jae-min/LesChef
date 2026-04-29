@@ -17,6 +17,7 @@ import Step from "@/components/recipe/form/Step";
 function RecipeEditPageContent() {
   const [recipeId, setRecipeId] = useState<string | null>(null);
   const [loadReady, setLoadReady] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const {
     formState,
@@ -69,6 +70,7 @@ function RecipeEditPageContent() {
   }, [hydrateFromDetail]);
 
   const handleUpdateRecipe = async () => {
+    if (isSubmitting) return;
     if (!recipeId) {
       alert("레시피 ID가 없습니다.");
       return;
@@ -80,6 +82,7 @@ function RecipeEditPageContent() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await updateRecipe({
         recipeInfo: {
@@ -109,6 +112,8 @@ function RecipeEditPageContent() {
         console.error("레시피 수정 실패:", error);
       }
       reportActionFailure(error, { redirect: "back" });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -195,9 +200,20 @@ function RecipeEditPageContent() {
               </button>
               <button
                 type="submit"
-                className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                disabled={isSubmitting}
+                className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+                  isSubmitting
+                    ? "cursor-not-allowed bg-orange-400 text-white"
+                    : "bg-orange-600 text-white hover:bg-orange-700"
+                }`}
               >
-                수정 완료
+                {isSubmitting && (
+                  <span
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                    aria-hidden
+                  />
+                )}
+                {isSubmitting ? "저장 중…" : "수정 완료"}
               </button>
             </div>
           </form>

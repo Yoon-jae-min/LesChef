@@ -15,6 +15,7 @@ export default function BoardEditPage() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [loadReady, setLoadReady] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -60,11 +61,13 @@ export default function BoardEditPage() {
   const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
 
   const handleUpdateBoard = async () => {
+    if (isSubmitting) return;
     if (!postId) {
       alert("게시글 ID가 없습니다.");
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await updateBoard({
         id: postId,
@@ -81,6 +84,8 @@ export default function BoardEditPage() {
         console.error("게시글 수정 실패:", error);
       }
       reportActionFailure(error, { redirect: "back" });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -182,9 +187,20 @@ export default function BoardEditPage() {
               </button>
               <button
                 type="submit"
-                className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                disabled={isSubmitting}
+                className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+                  isSubmitting
+                    ? "cursor-not-allowed bg-orange-400"
+                    : "bg-orange-600 hover:bg-orange-700"
+                }`}
               >
-                수정 완료
+                {isSubmitting && (
+                  <span
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                    aria-hidden
+                  />
+                )}
+                {isSubmitting ? "저장 중…" : "수정 완료"}
               </button>
             </div>
           </form>

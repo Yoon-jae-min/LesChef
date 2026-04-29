@@ -95,6 +95,8 @@ export default function StoragePage() {
 
   const [form, setForm] = useState<ItemFormState>(EMPTY_ITEM_FORM);
   const [pendingImageFile, setPendingImageFile] = useState<File | null>(null);
+  const [isItemSubmitting, setIsItemSubmitting] = useState(false);
+  const [deletingItemId, setDeletingItemId] = useState<string | null>(null);
 
   const handleOpenFoodModal = (item?: FoodItemType) => {
     setPendingImageFile(null);
@@ -126,7 +128,9 @@ export default function StoragePage() {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setActionError(null);
+    if (isItemSubmitting) return;
 
+    setIsItemSubmitting(true);
     try {
       if (!activePlaceId) {
         throw new Error("보관 장소를 먼저 추가해주세요.");
@@ -187,17 +191,23 @@ export default function StoragePage() {
       setActionError(
         err instanceof Error ? err : new Error("재료 추가/수정 중 오류가 발생했습니다.")
       );
+    } finally {
+      setIsItemSubmitting(false);
     }
   };
 
   const handleDelete = async (item: FoodItemType) => {
     if (!item._id) return;
     setActionError(null);
+    if (deletingItemId) return;
 
+    setDeletingItemId(item._id);
     try {
       await mutate(() => deleteFoodItem(item._id), { revalidate: false });
     } catch (err) {
       setActionError(err instanceof Error ? err : new Error("재료 삭제 중 오류가 발생했습니다."));
+    } finally {
+      setDeletingItemId(null);
     }
   };
 
@@ -390,6 +400,7 @@ export default function StoragePage() {
               item={item}
               onEdit={handleOpenFoodModal}
               onDelete={handleDelete}
+              isDeleting={deletingItemId === item._id}
             />
           ))}
         </div>
@@ -492,6 +503,7 @@ export default function StoragePage() {
         pendingImageFile={pendingImageFile}
         onPendingImageFileChange={setPendingImageFile}
         onSubmit={handleSubmit}
+        isSubmitting={isItemSubmitting}
         editingItem={editingItem}
         activePlaceName={activePlace?.name ?? ""}
         error={isFoodModalOpen ? actionError : null}

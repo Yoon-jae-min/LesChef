@@ -12,9 +12,10 @@ interface FoodItemProps {
   item: FoodItem;
   onEdit: (item: FoodItem) => void;
   onDelete: (item: FoodItem) => void;
+  isDeleting?: boolean;
 }
 
-export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
+export default function FoodItem({ item, onEdit, onDelete, isDeleting = false }: FoodItemProps) {
   const expirateStr = formatExpiryYmd(item.expirate);
   const dday =
     typeof item.daysUntilExpiry === "number" ? item.daysUntilExpiry : getDday(expirateStr);
@@ -79,6 +80,7 @@ export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
         <button
           type="button"
           onClick={() => onEdit(item)}
+          disabled={isDeleting}
           className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:text-black"
         >
           수정
@@ -86,9 +88,10 @@ export default function FoodItem({ item, onEdit, onDelete }: FoodItemProps) {
         <button
           type="button"
           onClick={() => onDelete(item)}
+          disabled={isDeleting}
           className="rounded-2xl border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-red-500 hover:text-red-600"
         >
-          삭제
+          {isDeleting ? "삭제 중…" : "삭제"}
         </button>
         {canFindRecipes ? (
           <Link

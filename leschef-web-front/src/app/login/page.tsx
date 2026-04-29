@@ -15,6 +15,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [saveSession, setSaveSession] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [fromMyPage, setFromMyPage] = useState(false);
   const [returnTo, setReturnTo] = useState<string>("/");
   const [showPassword, setShowPassword] = useState(false);
@@ -49,8 +50,10 @@ export default function LoginPage() {
 
   // 로그인 제출 함수
   const handleLogin = async () => {
+    if (isSubmitting) return;
     setError(null);
 
+    setIsSubmitting(true);
     try {
       const result = await login({
         customerId: loginId.trim(),
@@ -94,6 +97,8 @@ export default function LoginPage() {
       setError(
         error instanceof Error ? error.message : "아이디 또는 비밀번호가 올바르지 않습니다."
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -213,9 +218,18 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+                disabled={isSubmitting}
+                className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 ${
+                  isSubmitting ? "bg-gray-700" : "bg-black"
+                }`}
               >
-                로그인하기
+                {isSubmitting && (
+                  <span
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                    aria-hidden
+                  />
+                )}
+                {isSubmitting ? "로그인 중…" : "로그인하기"}
               </button>
             </form>
 

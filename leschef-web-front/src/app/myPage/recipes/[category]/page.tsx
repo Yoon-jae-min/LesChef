@@ -26,6 +26,7 @@ function MyRecipesCategoryPageContent() {
 
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     data,
@@ -66,7 +67,9 @@ function MyRecipesCategoryPageContent() {
 
   const handleDeleteConfirm = async () => {
     if (!deleteTargetId) return;
+    if (isDeleting) return;
 
+    setIsDeleting(true);
     try {
       const response = await deleteRecipe(deleteTargetId);
       if (response.ok) {
@@ -87,10 +90,13 @@ function MyRecipesCategoryPageContent() {
         console.error("레시피 삭제 실패:", err);
       }
       alert(err instanceof Error ? err.message : "레시피 삭제에 실패했습니다.");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
   const handleDeleteCancel = () => {
+    if (isDeleting) return;
     setShowDeleteConfirm(false);
     setDeleteTargetId(null);
   };
@@ -256,6 +262,7 @@ function MyRecipesCategoryPageContent() {
               <button
                 type="button"
                 onClick={handleDeleteCancel}
+                disabled={isDeleting}
                 className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
               >
                 취소
@@ -263,9 +270,20 @@ function MyRecipesCategoryPageContent() {
               <button
                 type="button"
                 onClick={() => void handleDeleteConfirm()}
-                className="flex-1 rounded-2xl border border-red-600 bg-red-600 px-4 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-red-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2"
+                disabled={isDeleting}
+                className={`inline-flex flex-1 items-center justify-center gap-2 rounded-2xl border px-4 py-3 text-sm font-medium shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 ${
+                  isDeleting
+                    ? "cursor-not-allowed border-red-400 bg-red-400 text-white"
+                    : "border-red-600 bg-red-600 text-white hover:bg-red-700"
+                }`}
               >
-                삭제하기
+                {isDeleting && (
+                  <span
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                    aria-hidden
+                  />
+                )}
+                {isDeleting ? "삭제 중…" : "삭제하기"}
               </button>
             </div>
           </div>

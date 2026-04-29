@@ -23,6 +23,7 @@ export default function SignupPage() {
   const [returnTo, setReturnTo] = useState<string>("/");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   // 이메일 인증 관련 상태
   const [verificationCode, setVerificationCode] = useState("");
@@ -112,6 +113,7 @@ export default function SignupPage() {
 
   // 회원가입 제출 함수
   const handleSignup = async () => {
+    if (isSubmitting) return;
     setError(null);
 
     // 이메일 인증 확인 (로컬 npm run dev 포함 동일)
@@ -156,6 +158,7 @@ export default function SignupPage() {
       return;
     }
 
+    setIsSubmitting(true);
     try {
       const response = await signup({
         id: idTrim,
@@ -187,6 +190,8 @@ export default function SignupPage() {
       setError(
         error instanceof Error ? error.message : "회원가입에 실패했습니다. 다시 시도해주세요."
       );
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -475,9 +480,18 @@ export default function SignupPage() {
 
               <button
                 type="submit"
-                className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg"
+                disabled={isSubmitting}
+                className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 ${
+                  isSubmitting ? "bg-gray-700" : "bg-black"
+                }`}
               >
-                회원가입하기
+                {isSubmitting && (
+                  <span
+                    className="h-4 w-4 animate-spin rounded-full border-2 border-white/60 border-t-white"
+                    aria-hidden
+                  />
+                )}
+                {isSubmitting ? "가입 중…" : "회원가입하기"}
               </button>
             </form>
 
