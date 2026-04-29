@@ -96,25 +96,17 @@ export default function DetailMeta({
 
       {/* 레시피 메타데이터 */}
       <div className="flex w-full items-center justify-center rounded-[28px] border border-orange-100/90 bg-gradient-to-br from-orange-50/90 via-amber-50/50 to-white px-3 py-5 shadow-sm sm:px-6 sm:py-6">
-        <div className="grid w-full max-w-xl grid-cols-1 gap-4 text-center font-semibold text-stone-900 sm:max-w-none sm:grid-cols-[1fr_auto_1fr_auto_1fr] sm:items-center sm:gap-0 sm:text-left">
-          <span className="text-sm sm:px-2 sm:text-base lg:text-lg">
+        <div className="grid w-full max-w-xl grid-cols-1 gap-4 text-center font-semibold text-stone-900 sm:max-w-none sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-orange-200/80">
+          <span className="text-sm sm:px-4 sm:text-base lg:text-lg">
             {(recipeMeta?.majorCategory || "카테고리") +
               (recipeMeta?.subCategory ? ` · ${recipeMeta.subCategory}` : "")}
           </span>
-          <div
-            className="hidden h-10 border-l border-orange-200/80 sm:block"
-            aria-hidden
-          />
-          <span className="text-sm sm:px-2 sm:text-center sm:text-base lg:text-lg">
+          <span className="text-sm sm:px-4 sm:text-base lg:text-lg">
             {recipeMeta?.portion
               ? `${recipeMeta.portion}${recipeMeta.portionUnit || "인분"}`
               : "분량 정보 없음"}
           </span>
-          <div
-            className="hidden h-10 border-l border-orange-200/80 sm:block"
-            aria-hidden
-          />
-          <span className="text-sm sm:px-2 sm:text-right sm:text-base lg:text-lg">
+          <span className="text-sm sm:px-4 sm:text-base lg:text-lg">
             {recipeMeta?.cookTime ? `${recipeMeta.cookTime}분` : "시간 정보 없음"}
           </span>
         </div>

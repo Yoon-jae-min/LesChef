@@ -55,13 +55,16 @@ export function resolveBackendAssetUrl(input: string | undefined): string {
     return input;
   }
 
+  // 일부 레거시 데이터는 선행 슬래시가 없을 수 있음 ("Image/..." 형태)
+  const normalized = input.startsWith("Image/") || input.startsWith("Video/") ? `/${input}` : input;
+
   // 백엔드에서 서빙하는 정적 경로
-  if (input.startsWith("/Image/") || input.startsWith("/Video/")) {
-    return `${API_CONFIG.BASE_URL}${input}`;
+  if (normalized.startsWith("/Image/") || normalized.startsWith("/Video/")) {
+    return `${API_CONFIG.BASE_URL}${normalized}`;
   }
 
   // 그 외는 그대로 반환 (상대 경로를 프론트에서 서빙하는 경우)
-  return input;
+  return normalized;
 }
 
 /**
