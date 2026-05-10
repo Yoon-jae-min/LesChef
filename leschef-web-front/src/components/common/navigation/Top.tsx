@@ -152,10 +152,11 @@ function Top(): React.JSX.Element {
               className="flex items-center h-full group"
               onClick={() => sessionStorage.setItem("fromLogoClick", "true")}
             >
-              {/* LesChef 텍스트 로고 */}
-              <span className="text-3xl font-bold tracking-normal leading-none text-gray-900 group-hover:text-orange-500 transition-colors duration-200 ml-2 mr-3">
-                LesChef
-              </span>
+              <img
+                src="/leschef-app-icon-mark.png"
+                alt="LesChef"
+                className="ml-2 mr-3 h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
+              />
             </Link>
           </div>
 
