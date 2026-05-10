@@ -153,7 +153,7 @@ function Top(): React.JSX.Element {
               onClick={() => sessionStorage.setItem("fromLogoClick", "true")}
             >
               <img
-                src="/leschef-app-icon-mark.png"
+                src="/leschef-web-logo.png"
                 alt="LesChef"
                 className="ml-2 mr-3 h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
               />
