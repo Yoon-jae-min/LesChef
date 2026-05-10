@@ -15,6 +15,7 @@ import {
     makeRefreshJti,
     signAccessToken,
     signRefreshToken,
+    verifyAccessToken,
 } from '../../../utils/auth/token';
 
 const isDev = process.env.NODE_ENV !== 'production';
@@ -26,6 +27,26 @@ function resolveSocialCallbackUrl(state: unknown): string {
     }
     const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
     return `${redirectBase}/social/callback`;
+}
+
+function getAppLinkUserId(state: unknown): string | null {
+    if (typeof state !== 'string' || !state.startsWith('app_link:')) {
+        return null;
+    }
+    try {
+        return verifyAccessToken(state.slice('app_link:'.length)).sub;
+    } catch {
+        return null;
+    }
+}
+
+function redirectSocialLinkResult(res: Response, provider: string, isAppLink: boolean): void {
+    if (isAppLink) {
+        res.redirect(`${APP_SOCIAL_CALLBACK_URL}#linkProvider=${provider}&linkStatus=success`);
+        return;
+    }
+    const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+    res.redirect(`${redirectBase}/myPage/info?link=${provider}&status=success`);
 }
 
 export const googleLogin = asyncHandler(async (req: Request, res: Response) => {
@@ -55,8 +76,11 @@ export const googleLogin = asyncHandler(async (req: Request, res: Response) => {
             const googleUniqueId = googleUserInfo.id;
 
             // [1] 계정 연동 모드: 로그인된 사용자의 계정에 구글 계정 연결
-            if (req.session?.user?.id && state === 'link') {
-                const baseUser = await User.findOne({ id: req.session.user.id });
+            const appLinkUserId = getAppLinkUserId(state);
+            const sessionUserId = req.session?.user?.id;
+            const linkUserId = appLinkUserId || (state === 'link' ? sessionUserId : undefined);
+            if (linkUserId) {
+                const baseUser = await User.findOne({ id: linkUserId });
                 if (!baseUser) {
                     res.status(404).send('기존 사용자를 찾을 수 없습니다.');
                     return;
@@ -78,8 +102,7 @@ export const googleLogin = asyncHandler(async (req: Request, res: Response) => {
                     await baseUser.save();
                 }
 
-                const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
-                res.redirect(`${redirectBase}/myPage/info?link=google&status=success`);
+                redirectSocialLinkResult(res, 'google', Boolean(appLinkUserId));
                 return;
             }
 

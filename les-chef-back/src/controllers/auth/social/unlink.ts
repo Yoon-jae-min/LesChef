@@ -25,7 +25,9 @@ export const unlinkSocialAccount = asyncHandler(
     ) => {
         const { provider } = req.params;
 
-        if (!req.session?.user?.id) {
+        const userId = req.auth?.sub || req.session?.user?.id;
+
+        if (!userId) {
             res.status(401).json({
                 error: true,
                 message: '로그인이 필요합니다.',
@@ -41,7 +43,6 @@ export const unlinkSocialAccount = asyncHandler(
             return;
         }
 
-        const userId = req.session.user.id;
         const field = providerFieldMap[provider];
 
         try {

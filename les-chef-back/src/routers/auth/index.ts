@@ -21,7 +21,7 @@ import {
     completePasswordReset,
     postRefresh,
 } from '../../controllers/auth';
-import { requireAuth } from '../../middleware/auth/auth';
+import { optionalAuth, requireAuth } from '../../middleware/auth/auth';
 
 const router = express.Router();
 
@@ -40,7 +40,7 @@ router
     .post('/login', postLogin)
     .post('/join', postJoin)
     .delete('/delete', requireAuth, delUser)
-    .post('/unlink/:provider', unlinkSocialAccount)
+    .post('/unlink/:provider', optionalAuth, unlinkSocialAccount)
     .get('/kakaoLogin', kakaoLogin)
     .get('/googleLogin', googleLogin)
     .get('/naverLogin', naverLogin)
