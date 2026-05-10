@@ -14,6 +14,15 @@ import {
 } from '../../../utils/auth/token';
 
 const isDev = process.env.NODE_ENV !== 'production';
+const APP_SOCIAL_CALLBACK_URL = process.env.APP_SOCIAL_CALLBACK_URL || 'leschefapp://social/callback';
+
+function resolveSocialCallbackUrl(state: unknown): string {
+    if (state === 'app_login') {
+        return APP_SOCIAL_CALLBACK_URL;
+    }
+    const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+    return `${redirectBase}/social/callback`;
+}
 
 interface KakaoTokenData {
     id_token?: string;
@@ -180,9 +189,9 @@ export const kakaoLogin = asyncHandler(async (req: Request, res: Response) => {
             const nickName = (user ? user.nickName : kakaoNickname) || '';
             const tel = (user ? user.tel : '') || '';
 
-            const redirectBase = process.env.FRONTEND_URL || process.env.SERVER_ADDRESS;
+            const callbackUrl = resolveSocialCallbackUrl(state);
             res.redirect(
-                `${redirectBase}/social/callback#accessToken=${encodeURIComponent(
+                `${callbackUrl}#accessToken=${encodeURIComponent(
                     accessToken
                 )}&refreshToken=${encodeURIComponent(refreshToken)}&userId=${encodeURIComponent(
                     userId
