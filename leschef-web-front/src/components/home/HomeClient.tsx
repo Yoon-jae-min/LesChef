@@ -6,6 +6,7 @@
 "use client";
 
 import Top from "@/components/common/navigation/Top";
+import SiteFooter from "@/components/common/ui/SiteFooter";
 import HeroSection from "./sections/HeroSection";
 import ExpiryAlerts from "./sections/ExpiryAlerts";
 import FoodInventory from "./sections/FoodInventory";
@@ -168,6 +169,7 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
           </div>
         </div>
       </main>
+      <SiteFooter />
     </div>
   );
 }
