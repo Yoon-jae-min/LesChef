@@ -11,7 +11,9 @@ export { CACHE_TTL } from './system/cache';
 // KAMIS constants
 export {
     MAX_INGREDIENT_ITEMS,
+    MAX_SEARCH_PRICE_ITEMS,
     MAIN_INGREDIENTS,
+    KAMIS_CATEGORY,
     KAMIS_DEFAULT_PARAMS,
     PRICE_DIRECTION,
     type PriceDirection,

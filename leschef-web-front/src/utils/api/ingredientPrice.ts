@@ -1,6 +1,6 @@
 /**
- * 식재료 물가 API 유틸리티 함수
- * 백엔드를 통해 공공데이터포털 API를 호출하여 식재료 물가 정보를 가져오는 함수들
+ * 식재료 물가 API 유틸리티
+ * 백엔드: KAMIS #15 코드표 + #17 소매가 검색
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
@@ -12,9 +12,11 @@ export type IngredientPriceItem = {
   name: string;
   price: number;
   unit: string;
-  change?: number; // 전일 대비 변동액
-  changeRate?: number; // 변동률 (%)
-  date?: string; // 기준일
+  change?: number;
+  changeRate?: number;
+  date?: string;
+  kindName?: string;
+  categoryName?: string;
 };
 
 export type IngredientPriceResponse = {
@@ -22,40 +24,71 @@ export type IngredientPriceResponse = {
   data: IngredientPriceItem[];
   date: string;
   message?: string;
+  query?: string;
 };
 
+async function parseError(response: Response, fallback: string): Promise<string> {
+  try {
+    const errorData = await response.json();
+    return errorData.message || errorData.error || fallback;
+  } catch {
+    const text = await response.text();
+    return text || fallback;
+  }
+}
+
 /**
- * 식재료 물가 정보 조회
- * 백엔드 API를 통해 공공데이터포털 API를 호출합니다.
- * @returns Promise<IngredientPriceResponse>
+ * 기본 관심 품목 소매가 (전체 물가 보기)
  */
 export const getIngredientPrices = async (): Promise<IngredientPriceResponse> => {
   try {
     const response = await authFetch(`${API_BASE_URL}/ingredient-price`, {
       method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
 
     if (!response.ok) {
-      let errorMessage = `식재료 물가 정보 조회 실패: ${response.status}`;
-      try {
-        const errorData = await response.json();
-        errorMessage = errorData.message || errorData.error || errorMessage;
-      } catch {
-        const text = await response.text();
-        errorMessage = text || errorMessage;
-      }
-      throw new Error(errorMessage);
+      throw new Error(
+        await parseError(response, `식재료 물가 정보 조회 실패: ${response.status}`)
+      );
     }
 
-    const result: IngredientPriceResponse = await response.json();
-    return result;
+    return (await response.json()) as IngredientPriceResponse;
   } catch (error) {
-    if (error instanceof Error) {
-      throw error;
-    }
+    if (error instanceof Error) throw error;
     throw new Error("식재료 물가 정보 조회 중 네트워크 오류가 발생했습니다.");
+  }
+};
+
+/**
+ * 식재료 이름 검색 → 소매가
+ */
+export const searchIngredientPrices = async (
+  query: string
+): Promise<IngredientPriceResponse> => {
+  const q = query.trim();
+  if (!q) {
+    throw new Error("검색어를 입력해 주세요.");
+  }
+
+  try {
+    const response = await authFetch(
+      `${API_BASE_URL}/ingredient-price/search?q=${encodeURIComponent(q)}`,
+      {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(
+        await parseError(response, `식재료 가격 검색 실패: ${response.status}`)
+      );
+    }
+
+    return (await response.json()) as IngredientPriceResponse;
+  } catch (error) {
+    if (error instanceof Error) throw error;
+    throw new Error("식재료 가격 검색 중 네트워크 오류가 발생했습니다.");
   }
 };

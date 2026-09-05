@@ -2,10 +2,10 @@
  * KAMIS API 관련 상수
  */
 
-// 식재료 목록 최대 반환 개수
-export const MAX_INGREDIENT_ITEMS = 8;
+/** 검색 결과로 가격 조회할 최대 품목 수 */
+export const MAX_SEARCH_PRICE_ITEMS = 6;
 
-// 주요 식재료 목록
+/** 전체 물가 보기용 기본 품목 (검색어 없을 때) */
 export const MAIN_INGREDIENTS = [
     '쌀',
     '돼지고기',
@@ -15,25 +15,36 @@ export const MAIN_INGREDIENTS = [
     '양파',
     '마늘',
     '배추',
-    '고추',
-    '당근',
-    '무',
-    '상추',
+    '고구마',
+    '감자',
 ] as const;
 
-// KAMIS 요청 기본 파라미터
+/** 부류 코드 (KAMIS) */
+export const KAMIS_CATEGORY = {
+    FOOD_CROPS: '100', // 식량작물
+    VEGETABLES: '200', // 채소류
+    SPECIAL: '300', // 특용작물
+    FRUITS: '400', // 과일류
+    LIVESTOCK: '500', // 축산물
+    SEAFOOD: '600', // 수산물
+} as const;
+
 export const KAMIS_DEFAULT_PARAMS = {
-    productClsCode: '01', // 01: 농산물, 02: 축산물
-    itemCategoryCode: '100', // 100: 곡물류 (예시 기본값)
-    countyCode: '1101', // 1101: 서울
+    /** 소매 조회 기본 지역: 서울 */
+    countryCode: '1101',
+    /** kg 환산 여부 */
+    convertKgYn: 'N',
+    /** 소매가 조회 기간(일) — 최근 N일 */
+    retailLookupDays: 10,
 } as const;
 
-// 가격 변동 방향 상수 (KAMIS API direction 필드 값)
+/** @deprecated 레거시 호환용. 검색 기반에서는 사용하지 않음 */
+export const MAX_INGREDIENT_ITEMS = MAX_SEARCH_PRICE_ITEMS;
+
 export const PRICE_DIRECTION = {
-    DOWN: '0', // 가격 하락
-    UP: '1', // 가격 상승
-    SAME: '2', // 등락 없음
+    DOWN: '0',
+    UP: '1',
+    SAME: '2',
 } as const;
 
-// PRICE_DIRECTION 타입
 export type PriceDirection = (typeof PRICE_DIRECTION)[keyof typeof PRICE_DIRECTION];
