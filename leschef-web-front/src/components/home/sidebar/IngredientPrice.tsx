@@ -5,20 +5,12 @@
 
 "use client";
 
-import Link from "next/link";
 import { FormEvent, useId, useState } from "react";
 import {
   searchIngredientPrices,
   type IngredientPriceItem,
-  type IngredientPriceResponse,
 } from "@/utils/api/ingredientPrice";
 import ErrorMessage from "@/components/common/ui/ErrorMessage";
-
-interface IngredientPriceProps {
-  /** 하위 호환용. 검색 UI에서는 사용하지 않음 */
-  initialData?: IngredientPriceResponse | null;
-  initialError?: string | null;
-}
 
 function formatPrice(item: IngredientPriceItem): string {
   if (typeof item.price === "number") return item.price.toLocaleString();
@@ -28,7 +20,7 @@ function formatPrice(item: IngredientPriceItem): string {
   return "0";
 }
 
-export default function IngredientPrice(_props: IngredientPriceProps) {
+export default function IngredientPrice() {
   const headingId = useId();
   const inputId = useId();
   const resultsId = useId();
@@ -222,13 +214,6 @@ export default function IngredientPrice(_props: IngredientPriceProps) {
           )}
         </div>
       )}
-
-      <Link
-        href="/ingredient-price"
-        className="mt-2 block text-center text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors py-2 border-t border-gray-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
-      >
-        전체 물가 보기<span aria-hidden> →</span>
-      </Link>
     </aside>
   );
 }

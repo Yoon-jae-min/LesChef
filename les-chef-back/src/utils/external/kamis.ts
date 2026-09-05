@@ -7,7 +7,6 @@ import https from 'https';
 import {
     CACHE_TTL,
     KAMIS_DEFAULT_PARAMS,
-    MAIN_INGREDIENTS,
     MAX_SEARCH_PRICE_ITEMS,
 } from '../../constants';
 import cache from '../system/cache';
@@ -358,7 +357,6 @@ export async function searchIngredientPrices(query: string): Promise<KamisItem[]
 
     const cert = getCertParams();
     if (!cert) {
-        // 키 없으면 목업에서 이름 필터
         const q = normalizeText(query);
         return getMockData().filter((item) => normalizeText(item.name).includes(q));
     }
@@ -367,25 +365,9 @@ export async function searchIngredientPrices(query: string): Promise<KamisItem[]
     return results.filter((item): item is KamisItem => item !== null);
 }
 
-/**
- * 기본 관심 품목 소매가 (전체 물가 보기용)
- */
-export async function fetchMainIngredientPrices(): Promise<KamisItem[]> {
-    const cert = getCertParams();
-    if (!cert) return getMockData();
-
-    const items: KamisItem[] = [];
-    for (const name of MAIN_INGREDIENTS) {
-        const found = await searchIngredientPrices(name);
-        if (found[0]) items.push(found[0]);
-        if (items.length >= MAX_SEARCH_PRICE_ITEMS) break;
-    }
-    return items.length > 0 ? items : getMockData();
-}
-
-/** @deprecated 기존 호출 호환. 내부적으로 메인 품목 소매가를 반환 */
+/** @deprecated 기존 호출 호환 — 검색 API만 사용 */
 export async function fetchKamisAPI(_url?: string): Promise<KamisItem[]> {
-    return fetchMainIngredientPrices();
+    return getMockData();
 }
 
 export function getTodayDateString(): string {

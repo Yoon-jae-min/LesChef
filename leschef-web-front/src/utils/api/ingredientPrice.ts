@@ -38,29 +38,6 @@ async function parseError(response: Response, fallback: string): Promise<string>
 }
 
 /**
- * 기본 관심 품목 소매가 (전체 물가 보기)
- */
-export const getIngredientPrices = async (): Promise<IngredientPriceResponse> => {
-  try {
-    const response = await authFetch(`${API_BASE_URL}/ingredient-price`, {
-      method: "GET",
-      headers: { "Content-Type": "application/json" },
-    });
-
-    if (!response.ok) {
-      throw new Error(
-        await parseError(response, `식재료 물가 정보 조회 실패: ${response.status}`)
-      );
-    }
-
-    return (await response.json()) as IngredientPriceResponse;
-  } catch (error) {
-    if (error instanceof Error) throw error;
-    throw new Error("식재료 물가 정보 조회 중 네트워크 오류가 발생했습니다.");
-  }
-};
-
-/**
  * 식재료 이름 검색 → 소매가
  */
 export const searchIngredientPrices = async (

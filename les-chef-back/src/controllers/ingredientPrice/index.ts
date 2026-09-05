@@ -2,7 +2,6 @@ import asyncHandler from 'express-async-handler';
 import { Request, Response } from 'express';
 import logger from '../../utils/system/logger';
 import {
-    fetchMainIngredientPrices,
     getTodayDateString,
     getMockData,
     searchIngredientPrices,
@@ -15,7 +14,6 @@ const isDev = process.env.NODE_ENV !== 'production';
 interface IngredientPriceResponse extends ApiSuccessResponse {
     data: unknown[];
     date: string;
-    cached?: boolean;
     message?: string;
     query?: string;
 }
@@ -25,48 +23,6 @@ function hasKamisCredentials(): boolean {
     const certId = process.env.KAMIS_CERT_ID?.trim();
     return Boolean(certKey && certId);
 }
-
-/**
- * 기본 관심 품목 소매가 (전체 물가 보기)
- * #15 코드표 + #17 소매가
- */
-export const getIngredientPrices = asyncHandler(
-    async (_req: Request, res: Response<IngredientPriceResponse | ApiErrorResponse>) => {
-        try {
-            if (!hasKamisCredentials()) {
-                if (isDev) {
-                    logger.warn(
-                        'KAMIS_CERT_KEY 또는 KAMIS_CERT_ID가 설정되지 않았습니다. 더미 데이터를 반환합니다.'
-                    );
-                }
-                res.status(200).json({
-                    error: false,
-                    data: getMockData(),
-                    date: getTodayDateString(),
-                    message: 'KAMIS API 키가 설정되지 않아 더미 데이터를 반환합니다.',
-                });
-                return;
-            }
-
-            const result = await fetchMainIngredientPrices();
-            res.status(200).json({
-                error: false,
-                data: result,
-                date: getTodayDateString(),
-            });
-        } catch (error) {
-            if (isDev) {
-                logger.error('식재료 물가 정보 조회 오류:', { error });
-            }
-            const err = error as Error;
-            res.status(500).json({
-                error: true,
-                message: '식재료 물가 정보를 가져오는 중 오류가 발생했습니다.',
-                details: process.env.NODE_ENV === 'development' ? err.message : undefined,
-            });
-        }
-    }
-);
 
 /**
  * 식재료 이름 검색 → 코드 매칭 → 소매가

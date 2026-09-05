@@ -14,19 +14,13 @@ import RecipeSection from "./sections/RecipeSection";
 import CategoryPreview from "./sections/CategoryPreview";
 import IngredientPrice from "./sidebar/IngredientPrice";
 import { useExpiryAlerts } from "@/hooks/useExpiryAlerts";
-import type { IngredientPriceResponse } from "@/utils/api/ingredientPrice";
 import useSWR from "swr";
 import { checkAuth } from "@/utils/api/auth";
 import { useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 
-interface HomeClientProps {
-  priceInitialData?: IngredientPriceResponse | null;
-  priceInitialError?: string | null;
-}
-
-export default function HomeClient({ priceInitialData, priceInitialError }: HomeClientProps) {
+export default function HomeClient() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -165,7 +159,7 @@ export default function HomeClient({ priceInitialData, priceInitialError }: Home
 
           {/* 사이드바 (1열) */}
           <div className="lg:col-span-1">
-            <IngredientPrice initialData={priceInitialData} initialError={priceInitialError} />
+            <IngredientPrice />
           </div>
         </div>
       </main>
