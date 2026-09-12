@@ -53,7 +53,7 @@ export default function SocialCallbackPage() {
   return (
     <main className="mx-auto flex min-h-[60vh] max-w-3xl flex-col items-center justify-center px-6 py-16">
       <div className="flex flex-col items-center gap-3">
-        <span className="h-10 w-10 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+        <span className="h-10 w-10 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
         <p className="text-sm text-stone-600">로그인 처리 중…</p>
       </div>
     </main>

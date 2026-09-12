@@ -83,7 +83,7 @@ export default function SearchBar({
         placeholder="레시피 이름, 재료명, 태그로 검색..."
         enterKeyHint="search"
         autoComplete="off"
-        className="w-full px-4 py-2 pl-10 pr-10 bg-gray-100 rounded-2xl border-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 text-sm text-gray-900 placeholder:text-gray-600"
+        className="w-full px-4 py-2 pl-10 pr-10 bg-white rounded-2xl border border-lime-100 shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 text-sm text-gray-900 placeholder:text-gray-600"
       />
       <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden>
         <svg
@@ -101,7 +101,7 @@ export default function SearchBar({
         <button
           type="button"
           onClick={handleSearchClick}
-          className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-200 rounded-r-2xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-inset"
+          className="absolute inset-y-0 right-0 pr-3 flex items-center hover:bg-gray-200 rounded-r-2xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-inset"
           aria-label="검색 실행"
         >
           <svg

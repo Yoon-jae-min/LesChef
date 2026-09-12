@@ -18,7 +18,7 @@ function SectionTitle({ id, children }: { id: string; children: ReactNode }) {
       id={id}
       className="mb-5 text-center text-xl font-bold tracking-tight text-stone-900 sm:text-2xl"
     >
-      <span className="inline-block border-b-2 border-orange-400/80 pb-1">{children}</span>
+      <span className="inline-block border-b-2 border-green-400/80 pb-1">{children}</span>
     </h2>
   );
 }
@@ -39,7 +39,7 @@ export default function Ingredients({ ingredients }: IngredientsProps) {
 
       {ingredients.map((group, idx) => (
         <div key={`${group.sortType}-${idx}`} className="mb-6 last:mb-0">
-          <p className="mb-3 inline-flex rounded-2xl border border-orange-100 bg-orange-50/80 px-4 py-2 text-sm font-semibold text-stone-800">
+          <p className="mb-3 inline-flex rounded-2xl border border-green-100 bg-green-50/80 px-4 py-2 text-sm font-semibold text-stone-800">
             {group.sortType || "재료"}
           </p>
           <ul className="space-y-2 sm:space-y-3 sm:pl-1">

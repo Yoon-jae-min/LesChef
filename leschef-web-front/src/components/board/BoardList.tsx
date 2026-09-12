@@ -97,7 +97,7 @@ export default function BoardList({
             role="status"
             aria-live="polite"
           >
-            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
             <p className="text-center text-sm text-stone-600 sm:text-left">게시글을 불러오는 중입니다…</p>
           </div>
         )}
@@ -126,9 +126,9 @@ export default function BoardList({
             <Link
               key={post._id}
               href={`/board/detail?type=${badgeType(post)}&id=${post._id}`}
-              className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:border-stone-300/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:border-stone-300/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
-              <div className="relative mb-4 rounded-2xl border border-stone-200/80 bg-gradient-to-br from-stone-50 via-white to-orange-50/30 px-4 py-4">
+              <div className="relative mb-4 rounded-2xl border border-stone-200/80 bg-gradient-to-br from-stone-50 via-white to-green-50/30 px-4 py-4">
                 <div className="flex items-center justify-between gap-2">
                   <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-400">
                     Post
@@ -136,14 +136,14 @@ export default function BoardList({
                   <span
                     className={`shrink-0 rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
                       badgeType(post) === "notice"
-                        ? "bg-orange-100 text-orange-800"
+                        ? "bg-green-100 text-green-800"
                         : "bg-stone-100 text-stone-700"
                     }`}
                   >
                     {BOARD_CATEGORY_LABEL[badgeType(post)] || "게시판"}
                   </span>
                 </div>
-                <p className="mt-3 line-clamp-2 text-lg font-semibold tracking-tight text-stone-900 group-hover:text-orange-900">
+                <p className="mt-3 line-clamp-2 text-lg font-semibold tracking-tight text-stone-900 group-hover:text-green-900">
                   {post.title}
                 </p>
               </div>
@@ -166,7 +166,7 @@ export default function BoardList({
                     <button
                       type="button"
                       onClick={(e) => handleEditClick(e, post._id, badgeType(post))}
-                      className="rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1"
+                      className="rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1"
                     >
                       편집
                     </button>
@@ -174,7 +174,7 @@ export default function BoardList({
                   <span className="text-xs text-stone-500">상세 보기</span>
                 </div>
                 <span
-                  className="text-orange-600 transition group-hover:translate-x-0.5"
+                  className="text-green-600 transition group-hover:translate-x-0.5"
                   aria-hidden
                 >
                   →
@@ -197,7 +197,7 @@ export default function BoardList({
             ) : (
               <Link
                 href={boardListHref(listType, page - 1)}
-                className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                 scroll
               >
                 이전
@@ -214,7 +214,7 @@ export default function BoardList({
             ) : (
               <Link
                 href={boardListHref(listType, page + 1)}
-                className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                 scroll
               >
                 다음
@@ -234,13 +234,13 @@ export default function BoardList({
                       </span>
                     )}
                     {p === page ? (
-                      <span className="min-w-[2.25rem] rounded-xl border border-orange-600 bg-orange-600 px-3 py-1.5 text-center text-sm font-semibold text-white shadow-sm">
+                      <span className="min-w-[2.25rem] rounded-xl border border-green-600 bg-green-600 px-3 py-1.5 text-center text-sm font-semibold text-white shadow-sm">
                         {p}
                       </span>
                     ) : (
                       <Link
                         href={boardListHref(listType, p)}
-                        className="min-w-[2.25rem] rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-center text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-1"
+                        className="min-w-[2.25rem] rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-center text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-1"
                         scroll
                       >
                         {p}

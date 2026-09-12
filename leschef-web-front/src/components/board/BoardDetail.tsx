@@ -127,7 +127,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
           role="status"
           aria-live="polite"
         >
-          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
           <p className="text-sm text-stone-600">게시글을 불러오는 중입니다…</p>
         </div>
       )}
@@ -150,7 +150,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
                 <span
                   className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${
                     boardType === "notice"
-                      ? "bg-orange-100 text-orange-900"
+                      ? "bg-green-100 text-green-900"
                       : "bg-stone-100 text-stone-800"
                   }`}
                 >
@@ -161,7 +161,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
                     <>
                       <Link
                         href={`/board/edit?id=${postId}&type=${boardType}`}
-                        className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                        className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                       >
                         편집
                       </Link>
@@ -178,7 +178,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
                   <button
                     type="button"
                     onClick={handleToggleLike}
-                    className={`inline-flex h-10 min-w-[3.5rem] items-center justify-center gap-1 rounded-full border px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+                    className={`inline-flex h-10 min-w-[3.5rem] items-center justify-center gap-1 rounded-full border px-3 text-sm font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
                       isLiked
                         ? "border-red-200 bg-red-50 text-red-600"
                         : "border-stone-200 bg-white text-stone-500 hover:border-red-200 hover:bg-red-50/50 hover:text-red-500"
@@ -228,7 +228,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
                   value={comment}
                   onChange={(e) => setComment(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAddComment()}
-                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/50 px-4 py-3.5 text-base text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/50 px-4 py-3.5 text-base text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                 />
               </div>
 
@@ -265,7 +265,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
                       <button
                         type="button"
                         onClick={() => handleDeleteComment(c._id)}
-                        className="shrink-0 rounded-lg p-2 text-stone-400 transition hover:bg-red-50 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                        className="shrink-0 rounded-lg p-2 text-stone-400 transition hover:bg-red-50 hover:text-red-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
                         aria-label="댓글 삭제"
                       >
                         <svg
@@ -313,7 +313,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
                 type="button"
                 disabled={deleteSubmitting}
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 취소
               </button>

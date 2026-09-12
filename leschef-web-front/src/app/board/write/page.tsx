@@ -61,7 +61,7 @@ export default function BoardWritePage() {
       <Top />
       <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
         <header className="mb-8 text-center sm:mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
             Board Write
           </p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
@@ -77,7 +77,7 @@ export default function BoardWritePage() {
             className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
               boardType === "free"
                 ? "bg-stone-100 text-stone-800"
-                : "bg-orange-100 text-orange-900"
+                : "bg-green-100 text-green-900"
             }`}
           >
             {categoryName}
@@ -100,7 +100,7 @@ export default function BoardWritePage() {
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="제목을 입력하세요"
-                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                   required
                 />
               </div>
@@ -118,7 +118,7 @@ export default function BoardWritePage() {
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="내용을 입력하세요..."
                   rows={15}
-                  className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                   required
                 />
               </div>
@@ -133,17 +133,17 @@ export default function BoardWritePage() {
                   window.history.back();
                 }
               }}
-              className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               취소
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+              className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold text-white shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
                 isSubmitting
-                  ? "cursor-not-allowed bg-orange-400"
-                  : "bg-orange-600 hover:bg-orange-700"
+                  ? "cursor-not-allowed bg-green-400"
+                  : "bg-green-600 hover:bg-green-700"
               }`}
             >
               {isSubmitting && (

@@ -232,15 +232,15 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
       <Top />
 
       <main className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* 브랜드 메시지 */}
           <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 lg:px-14 lg:py-16 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-            <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-orange-200 to-red-200 opacity-70 blur-3xl pointer-events-none" />
-            <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-orange-200 opacity-60 blur-2xl pointer-events-none" />
+            <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl pointer-events-none" />
+            <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl pointer-events-none" />
 
             <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
               Join us
@@ -248,10 +248,10 @@ export default function SignupPage() {
             <h1 className="mt-4 text-4xl lg:text-5xl font-semibold text-gray-900 leading-tight">
               새로운 요리 여정,
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-400 to-yellow-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400">
                 LesChef{" "}
               </span>
-              와 <span className="underline decoration-4 decoration-orange-300">시작</span>
+              와 <span className="underline decoration-4 decoration-green-300">시작</span>
             </h1>
 
             <p className="mt-6 text-base text-gray-600 leading-relaxed">

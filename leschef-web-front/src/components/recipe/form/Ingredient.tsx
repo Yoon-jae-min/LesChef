@@ -29,7 +29,7 @@ export default function Ingredient({
   onUpdateIngredient,
 }: IngredientProps) {
   const inputClass =
-    "rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-500 transition focus:outline-none focus-visible:border-orange-400 focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2";
+    "rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-500 transition focus:outline-none focus-visible:border-green-400 focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2";
 
   /**
    * 수량(volume) UX:
@@ -60,7 +60,7 @@ export default function Ingredient({
         <button
           type="button"
           onClick={onAddGroup}
-          className="rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 transition hover:border-orange-200 hover:bg-orange-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+          className="rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 transition hover:border-green-200 hover:bg-green-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
         >
           재료 그룹 추가
         </button>
@@ -83,7 +83,7 @@ export default function Ingredient({
               <button
                 type="button"
                 onClick={() => onAddIngredient(groupIndex)}
-                className="shrink-0 rounded-xl border border-orange-200 bg-orange-50 px-3 py-2 text-sm font-semibold text-orange-900 transition hover:bg-orange-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="shrink-0 rounded-xl border border-green-200 bg-green-50 px-3 py-2 text-sm font-semibold text-green-900 transition hover:bg-green-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
                 재료 추가
               </button>
@@ -121,7 +121,7 @@ export default function Ingredient({
                           onClick={() => onUpdateIngredient(groupIndex, ingredientIndex, "amountText", "")}
                           className={`px-3 py-2 text-xs font-semibold transition ${
                             !isTextMode
-                              ? "bg-orange-600 text-white"
+                              ? "bg-green-600 text-white"
                               : "bg-white text-stone-600 hover:bg-stone-50"
                           }`}
                         >
@@ -136,7 +136,7 @@ export default function Ingredient({
                           }}
                           className={`px-3 py-2 text-xs font-semibold transition ${
                             isTextMode
-                              ? "bg-orange-600 text-white"
+                              ? "bg-green-600 text-white"
                               : "bg-white text-stone-600 hover:bg-stone-50"
                           }`}
                         >
@@ -162,7 +162,7 @@ export default function Ingredient({
                               key={t}
                               type="button"
                               onClick={() => onUpdateIngredient(groupIndex, ingredientIndex, "amountText", t)}
-                              className="rounded-full border border-orange-200 bg-orange-50 px-2.5 py-1 text-[11px] font-semibold text-orange-900 hover:bg-orange-100"
+                              className="rounded-full border border-green-200 bg-green-50 px-2.5 py-1 text-[11px] font-semibold text-green-900 hover:bg-green-100"
                             >
                               {t}
                             </button>

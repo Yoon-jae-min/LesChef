@@ -53,7 +53,7 @@ export default function FavoritesCategoryPage() {
           role="status"
           aria-live="polite"
         >
-          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
           <p className="text-sm text-stone-600">찜한 레시피를 불러오는 중입니다…</p>
         </div>
       )}
@@ -84,11 +84,11 @@ export default function FavoritesCategoryPage() {
           <Link
             key={card._id}
             href={card._id ? `/recipe/detail?id=${card._id}` : "/recipe"}
-            className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:border-stone-300/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:border-stone-300/90 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             aria-label={`${card.recipeName} 상세로 이동`}
           >
             <div className="relative overflow-hidden rounded-2xl border border-stone-200/80 bg-stone-50">
-              <div className="relative aspect-[5/3] w-full bg-gradient-to-br from-stone-50 to-orange-50/30">
+              <div className="relative aspect-[5/3] w-full bg-gradient-to-br from-stone-50 to-green-50/30">
                 {card.recipeImg ? (
                   <Image
                     src={card.recipeImg}
@@ -106,7 +106,7 @@ export default function FavoritesCategoryPage() {
               </div>
             </div>
 
-            <div className="relative mt-4 flex items-center justify-between rounded-2xl border border-stone-200/80 bg-gradient-to-br from-stone-50 via-white to-orange-50/40 px-4 py-5">
+            <div className="relative mt-4 flex items-center justify-between rounded-2xl border border-stone-200/80 bg-gradient-to-br from-stone-50 via-white to-green-50/40 px-4 py-5">
               <span className="text-3xl" aria-hidden>
                 ❤️
               </span>
@@ -121,7 +121,7 @@ export default function FavoritesCategoryPage() {
               </div>
             </div>
 
-            <h3 className="mt-3 text-lg font-semibold tracking-tight text-stone-900 group-hover:text-orange-900 sm:text-xl">
+            <h3 className="mt-3 text-lg font-semibold tracking-tight text-stone-900 group-hover:text-green-900 sm:text-xl">
               {card.recipeName}
             </h3>
 
@@ -140,7 +140,7 @@ export default function FavoritesCategoryPage() {
 
             <div className="mt-4 flex items-center justify-between border-t border-stone-100 pt-4 text-[11px] text-stone-500">
               <span>레시피 상세 보기</span>
-              <span className="font-semibold text-orange-600 transition group-hover:translate-x-0.5">
+              <span className="font-semibold text-green-600 transition group-hover:translate-x-0.5">
                 →
               </span>
             </div>

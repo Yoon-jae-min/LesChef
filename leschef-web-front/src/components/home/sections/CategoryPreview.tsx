@@ -78,7 +78,7 @@ function CategoryCard({ categoryKey, categoryLabel, href }: CategoryCardProps) {
         </h3>
         <Link
           href={href}
-          className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+          className="text-sm text-green-600 font-medium hover:text-green-700 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           aria-label={`${categoryLabel} 레시피 더보기`}
         >
           더보기<span aria-hidden> →</span>
@@ -100,7 +100,7 @@ function CategoryCard({ categoryKey, categoryLabel, href }: CategoryCardProps) {
             <Link
               key={recipe._id || recipe.recipeName}
               href={recipe._id ? `/recipe/detail?id=${recipe._id}` : "/recipe"}
-              className="block p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="block p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               aria-label={
                 recipe.recipeName
                   ? `${recipe.recipeName}${recipe.cookTime ? `, 조리 ${recipe.cookTime}분` : ""} · 상세 보기`

@@ -20,10 +20,10 @@ export default function ExpiryAlerts({ alerts }: ExpiryAlertsProps) {
   if (!hasAlerts) return null;
 
   return (
-    <div className="rounded-3xl border border-orange-200 bg-orange-50 p-6">
+    <div className="rounded-3xl border border-green-200 bg-green-50 p-6">
       <div className="flex items-start justify-between gap-4">
         <div className="flex-1">
-          <h3 className="text-lg font-semibold text-orange-900 mb-2">유통기한 알림</h3>
+          <h3 className="text-lg font-semibold text-green-900 mb-2">유통기한 알림</h3>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
             {alerts.expiredCount > 0 && (
               <div className="flex items-center gap-2">
@@ -35,9 +35,9 @@ export default function ExpiryAlerts({ alerts }: ExpiryAlertsProps) {
             )}
             {alerts.urgentCount > 0 && (
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-orange-500"></span>
+                <span className="w-3 h-3 rounded-full bg-green-500"></span>
                 <span className="text-gray-700">
-                  <span className="font-semibold text-orange-600">{alerts.urgentCount}</span>개 긴급
+                  <span className="font-semibold text-green-600">{alerts.urgentCount}</span>개 긴급
                 </span>
               </div>
             )}

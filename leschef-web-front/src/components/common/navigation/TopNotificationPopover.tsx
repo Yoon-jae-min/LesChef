@@ -35,7 +35,7 @@ function bucketStyle(bucket: ExpiryInboxBucket): string {
     case "expired":
       return "bg-red-100 text-red-800";
     case "urgent":
-      return "bg-orange-100 text-orange-800";
+      return "bg-amber-100 text-amber-800";
     case "warning":
       return "bg-yellow-100 text-yellow-800";
     case "notice":
@@ -99,7 +99,7 @@ export default function TopNotificationPopover(): React.JSX.Element {
         title="알림"
         aria-label="유통기한 알림 미리보기"
         className={`relative flex h-8 w-8 items-center justify-center rounded-xl transition-all ${
-          open ? "bg-orange-100 text-orange-700" : "text-gray-600 hover:bg-gray-100"
+          open ? "bg-green-100 text-green-700" : "text-gray-600 hover:bg-gray-100"
         }`}
       >
         <svg
@@ -117,7 +117,7 @@ export default function TopNotificationPopover(): React.JSX.Element {
           />
         </svg>
         {total > 0 && (
-          <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-orange-600 px-1 text-[10px] font-bold leading-none text-white tabular-nums">
+          <span className="absolute -right-0.5 -top-0.5 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-green-600 px-1 text-[10px] font-bold leading-none text-white tabular-nums">
             {badgeText}
           </span>
         )}

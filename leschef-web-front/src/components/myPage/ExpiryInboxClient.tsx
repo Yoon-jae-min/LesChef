@@ -41,7 +41,7 @@ function bucketStyle(bucket: ExpiryInboxBucket): string {
     case "expired":
       return "bg-red-100 text-red-800";
     case "urgent":
-      return "bg-orange-100 text-orange-800";
+      return "bg-amber-100 text-amber-800";
     case "warning":
       return "bg-yellow-100 text-yellow-800";
     case "notice":
@@ -85,7 +85,7 @@ export default function ExpiryInboxClient() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">Inbox</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">Inbox</p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
             유통기한 알림 기록
           </h2>
@@ -96,13 +96,13 @@ export default function ExpiryInboxClient() {
         <div className="flex flex-wrap gap-2">
           <Link
             href="/myPage/notifications"
-            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             알림 설정
           </Link>
           <Link
             href="/myPage/storage"
-            className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             보관함
           </Link>
@@ -156,7 +156,7 @@ export default function ExpiryInboxClient() {
                 <button
                   type="button"
                   onClick={() => handleRemove(entry.id)}
-                  className="shrink-0 self-start rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500"
+                  className="shrink-0 self-start rounded-xl border border-stone-200 bg-white px-3 py-1.5 text-xs font-medium text-stone-600 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500"
                 >
                   삭제
                 </button>

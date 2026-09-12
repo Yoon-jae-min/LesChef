@@ -91,7 +91,7 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
       <Top />
       <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
         <header className="mb-8 text-center sm:mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
             Recipe
           </p>
           <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">

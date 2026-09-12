@@ -195,7 +195,7 @@ export default function Review({ recipeId }: ReviewProps) {
         id="recipe-review-heading"
         className="mb-4 text-center text-xl font-bold tracking-tight text-stone-900 sm:mb-5 sm:text-2xl"
       >
-        <span className="inline-block border-b-2 border-orange-400/80 pb-1">리뷰</span>
+        <span className="inline-block border-b-2 border-green-400/80 pb-1">리뷰</span>
       </h2>
 
       {/* 요약 정보 */}

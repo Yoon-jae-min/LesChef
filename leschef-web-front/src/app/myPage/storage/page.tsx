@@ -291,7 +291,7 @@ export default function StoragePage() {
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">My Fridge</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">My Fridge</p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
             보관 재료 인벤토리
           </h2>
@@ -303,7 +303,7 @@ export default function StoragePage() {
           <button
             type="button"
             onClick={() => setIsPlaceModalOpen(true)}
-            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             장소 추가
           </button>
@@ -311,7 +311,7 @@ export default function StoragePage() {
             type="button"
             onClick={openRenamePlaceModal}
             disabled={!activePlaceId}
-            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-semibold text-stone-900 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
           >
             이름 변경
           </button>
@@ -330,7 +330,7 @@ export default function StoragePage() {
             type="button"
             onClick={() => handleOpenFoodModal()}
             disabled={!activePlaceId}
-            className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-orange-600"
+            className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:bg-green-600"
           >
             재료 추가하기
           </button>
@@ -355,7 +355,7 @@ export default function StoragePage() {
           role="status"
           aria-live="polite"
         >
-          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
           <p className="text-sm text-stone-600">불러오는 중…</p>
         </div>
       )}
@@ -371,7 +371,7 @@ export default function StoragePage() {
                 onClick={() => setActivePlaceId(p._id)}
                 className={`whitespace-nowrap rounded-full border px-3 py-1.5 text-xs transition-colors sm:px-4 sm:py-2 sm:text-sm ${
                   isActive
-                    ? "border-orange-600 bg-orange-600 text-white shadow-sm"
+                    ? "border-green-600 bg-green-600 text-white shadow-sm"
                     : "border-stone-200 bg-white text-stone-700 shadow-sm hover:border-stone-300 hover:bg-stone-50"
                 }`}
                 aria-pressed={isActive}
@@ -472,7 +472,7 @@ export default function StoragePage() {
                   setShowDeletePlaceConfirm(false);
                   setActionError(null);
                 }}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 취소
               </button>

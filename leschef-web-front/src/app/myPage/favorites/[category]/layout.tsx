@@ -62,7 +62,7 @@ function FavoritesCategoryLayoutInner({ children }: { children: React.ReactNode 
       </div>
 
       <div className="mb-6 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:px-6 sm:py-5">
-        <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">Favorites</p>
+        <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">Favorites</p>
         <div className="mt-1 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <h2 className="text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
             찜한 레시피 목록

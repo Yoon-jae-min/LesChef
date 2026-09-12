@@ -137,7 +137,7 @@ function DetailClient({ recipeId, initialData, initialError }: DetailClientProps
       {loading && !initialData && (
         <div className="mx-auto flex max-w-4xl items-center justify-center gap-3 px-6 py-12 text-sm text-stone-600">
           <div
-            className="h-8 w-8 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500"
+            className="h-8 w-8 animate-spin rounded-full border-2 border-stone-200 border-t-green-500"
             aria-hidden
           />
           <p role="status" aria-live="polite">

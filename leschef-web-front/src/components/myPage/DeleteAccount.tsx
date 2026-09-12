@@ -154,7 +154,7 @@ export default function DeleteAccount({
               <button
                 type="button"
                 onClick={handleClose}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
                 취소
               </button>
@@ -186,7 +186,7 @@ export default function DeleteAccount({
                   }}
                   placeholder="비밀번호를 입력하세요"
                   disabled={checkingPassword}
-                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25 disabled:opacity-60"
+                  className="w-full rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25 disabled:opacity-60"
                   onKeyDown={(e) => e.key === "Enter" && !checkingPassword && void handlePasswordCheck()}
                 />
                 {passwordError && <p className="text-sm text-red-500 mt-2">{passwordError}</p>}
@@ -197,7 +197,7 @@ export default function DeleteAccount({
                 type="button"
                 onClick={() => setDeleteStep("warning")}
                 disabled={checkingPassword}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 이전
               </button>
@@ -248,7 +248,7 @@ export default function DeleteAccount({
                   onChange={(e) => setCustomReason(e.target.value)}
                   placeholder="탈퇴 사유를 입력해주세요"
                   rows={3}
-                  className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full resize-none rounded-2xl border border-stone-200 bg-stone-50/30 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                 />
               )}
             </div>
@@ -258,7 +258,7 @@ export default function DeleteAccount({
                 onClick={() =>
                   setDeleteStep(requiresLocalPassword ? "password" : "warning")
                 }
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
                 이전
               </button>
@@ -308,7 +308,7 @@ export default function DeleteAccount({
                 type="button"
                 onClick={() => setDeleteStep("reason")}
                 disabled={deleting}
-                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="flex-1 rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 이전
               </button>

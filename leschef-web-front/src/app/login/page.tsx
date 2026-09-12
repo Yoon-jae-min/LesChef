@@ -108,15 +108,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
       <Top />
 
       <main className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* 브랜드 메시지 */}
           <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 lg:px-14 lg:py-16 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-            <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-orange-200 to-red-200 opacity-70 blur-3xl pointer-events-none" />
-            <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-orange-200 opacity-60 blur-2xl pointer-events-none" />
+            <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl pointer-events-none" />
+            <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl pointer-events-none" />
 
             <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
               Welcome back
@@ -124,10 +124,10 @@ export default function LoginPage() {
             <h1 className="mt-4 text-4xl lg:text-5xl font-semibold text-gray-900 leading-tight">
               나만의 요리 여정,
               <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 via-red-400 to-yellow-400">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400">
                 LesChef{" "}
               </span>
-              와 <span className="underline decoration-4 decoration-orange-300">계속</span>
+              와 <span className="underline decoration-4 decoration-lime-300">계속</span>
             </h1>
 
             <p className="mt-6 text-base text-gray-600 leading-relaxed">
@@ -142,7 +142,7 @@ export default function LoginPage() {
                 "마이페이지에서 즐겨찾기와 저장함 관리",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 text-gray-800">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-black" />
+                  <span className="mt-1 h-2 w-2 rounded-full bg-green-500" />
                   <p className="text-sm lg:text-base leading-relaxed">{item}</p>
                 </div>
               ))}
@@ -220,7 +220,7 @@ export default function LoginPage() {
                 type="submit"
                 disabled={isSubmitting}
                 className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 ${
-                  isSubmitting ? "bg-gray-700" : "bg-black"
+                  isSubmitting ? "bg-green-700" : "bg-green-600 hover:bg-green-700"
                 }`}
               >
                 {isSubmitting && (

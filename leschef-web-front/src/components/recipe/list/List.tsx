@@ -158,7 +158,7 @@ export default function List({
           <p className="text-sm text-stone-600">
             총{" "}
             {typeof totalCount === "number" ? (
-              <span className="inline-flex min-w-[2ch] items-center justify-center rounded-md bg-orange-50 px-1.5 py-0.5 font-semibold tabular-nums text-orange-800">
+              <span className="inline-flex min-w-[2ch] items-center justify-center rounded-md bg-green-50 px-1.5 py-0.5 font-semibold tabular-nums text-green-800">
                 {totalCount}
               </span>
             ) : (
@@ -174,7 +174,7 @@ export default function List({
               id="sort-select"
               value={sortOption}
               onChange={(e) => handleSortChange(e.target.value as RecipeSortOption)}
-              className="min-h-10 cursor-pointer rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-800 shadow-sm transition-colors hover:border-orange-200 hover:bg-orange-50/40 focus:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1"
+              className="min-h-10 cursor-pointer rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-800 shadow-sm transition-colors hover:border-green-200 hover:bg-green-50/40 focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1"
             >
               {Object.entries(RECIPE_SORT_LABELS).map(([value, label]) => (
                 <option key={value} value={value}>
@@ -187,7 +187,7 @@ export default function List({
       </div>
 
       {searchKeyword && (
-        <div className="col-span-full mb-3 rounded-xl border border-orange-100 bg-orange-50/70 px-4 py-2.5 text-sm text-stone-700">
+        <div className="col-span-full mb-3 rounded-xl border border-green-100 bg-green-50/70 px-4 py-2.5 text-sm text-stone-700">
           <span className="font-medium text-stone-800">&quot;{searchKeyword}&quot;</span> 검색 결과:{" "}
           {awaitingList ? <span className="text-stone-400">…</span> : data?.total ?? 0}개
         </div>
@@ -229,7 +229,7 @@ export default function List({
 
       {!displayError && !awaitingList && recipes.length === 0 && (
         <div className="col-span-full rounded-3xl border border-dashed border-stone-300 bg-white/90 px-6 py-14 text-center shadow-sm">
-          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-orange-50 text-2xl text-orange-600" aria-hidden>🥘</div>
+          <div className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-green-50 text-2xl text-green-600" aria-hidden>🥘</div>
           <p className="font-medium text-stone-900">조건에 맞는 레시피가 없습니다.</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-stone-600">
             검색어를 바꾸거나, 정렬·카테고리·서브 필터를 조정해 다시 찾아보세요.

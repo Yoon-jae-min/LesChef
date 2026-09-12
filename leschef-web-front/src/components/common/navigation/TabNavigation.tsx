@@ -21,9 +21,9 @@ function TabNavigation({ tabs, activeTab, onTabChange }: TabNavigationProps) {
               key={tab}
               type="button"
               onClick={() => onTabChange(tab)}
-              className={`relative whitespace-nowrap rounded-lg px-1 pb-1 text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 sm:text-lg md:text-xl ${
+              className={`relative whitespace-nowrap rounded-lg px-1 pb-1 text-base font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 sm:text-lg md:text-xl ${
                 active
-                  ? "text-orange-600 after:absolute after:bottom-0 after:left-1 after:right-1 after:h-0.5 after:rounded-full after:bg-orange-500"
+                  ? "text-green-600 after:absolute after:bottom-0 after:left-1 after:right-1 after:h-0.5 after:rounded-full after:bg-green-500"
                   : "text-stone-500 hover:text-stone-800"
               }`}
               aria-pressed={active}

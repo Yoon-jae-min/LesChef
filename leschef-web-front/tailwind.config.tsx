@@ -59,7 +59,7 @@ const config: Config = {
         },
         "text-glow": {
           "0%, 100%": { opacity: "0.7", textShadow: "0 0 5px rgba(0,0,0,0.1)" },
-          "50%": { opacity: "1", textShadow: "0 0 10px rgba(255,165,0,0.3)" },
+          "50%": { opacity: "1", textShadow: "0 0 10px rgba(34,197,94,0.25)" },
         },
       },
       transitionDelay: {

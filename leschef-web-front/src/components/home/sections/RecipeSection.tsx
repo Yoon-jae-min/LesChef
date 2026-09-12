@@ -83,7 +83,7 @@ export default function RecipeSection({
           {showViewAll && recipes.length > 0 && (
             <Link
               href={viewAllHref || `/recipe/${category}?sort=${sort}`}
-              className="text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="text-green-600 font-medium hover:text-green-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               전체보기
               <svg

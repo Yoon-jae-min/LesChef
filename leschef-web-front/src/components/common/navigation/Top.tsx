@@ -107,7 +107,7 @@ function Top(): React.JSX.Element {
 
   return (
     <>
-      <header className="w-full bg-white border-b border-gray-200 py-2 sticky top-0 z-50 shadow-sm">
+      <header className="w-full bg-white/95 backdrop-blur-sm border-b border-lime-100 py-2 sticky top-0 z-50 shadow-sm">
         <div className="flex items-center max-w-6xl mx-auto h-14 px-4 lg:px-8">
           {/* 로고 */}
           <div className="flex items-center h-full lg:-translate-x-8">
@@ -164,7 +164,7 @@ function Top(): React.JSX.Element {
           <div className="hidden md:flex items-center space-x-4 md:space-x-6 lg:space-x-8 ml-4 md:ml-8 lg:ml-16 lg:-translate-x-8">
             {NAVIGATION_ITEMS.map((item) => {
               const isActive = getActiveMenuId(pathname || "") === item.id;
-              const iconClassName = isActive ? "w-6 h-6 text-orange-600" : "w-6 h-6 text-gray-600";
+              const iconClassName = isActive ? "w-6 h-6 text-green-600" : "w-6 h-6 text-gray-600";
 
               // 아이콘 컴포넌트 선택
               let IconComponent: React.ComponentType<{ className?: string }>;
@@ -191,7 +191,7 @@ function Top(): React.JSX.Element {
                   href={item.href}
                   title={item.label}
                   className={`w-8 h-8 flex items-center justify-center cursor-pointer rounded-xl transition-all ${
-                    isActive ? "bg-orange-100" : "hover:bg-gray-100"
+                    isActive ? "bg-green-100" : "hover:bg-gray-100"
                   }`}
                   aria-label={item.ariaLabel}
                 >
@@ -321,30 +321,30 @@ function Top(): React.JSX.Element {
                     href={item.href}
                     onClick={() => setIsMobileMenuOpen(false)}
                     className={`flex items-center gap-3 rounded-2xl px-3 py-2 transition-colors ${
-                      isActive ? "bg-orange-50" : "hover:bg-gray-100"
+                      isActive ? "bg-green-50" : "hover:bg-gray-100"
                     }`}
                     aria-label={item.ariaLabel}
                     title={item.label}
                   >
                     <div
                       className={`w-9 h-9 flex items-center justify-center rounded-xl ${
-                        isActive ? "bg-orange-100" : "bg-gray-50"
+                        isActive ? "bg-green-100" : "bg-gray-50"
                       }`}
                     >
                       <IconComponent
-                        className={isActive ? "w-5 h-5 text-orange-600" : "w-5 h-5 text-gray-700"}
+                        className={isActive ? "w-5 h-5 text-green-600" : "w-5 h-5 text-gray-700"}
                       />
                     </div>
                     <div className="flex items-center gap-2">
                       <span
                         className={`text-sm font-medium ${
-                          isActive ? "text-orange-700" : "text-gray-900"
+                          isActive ? "text-green-700" : "text-gray-900"
                         }`}
                       >
                         {item.label}
                       </span>
                       {isActive && (
-                        <span className="text-xs text-orange-600 bg-orange-100 px-2 py-0.5 rounded-full">
+                        <span className="text-xs text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
                           현재
                         </span>
                       )}

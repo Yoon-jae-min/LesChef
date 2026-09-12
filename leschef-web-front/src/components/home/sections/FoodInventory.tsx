@@ -79,7 +79,7 @@ export default function FoodInventory({ isLoggedIn = false, authLoading = false 
             </p>
             <Link
               href="/login"
-              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-2xl hover:bg-green-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               로그인하고 냉장고 채우기
             </Link>
@@ -142,7 +142,7 @@ export default function FoodInventory({ isLoggedIn = false, authLoading = false 
             </h2>
             <Link
               href="/myPage/storage"
-              className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="text-sm text-green-600 font-medium hover:text-green-700 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               식재료 관리하기
             </Link>
@@ -151,7 +151,7 @@ export default function FoodInventory({ isLoggedIn = false, authLoading = false 
             <p className="text-gray-600 mb-4">등록된 식재료가 없습니다.</p>
             <Link
               href="/myPage/storage"
-              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-2xl hover:bg-green-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               식재료 등록하기
             </Link>
@@ -170,7 +170,7 @@ export default function FoodInventory({ isLoggedIn = false, authLoading = false 
           </h2>
           <Link
             href="/myPage/storage"
-            className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="text-sm text-green-600 font-medium hover:text-green-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             전체보기
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
@@ -181,11 +181,11 @@ export default function FoodInventory({ isLoggedIn = false, authLoading = false 
 
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
           {/* 전체 통계 */}
-          <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-orange-50 to-yellow-50 p-6">
+          <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-green-50 to-yellow-50 p-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-gray-600">전체 식재료</span>
               <svg
-                className="w-6 h-6 text-orange-600"
+                className="w-6 h-6 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -246,7 +246,7 @@ export default function FoodInventory({ isLoggedIn = false, authLoading = false 
                 <Link
                   key={place._id}
                   href="/myPage/storage"
-                  className="flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                  className="flex items-center justify-between p-3 rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                   aria-label={`${place.name}, ${place.foodList?.length || 0}개 · 식재료 관리`}
                 >
                   <div>

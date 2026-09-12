@@ -93,7 +93,7 @@ export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }
             <p className="text-gray-600 mb-4">로그인하시면 식재료의 유통기한을 관리해드려요!</p>
             <Link
               href="/login"
-              className="inline-block px-6 py-3 bg-orange-600 text-white font-semibold rounded-2xl hover:bg-orange-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-2xl hover:bg-green-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               로그인하기
             </Link>
@@ -166,7 +166,7 @@ export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }
       case "expired":
         return "bg-red-50 border-red-200 text-red-900";
       case "urgent":
-        return "bg-orange-50 border-orange-200 text-orange-900";
+        return "bg-amber-50 border-amber-200 text-amber-900";
       case "warning":
         return "bg-yellow-50 border-yellow-200 text-yellow-900";
       case "notice":
@@ -196,7 +196,7 @@ export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }
           </h2>
           <Link
             href="/myPage/storage"
-            className="text-sm text-orange-600 font-medium hover:text-orange-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="text-sm text-green-600 font-medium hover:text-green-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             전체보기
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>

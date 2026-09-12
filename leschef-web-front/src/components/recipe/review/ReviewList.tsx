@@ -40,7 +40,7 @@ export default function ReviewList({ reviews, loading, error }: ReviewListProps)
         >
           <div className="mb-2 flex items-start justify-between gap-3">
             <div className="flex min-w-0 items-center gap-2">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-orange-100 bg-orange-50 text-sm font-semibold text-orange-800">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-green-100 bg-green-50 text-sm font-semibold text-green-800">
                 <span aria-hidden>{review.userNickName?.[0] || "유"}</span>
               </div>
               <div className="min-w-0 flex flex-col">

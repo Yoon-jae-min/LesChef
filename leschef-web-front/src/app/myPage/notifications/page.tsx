@@ -66,7 +66,7 @@ export default function NotificationSettingsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
             Settings
           </p>
           <h2 className="mt-1 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
@@ -76,7 +76,7 @@ export default function NotificationSettingsPage() {
         </div>
         <Link
           href="/myPage/notifications/inbox"
-          className="inline-flex w-fit items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+          className="inline-flex w-fit items-center justify-center rounded-2xl border border-stone-200 bg-white px-4 py-2.5 text-sm font-semibold text-stone-800 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
         >
           유통기한 알림 기록 보기
         </Link>
@@ -97,7 +97,7 @@ export default function NotificationSettingsPage() {
                 onChange={(e) => handleChange("enabled", e.target.checked)}
                 className="sr-only peer"
               />
-              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
             </label>
           </div>
         </div>
@@ -144,15 +144,15 @@ export default function NotificationSettingsPage() {
             </div>
 
             {/* 긴급 알림 (1일 전) */}
-            <div className="flex items-center justify-between rounded-2xl border border-orange-200/80 bg-orange-50/50 p-4">
+            <div className="flex items-center justify-between rounded-2xl border border-green-200/80 bg-green-50/50 p-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-orange-100 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
                   <svg
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
                     strokeWidth="2"
-                    className="w-5 h-5 text-orange-600"
+                    className="w-5 h-5 text-green-600"
                   >
                     <path
                       d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
@@ -175,7 +175,7 @@ export default function NotificationSettingsPage() {
                   onChange={(e) => handleChange("showUrgent", e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
               </label>
             </div>
 
@@ -265,7 +265,7 @@ export default function NotificationSettingsPage() {
                     onChange={(e) => handleChange("autoClose", e.target.checked)}
                     className="sr-only peer"
                   />
-                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-orange-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-orange-600"></div>
+                  <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
                 </label>
               </div>
 
@@ -281,7 +281,7 @@ export default function NotificationSettingsPage() {
                     step="1000"
                     value={settings.autoCloseDuration}
                     onChange={(e) => handleChange("autoCloseDuration", Number(e.target.value))}
-                    className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-orange-600"
+                    className="h-2 w-full cursor-pointer appearance-none rounded-lg bg-stone-200 accent-green-600"
                   />
                   <div className="mt-1 flex justify-between text-xs text-stone-500">
                     <span>3초</span>
@@ -300,7 +300,7 @@ export default function NotificationSettingsPage() {
           <button
             type="button"
             onClick={handleReset}
-            className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition-colors hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="rounded-2xl border border-stone-200 bg-white px-6 py-3 text-sm font-semibold text-stone-700 shadow-sm transition-colors hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             기본값으로 초기화
           </button>
@@ -308,7 +308,7 @@ export default function NotificationSettingsPage() {
             type="button"
             onClick={handleSave}
             disabled={!hasChanges}
-            className="rounded-2xl bg-orange-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-2xl bg-green-600 px-6 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             설정 저장
           </button>

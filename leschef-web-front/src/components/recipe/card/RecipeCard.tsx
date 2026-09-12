@@ -36,7 +36,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
     <Link
       key={recipeId || recipe.recipeName}
       href={recipeId ? `/recipe/detail?id=${recipeId}` : "/recipe"}
-      className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition duration-200 hover:-translate-y-0.5 hover:border-orange-200/80 hover:shadow-md hover:shadow-orange-900/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+      className="group flex flex-col rounded-[28px] border border-stone-200/90 bg-white p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition duration-200 hover:-translate-y-0.5 hover:border-green-200/80 hover:shadow-md hover:shadow-green-900/5 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
       aria-label={`${recipe.recipeName} 상세로 이동`}
     >
       <div className="relative overflow-hidden rounded-[22px] border border-stone-200/80 bg-stone-50">
@@ -74,7 +74,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
       </div>
 
       {isLoggedIn ? (
-        <div className="relative mt-4 flex items-center justify-between rounded-[22px] border border-stone-200/90 bg-gradient-to-br from-orange-50/50 via-white to-stone-50 px-5 py-5">
+        <div className="relative mt-4 flex items-center justify-between rounded-[22px] border border-stone-200/90 bg-gradient-to-br from-green-50/50 via-white to-stone-50 px-5 py-5">
           <span className="text-4xl" aria-hidden>
             🍳
           </span>
@@ -115,7 +115,7 @@ export default function RecipeCard({ recipe }: RecipeCardProps) {
 
       <div className="mt-4 flex items-center justify-between text-[11px] text-stone-500">
         <span>레시피 상세 보기</span>
-        <span className="font-semibold text-orange-600 transition-colors group-hover:text-orange-700" aria-hidden>
+        <span className="font-semibold text-green-600 transition-colors group-hover:text-green-700" aria-hidden>
           →
         </span>
       </div>

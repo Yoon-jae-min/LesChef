@@ -59,7 +59,7 @@ export default function FoodItem({ item, onEdit, onDelete, isDeleting = false }:
             <div>
               <p className="text-xs uppercase tracking-wide text-gray-400">유통기한</p>
               <p
-                className={`font-medium ${dday !== null && dday < 3 ? "text-orange-600" : "text-gray-900"}`}
+                className={`font-medium ${dday !== null && dday < 3 ? "text-green-600" : "text-gray-900"}`}
               >
                 {expirateStr || "-"}
               </p>

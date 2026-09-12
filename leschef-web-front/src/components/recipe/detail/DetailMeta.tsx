@@ -30,7 +30,7 @@ export default function DetailMeta({
       {/* 레시피 제목 */}
       <div className="flex flex-col gap-4 rounded-[28px] border border-stone-200/90 bg-white/95 p-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.04] sm:flex-row sm:items-start sm:justify-between sm:p-6">
         <div className="min-w-0 flex-1">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">Recipe</p>
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">Recipe</p>
           <h1 className="mt-1 text-3xl font-bold leading-tight tracking-tight text-stone-900 sm:text-4xl">
             {recipeMeta?.recipeName || "레시피"}
           </h1>
@@ -40,7 +40,7 @@ export default function DetailMeta({
           {canEdit && recipeId && (
             <Link
               href={`/myPage/recipes/edit?id=${recipeId}`}
-              className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-orange-200 hover:bg-orange-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+              className="rounded-2xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-green-200 hover:bg-green-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
             >
               편집
             </Link>
@@ -51,7 +51,7 @@ export default function DetailMeta({
             onClick={onToggleWish}
             aria-label={isLiked ? "찜 해제" : "찜하기"}
             aria-pressed={isLiked}
-            className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+            className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
               isLiked
                 ? "border-red-100 bg-red-50 text-red-500"
                 : "border-stone-200 bg-white text-stone-400 hover:border-red-100 hover:bg-red-50/40 hover:text-red-500"
@@ -95,8 +95,8 @@ export default function DetailMeta({
       </div>
 
       {/* 레시피 메타데이터 */}
-      <div className="flex w-full items-center justify-center rounded-[28px] border border-orange-100/90 bg-gradient-to-br from-orange-50/90 via-amber-50/50 to-white px-3 py-5 shadow-sm sm:px-6 sm:py-6">
-        <div className="grid w-full max-w-xl grid-cols-1 gap-4 text-center font-semibold text-stone-900 sm:max-w-none sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-orange-200/80">
+      <div className="flex w-full items-center justify-center rounded-[28px] border border-green-100/90 bg-gradient-to-br from-green-50/90 via-amber-50/50 to-white px-3 py-5 shadow-sm sm:px-6 sm:py-6">
+        <div className="grid w-full max-w-xl grid-cols-1 gap-4 text-center font-semibold text-stone-900 sm:max-w-none sm:grid-cols-3 sm:gap-0 sm:divide-x sm:divide-green-200/80">
           <span className="text-sm sm:px-4 sm:text-base lg:text-lg">
             {(recipeMeta?.majorCategory || "카테고리") +
               (recipeMeta?.subCategory ? ` · ${recipeMeta.subCategory}` : "")}

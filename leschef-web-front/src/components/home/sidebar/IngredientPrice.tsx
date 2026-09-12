@@ -77,14 +77,18 @@ export default function IngredientPrice() {
 
   return (
     <aside
-      className="bg-white rounded-[32px] border border-gray-200 shadow-[6px_6px_0_rgba(0,0,0,0.05)] p-6 sticky top-6"
+      className="relative overflow-hidden bg-gradient-to-b from-lime-50/80 to-white rounded-[32px] border border-lime-100 shadow-[6px_6px_0_rgba(34,197,94,0.08)] p-6 sticky top-6"
       aria-labelledby={headingId}
     >
-      <h3 id={headingId} className="text-xl font-bold text-gray-900">
+      <div
+        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full border-[8px] border-yellow-200/60"
+        aria-hidden
+      />
+      <h3 id={headingId} className="relative text-xl font-bold text-gray-900">
         식재료 가격 검색
       </h3>
-      <p className="mt-1.5 mb-4 text-sm text-gray-500">
-        궁금한 식재료를 입력해 보세요
+      <p className="relative mt-1.5 mb-4 text-sm text-gray-500">
+        신선한 식재료의 오늘 가격을 빠르게 확인하세요
       </p>
 
       <form onSubmit={handleSubmit} className="mb-4" role="search" aria-label="식재료 가격 검색">
@@ -99,12 +103,12 @@ export default function IngredientPrice() {
             onChange={(e) => setInputValue(e.target.value)}
             placeholder="예: 고구마, 계란"
             autoComplete="off"
-            className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-colors focus:border-orange-400 focus:bg-white focus:ring-2 focus:ring-orange-500/30"
+            className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-colors focus:border-green-400 focus:bg-white focus:ring-2 focus:ring-green-500/30"
           />
           <button
             type="submit"
             disabled={isLoading}
-            className="shrink-0 rounded-2xl bg-orange-600 px-3.5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-orange-700 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="shrink-0 rounded-2xl bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             {isLoading ? "…" : "검색"}
           </button>
@@ -147,7 +151,7 @@ export default function IngredientPrice() {
             <button
               type="button"
               onClick={handleClear}
-              className="text-xs font-medium text-gray-500 underline-offset-2 hover:text-gray-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 rounded"
+              className="text-xs font-medium text-gray-500 underline-offset-2 hover:text-gray-800 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded"
             >
               지우기
             </button>
@@ -170,7 +174,7 @@ export default function IngredientPrice() {
               {results.map((item, index) => (
                 <div
                   key={`${item.name}-${index}`}
-                  className="p-3 rounded-xl border border-gray-200 bg-gray-50"
+                  className="p-3 rounded-xl border border-lime-100 bg-white shadow-sm"
                 >
                   <div className="flex items-center justify-between mb-2 gap-2">
                     <span className="text-sm font-medium text-gray-900 truncate">{item.name}</span>

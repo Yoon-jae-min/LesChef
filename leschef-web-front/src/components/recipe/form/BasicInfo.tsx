@@ -60,7 +60,7 @@ export default function BasicInfo({
 
   const fieldBase =
     "w-full rounded-2xl border px-4 py-3 text-sm text-stone-900 placeholder:text-stone-500 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2";
-  const fieldNormal = `${fieldBase} border-stone-200 focus-visible:border-orange-400 focus-visible:ring-orange-500`;
+  const fieldNormal = `${fieldBase} border-stone-200 focus-visible:border-green-400 focus-visible:ring-green-500`;
   const fieldError = `${fieldBase} border-red-300 focus-visible:border-red-500 focus-visible:ring-red-400`;
 
   return (
@@ -197,7 +197,7 @@ export default function BasicInfo({
                 />
               </div>
             ) : (
-              <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-stone-300 bg-gradient-to-br from-stone-50 to-orange-50/30">
+              <div className="relative flex h-64 w-full items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-stone-300 bg-gradient-to-br from-stone-50 to-green-50/30">
                 <div className="flex flex-col items-center justify-center gap-2 text-stone-400">
                   <span className="text-4xl" aria-hidden>
                     📷
@@ -210,7 +210,7 @@ export default function BasicInfo({
               type="file"
               accept="image/*"
               onChange={onImageChange}
-              className={`${fieldNormal} file:mr-3 file:rounded-lg file:border-0 file:bg-orange-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-orange-800 hover:file:bg-orange-100`}
+              className={`${fieldNormal} file:mr-3 file:rounded-lg file:border-0 file:bg-green-50 file:px-3 file:py-1.5 file:text-sm file:font-medium file:text-green-800 hover:file:bg-green-100`}
             />
           </div>
         </div>

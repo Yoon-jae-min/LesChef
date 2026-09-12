@@ -81,7 +81,7 @@ export default function RecipeWritePage() {
     <div className="min-h-screen bg-white">
       <main className="mx-auto max-w-4xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
         <header className="mb-8 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-5 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:px-6 sm:py-6">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
             Recipe
           </p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
@@ -144,10 +144,10 @@ export default function RecipeWritePage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 ${
+              className={`inline-flex items-center justify-center gap-2 rounded-2xl px-6 py-3 text-sm font-semibold shadow-sm transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
                 isSubmitting
-                  ? "cursor-not-allowed bg-orange-400 text-white"
-                  : "bg-orange-600 text-white hover:bg-orange-700"
+                  ? "cursor-not-allowed bg-green-400 text-white"
+                  : "bg-green-600 text-white hover:bg-green-700"
               }`}
             >
               {isSubmitting && (

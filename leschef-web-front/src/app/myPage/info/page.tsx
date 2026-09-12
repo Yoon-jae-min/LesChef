@@ -109,7 +109,7 @@ function severityDotClass(s: AlertSeverity): string {
     case "expired":
       return "bg-red-500";
     case "urgent":
-      return "bg-orange-500";
+      return "bg-amber-500";
     case "warning":
       return "bg-yellow-500";
     case "notice":
@@ -330,7 +330,7 @@ function InfoPageContent() {
           role="status"
           aria-live="polite"
         >
-          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+          <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
           <p className="text-sm text-stone-600">정보를 불러오는 중입니다…</p>
         </div>
       )}
@@ -341,7 +341,7 @@ function InfoPageContent() {
       )}
       <section className="rounded-[28px] border border-stone-200/90 bg-white/95 p-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03]">
         {/* 프로필 헤더 - 모바일: 세로 배치, 데스크톱: 좌우 배치 + 오른쪽에 아이콘 버튼 */}
-        <div className="relative overflow-hidden rounded-[24px] border border-stone-200/80 bg-gradient-to-br from-stone-50 via-orange-50/50 to-amber-50/40 px-6 py-8 lg:px-8 lg:py-10">
+        <div className="relative overflow-hidden rounded-[24px] border border-stone-200/80 bg-gradient-to-br from-stone-50 via-green-50/50 to-amber-50/40 px-6 py-8 lg:px-8 lg:py-10">
           <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-center lg:justify-between lg:gap-6">
             {/* 프로필 정보 영역 */}
             <div className="flex flex-col items-center gap-4 lg:flex-row lg:items-center lg:gap-6 lg:flex-1">
@@ -358,7 +358,7 @@ function InfoPageContent() {
                 </svg>
               </div>
               <div className="text-center lg:text-left">
-                <p className="text-xs uppercase tracking-[0.2em] text-orange-700/80 lg:text-sm">
+                <p className="text-xs uppercase tracking-[0.2em] text-green-700/80 lg:text-sm">
                   Profile
                 </p>
                 <p className="mt-1 text-2xl font-bold tracking-tight text-stone-900 lg:text-3xl">{nickname}</p>
@@ -372,7 +372,7 @@ function InfoPageContent() {
               <button
                 type="button"
                 onClick={openInfoModal}
-                className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white/95 px-4 py-3 text-stone-600 shadow-sm transition-all duration-200 hover:border-stone-300 hover:bg-white hover:text-stone-900 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white/95 px-4 py-3 text-stone-600 shadow-sm transition-all duration-200 hover:border-stone-300 hover:bg-white hover:text-stone-900 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                 title="정보확인"
                 aria-label="정보확인"
               >
@@ -393,7 +393,7 @@ function InfoPageContent() {
               <button
                 type="button"
                 onClick={openEditModal}
-                className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white/95 px-4 py-3 text-stone-600 shadow-sm transition-all duration-200 hover:border-stone-300 hover:bg-white hover:text-stone-900 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white/95 px-4 py-3 text-stone-600 shadow-sm transition-all duration-200 hover:border-stone-300 hover:bg-white hover:text-stone-900 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                 title="정보변경"
                 aria-label="정보변경"
               >
@@ -414,7 +414,7 @@ function InfoPageContent() {
               <button
                 type="button"
                 onClick={openPasswordModal}
-                className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white/95 px-4 py-3 text-stone-600 shadow-sm transition-all duration-200 hover:border-stone-300 hover:bg-white hover:text-stone-900 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="flex flex-col items-center justify-center rounded-xl border border-stone-200/90 bg-white/95 px-4 py-3 text-stone-600 shadow-sm transition-all duration-200 hover:border-stone-300 hover:bg-white hover:text-stone-900 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                 title="비밀번호 변경"
                 aria-label="비밀번호 변경"
               >
@@ -462,21 +462,21 @@ function InfoPageContent() {
           <button
             type="button"
             onClick={openInfoModal}
-            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             정보확인
           </button>
           <button
             type="button"
             onClick={openEditModal}
-            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             정보변경
           </button>
           <button
             type="button"
             onClick={openPasswordModal}
-            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="w-full rounded-2xl border border-stone-200 bg-white px-4 py-3 text-sm font-medium text-stone-700 shadow-sm transition hover:border-stone-300 hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             비밀번호 변경
           </button>
@@ -497,7 +497,7 @@ function InfoPageContent() {
         <div className="rounded-[28px] border border-stone-200/90 bg-white/95 px-6 py-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03]">
           <div className="mb-4 flex items-center justify-between">
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
                 Account Link
               </p>
               <h2 className="mt-1 text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
@@ -585,7 +585,7 @@ function InfoPageContent() {
         <div className="rounded-[28px] border border-stone-200/90 bg-white/95 px-6 py-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03]">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
                 Inventory Alert
               </p>
               <h2 className="mt-1 text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
@@ -597,7 +597,7 @@ function InfoPageContent() {
                 expiryLoading
                   ? "border-stone-200/90 text-stone-400"
                   : alertTotal > 0
-                    ? "border-orange-200 bg-orange-50 font-medium text-orange-800"
+                    ? "border-green-200 bg-green-50 font-medium text-green-800"
                     : "border-stone-200/90 text-stone-500"
               }`}
             >
@@ -673,7 +673,7 @@ function InfoPageContent() {
         <div className="rounded-[28px] border border-stone-200/90 bg-white/95 px-6 py-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03]">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+              <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
                 My Recipes
               </p>
               <h2 className="mt-1 text-xl font-bold tracking-tight text-stone-900 sm:text-2xl">
@@ -689,7 +689,7 @@ function InfoPageContent() {
                 myRecipesLoading
                   ? "border-stone-200/90 text-stone-400"
                   : myRecipeTotal > 0
-                    ? "border-orange-600 bg-orange-600 font-medium text-white shadow-sm"
+                    ? "border-green-600 bg-green-600 font-medium text-white shadow-sm"
                     : "border-stone-200/90 text-stone-500"
               }`}
             >
@@ -717,7 +717,7 @@ function InfoPageContent() {
               <div className="mt-4 flex justify-center">
                 <Link
                   href="/myPage/recipes/write"
-                  className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-orange-700"
+                  className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
                 >
                   레시피 작성하기
                 </Link>
@@ -731,7 +731,7 @@ function InfoPageContent() {
                   <Link
                     key={recipe._id}
                     href={recipe._id ? `/recipe/detail?id=${recipe._id}` : "/recipe/all"}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                    className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-white shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] transition hover:-translate-y-0.5 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                     aria-label={`${recipe.recipeName} 상세로 이동`}
                   >
                     <div className="relative aspect-[5/3] w-full bg-gradient-to-br from-stone-50 to-stone-100">
@@ -789,7 +789,7 @@ function InfoPageContent() {
                 </Link>
                 <Link
                   href="/myPage/recipes/write"
-                  className="inline-flex items-center justify-center rounded-2xl bg-orange-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                  className="inline-flex items-center justify-center rounded-2xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
                 >
                   새 레시피 작성
                 </Link>
@@ -836,7 +836,7 @@ function InfoPageContent() {
               <button
                 type="button"
                 onClick={() => setShowInfoModal(false)}
-                className="rounded-xl bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+                className="rounded-xl bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               >
                 닫기
               </button>
@@ -881,7 +881,7 @@ function InfoPageContent() {
                   type="text"
                   value={editNickName}
                   onChange={(e) => setEditNickName(e.target.value)}
-                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                   autoComplete="nickname"
                 />
               </div>
@@ -894,7 +894,7 @@ function InfoPageContent() {
                   type="tel"
                   value={editTel}
                   onChange={(e) => setEditTel(e.target.value)}
-                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                   autoComplete="tel"
                   placeholder="선택 입력"
                 />
@@ -905,7 +905,7 @@ function InfoPageContent() {
                 type="button"
                 onClick={() => setShowEditModal(false)}
                 disabled={editSubmitting}
-                className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 취소
               </button>
@@ -913,7 +913,7 @@ function InfoPageContent() {
                 type="button"
                 onClick={() => void handleEditSave()}
                 disabled={editSubmitting}
-                className="rounded-xl bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="rounded-xl bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 {editSubmitting ? "저장 중…" : "저장"}
               </button>
@@ -945,7 +945,7 @@ function InfoPageContent() {
                   autoComplete="current-password"
                   value={currentPwd}
                   onChange={(e) => setCurrentPwd(e.target.value)}
-                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                 />
               </div>
               <div>
@@ -955,7 +955,7 @@ function InfoPageContent() {
                   autoComplete="new-password"
                   value={newPwd}
                   onChange={(e) => setNewPwd(e.target.value)}
-                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                 />
               </div>
               <div>
@@ -967,7 +967,7 @@ function InfoPageContent() {
                   autoComplete="new-password"
                   value={confirmPwd}
                   onChange={(e) => setConfirmPwd(e.target.value)}
-                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 transition focus:border-orange-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-orange-500/25"
+                  className="w-full rounded-xl border border-stone-200 bg-stone-50/30 px-3 py-2 text-sm text-stone-900 transition focus:border-green-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-green-500/25"
                 />
               </div>
             </div>
@@ -976,7 +976,7 @@ function InfoPageContent() {
                 type="button"
                 onClick={() => setShowPwdModal(false)}
                 disabled={pwdSubmitting}
-                className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="rounded-xl border border-stone-200 bg-white px-4 py-2 text-sm font-medium text-stone-700 shadow-sm transition hover:bg-stone-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 취소
               </button>
@@ -984,7 +984,7 @@ function InfoPageContent() {
                 type="button"
                 onClick={() => void handlePasswordChange()}
                 disabled={pwdSubmitting}
-                className="rounded-xl bg-orange-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-orange-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+                className="rounded-xl bg-green-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
               >
                 {pwdSubmitting ? "처리 중…" : "변경"}
               </button>
@@ -1009,7 +1009,7 @@ export default function InfoPage() {
       fallback={
         <div className="grid gap-6 md:grid-cols-[320px,1fr]">
           <div className="md:col-span-2 flex min-h-[400px] flex-col items-center justify-center gap-3">
-            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
             <p className="text-sm text-stone-500" role="status">
               불러오는 중…
             </p>

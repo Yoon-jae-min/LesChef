@@ -87,7 +87,7 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
       <Top />
       <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
         <header className="mb-8 text-center sm:mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-orange-600/90">
+          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
             My Page
           </p>
           <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
@@ -109,7 +109,7 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
 
       {(isCheckingAuth || !isAuthorized) && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-white/90 backdrop-blur-sm">
-          <span className="h-11 w-11 animate-spin rounded-full border-[3px] border-stone-200 border-t-orange-600" />
+          <span className="h-11 w-11 animate-spin rounded-full border-[3px] border-stone-200 border-t-green-600" />
           <p className="text-sm text-stone-600" role="status" aria-live="polite">
             로그인 상태 확인 중…
           </p>
@@ -126,7 +126,7 @@ export default function MyPageLayoutClient({ children }: { children: React.React
         <div className="relative min-h-screen bg-white">
           <Top />
           <main className="mx-auto flex min-h-[400px] max-w-7xl flex-col items-center justify-center px-4 py-10 sm:px-6 lg:px-8">
-            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+            <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
             <p className="mt-3 text-sm text-stone-500">불러오는 중…</p>
           </main>
         </div>

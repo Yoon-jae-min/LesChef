@@ -15,7 +15,7 @@ export default function MyRecipesPage() {
 
   return (
     <div className="flex min-h-[400px] flex-col items-center justify-center gap-3">
-      <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-orange-500" />
+      <span className="h-9 w-9 animate-spin rounded-full border-2 border-stone-200 border-t-green-500" />
       <p className="text-sm text-stone-500" role="status" aria-live="polite">
         나의 레시피로 이동 중…
       </p>

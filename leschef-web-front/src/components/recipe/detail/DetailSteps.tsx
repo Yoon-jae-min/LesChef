@@ -21,7 +21,7 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
           id="recipe-steps-heading"
           className="mb-4 text-center text-xl font-bold tracking-tight text-stone-900 sm:mb-5 sm:text-2xl"
         >
-          <span className="inline-block border-b-2 border-orange-400/80 pb-1">조리 순서</span>
+          <span className="inline-block border-b-2 border-green-400/80 pb-1">조리 순서</span>
         </h2>
         <p className="py-4 text-center text-sm text-stone-500">조리 단계가 없습니다.</p>
       </section>
@@ -34,7 +34,7 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
         id="recipe-steps-heading"
         className="mb-5 text-center text-xl font-bold tracking-tight text-stone-900 sm:text-2xl"
       >
-        <span className="inline-block border-b-2 border-orange-400/80 pb-1">조리 순서</span>
+        <span className="inline-block border-b-2 border-green-400/80 pb-1">조리 순서</span>
       </h2>
 
       <ol className="space-y-4">
@@ -66,7 +66,7 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
               </div>
               <div className="min-w-0 flex-1">
                 <h3 className="mb-2 flex items-center gap-2 text-lg font-semibold text-stone-900">
-                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-sm font-bold text-orange-800">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-green-100 text-sm font-bold text-green-800">
                     {step.stepNum}
                   </span>
                   <span>단계</span>

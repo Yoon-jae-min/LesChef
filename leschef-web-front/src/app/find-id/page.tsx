@@ -29,14 +29,14 @@ export default function FindIdPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
       <Top />
 
       <main className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">
           <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)] lg:px-14 lg:py-16">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-orange-200 to-red-200 opacity-70 blur-3xl" />
-            <div className="pointer-events-none absolute -left-6 bottom-8 h-20 w-20 rounded-full bg-gradient-to-br from-yellow-200 to-orange-200 opacity-60 blur-2xl" />
+            <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl" />
+            <div className="pointer-events-none absolute -left-6 bottom-8 h-20 w-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl" />
 
             <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
               Find Account
@@ -44,7 +44,7 @@ export default function FindIdPage() {
             <h1 className="mt-4 text-4xl font-semibold leading-tight text-gray-900 lg:text-5xl">
               아이디를
               <br />
-              <span className="bg-gradient-to-r from-orange-500 via-red-400 to-yellow-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400 bg-clip-text text-transparent">
                 찾아보세요
               </span>
             </h1>

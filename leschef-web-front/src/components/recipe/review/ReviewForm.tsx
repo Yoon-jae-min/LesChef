@@ -91,7 +91,7 @@ export default function ReviewForm({
               onClick={() => isLoggedIn && setMyRating(star)}
               disabled={!isLoggedIn || isSubmitting}
               aria-label={`${star}점`}
-              className="rounded-lg p-1 text-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:opacity-50"
+              className="rounded-lg p-1 text-xl transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
             >
               <span className={star <= myRating ? "text-amber-400" : "text-stone-300"} aria-hidden>
                 ★
@@ -110,7 +110,7 @@ export default function ReviewForm({
         }
         disabled={!isLoggedIn || isSubmitting}
         maxLength={1000}
-        className="min-h-[88px] w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-orange-300 focus:outline-none focus:ring-2 focus:ring-orange-400 disabled:bg-stone-100"
+        className="min-h-[88px] w-full rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 placeholder:text-stone-400 focus:border-green-300 focus:outline-none focus:ring-2 focus:ring-green-400 disabled:bg-stone-100"
       />
       <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-xs text-stone-400">{myComment.length} / 1000자</span>
@@ -129,7 +129,7 @@ export default function ReviewForm({
             type="button"
             onClick={handleSubmit}
             disabled={!isLoggedIn || isSubmitting || myRating === 0}
-            className="rounded-xl bg-orange-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
+            className="rounded-xl bg-green-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             {myReview ? "리뷰 수정" : "리뷰 등록"}
           </button>

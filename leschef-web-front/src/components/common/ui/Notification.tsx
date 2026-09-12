@@ -44,9 +44,9 @@ const getNotificationStyles = (type: NotificationType) => {
       };
     case "urgent":
       return {
-        container: "bg-orange-50 border-orange-200 text-orange-900",
-        icon: "text-orange-600",
-        button: "bg-orange-100 hover:bg-orange-200 text-orange-900",
+        container: "bg-amber-50 border-amber-200 text-amber-900",
+        icon: "text-amber-600",
+        button: "bg-amber-100 hover:bg-amber-200 text-amber-900",
       };
     case "warning":
       return {
