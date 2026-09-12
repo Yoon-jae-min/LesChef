@@ -34,7 +34,7 @@ export default function CitrusPageBanner({
         </p>
         <h1
           id="citrus-page-banner-title"
-          className="mt-2 text-3xl font-bold tracking-tight text-[#1B5E20] sm:text-4xl"
+          className="mt-2 text-3xl font-semibold tracking-tight text-[#1B5E20] sm:text-4xl"
         >
           {title}
         </h1>

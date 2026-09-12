@@ -10,6 +10,7 @@ import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { NAVIGATION_ITEMS, getActiveMenuId } from "@/constants/navigation/navigation";
 import { StorageIcon, RecipeIcon, MyPageIcon, BoardIcon } from "./NavigationIcons";
 import TopNotificationPopover from "./TopNotificationPopover";
+import BrandLogo from "@/components/common/ui/BrandLogo";
 
 function Top(): React.JSX.Element {
   const pathname = usePathname();
@@ -149,14 +150,10 @@ function Top(): React.JSX.Element {
             <Link
               href="/"
               title="홈"
-              className="flex items-center h-full group"
+              className="flex items-center h-full group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               onClick={() => sessionStorage.setItem("fromLogoClick", "true")}
             >
-              <img
-                src="/leschef-web-logo.png"
-                alt="LesChef"
-                className="ml-2 mr-3 h-12 w-auto object-contain transition-transform duration-200 group-hover:scale-[1.02]"
-              />
+              <BrandLogo className="ml-2 mr-3 h-9 w-auto transition-transform duration-200 group-hover:scale-[1.02] sm:h-10" />
             </Link>
           </div>
 

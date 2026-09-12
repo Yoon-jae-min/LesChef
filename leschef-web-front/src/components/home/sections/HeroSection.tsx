@@ -67,7 +67,7 @@ export default function HeroSection() {
 
       <div className="relative z-10 mx-auto max-w-7xl px-6">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="mb-4 text-4xl font-bold tracking-tight text-[#1B5E20] md:text-5xl lg:text-[3.25rem] lg:leading-tight">
+          <h1 className="mb-4 text-4xl font-semibold tracking-tight text-[#1B5E20] md:text-5xl lg:text-[3.15rem] lg:leading-[1.15]">
             내 식재료를{" "}
             <span className="text-green-600">스마트하게</span> 관리하세요
           </h1>
