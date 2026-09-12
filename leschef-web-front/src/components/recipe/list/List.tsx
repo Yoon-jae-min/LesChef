@@ -3,7 +3,6 @@
 import { useState, useCallback, useEffect } from "react";
 import useSWR from "swr";
 import RecipeCard from "../card/RecipeCard";
-import SearchBar from "../search/SearchBar";
 import {
   fetchRecipeList,
   type RecipeListResponse,
@@ -75,25 +74,6 @@ export default function List({
     return () => window.removeEventListener("popstate", handlePopState);
   }, [syncFromUrl]);
 
-  // 검색 핸들러
-  const handleSearch = useCallback((keyword: string) => {
-    setSearchKeyword(keyword);
-    // URL 업데이트
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      params.delete("ingredients"); // 예전 링크 호환(무시)
-      const trimmed = keyword.trim();
-      if (trimmed) {
-        params.set("keyword", trimmed);
-      } else {
-        params.delete("keyword");
-      }
-      const newUrl = params.toString() ? `?${params.toString()}` : window.location.pathname;
-      window.history.pushState({}, "", newUrl);
-      window.dispatchEvent(new PopStateEvent("popstate"));
-    }
-  }, []);
-
   // 정렬 옵션 변경 핸들러
   const handleSortChange = useCallback((sort: RecipeSortOption) => {
     setSortOption(sort);
@@ -151,38 +131,34 @@ export default function List({
 
   return (
     <>
-      <div className="col-span-full mb-6 space-y-4 rounded-2xl border border-stone-200/90 bg-white/95 p-4 shadow-sm sm:p-5">
-        <SearchBar onSearch={handleSearch} initialKeyword={searchKeyword} />
-
-        <div className="flex flex-col gap-4 border-t border-stone-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm text-stone-600">
-            총{" "}
-            {typeof totalCount === "number" ? (
-              <span className="inline-flex min-w-[2ch] items-center justify-center rounded-md bg-green-50 px-1.5 py-0.5 font-semibold tabular-nums text-green-800">
-                {totalCount}
-              </span>
-            ) : (
-              <span className="text-stone-400">…</span>
-            )}
-            <span className="ml-1">개의 레시피</span>
-          </p>
-          <div className="flex flex-wrap items-center gap-2">
-            <label htmlFor="sort-select" className="text-sm font-medium text-stone-700">
-              정렬
-            </label>
-            <select
-              id="sort-select"
-              value={sortOption}
-              onChange={(e) => handleSortChange(e.target.value as RecipeSortOption)}
-              className="min-h-10 cursor-pointer rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-800 shadow-sm transition-colors hover:border-green-200 hover:bg-green-50/40 focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1"
-            >
-              {Object.entries(RECIPE_SORT_LABELS).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="col-span-full mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-sm text-stone-600">
+          총{" "}
+          {typeof totalCount === "number" ? (
+            <span className="inline-flex min-w-[2ch] items-center justify-center rounded-md bg-green-50 px-1.5 py-0.5 font-semibold tabular-nums text-green-800">
+              {totalCount}
+            </span>
+          ) : (
+            <span className="text-stone-400">…</span>
+          )}
+          <span className="ml-1">개의 레시피</span>
+        </p>
+        <div className="flex flex-wrap items-center gap-2">
+          <label htmlFor="sort-select" className="text-sm font-medium text-stone-700">
+            정렬
+          </label>
+          <select
+            id="sort-select"
+            value={sortOption}
+            onChange={(e) => handleSortChange(e.target.value as RecipeSortOption)}
+            className="min-h-10 cursor-pointer rounded-xl border border-stone-200 bg-white px-3 py-2 text-sm font-medium text-stone-800 shadow-sm transition-colors hover:border-green-200 hover:bg-green-50/40 focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-1"
+          >
+            {Object.entries(RECIPE_SORT_LABELS).map(([value, label]) => (
+              <option key={value} value={value}>
+                {label}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 

@@ -51,10 +51,10 @@ export default function DetailMeta({
             onClick={onToggleWish}
             aria-label={isLiked ? "찜 해제" : "찜하기"}
             aria-pressed={isLiked}
-            className={`flex h-10 w-10 items-center justify-center rounded-xl border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
+            className={`inline-flex h-10 items-center gap-1.5 rounded-xl border px-3 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
               isLiked
-                ? "border-red-100 bg-red-50 text-red-500"
-                : "border-stone-200 bg-white text-stone-400 hover:border-red-100 hover:bg-red-50/40 hover:text-red-500"
+                ? "border-green-600 bg-green-600 text-white"
+                : "border-green-600 bg-white text-green-700 hover:bg-green-50"
             }`}
           >
             <svg
@@ -62,11 +62,12 @@ export default function DetailMeta({
               fill={isLiked ? "currentColor" : "none"}
               stroke="currentColor"
               strokeWidth="2"
-              className="h-6 w-6"
+              className="h-5 w-5"
               aria-hidden
             >
               <path d="M12 21l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.18L12 21z" />
             </svg>
+            찜
           </button>
         </div>
       </div>

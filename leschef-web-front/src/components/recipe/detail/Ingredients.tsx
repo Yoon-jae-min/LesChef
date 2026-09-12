@@ -14,11 +14,8 @@ const sectionShell =
 
 function SectionTitle({ id, children }: { id: string; children: ReactNode }) {
   return (
-    <h2
-      id={id}
-      className="mb-5 text-center text-xl font-bold tracking-tight text-stone-900 sm:text-2xl"
-    >
-      <span className="inline-block border-b-2 border-green-400/80 pb-1">{children}</span>
+    <h2 id={id} className="mb-5 text-xl font-bold tracking-tight text-green-700 sm:text-2xl">
+      {children}
     </h2>
   );
 }

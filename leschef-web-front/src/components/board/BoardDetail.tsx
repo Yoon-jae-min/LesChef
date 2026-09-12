@@ -118,7 +118,7 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
   };
 
   return (
-    <div className="min-h-screen bg-white lg:h-screen lg:overflow-hidden">
+    <div className="relative min-h-screen overflow-hidden bg-[#FFF9E8] lg:h-screen lg:overflow-hidden">
       <Top />
 
       {loading && !initialData && (
@@ -142,16 +142,16 @@ function BoardDetail({ postId, initialCategory, initialData, initialError }: Boa
         </div>
       )}
 
-      <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-6xl lg:h-[calc(100vh-80px)] lg:overflow-hidden lg:px-8 lg:pb-10 lg:pt-8">
+      <main className="relative z-10 mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-6xl lg:h-[calc(100vh-80px)] lg:overflow-hidden lg:px-8 lg:pb-10 lg:pt-8">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:h-full lg:gap-12">
           <div className="space-y-6 lg:overflow-y-auto lg:pr-2">
-            <article className="rounded-[28px] border border-stone-200/90 bg-white/95 p-6 shadow-sm shadow-stone-900/5 ring-1 ring-stone-900/[0.03] sm:p-7">
+            <article className="rounded-[28px] border border-white/80 bg-white/95 p-6 shadow-sm sm:p-7">
               <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                 <span
-                  className={`inline-flex w-fit rounded-full px-3 py-1 text-xs font-semibold ${
+                  className={`inline-flex w-fit rounded-lg px-3 py-1 text-xs font-semibold ${
                     boardType === "notice"
-                      ? "bg-green-100 text-green-900"
-                      : "bg-stone-100 text-stone-800"
+                      ? "bg-red-100 text-red-700"
+                      : "bg-green-100 text-green-800"
                   }`}
                 >
                   {category}

@@ -4,13 +4,26 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import Top from "@/components/common/navigation/Top";
+import AuthCitrusShell from "@/components/common/ui/AuthCitrusShell";
 import { useState, useEffect } from "react";
 import { signup, checkIdDuplicate, sendVerificationCode, verifyEmailCode } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
 
 const LOGIN_ID_REGEX = /^[a-zA-Z0-9]{3,50}$/;
+
+const inputClass =
+  "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20";
+
+function GreenCheck() {
+  return (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+      </svg>
+    </span>
+  );
+}
 
 export default function SignupPage() {
   const [loginId, setLoginId] = useState("");
@@ -232,20 +245,15 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
-      <Top />
-
-      <main className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* 브랜드 메시지 */}
-          <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 lg:px-14 lg:py-16 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-            <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl pointer-events-none" />
-            <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl pointer-events-none" />
-
-            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
+    <AuthCitrusShell>
+      <main className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-20">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* 브랜드 패널 */}
+          <section className="relative px-2 py-4 lg:px-4 lg:py-8">
+            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-green-700/70">
               Join us
             </p>
-            <h1 className="mt-4 text-4xl lg:text-5xl font-semibold text-gray-900 leading-tight">
+            <h1 className="mt-4 text-4xl font-semibold leading-tight text-gray-900 lg:text-5xl">
               새로운 요리 여정,
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400">
@@ -254,7 +262,7 @@ export default function SignupPage() {
               와 <span className="underline decoration-4 decoration-green-300">시작</span>
             </h1>
 
-            <p className="mt-6 text-base text-gray-600 leading-relaxed">
+            <p className="mt-6 text-base leading-relaxed text-gray-600">
               냉장고 재료 관리부터 맞춤 레시피 추천까지. 지금 가입하고 나만의 요리 여정을
               시작해보세요.
             </p>
@@ -266,15 +274,15 @@ export default function SignupPage() {
                 "즐겨찾기와 보관함 관리",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 text-gray-800">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-black" />
-                  <p className="text-sm lg:text-base leading-relaxed">{item}</p>
+                  <GreenCheck />
+                  <p className="text-sm leading-relaxed lg:text-base">{item}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* 회원가입 폼 */}
-          <section className="bg-white border border-gray-200 rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+          <section className="rounded-[28px] border border-white/80 bg-white/95 px-8 py-10 shadow-sm backdrop-blur-sm lg:px-12 lg:py-12">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-gray-900">회원가입</h2>
               <p className="text-sm text-gray-500">LesChef와 함께 요리 여정을 시작해보세요.</p>
@@ -293,7 +301,7 @@ export default function SignupPage() {
                       setIdAvailabilityNote(null);
                     }}
                     placeholder="영문,숫자(3~50자)"
-                    className="min-w-0 flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={`min-w-0 flex-1 ${inputClass}`}
                     required
                     maxLength={50}
                     autoComplete="username"
@@ -302,7 +310,7 @@ export default function SignupPage() {
                     type="button"
                     onClick={handleCheckIdDuplicate}
                     disabled={isIdChecking}
-                    className="shrink-0 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-800 hover:border-gray-400 hover:text-black disabled:cursor-not-allowed disabled:opacity-60 whitespace-nowrap"
+                    className="shrink-0 whitespace-nowrap rounded-2xl border border-green-200 bg-white px-4 py-3 text-sm font-medium text-green-700 transition hover:border-green-400 hover:bg-green-50 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isIdChecking ? "확인 중…" : "중복 확인"}
                   </button>
@@ -310,9 +318,7 @@ export default function SignupPage() {
                 {idAvailabilityNote && (
                   <p
                     className={`text-xs ${
-                      availableIdTrim === loginId.trim()
-                        ? "text-green-600"
-                        : "text-red-500"
+                      availableIdTrim === loginId.trim() ? "text-green-600" : "text-red-500"
                     }`}
                   >
                     {idAvailabilityNote}
@@ -321,7 +327,9 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">이메일 (인증·연락용) · 필수</label>
+                <label className="text-sm font-medium text-gray-700">
+                  이메일 (인증·연락용) · 필수
+                </label>
                 <div className="flex gap-2">
                   <input
                     type="email"
@@ -333,7 +341,7 @@ export default function SignupPage() {
                       setVerificationError(null);
                     }}
                     placeholder="you@example.com"
-                    className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0 disabled:bg-gray-100 disabled:cursor-not-allowed"
+                    className={`flex-1 ${inputClass} disabled:cursor-not-allowed disabled:bg-gray-100`}
                     required
                     disabled={isEmailVerified}
                   />
@@ -341,7 +349,7 @@ export default function SignupPage() {
                     type="button"
                     onClick={handleSendVerificationCode}
                     disabled={isSendingCode || countdown > 0 || isEmailVerified}
-                    className="px-4 py-3 rounded-2xl bg-gray-800 text-white text-sm font-medium hover:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap"
+                    className="whitespace-nowrap rounded-2xl bg-green-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-300"
                   >
                     {isSendingCode
                       ? "발송 중..."
@@ -373,14 +381,14 @@ export default function SignupPage() {
                         setVerificationError(null);
                       }}
                       placeholder="6자리 인증 코드"
-                      className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                      className={`flex-1 ${inputClass}`}
                       maxLength={6}
                     />
                     <button
                       type="button"
                       onClick={handleVerifyCode}
                       disabled={isVerifyingCode || verificationCode.length !== 6}
-                      className="px-4 py-3 rounded-2xl bg-black text-white text-sm font-medium hover:bg-gray-900 transition disabled:bg-gray-300 disabled:cursor-not-allowed whitespace-nowrap"
+                      className="whitespace-nowrap rounded-2xl bg-green-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:bg-gray-300"
                     >
                       {isVerifyingCode ? "확인 중..." : "인증 확인"}
                     </button>
@@ -402,7 +410,7 @@ export default function SignupPage() {
                   value={nickname}
                   onChange={(e) => setNickname(e.target.value)}
                   placeholder="닉네임을 입력해주세요"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                  className={inputClass}
                   required
                   autoComplete="nickname"
                 />
@@ -416,7 +424,7 @@ export default function SignupPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="비밀번호를 입력해주세요 (최소 8자)"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={`${inputClass} pr-12`}
                     required
                     minLength={8}
                     autoComplete="new-password"
@@ -424,7 +432,7 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-gray-700"
+                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-green-700"
                   >
                     {showPassword ? "숨기기" : "보기"}
                   </button>
@@ -439,7 +447,7 @@ export default function SignupPage() {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="비밀번호를 다시 입력해주세요"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={`${inputClass} pr-12`}
                     required
                     minLength={8}
                     autoComplete="new-password"
@@ -447,7 +455,7 @@ export default function SignupPage() {
                   <button
                     type="button"
                     onClick={() => setShowConfirmPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-gray-700"
+                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-green-700"
                   >
                     {showConfirmPassword ? "숨기기" : "보기"}
                   </button>
@@ -460,15 +468,21 @@ export default function SignupPage() {
                     type="checkbox"
                     checked={agreeToTerms}
                     onChange={(e) => setAgreeToTerms(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                    className="mt-0.5 h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                     required
                   />
                   <span>
-                    <Link href="/terms" className="text-black underline-offset-4 hover:underline">
+                    <Link
+                      href="/terms"
+                      className="text-green-600 underline-offset-4 hover:underline"
+                    >
                       이용약관
                     </Link>
                     및{" "}
-                    <Link href="/privacy" className="text-black underline-offset-4 hover:underline">
+                    <Link
+                      href="/privacy"
+                      className="text-green-600 underline-offset-4 hover:underline"
+                    >
                       개인정보처리방침
                     </Link>
                     에 동의합니다.
@@ -481,8 +495,8 @@ export default function SignupPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 ${
-                  isSubmitting ? "bg-gray-700" : "bg-black"
+                className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70 ${
+                  isSubmitting ? "bg-green-700" : "bg-green-600"
                 }`}
               >
                 {isSubmitting && (
@@ -513,7 +527,8 @@ export default function SignupPage() {
                     alert("카카오 로그인을 시작할 수 없습니다.");
                   }
                 }}
-                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+                className="rounded-2xl py-3 text-sm font-medium text-gray-900 transition hover:brightness-95"
+                style={{ backgroundColor: "#FEE500" }}
               >
                 카카오
               </button>
@@ -529,7 +544,8 @@ export default function SignupPage() {
                     alert("네이버 로그인을 시작할 수 없습니다.");
                   }
                 }}
-                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+                className="rounded-2xl py-3 text-sm font-medium text-white transition hover:brightness-95"
+                style={{ backgroundColor: "#03C75A" }}
               >
                 네이버
               </button>
@@ -545,18 +561,18 @@ export default function SignupPage() {
                     alert("구글 로그인을 시작할 수 없습니다.");
                   }
                 }}
-                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+                className="rounded-2xl border border-gray-200 bg-white py-3 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
               >
                 구글
               </button>
             </div>
 
-            <div className="mt-8 rounded-2xl bg-gray-50 px-5 py-4 text-sm text-gray-600">
+            <div className="mt-8 rounded-2xl bg-[#FFF9E8]/80 px-5 py-4 text-sm text-gray-600">
               <p>
                 이미 회원이신가요?{" "}
                 <Link
                   href="/login"
-                  className="font-semibold text-black underline-offset-4 hover:underline"
+                  className="font-semibold text-green-600 underline-offset-4 hover:underline"
                 >
                   로그인
                 </Link>
@@ -566,6 +582,6 @@ export default function SignupPage() {
           </section>
         </div>
       </main>
-    </div>
+    </AuthCitrusShell>
   );
 }

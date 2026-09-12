@@ -160,46 +160,31 @@ function Top(): React.JSX.Element {
             </Link>
           </div>
 
-          {/* 네비게이션 메뉴 아이콘들 */}
-          <div className="hidden md:flex items-center space-x-4 md:space-x-6 lg:space-x-8 ml-4 md:ml-8 lg:ml-16 lg:-translate-x-8">
+          {/* 네비게이션 — 데스크톱 텍스트 라벨 (시안) */}
+          <nav
+            className="ml-4 hidden items-center gap-1 md:ml-8 md:flex lg:ml-12 lg:-translate-x-4 lg:gap-2"
+            aria-label="주요 메뉴"
+          >
             {NAVIGATION_ITEMS.map((item) => {
               const isActive = getActiveMenuId(pathname || "") === item.id;
-              const iconClassName = isActive ? "w-6 h-6 text-green-600" : "w-6 h-6 text-gray-600";
-
-              // 아이콘 컴포넌트 선택
-              let IconComponent: React.ComponentType<{ className?: string }>;
-              switch (item.iconId) {
-                case "storage":
-                  IconComponent = StorageIcon;
-                  break;
-                case "recipe":
-                  IconComponent = RecipeIcon;
-                  break;
-                case "mypage":
-                  IconComponent = MyPageIcon;
-                  break;
-                case "board":
-                  IconComponent = BoardIcon;
-                  break;
-                default:
-                  IconComponent = RecipeIcon;
-              }
 
               return (
                 <Link
                   key={item.id}
                   href={item.href}
-                  title={item.label}
-                  className={`w-8 h-8 flex items-center justify-center cursor-pointer rounded-xl transition-all ${
-                    isActive ? "bg-green-100" : "hover:bg-gray-100"
+                  className={`rounded-xl px-3 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 ${
+                    isActive
+                      ? "bg-green-50 text-green-700"
+                      : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
                   }`}
                   aria-label={item.ariaLabel}
+                  aria-current={isActive ? "page" : undefined}
                 >
-                  <IconComponent className={iconClassName} />
+                  {item.label}
                 </Link>
               );
             })}
-          </div>
+          </nav>
 
           {/* 알림 · 로그인 — 검색창(또는 검색 아이콘) 바로 왼쪽 */}
           <div className="ml-auto flex items-center gap-2 md:gap-3 mr-3 lg:translate-x-8 shrink-0">

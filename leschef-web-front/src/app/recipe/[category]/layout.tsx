@@ -3,6 +3,8 @@
 import Top from "@/components/common/navigation/Top";
 import TabNavigation from "@/components/common/navigation/TabNavigation";
 import FilterTabs from "@/components/common/ui/FilterTabs";
+import CitrusPageBanner from "@/components/common/ui/CitrusPageBanner";
+import SearchBar from "@/components/recipe/search/SearchBar";
 import { RECIPE_SUBCATEGORIES_BY_MAJOR } from "@/constants/recipe/recipe";
 import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
@@ -39,6 +41,7 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
   const pathname = usePathname();
   const router = useRouter();
   const [activeSub, setActiveSub] = useState<string>("전체");
+  const [bannerKeyword, setBannerKeyword] = useState("");
 
   const currentCategory = pathname.split("/").pop() || "korean";
   const currentDisplay = CATEGORY_TO_DISPLAY[currentCategory] || "한식";
@@ -47,11 +50,12 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
 
   const syncSubFromUrl = useCallback(() => {
     if (typeof window === "undefined") return;
-    const raw = new URLSearchParams(window.location.search).get("subCategory")?.trim();
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get("subCategory")?.trim();
     setActiveSub(raw && raw.length > 0 ? raw : "전체");
+    setBannerKeyword(params.get("keyword")?.trim() || "");
   }, []);
 
-  /** URL ?subCategory= 과 탭 동기화 (카테고리 변경·뒤로가기 등) */
   useEffect(() => {
     syncSubFromUrl();
   }, [pathname, syncSubFromUrl]);
@@ -62,6 +66,20 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, [syncSubFromUrl]);
+
+  const handleBannerSearch = useCallback((keyword: string) => {
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    params.delete("ingredients");
+    const trimmed = keyword.trim();
+    if (trimmed) params.set("keyword", trimmed);
+    else params.delete("keyword");
+    const base = window.location.pathname;
+    const qs = params.toString();
+    window.history.pushState({}, "", qs ? `${base}?${qs}` : base);
+    window.dispatchEvent(new PopStateEvent("popstate"));
+    setBannerKeyword(trimmed);
+  }, []);
 
   const handleSubChange = useCallback((sub: string) => {
     setActiveSub(sub);
@@ -89,20 +107,21 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
   return (
     <div className="min-h-screen bg-white">
       <Top />
-      <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
-        <header className="mb-8 text-center sm:mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
-            Recipe
-          </p>
-          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
-            레시피 찾기
-          </h1>
-          <p className="mx-auto mt-2 max-w-xl text-sm text-stone-600">
-            요리 종류와 세부 카테고리로 빠르게 골라보세요.
-          </p>
-        </header>
+      <CitrusPageBanner
+        eyebrow="Recipe"
+        title="레시피 찾기"
+        description="요리 종류와 세부 카테고리로 빠르게 골라보세요."
+      >
+        <SearchBar
+          variant="hero"
+          initialKeyword={bannerKeyword}
+          onSearch={handleBannerSearch}
+          className="mx-auto"
+        />
+      </CitrusPageBanner>
 
-        <div className="mb-8 sm:mb-10">
+      <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
+        <div className="mb-6 sm:mb-8">
           <TabNavigation
             tabs={[...CUISINE_TABS]}
             activeTab={currentDisplay}
@@ -111,7 +130,7 @@ export default function RecipeCategoryLayout({ children }: { children: React.Rea
         </div>
 
         {subFiltersForActive.length > 0 ? (
-          <div className="mb-8 rounded-3xl border border-stone-200/80 bg-white/90 px-4 py-4 shadow-sm backdrop-blur-sm sm:px-5 sm:py-5">
+          <div className="mb-8 rounded-2xl border border-lime-100 bg-lime-50/40 px-4 py-4 sm:px-5 sm:py-5">
             <p className="sr-only">세부 카테고리 필터</p>
             <FilterTabs
               items={[...subFiltersForActive]}

@@ -69,14 +69,14 @@ export default function RenamePlaceModal({
             type="button"
             onClick={onClose}
             disabled={loading}
-            className="flex-1 rounded-2xl border border-gray-200 py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+            className="flex-1 rounded-2xl border border-gray-200 bg-white py-3 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
           >
             취소
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="flex-1 rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:opacity-50"
+            className="flex-1 rounded-2xl bg-green-600 py-3 text-sm font-semibold text-white transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 disabled:opacity-50"
           >
             {loading ? "저장 중…" : "저장"}
           </button>

@@ -13,11 +13,11 @@ export default function Storage({ open, onClose, children }: StorageProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-[2px] px-4">
-      <div className="relative w-full max-w-xl rounded-3xl border border-gray-200 bg-white p-8 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/45 px-4 backdrop-blur-[2px]">
+      <div className="relative w-full max-w-xl rounded-[28px] border border-stone-200/90 bg-white p-8 shadow-xl shadow-stone-900/10 ring-1 ring-stone-900/[0.04]">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 text-gray-500 hover:text-black"
+          className="absolute right-4 top-4 text-gray-500 transition hover:text-gray-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2 rounded-lg"
           aria-label="닫기"
         >
           <svg

@@ -1,6 +1,5 @@
 /**
- * 유통기한 임박 알림 섹션 컴포넌트
- * 만료, 긴급, 경고, 알림 상태의 식재료를 표시
+ * 유통기한 임박 알림 섹션
  */
 
 "use client";
@@ -17,9 +16,15 @@ import { resolveBackendAssetUrl } from "@/utils/helpers/imageUtils";
 interface ExpiryAlertsProps {
   isLoggedIn?: boolean;
   authLoading?: boolean;
+  /** 홈 3열 레이아웃용 — 바깥 패딩/max-width 제거, 카드 수 축소 */
+  embedded?: boolean;
 }
 
-export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }: ExpiryAlertsProps) {
+export default function ExpiryAlerts({
+  isLoggedIn = false,
+  authLoading = false,
+  embedded = false,
+}: ExpiryAlertsProps) {
   const sectionTitleId = useId();
   const { data, error, isLoading } = useSWR<ExpiryAlertResponse>(
     isLoggedIn ? "/foods/expiry-alerts" : null,
@@ -30,8 +35,6 @@ export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }
     }
   );
 
-  // 메모이제이션으로 불필요한 재계산 방지
-  // ⚠️ 중요: 모든 Hook은 early return 전에 호출해야 함
   const alerts = data;
   const hasAlerts = useMemo(() => {
     return (
@@ -43,121 +46,115 @@ export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }
     );
   }, [alerts]);
 
-  // 우선순위 알림 목록 메모이제이션
+  const maxItems = embedded ? 2 : 6;
+
   const priorityAlerts = useMemo(() => {
     if (!alerts || !hasAlerts) return [];
 
-    // 우선순위: 만료 > 긴급 > 경고 > 알림
     return [
       ...(alerts.expired || []).map((item) => ({ ...item, priority: "expired" as const })),
       ...(alerts.urgent || []).map((item) => ({ ...item, priority: "urgent" as const })),
       ...(alerts.warning || []).map((item) => ({ ...item, priority: "warning" as const })),
       ...(alerts.notice || []).map((item) => ({ ...item, priority: "notice" as const })),
-    ].slice(0, 6); // 최대 6개만 표시
-  }, [alerts, hasAlerts]);
+    ].slice(0, maxItems);
+  }, [alerts, hasAlerts, maxItems]);
 
-  // 인증 확인 중에는 "로그인하세요"를 먼저 보여주지 않고, 섹션 스켈레톤으로 대기
+  const sectionClass = embedded ? "py-0" : "py-8";
+  const innerClass = embedded ? "" : "max-w-7xl mx-auto px-6";
+  const titleClass = embedded
+    ? "text-xl font-bold text-gray-900"
+    : "text-2xl font-bold text-gray-900 mb-4";
+
+  const wrap = (children: React.ReactNode, busy?: boolean) => (
+    <section
+      className={sectionClass}
+      aria-labelledby={sectionTitleId}
+      {...(busy ? { "aria-busy": true as const, "aria-live": "polite" as const } : {})}
+    >
+      <div className={innerClass}>{children}</div>
+    </section>
+  );
+
   if (authLoading) {
-    return (
-      <section
-        className="py-8"
-        aria-labelledby={sectionTitleId}
-        aria-busy="true"
-        aria-live="polite"
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
-            유통기한 알림
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-gray-200 bg-gray-50 p-4 animate-pulse h-32"
-              ></div>
-            ))}
-          </div>
+    return wrap(
+      <>
+        <h2 id={sectionTitleId} className={titleClass}>
+          유통기한 알림
+        </h2>
+        <div className={`grid gap-3 ${embedded ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3 gap-4"}`}>
+          {Array.from({ length: embedded ? 2 : 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-24 animate-pulse rounded-2xl border border-gray-200 bg-gray-50"
+            />
+          ))}
         </div>
-      </section>
+      </>,
+      true
     );
   }
 
   if (!isLoggedIn) {
-    return (
-      <section className="py-8" aria-labelledby={sectionTitleId}>
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
-            유통기한 알림
-          </h2>
-          <div className="rounded-3xl border border-gray-200 bg-gray-50 p-8 text-center">
-            <p className="text-gray-600 mb-4">로그인하시면 식재료의 유통기한을 관리해드려요!</p>
-            <Link
-              href="/login"
-              className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-2xl hover:bg-green-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-            >
-              로그인하기
-            </Link>
-          </div>
+    return wrap(
+      <>
+        <h2 id={sectionTitleId} className={titleClass}>
+          유통기한 알림
+        </h2>
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 text-center">
+          <p className="mb-3 text-sm text-gray-600">
+            로그인하시면 식재료의 유통기한을 관리해드려요!
+          </p>
+          <Link
+            href="/login"
+            className="inline-block rounded-2xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+          >
+            로그인하기
+          </Link>
         </div>
-      </section>
+      </>
     );
   }
 
   if (error) {
-    return (
-      <section className="py-8" aria-labelledby={sectionTitleId}>
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
-            유통기한 알림
-          </h2>
-          <ErrorMessage error={error} showDetails={false} showAction={false} />
-        </div>
-      </section>
+    return wrap(
+      <>
+        <h2 id={sectionTitleId} className={titleClass}>
+          유통기한 알림
+        </h2>
+        <ErrorMessage error={error} showDetails={false} showAction={false} />
+      </>
     );
   }
 
   if (isLoading) {
-    return (
-      <section
-        className="py-8"
-        aria-labelledby={sectionTitleId}
-        aria-busy="true"
-        aria-live="polite"
-      >
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
-            유통기한 알림
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div
-                key={i}
-                className="rounded-2xl border border-gray-200 bg-gray-50 p-4 animate-pulse h-32"
-              ></div>
-            ))}
-          </div>
+    return wrap(
+      <>
+        <h2 id={sectionTitleId} className={titleClass}>
+          유통기한 알림
+        </h2>
+        <div className={`grid gap-3 ${embedded ? "grid-cols-1" : "sm:grid-cols-2 lg:grid-cols-3 gap-4"}`}>
+          {Array.from({ length: embedded ? 2 : 6 }).map((_, i) => (
+            <div
+              key={i}
+              className="h-24 animate-pulse rounded-2xl border border-gray-200 bg-gray-50"
+            />
+          ))}
         </div>
-      </section>
+      </>,
+      true
     );
   }
 
   if (!hasAlerts) {
-    return (
-      <section className="py-8" aria-labelledby={sectionTitleId}>
-        <div className="max-w-7xl mx-auto px-6">
-          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900 mb-4">
-            유통기한 알림
-          </h2>
-          <div className="rounded-3xl border border-gray-200 bg-green-50 p-6 text-center">
-            <p className="text-gray-600">
-              유통기한이 임박한 식재료가 없습니다.{" "}
-              <span aria-hidden>
-                🎉
-              </span>
-            </p>
-          </div>
+    return wrap(
+      <>
+        <h2 id={sectionTitleId} className={titleClass}>
+          유통기한 알림
+        </h2>
+        <div className="rounded-2xl border border-gray-200 bg-green-50 p-5 text-center">
+          <p className="text-sm text-gray-600">유통기한이 임박한 식재료가 없습니다.</p>
         </div>
-      </section>
+      </>
     );
   }
 
@@ -187,84 +184,98 @@ export default function ExpiryAlerts({ isLoggedIn = false, authLoading = false }
     }
   };
 
-  return (
-    <section className="py-8" aria-labelledby={sectionTitleId}>
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex items-center justify-between mb-4">
-          <h2 id={sectionTitleId} className="text-2xl font-bold text-gray-900">
-            유통기한 알림
-          </h2>
-          <Link
-            href="/myPage/storage"
-            className="text-sm text-green-600 font-medium hover:text-green-700 transition-colors flex items-center gap-1 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-          >
-            전체보기
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+  const expiryText = (daysUntilExpiry: number) => {
+    if (daysUntilExpiry < 0) return `만료됨 (${Math.abs(daysUntilExpiry)}일 전)`;
+    if (daysUntilExpiry === 0) return "오늘 만료";
+    if (daysUntilExpiry <= 3) return `유통기한 ${daysUntilExpiry}일 전`;
+    if (daysUntilExpiry <= 7) return "유통기한 1주일 전";
+    return `D-${daysUntilExpiry}`;
+  };
 
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {priorityAlerts.map((alert, index) => {
-            const daysUntilExpiry = alert.food.daysUntilExpiry ?? 0;
-            const title = alert.food.name?.trim() || "이름 없음";
-            const imgSrc = alert.food.imageUrl
-              ? resolveBackendAssetUrl(alert.food.imageUrl)
-              : "";
-            return (
-              <div
-                key={`${alert.food._id}-${index}`}
-                className={`rounded-2xl border p-4 ${getPriorityStyle(alert.priority)}`}
-              >
-                <div className="flex items-start gap-3 mb-2">
-                  <div className="relative h-16 w-16 shrink-0 overflow-hidden rounded-xl border border-current/20 bg-white/40">
-                    {imgSrc ? (
-                      <Image src={imgSrc} alt={title} fill className="object-cover" sizes="64px" />
-                    ) : (
-                      <div className="flex h-full items-center justify-center text-[10px] text-gray-500">
-                        사진 없음
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-1 flex-wrap">
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-white/50">
+  return wrap(
+    <>
+      <div className={`flex items-center justify-between gap-2 ${embedded ? "mb-3" : "mb-4"}`}>
+        <h2 id={sectionTitleId} className={embedded ? titleClass : "text-2xl font-bold text-gray-900"}>
+          유통기한 알림
+        </h2>
+        <Link
+          href="/myPage/storage"
+          className="shrink-0 rounded-lg text-sm font-medium text-green-600 transition-colors hover:text-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+        >
+          전체보기
+        </Link>
+      </div>
+
+      <div
+        className={
+          embedded
+            ? "grid grid-cols-1 gap-3"
+            : "grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+        }
+      >
+        {priorityAlerts.map((alert, index) => {
+          const daysUntilExpiry = alert.food.daysUntilExpiry ?? 0;
+          const title = alert.food.name?.trim() || "이름 없음";
+          const imgSrc = alert.food.imageUrl
+            ? resolveBackendAssetUrl(alert.food.imageUrl)
+            : "";
+          return (
+            <div
+              key={`${alert.food._id}-${index}`}
+              className={`rounded-2xl border p-3.5 ${getPriorityStyle(alert.priority)}`}
+            >
+              <div className="mb-2 flex items-start gap-3">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-xl border border-current/20 bg-white/40">
+                  {imgSrc ? (
+                    <Image src={imgSrc} alt={title} fill className="object-cover" sizes="56px" />
+                  ) : (
+                    <div className="flex h-full items-center justify-center text-[10px] text-gray-500">
+                      사진 없음
+                    </div>
+                  )}
+                </div>
+                <div className="min-w-0 flex-1">
+                  {!embedded && (
+                    <div className="mb-1 flex flex-wrap items-center gap-2">
+                      <span className="rounded-full bg-white/50 px-2 py-0.5 text-xs font-semibold">
                         {getPriorityLabel(alert.priority)}
                       </span>
                       <span className="text-xs text-gray-600">{alert.place}</span>
                     </div>
-                    <h3 className="font-semibold text-lg truncate">{title}</h3>
-                    <p className="text-sm text-gray-600 mt-1">
+                  )}
+                  <h3 className={`truncate font-semibold ${embedded ? "text-base" : "text-lg"}`}>
+                    {title}
+                  </h3>
+                  {!embedded && (
+                    <p className="mt-1 text-sm text-gray-600">
                       {alert.food.volume} {alert.food.unit}
                     </p>
-                  </div>
-                </div>
-                <div className="mt-3 pt-3 border-t border-current/20">
-                  <p className="text-sm font-medium">
-                    {daysUntilExpiry < 0
-                      ? `만료됨 (${Math.abs(daysUntilExpiry)}일 전)`
-                      : daysUntilExpiry === 0
-                        ? "오늘 만료"
-                        : `D-${daysUntilExpiry}`}
-                  </p>
+                  )}
+                  {embedded && (
+                    <p className="mt-1 text-sm text-gray-600">{expiryText(daysUntilExpiry)}</p>
+                  )}
                 </div>
               </div>
-            );
-          })}
-        </div>
-
-        {alerts && alerts.totalCount > 6 && (
-          <div className="mt-4 text-center">
-            <Link
-              href="/myPage/storage"
-              className="text-sm text-gray-600 hover:text-gray-900 transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
-            >
-              외 {alerts.totalCount - 6}개의 알림 더보기
-            </Link>
-          </div>
-        )}
+              {!embedded && (
+                <div className="mt-3 border-t border-current/20 pt-3">
+                  <p className="text-sm font-medium">{expiryText(daysUntilExpiry)}</p>
+                </div>
+              )}
+            </div>
+          );
+        })}
       </div>
-    </section>
+
+      {!embedded && alerts && alerts.totalCount > 6 && (
+        <div className="mt-4 text-center">
+          <Link
+            href="/myPage/storage"
+            className="rounded-lg text-sm text-gray-600 transition-colors hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-400 focus-visible:ring-offset-2"
+          >
+            외 {alerts.totalCount - 6}개의 알림 더보기
+          </Link>
+        </div>
+      )}
+    </>
   );
 }

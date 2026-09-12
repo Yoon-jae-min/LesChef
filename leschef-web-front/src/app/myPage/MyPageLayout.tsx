@@ -2,6 +2,7 @@
 
 import Top from "@/components/common/navigation/Top";
 import TabNavigation from "@/components/common/navigation/TabNavigation";
+import CitrusPageBanner from "@/components/common/ui/CitrusPageBanner";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState, Suspense } from "react";
 import { checkAuth } from "@/utils/api/auth";
@@ -85,18 +86,13 @@ function MyPageLayoutClientContent({ children }: { children: React.ReactNode }) 
   return (
     <div className="relative min-h-screen bg-white">
       <Top />
-      <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8 lg:pt-10">
-        <header className="mb-8 text-center sm:mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
-            My Page
-          </p>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
-            마이페이지
-          </h1>
-          <p className="mx-auto mt-2 max-w-lg text-sm text-stone-600">
-            내 정보와 알림, 보관함, 레시피를 한곳에서 관리해요.
-          </p>
-        </header>
+      <CitrusPageBanner
+        eyebrow="My Page"
+        title="마이페이지"
+        description="내 정보와 알림, 보관함, 레시피를 한곳에서 관리해요."
+        size="compact"
+      />
+      <main className="mx-auto max-w-7xl px-4 pb-12 pt-8 sm:px-6 lg:px-8">
         <div className={`flex flex-col gap-4 ${marginBottom}`}>
           <TabNavigation
             tabs={tabs.map((t) => t.label)}

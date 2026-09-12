@@ -1,9 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import Top from "@/components/common/navigation/Top";
+import AuthCitrusShell from "@/components/common/ui/AuthCitrusShell";
 import { useState, Suspense } from "react";
 import { completePasswordReset, verifyPasswordReset } from "@/utils/api/auth";
+
+const inputClass =
+  "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20";
+
+function GreenCheck() {
+  return (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+      </svg>
+    </span>
+  );
+}
 
 function validateNewPassword(pwd: string): string | null {
   if (pwd.length < 8) return "비밀번호는 최소 8자 이상이어야 합니다.";
@@ -88,16 +101,11 @@ function FindPasswordPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
-      <Top />
-
+    <AuthCitrusShell>
       <main className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)] lg:px-14 lg:py-16">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl" />
-            <div className="pointer-events-none absolute -left-6 bottom-8 h-20 w-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl" />
-
-            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
+          <section className="relative px-2 py-4 lg:px-4 lg:py-8">
+            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-green-700/70">
               Reset Password
             </p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight text-gray-900 lg:text-5xl">
@@ -121,14 +129,14 @@ function FindPasswordPageContent() {
                 "비밀번호는 영문+숫자, 8자 이상",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 text-gray-800">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-black" />
+                  <GreenCheck />
                   <p className="text-sm leading-relaxed lg:text-base">{item}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="rounded-[32px] border border-gray-200 bg-white px-8 py-10 shadow-[6px_6px_0_rgba(0,0,0,0.05)] lg:px-12 lg:py-12">
+          <section className="rounded-[28px] border border-white/80 bg-white/95 px-8 py-10 shadow-sm backdrop-blur-sm lg:px-12 lg:py-12">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-gray-900">비밀번호 찾기</h2>
               <p className="text-sm text-gray-500">
@@ -137,7 +145,7 @@ function FindPasswordPageContent() {
             </div>
 
             {done ? (
-              <div className="mt-8 rounded-2xl border border-gray-200 bg-gray-50 px-6 py-8 text-center">
+              <div className="mt-8 rounded-2xl border border-green-100 bg-[#FFF9E8]/80 px-6 py-8 text-center">
                 <p className="mb-2 text-lg font-semibold text-gray-900">비밀번호가 변경되었습니다</p>
                 <p className="mb-6 text-sm text-gray-600">새 비밀번호로 로그인해주세요.</p>
                 <div className="flex flex-col gap-3 sm:flex-row">
@@ -148,14 +156,14 @@ function FindPasswordPageContent() {
                         window.location.href = "/login";
                       }
                     }}
-                    className="flex-1 rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:bg-gray-800"
+                    className="flex-1 rounded-2xl bg-green-600 py-3 text-sm font-semibold text-white transition hover:bg-green-700"
                   >
                     로그인하기
                   </button>
                   <button
                     type="button"
                     onClick={resetFlow}
-                    className="flex-1 rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                    className="flex-1 rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 transition hover:bg-green-50"
                   >
                     처음으로
                   </button>
@@ -170,7 +178,7 @@ function FindPasswordPageContent() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="you@example.com"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="email"
                   />
@@ -183,7 +191,7 @@ function FindPasswordPageContent() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="가입 시 등록한 이름"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="name"
                   />
@@ -196,7 +204,7 @@ function FindPasswordPageContent() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="010-1234-5678"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="tel"
                   />
@@ -207,7 +215,7 @@ function FindPasswordPageContent() {
                 <button
                   type="submit"
                   disabled={isBusy}
-                  className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-2xl bg-green-600 py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isBusy ? "확인 중..." : "본인 확인"}
                 </button>
@@ -227,7 +235,7 @@ function FindPasswordPageContent() {
                     value={newPwd}
                     onChange={(e) => setNewPwd(e.target.value)}
                     placeholder="영문+숫자, 8자 이상"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="new-password"
                   />
@@ -240,7 +248,7 @@ function FindPasswordPageContent() {
                     value={newPwd2}
                     onChange={(e) => setNewPwd2(e.target.value)}
                     placeholder="한 번 더 입력"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="new-password"
                   />
@@ -252,14 +260,14 @@ function FindPasswordPageContent() {
                   <button
                     type="button"
                     onClick={resetFlow}
-                    className="flex-1 rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50"
+                    className="flex-1 rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 transition hover:bg-green-50"
                   >
                     이전 단계
                   </button>
                   <button
                     type="submit"
                     disabled={isBusy}
-                    className="flex-1 rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex-1 rounded-2xl bg-green-600 py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {isBusy ? "변경 중..." : "비밀번호 변경"}
                   </button>
@@ -268,22 +276,22 @@ function FindPasswordPageContent() {
             )}
 
             <div className="mt-8 flex items-center justify-center gap-4 text-sm">
-              <Link href="/login" className="text-gray-600 transition hover:text-black">
+              <Link href="/login" className="text-gray-600 transition hover:text-green-600">
                 로그인
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/find-id" className="text-gray-600 transition hover:text-black">
+              <Link href="/find-id" className="text-gray-600 transition hover:text-green-600">
                 아이디 찾기
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/signup" className="text-gray-600 transition hover:text-black">
+              <Link href="/signup" className="text-gray-600 transition hover:text-green-600">
                 회원가입
               </Link>
             </div>
           </section>
         </div>
       </main>
-    </div>
+    </AuthCitrusShell>
   );
 }
 
@@ -291,11 +299,11 @@ export default function FindPasswordPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
+        <AuthCitrusShell showTop={false}>
           <div className="flex min-h-screen items-center justify-center">
             <p className="text-gray-400">Loading...</p>
           </div>
-        </div>
+        </AuthCitrusShell>
       }
     >
       <FindPasswordPageContent />

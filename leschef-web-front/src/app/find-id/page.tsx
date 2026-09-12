@@ -1,9 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import Top from "@/components/common/navigation/Top";
+import AuthCitrusShell from "@/components/common/ui/AuthCitrusShell";
 import { useState } from "react";
 import { findIdByProfile } from "@/utils/api/auth";
+
+const inputClass =
+  "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20";
+
+function GreenCheck() {
+  return (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+      </svg>
+    </span>
+  );
+}
 
 export default function FindIdPage() {
   const [name, setName] = useState("");
@@ -29,16 +42,11 @@ export default function FindIdPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
-      <Top />
-
+    <AuthCitrusShell>
       <main className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-20">
         <div className="grid items-center gap-12 lg:grid-cols-2">
-          <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)] lg:px-14 lg:py-16">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-36 w-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl" />
-            <div className="pointer-events-none absolute -left-6 bottom-8 h-20 w-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl" />
-
-            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
+          <section className="relative px-2 py-4 lg:px-4 lg:py-8">
+            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-green-700/70">
               Find Account
             </p>
             <h1 className="mt-4 text-4xl font-semibold leading-tight text-gray-900 lg:text-5xl">
@@ -60,14 +68,14 @@ export default function FindIdPage() {
                 "찾은 아이디로 로그인 시도",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 text-gray-800">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-black" />
+                  <GreenCheck />
                   <p className="text-sm leading-relaxed lg:text-base">{item}</p>
                 </div>
               ))}
             </div>
           </section>
 
-          <section className="rounded-[32px] border border-gray-200 bg-white px-8 py-10 shadow-[6px_6px_0_rgba(0,0,0,0.05)] lg:px-12 lg:py-12">
+          <section className="rounded-[28px] border border-white/80 bg-white/95 px-8 py-10 shadow-sm backdrop-blur-sm lg:px-12 lg:py-12">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-gray-900">아이디 찾기</h2>
               <p className="text-sm text-gray-500">등록된 이름과 전화번호를 입력해주세요.</p>
@@ -75,7 +83,7 @@ export default function FindIdPage() {
 
             {foundMaskedId ? (
               <div className="mt-8 space-y-6">
-                <div className="rounded-2xl border border-gray-200 bg-gray-50 px-6 py-8 text-center">
+                <div className="rounded-2xl border border-green-100 bg-[#FFF9E8]/80 px-6 py-8 text-center">
                   <div className="mb-4">
                     <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
                       <svg
@@ -103,7 +111,7 @@ export default function FindIdPage() {
                           window.location.href = "/login";
                         }
                       }}
-                      className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+                      className="flex-1 rounded-2xl bg-green-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-green-700"
                     >
                       로그인하기
                     </button>
@@ -114,7 +122,7 @@ export default function FindIdPage() {
                         setName("");
                         setPhone("");
                       }}
-                      className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:bg-gray-50"
+                      className="flex-1 rounded-2xl border border-gray-200 px-4 py-3 text-sm font-medium text-gray-700 transition hover:border-green-300 hover:bg-green-50"
                     >
                       다시 찾기
                     </button>
@@ -130,7 +138,7 @@ export default function FindIdPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="가입 시 등록한 이름"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="name"
                   />
@@ -143,7 +151,7 @@ export default function FindIdPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="010-1234-5678"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={inputClass}
                     required
                     autoComplete="tel"
                   />
@@ -154,7 +162,7 @@ export default function FindIdPage() {
                 <button
                   type="submit"
                   disabled={isSearching}
-                  className="w-full rounded-2xl bg-black py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
+                  className="w-full rounded-2xl bg-green-600 py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {isSearching ? "찾는 중..." : "아이디 찾기"}
                 </button>
@@ -162,21 +170,21 @@ export default function FindIdPage() {
             )}
 
             <div className="mt-8 flex items-center justify-center gap-4 text-sm">
-              <Link href="/login" className="text-gray-600 transition hover:text-black">
+              <Link href="/login" className="text-gray-600 transition hover:text-green-600">
                 로그인
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/find-password" className="text-gray-600 transition hover:text-black">
+              <Link href="/find-password" className="text-gray-600 transition hover:text-green-600">
                 비밀번호 찾기
               </Link>
               <span className="text-gray-300">|</span>
-              <Link href="/signup" className="text-gray-600 transition hover:text-black">
+              <Link href="/signup" className="text-gray-600 transition hover:text-green-600">
                 회원가입
               </Link>
             </div>
           </section>
         </div>
       </main>
-    </div>
+    </AuthCitrusShell>
   );
 }

@@ -2,6 +2,7 @@
 
 import Top from "@/components/common/navigation/Top";
 import ScrollToTop from "@/components/common/ui/ScrollToTop";
+import CitrusDecor from "@/components/common/ui/CitrusDecor";
 import { useState, useEffect, useCallback, useMemo } from "react";
 import useSWR from "swr";
 import {
@@ -131,7 +132,8 @@ function DetailClient({ recipeId, initialData, initialError }: DetailClientProps
   const canEdit = useMemo(() => isLoggedIn && isAuthor, [isLoggedIn, isAuthor]);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#FFF9E8]">
+      <CitrusDecor className="opacity-70" />
       <Top />
 
       {loading && !initialData && (
@@ -156,7 +158,7 @@ function DetailClient({ recipeId, initialData, initialError }: DetailClientProps
         </div>
       )}
 
-      <main className="mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-6xl lg:h-[calc(100vh-80px)] lg:overflow-hidden lg:px-8 lg:py-10">
+      <main className="relative z-10 mx-auto max-w-2xl px-4 py-8 sm:px-6 lg:max-w-6xl lg:h-[calc(100vh-80px)] lg:overflow-hidden lg:px-8 lg:py-10">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-12 xl:gap-16 lg:h-full">
           {/* 왼쪽: 레시피 메인 정보 */}
           <DetailMeta
@@ -167,8 +169,8 @@ function DetailClient({ recipeId, initialData, initialError }: DetailClientProps
             onToggleWish={handleToggleWish}
           />
 
-          {/* 오른쪽: 재료, 단계, 리뷰 */}
-          <div className="space-y-8 lg:overflow-y-auto lg:pr-2">
+          {/* 오른쪽: 재료, 단계(단계별 이미지 포함), 리뷰 — 기능 유지 */}
+          <div className="space-y-8 rounded-[28px] border border-white/80 bg-white/90 p-5 shadow-sm shadow-green-900/5 sm:p-6 lg:overflow-y-auto lg:pr-2">
             <Ingredients ingredients={ingredients} />
             <DetailSteps steps={steps} />
 

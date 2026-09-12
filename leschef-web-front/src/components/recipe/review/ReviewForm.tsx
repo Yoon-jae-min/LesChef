@@ -129,7 +129,7 @@ export default function ReviewForm({
             type="button"
             onClick={handleSubmit}
             disabled={!isLoggedIn || isSubmitting || myRating === 0}
-            className="rounded-xl bg-green-500 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-green-600 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+            className="rounded-xl bg-green-600 px-4 py-2 text-xs font-semibold text-white shadow-sm transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             {myReview ? "리뷰 수정" : "리뷰 등록"}
           </button>

@@ -77,42 +77,33 @@ export default function IngredientPrice() {
 
   return (
     <aside
-      className="relative overflow-hidden bg-gradient-to-b from-lime-50/80 to-white rounded-[32px] border border-lime-100 shadow-[6px_6px_0_rgba(34,197,94,0.08)] p-6 sticky top-6"
+      className="sticky top-6 rounded-[28px] border border-gray-200 bg-white p-6 shadow-sm shadow-gray-900/5"
       aria-labelledby={headingId}
     >
-      <div
-        className="pointer-events-none absolute -right-6 -top-6 h-24 w-24 rounded-full border-[8px] border-yellow-200/60"
-        aria-hidden
-      />
-      <h3 id={headingId} className="relative text-xl font-bold text-gray-900">
+      <h3 id={headingId} className="text-xl font-bold text-gray-900">
         식재료 가격 검색
       </h3>
-      <p className="relative mt-1.5 mb-4 text-sm text-gray-500">
-        신선한 식재료의 오늘 가격을 빠르게 확인하세요
-      </p>
 
-      <form onSubmit={handleSubmit} className="mb-4" role="search" aria-label="식재료 가격 검색">
+      <form onSubmit={handleSubmit} className="mb-4 mt-4" role="search" aria-label="식재료 가격 검색">
         <label htmlFor={inputId} className="sr-only">
           식재료 이름
         </label>
-        <div className="flex gap-2">
-          <input
-            id={inputId}
-            type="search"
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            placeholder="예: 고구마, 계란"
-            autoComplete="off"
-            className="min-w-0 flex-1 rounded-2xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-colors focus:border-green-400 focus:bg-white focus:ring-2 focus:ring-green-500/30"
-          />
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="shrink-0 rounded-2xl bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-          >
-            {isLoading ? "…" : "검색"}
-          </button>
-        </div>
+        <input
+          id={inputId}
+          type="search"
+          value={inputValue}
+          onChange={(e) => setInputValue(e.target.value)}
+          placeholder="예: 고구마, 계란"
+          autoComplete="off"
+          className="mb-3 w-full rounded-2xl border border-gray-200 bg-gray-50 px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 outline-none transition-colors focus:border-green-400 focus:bg-white focus:ring-2 focus:ring-green-500/30"
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="w-full rounded-2xl bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+        >
+          {isLoading ? "검색 중…" : "검색"}
+        </button>
       </form>
 
       {isLoading && (
@@ -184,7 +175,7 @@ export default function IngredientPrice() {
                           item.changeRate > 0
                             ? "text-red-600"
                             : item.changeRate < 0
-                              ? "text-blue-600"
+                              ? "text-green-600"
                               : "text-gray-600"
                         }`}
                       >

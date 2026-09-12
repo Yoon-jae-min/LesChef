@@ -4,11 +4,24 @@
 export const dynamic = "force-dynamic";
 
 import Link from "next/link";
-import Top from "@/components/common/navigation/Top";
+import AuthCitrusShell from "@/components/common/ui/AuthCitrusShell";
 import { useEffect, useState } from "react";
 import { login } from "@/utils/api/auth";
 import { STORAGE_KEYS } from "@/constants/storage/storageKeys";
 import { getKakaoLoginUrl, getGoogleLoginUrl, getNaverLoginUrl } from "@/config/apiConfig";
+
+const inputClass =
+  "w-full rounded-2xl border border-gray-200 bg-white px-4 py-3 text-sm text-gray-900 placeholder:text-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500/20";
+
+function GreenCheck() {
+  return (
+    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-100 text-green-600">
+      <svg className="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden>
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
+      </svg>
+    </span>
+  );
+}
 
 export default function LoginPage() {
   const [loginId, setLoginId] = useState("");
@@ -108,20 +121,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-yellow-50">
-      <Top />
-
-      <main className="max-w-6xl mx-auto px-6 lg:px-8 py-12 lg:py-20">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* 브랜드 메시지 */}
-          <section className="relative overflow-hidden rounded-[32px] border border-gray-200 bg-white px-10 py-12 lg:px-14 lg:py-16 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
-            <div className="absolute -right-10 -top-10 w-36 h-36 rounded-full bg-gradient-to-br from-lime-200 to-yellow-200 opacity-70 blur-3xl pointer-events-none" />
-            <div className="absolute -left-6 bottom-8 w-20 h-20 rounded-full bg-gradient-to-br from-yellow-200 to-green-200 opacity-60 blur-2xl pointer-events-none" />
-
-            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-gray-500">
+    <AuthCitrusShell>
+      <main className="mx-auto max-w-6xl px-6 py-12 lg:px-8 lg:py-20">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          {/* 브랜드 패널 */}
+          <section className="relative px-2 py-4 lg:px-4 lg:py-8">
+            <p className="inline-flex items-center text-sm uppercase tracking-[0.2em] text-green-700/70">
               Welcome back
             </p>
-            <h1 className="mt-4 text-4xl lg:text-5xl font-semibold text-gray-900 leading-tight">
+            <h1 className="mt-4 text-4xl font-semibold leading-tight text-gray-900 lg:text-5xl">
               나만의 요리 여정,
               <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 via-lime-500 to-yellow-400">
@@ -130,7 +138,7 @@ export default function LoginPage() {
               와 <span className="underline decoration-4 decoration-lime-300">계속</span>
             </h1>
 
-            <p className="mt-6 text-base text-gray-600 leading-relaxed">
+            <p className="mt-6 text-base leading-relaxed text-gray-600">
               즐겨찾기, 식재료 관리, 맞춤 레시피 추천까지. 로그인하면 나에게 딱 맞춘 LesChef의
               서비스를 온전히 경험할 수 있어요.
             </p>
@@ -142,15 +150,15 @@ export default function LoginPage() {
                 "마이페이지에서 즐겨찾기와 저장함 관리",
               ].map((item) => (
                 <div key={item} className="flex items-start gap-3 text-gray-800">
-                  <span className="mt-1 h-2 w-2 rounded-full bg-green-500" />
-                  <p className="text-sm lg:text-base leading-relaxed">{item}</p>
+                  <GreenCheck />
+                  <p className="text-sm leading-relaxed lg:text-base">{item}</p>
                 </div>
               ))}
             </div>
           </section>
 
           {/* 로그인 폼 */}
-          <section className="bg-white border border-gray-200 rounded-[32px] px-8 py-10 lg:px-12 lg:py-12 shadow-[6px_6px_0_rgba(0,0,0,0.05)]">
+          <section className="rounded-[28px] border border-white/80 bg-white/95 px-8 py-10 shadow-sm backdrop-blur-sm lg:px-12 lg:py-12">
             <div className="space-y-1">
               <h2 className="text-2xl font-semibold text-gray-900">계정으로 로그인</h2>
               <p className="text-sm text-gray-500">LesChef 서비스 이용을 위해 로그인해 주세요.</p>
@@ -164,7 +172,7 @@ export default function LoginPage() {
                   value={loginId}
                   onChange={(e) => setLoginId(e.target.value)}
                   placeholder="회원가입 시 설정한 아이디"
-                  className="w-full rounded-2xl border border-gray-200 px-4 py-3 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                  className={inputClass}
                   required
                   autoComplete="username"
                 />
@@ -178,14 +186,14 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="비밀번호를 입력해주세요"
-                    className="w-full rounded-2xl border border-gray-200 px-4 py-3 pr-12 text-sm text-gray-900 placeholder:text-gray-600 focus:border-gray-400 focus:ring-0"
+                    className={`${inputClass} pr-12`}
                     required
                     autoComplete="current-password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword((prev) => !prev)}
-                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-gray-700"
+                    className="absolute inset-y-0 right-3 flex items-center text-xs text-gray-500 hover:text-green-700"
                   >
                     {showPassword ? "숨기기" : "보기"}
                   </button>
@@ -198,17 +206,17 @@ export default function LoginPage() {
                     type="checkbox"
                     checked={saveSession}
                     onChange={() => setSaveSession((prev) => !prev)}
-                    className="h-4 w-4 rounded border-gray-300 text-black focus:ring-black"
+                    className="h-4 w-4 rounded border-gray-300 text-green-600 focus:ring-green-500"
                   />
                   로그인 상태 유지
                 </label>
 
                 <div className="flex items-center gap-3 text-gray-500">
-                  <Link href="/find-id" className="hover:text-black transition">
+                  <Link href="/find-id" className="transition hover:text-green-600">
                     아이디 찾기
                   </Link>
                   <span className="text-gray-300">|</span>
-                  <Link href="/find-password" className="hover:text-black transition">
+                  <Link href="/find-password" className="transition hover:text-green-600">
                     비밀번호 찾기
                   </Link>
                 </div>
@@ -219,8 +227,8 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-70 ${
-                  isSubmitting ? "bg-green-700" : "bg-green-600 hover:bg-green-700"
+                className={`inline-flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-semibold text-white transition hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-70 ${
+                  isSubmitting ? "bg-green-700" : "bg-green-600"
                 }`}
               >
                 {isSubmitting && (
@@ -255,7 +263,8 @@ export default function LoginPage() {
                     }
                   }
                 }}
-                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+                className="rounded-2xl py-3 text-sm font-medium text-gray-900 transition hover:brightness-95"
+                style={{ backgroundColor: "#FEE500" }}
               >
                 카카오
               </button>
@@ -275,7 +284,8 @@ export default function LoginPage() {
                     }
                   }
                 }}
-                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+                className="rounded-2xl py-3 text-sm font-medium text-white transition hover:brightness-95"
+                style={{ backgroundColor: "#03C75A" }}
               >
                 네이버
               </button>
@@ -295,18 +305,18 @@ export default function LoginPage() {
                     }
                   }
                 }}
-                className="rounded-2xl border border-gray-200 py-3 text-sm font-medium text-gray-700 hover:border-gray-400 hover:text-black transition"
+                className="rounded-2xl border border-gray-200 bg-white py-3 text-sm font-medium text-gray-700 transition hover:border-gray-300 hover:bg-gray-50"
               >
                 구글
               </button>
             </div>
 
-            <div className="mt-8 rounded-2xl bg-gray-50 px-5 py-4 text-sm text-gray-600">
+            <div className="mt-8 rounded-2xl bg-[#FFF9E8]/80 px-5 py-4 text-sm text-gray-600">
               <p>
                 아직 회원이 아니신가요?{" "}
                 <Link
                   href="/signup"
-                  className="font-semibold text-black underline-offset-4 hover:underline"
+                  className="font-semibold text-green-600 underline-offset-4 hover:underline"
                 >
                   회원가입
                 </Link>
@@ -316,6 +326,6 @@ export default function LoginPage() {
           </section>
         </div>
       </main>
-    </div>
+    </AuthCitrusShell>
   );
 }

@@ -19,9 +19,9 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
       <section className={sectionShell} aria-labelledby="recipe-steps-heading">
         <h2
           id="recipe-steps-heading"
-          className="mb-4 text-center text-xl font-bold tracking-tight text-stone-900 sm:mb-5 sm:text-2xl"
+          className="mb-4 text-xl font-bold tracking-tight text-green-700 sm:mb-5 sm:text-2xl"
         >
-          <span className="inline-block border-b-2 border-green-400/80 pb-1">조리 순서</span>
+          조리 순서
         </h2>
         <p className="py-4 text-center text-sm text-stone-500">조리 단계가 없습니다.</p>
       </section>
@@ -32,9 +32,9 @@ export default function DetailSteps({ steps }: DetailStepsProps) {
     <section className={sectionShell} aria-labelledby="recipe-steps-heading">
       <h2
         id="recipe-steps-heading"
-        className="mb-5 text-center text-xl font-bold tracking-tight text-stone-900 sm:text-2xl"
+        className="mb-5 text-xl font-bold tracking-tight text-green-700 sm:text-2xl"
       >
-        <span className="inline-block border-b-2 border-green-400/80 pb-1">조리 순서</span>
+        조리 순서
       </h2>
 
       <ol className="space-y-4">

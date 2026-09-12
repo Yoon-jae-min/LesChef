@@ -4,6 +4,7 @@
 export const dynamic = "force-dynamic";
 
 import Top from "@/components/common/navigation/Top";
+import CitrusPageBanner from "@/components/common/ui/CitrusPageBanner";
 import { useState, useEffect } from "react";
 import { createBoard } from "@/utils/api/board";
 import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
@@ -59,25 +60,19 @@ export default function BoardWritePage() {
   return (
     <div className="min-h-screen bg-white">
       <Top />
-      <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8 lg:py-12">
-        <header className="mb-8 text-center sm:mb-10">
-          <p className="text-xs font-medium uppercase tracking-[0.2em] text-green-600/90">
-            Board Write
-          </p>
-          <h1 className="mt-2 text-2xl font-bold tracking-tight text-stone-900 sm:text-3xl">
-            게시글 작성
-          </h1>
-          <p className="mx-auto mt-2 max-w-md text-sm text-stone-600">
-            커뮤니티에 글을 남겨 보세요.
-          </p>
-        </header>
-
-        <div className="mb-8 rounded-[28px] border border-stone-200/90 bg-white/95 px-5 py-4 shadow-sm ring-1 ring-stone-900/[0.03] sm:px-6">
+      <CitrusPageBanner
+        eyebrow="Board Write"
+        title="게시글 작성"
+        description="커뮤니티에 글을 남겨 보세요."
+        size="compact"
+      />
+      <main className="mx-auto max-w-3xl px-4 py-10 sm:px-6 lg:px-8">
+        <div className="mb-8">
           <span
-            className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${
+            className={`inline-flex rounded-lg px-3 py-1 text-xs font-semibold ${
               boardType === "free"
-                ? "bg-stone-100 text-stone-800"
-                : "bg-green-100 text-green-900"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-700"
             }`}
           >
             {categoryName}
@@ -85,7 +80,7 @@ export default function BoardWritePage() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="rounded-[28px] border border-stone-200/90 bg-white/95 p-6 shadow-sm ring-1 ring-stone-900/[0.03] sm:p-8">
+          <div className="rounded-[28px] border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
             <div className="space-y-6">
               <div>
                 <label
