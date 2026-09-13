@@ -9,21 +9,37 @@ import { useState, useEffect } from "react";
 import { createBoard } from "@/utils/api/board";
 import { assertApiJsonSuccess } from "@/utils/helpers/apiJsonResponse";
 import { reportActionFailure } from "@/utils/helpers/actionFailure";
+import { checkLoginStatus, isCurrentUserAdmin } from "@/utils/helpers/authUtils";
 
 export default function BoardWritePage() {
   const [boardType, setBoardType] = useState<string>("notice");
+  const [gateReady, setGateReady] = useState(false);
+  const [blocked, setBlocked] = useState(false);
 
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // URL 파라미터에서 boardType 가져오기
+  // URL 파라미터 + 공지 관리자 게이트
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const type = params.get("type") || "notice";
-      setBoardType(type);
+    if (typeof window === "undefined") return;
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type") === "free" ? "free" : "notice";
+    setBoardType(type);
+
+    if (!checkLoginStatus()) {
+      window.location.href = `/login?back=${encodeURIComponent(`/board/write?type=${type}`)}`;
+      return;
     }
+
+    if (type === "notice" && !isCurrentUserAdmin()) {
+      setBlocked(true);
+      setGateReady(true);
+      return;
+    }
+
+    setBlocked(false);
+    setGateReady(true);
   }, []);
 
   const categoryName = boardType === "free" ? "자유게시판" : "공지사항";
@@ -56,6 +72,34 @@ export default function BoardWritePage() {
     e.preventDefault();
     await handleSubmitBoard();
   };
+
+  if (!gateReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <span className="h-8 w-8 animate-spin rounded-full border-2 border-stone-200 border-t-green-600" />
+      </div>
+    );
+  }
+
+  if (blocked) {
+    return (
+      <div className="min-h-screen bg-white">
+        <Top />
+        <main className="mx-auto max-w-lg px-6 py-20 text-center">
+          <h1 className="text-xl font-semibold text-stone-900">공지 작성 권한 없음</h1>
+          <p className="mt-3 text-sm text-stone-600">
+            공지사항은 관리자만 작성할 수 있습니다.
+          </p>
+          <a
+            href="/board/notice"
+            className="mt-8 inline-flex rounded-2xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
+          >
+            공지 목록으로
+          </a>
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">

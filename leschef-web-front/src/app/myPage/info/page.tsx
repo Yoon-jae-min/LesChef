@@ -27,7 +27,11 @@ import {
 import { fetchMyRecipeList } from "@/utils/api/recipeApi";
 import type { RecipeListItem } from "@/types/recipe";
 
-function syncStoredUserProfile(partial: { nickName?: string; tel?: string }) {
+function syncStoredUserProfile(partial: {
+  nickName?: string;
+  tel?: string;
+  checkAdmin?: boolean;
+}) {
   if (typeof window === "undefined") return;
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.CURRENT_USER);
@@ -235,6 +239,15 @@ function InfoPageContent() {
       dedupingInterval: 1800000, // 30분 동안 중복 요청 방지 (전역 설정보다 더 길게)
     }
   );
+
+  useEffect(() => {
+    if (!userInfo?.id) return;
+    syncStoredUserProfile({
+      nickName: userInfo.nickName,
+      tel: userInfo.tel,
+      checkAdmin: !!userInfo.checkAdmin,
+    });
+  }, [userInfo]);
 
   const {
     data: expiryAlerts,

@@ -204,6 +204,7 @@ export const kakaoLogin = asyncHandler(async (req: Request, res: Response) => {
                 sub: finalUserId,
                 userType: user?.userType || 'kakao',
                 nickName: user ? user.nickName : kakaoNickname,
+                checkAdmin: !!user?.checkAdmin,
             });
             const refreshToken = signRefreshToken({ sub: finalUserId, jti: refreshJti });
 

@@ -27,6 +27,7 @@ interface LoginSuccessResponse extends ApiSuccessResponse {
     name?: string;
     nickName?: string;
     tel?: string;
+    checkAdmin?: boolean;
     accessToken?: string;
     refreshToken?: string;
     accessTokenExpiresInSeconds?: number;
@@ -99,6 +100,7 @@ export const postLogin = asyncHandler(
                 sub: findUser.id,
                 userType: findUser.userType || 'common',
                 nickName: findUser.nickName || 'user',
+                checkAdmin: !!findUser.checkAdmin,
             });
             const refreshToken = signRefreshToken({ sub: findUser.id, jti: refreshJti });
 
@@ -109,6 +111,7 @@ export const postLogin = asyncHandler(
                 name: findUser.name,
                 nickName: findUser.nickName,
                 tel: findUser.tel,
+                checkAdmin: !!findUser.checkAdmin,
                 accessToken,
                 refreshToken,
                 accessTokenExpiresInSeconds: getAccessTtlSeconds(),
@@ -243,6 +246,7 @@ export const postRefresh = asyncHandler(
             sub: payload.sub,
             userType: user?.userType || 'common',
             nickName: user?.nickName || 'user',
+            checkAdmin: !!user?.checkAdmin,
         });
         const newRefreshToken = signRefreshToken({ sub: payload.sub, jti: newJti });
 

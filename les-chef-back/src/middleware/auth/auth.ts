@@ -7,6 +7,7 @@ import { Request, Response, NextFunction } from 'express';
 import { ApiErrorResponse } from '../../types';
 import { COMMON_ERROR_MESSAGES } from '../../constants/error/errorMessages';
 import { verifyAccessToken, type AccessTokenPayload } from '../../utils/auth/token';
+import User from '../../models/user/userModel';
 
 function getBearerToken(req: Request): string | null {
     const h = req.headers.authorization;
@@ -36,6 +37,42 @@ export const requireAuth = (
         res.status(401).json({
             error: true,
             message: COMMON_ERROR_MESSAGES.UNAUTHORIZED,
+        });
+    }
+};
+
+/**
+ * 관리자 전용 — requireAuth 이후에 사용
+ * DB의 checkAdmin 을 재확인합니다 (JWT 플래그만으로 신뢰하지 않음).
+ */
+export const requireAdmin = async (
+    req: Request,
+    res: Response<ApiErrorResponse>,
+    next: NextFunction
+): Promise<void> => {
+    const userId = req.auth?.sub;
+    if (!userId) {
+        res.status(401).json({
+            error: true,
+            message: COMMON_ERROR_MESSAGES.UNAUTHORIZED,
+        });
+        return;
+    }
+
+    try {
+        const user = await User.findOne({ id: userId }).select('checkAdmin').lean();
+        if (!user?.checkAdmin) {
+            res.status(403).json({
+                error: true,
+                message: '관리자 권한이 필요합니다.',
+            });
+            return;
+        }
+        next();
+    } catch {
+        res.status(500).json({
+            error: true,
+            message: '권한 확인 중 오류가 발생했습니다.',
         });
     }
 };

@@ -169,6 +169,7 @@ export const naverLogin = asyncHandler(async (req: Request, res: Response) => {
                 sub: finalUserId,
                 userType: user?.userType || 'naver',
                 nickName: user ? user.nickName : naverNickname,
+                checkAdmin: !!user?.checkAdmin,
             });
             const refreshToken = signRefreshToken({ sub: finalUserId, jti: refreshJti });
 

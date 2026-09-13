@@ -13,6 +13,7 @@ export type StoredUserInfo = {
   name?: string;
   nickName?: string;
   tel?: string;
+  checkAdmin?: boolean;
   [key: string]: unknown; // 추가 필드 허용
 };
 
@@ -51,6 +52,15 @@ export const getCurrentUser = (): StoredUserInfo | null => {
 export const getCurrentUserId = (): string | null => {
   const user = getCurrentUser();
   return user?.id || null;
+};
+
+/**
+ * 현재 사용자가 관리자인지 (로컬 스토리지 힌트)
+ * 실제 권한은 서버에서 재검증합니다.
+ */
+export const isCurrentUserAdmin = (): boolean => {
+  const user = getCurrentUser();
+  return user?.checkAdmin === true;
 };
 
 /**

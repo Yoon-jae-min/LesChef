@@ -90,6 +90,7 @@ export default function LoginPage() {
                 name: result.name,
                 nickName: result.nickName,
                 tel: result.tel,
+                checkAdmin: !!result.checkAdmin,
               })
             );
           } catch {

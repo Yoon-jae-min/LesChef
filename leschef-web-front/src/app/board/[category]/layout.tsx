@@ -5,6 +5,8 @@ import TabNavigation from "@/components/common/navigation/TabNavigation";
 import CitrusPageBanner from "@/components/common/ui/CitrusPageBanner";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { isCurrentUserAdmin, checkLoginStatus } from "@/utils/helpers/authUtils";
 
 const BOARD_TABS = ["공지사항", "자유게시판"] as const;
 
@@ -21,9 +23,19 @@ const DISPLAY_TO_CATEGORY: Record<string, string> = {
 export default function BoardCategoryLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const router = useRouter();
+  const [canWrite, setCanWrite] = useState(false);
 
   const currentCategory = pathname.split("/").pop() || "notice";
   const currentDisplay = CATEGORY_TO_DISPLAY[currentCategory] || "공지사항";
+
+  useEffect(() => {
+    // 공지: 관리자만 / 자유: 로그인 사용자
+    if (currentCategory === "notice") {
+      setCanWrite(isCurrentUserAdmin());
+    } else {
+      setCanWrite(checkLoginStatus());
+    }
+  }, [currentCategory, pathname]);
 
   const handleTabChange = (tab: string) => {
     if (tab === currentDisplay) return;
@@ -49,12 +61,14 @@ export default function BoardCategoryLayout({ children }: { children: React.Reac
             activeTab={currentDisplay}
             onTabChange={handleTabChange}
           />
-          <Link
-            href={`/board/write?type=${currentCategory}`}
-            className="inline-flex shrink-0 items-center justify-center rounded-2xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
-          >
-            글쓰기
-          </Link>
+          {canWrite ? (
+            <Link
+              href={`/board/write?type=${currentCategory}`}
+              className="inline-flex shrink-0 items-center justify-center rounded-2xl bg-green-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-green-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
+            >
+              글쓰기
+            </Link>
+          ) : null}
         </div>
 
         {children}

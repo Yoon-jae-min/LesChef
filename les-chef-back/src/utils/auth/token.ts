@@ -5,6 +5,8 @@ export type AccessTokenPayload = {
     sub: string; // user id
     userType: string;
     nickName?: string;
+    /** 관리자 여부 (프론트 게이트용 힌트; 권한 검사는 DB 재확인) */
+    checkAdmin?: boolean;
 };
 
 export type RefreshTokenPayload = {

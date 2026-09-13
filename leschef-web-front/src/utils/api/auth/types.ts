@@ -22,6 +22,7 @@ export type LoginResponse = {
   name: string;
   nickName: string;
   tel: string;
+  checkAdmin?: boolean;
 };
 
 export type UserInfoResponse = {

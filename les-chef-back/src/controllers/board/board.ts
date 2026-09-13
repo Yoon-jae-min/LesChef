@@ -116,6 +116,18 @@ export const postWriting = asyncHandler(
             return;
         }
 
+        // 공지 작성은 관리자만
+        if (boardType === 'notice') {
+            const user = await User.findOne({ id: userId }).select('checkAdmin').lean();
+            if (!user?.checkAdmin) {
+                res.status(403).json({
+                    error: true,
+                    message: '공지사항은 관리자만 작성할 수 있습니다.',
+                });
+                return;
+            }
+        }
+
         try {
             await Board.create({
                 title: title,

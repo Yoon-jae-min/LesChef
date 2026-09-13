@@ -163,6 +163,7 @@ export const googleLogin = asyncHandler(async (req: Request, res: Response) => {
                 sub: finalUserId,
                 userType: user?.userType || 'google',
                 nickName: user ? user.nickName : googleNickname,
+                checkAdmin: !!user?.checkAdmin,
             });
             const refreshToken = signRefreshToken({ sub: finalUserId, jti: refreshJti });
 
