@@ -4,7 +4,6 @@ import ScrollToTop from "@/components/common/ui/ScrollToTop";
 import SWRProvider from "@/components/common/providers/SWRProvider";
 import GlobalClientFailureHandlers from "@/components/common/providers/GlobalClientFailureHandlers";
 import { NotificationProvider } from "@/contexts/Notification";
-import { brandDisplay } from "@/styles/fonts";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 
@@ -42,7 +41,7 @@ export const metadata: Metadata = {
 
 function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="ko" className={brandDisplay.variable}>
+    <html lang="ko">
       <body className="min-h-screen bg-white text-gray-900 antialiased">
         <SWRProvider>
           <NotificationProvider>

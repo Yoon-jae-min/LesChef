@@ -54,9 +54,14 @@ h2 {
 }
 
 .font-brand {
-  font-family: var(--font-brand-display), Georgia, "Times New Roman", serif;
+  font-family:
+    "Pretendard Variable",
+    Pretendard,
+    system-ui,
+    sans-serif;
   font-weight: 600;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
+  color: #1b5e20;
 }
 
 /* 폼 필드는 흰 배경 카드에서도 본문 색(다크 모드 선호 시 연한색)을 물려받지 않도록 통일 */

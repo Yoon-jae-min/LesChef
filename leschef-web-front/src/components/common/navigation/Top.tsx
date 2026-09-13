@@ -153,7 +153,7 @@ function Top(): React.JSX.Element {
               className="flex items-center h-full group rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
               onClick={() => sessionStorage.setItem("fromLogoClick", "true")}
             >
-              <BrandLogo className="ml-2 mr-3 h-9 w-auto transition-transform duration-200 group-hover:scale-[1.02] sm:h-10" />
+              <BrandLogo className="ml-2 mr-3 transition-transform duration-200 group-hover:scale-[1.02]" />
             </Link>
           </div>
 
