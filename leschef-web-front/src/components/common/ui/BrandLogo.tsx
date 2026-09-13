@@ -17,22 +17,31 @@ const BRAND = "#1B5E20";
 function OutlineLeaf({ className = "h-8 w-8" }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 32 32"
+      viewBox="0 0 24 24"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       aria-hidden
     >
+      {/* 닫힌 잎 윤곽 */}
       <path
-        d="M16 4.5c-1.2 3.8-1.4 7.4-.4 10.8 1.2 4.2 4.1 7.6 8.4 10.1-3.8.2-7.5-.9-10.4-3.2C10.2 19.2 8.2 15.2 8.4 10.6c.1-2.6 1-5.1 2.6-7.2 1.8 1.6 3.7 2.5 5 1.1Z"
+        d="M12 3.5C9.5 6.2 7.8 9.5 7.5 13c-.3 3.2 1.2 6.2 3.8 7.8 1.1.7 2.3.7 3.4 0 2.6-1.6 4.1-4.6 3.8-7.8C18.2 9.5 16.5 6.2 14 3.5c-.6-.7-1.4-.7-2 0Z"
         stroke={BRAND}
-        strokeWidth="1.75"
+        strokeWidth="1.6"
         strokeLinejoin="round"
       />
+      {/* 중앙 잎맥 */}
       <path
-        d="M15.6 7.2c.15 3.6.7 6.9 2.2 9.8 1.3 2.6 3.2 4.7 5.7 6.4"
+        d="M12 5.5v14"
         stroke={BRAND}
-        strokeWidth="1.5"
+        strokeWidth="1.4"
+        strokeLinecap="round"
+      />
+      {/* 옆 잎맥 */}
+      <path
+        d="M12 10.5c-1.4.8-2.4 1.8-3 3M12 14c1.4.8 2.4 1.8 3 3"
+        stroke={BRAND}
+        strokeWidth="1.2"
         strokeLinecap="round"
       />
     </svg>
