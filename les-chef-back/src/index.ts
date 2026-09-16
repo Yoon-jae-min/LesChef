@@ -27,7 +27,6 @@ import authRouter from './routers/auth';
 import recipe from './routers/recipe';
 import board from './routers/board';
 import foods from './routers/foods';
-import ingredientPrice from './routers/ingredientPrice';
 import { healthCheck } from './controllers/health';
 
 // MongoDB 연결
@@ -196,7 +195,6 @@ app.use('/customer', authRouter);
 app.use('/recipe', recipe);
 app.use('/board', board);
 app.use('/foods', foods);
-app.use('/ingredient-price', ingredientPrice);
 
 // 404 핸들러 (API 라우트에만 적용)
 app.use((req: Request, res: Response, next: NextFunction): void => {
@@ -205,8 +203,7 @@ app.use((req: Request, res: Response, next: NextFunction): void => {
         req.path.startsWith('/customer') ||
         req.path.startsWith('/recipe') ||
         req.path.startsWith('/board') ||
-        req.path.startsWith('/foods') ||
-        req.path.startsWith('/ingredient-price')
+        req.path.startsWith('/foods')
     ) {
         res.status(404).json({
             error: true,

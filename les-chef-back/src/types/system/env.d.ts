@@ -35,7 +35,7 @@ declare namespace NodeJS {
         SSL_KEY_PATH?: string;
         SSL_CERT_PATH?: string;
 
-        // KAMIS API (식재료 물가 정보)
+        // KAMIS API (아카이브됨 — _archive/kamis-ingredient-price)
         KAMIS_API_BASE_URL?: string;
         KAMIS_CERT_KEY?: string;
         KAMIS_CERT_ID?: string;
@@ -53,6 +53,9 @@ declare namespace NodeJS {
         // 네이버 소셜 로그인
         NAVER_CLIENT_ID?: string;
         NAVER_CLIENT_SECRET?: string;
+        /** 아카이브됨 — 쇼핑 검색 API 종료 (_archive/naver-shop-search-api) */
+        NAVER_SEARCH_CLIENT_ID?: string;
+        NAVER_SEARCH_CLIENT_SECRET?: string;
 
         // 쿠키 도메인 (JWT 완전 전환 후에는 보통 불필요)
         COOKIE_DOMAIN?: string;

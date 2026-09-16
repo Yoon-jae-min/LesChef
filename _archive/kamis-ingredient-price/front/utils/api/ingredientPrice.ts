@@ -1,6 +1,6 @@
 /**
- * 식재료 물가 API 유틸리티
- * 백엔드: KAMIS #15 코드표 + #17 소매가 검색
+ * 식재료 물가 API
+ * curated(기본): 주요 품목 스냅샷 / search: 자유검색
  */
 
 import { API_CONFIG } from "@/config/apiConfig";
@@ -9,6 +9,7 @@ import { authFetch } from "@/utils/api/authFetch";
 const API_BASE_URL = API_CONFIG.BASE_URL;
 
 export type IngredientPriceItem = {
+  id?: string;
   name: string;
   price: number;
   unit: string;
@@ -17,6 +18,7 @@ export type IngredientPriceItem = {
   date?: string;
   kindName?: string;
   categoryName?: string;
+  source?: "retail" | "wholesale";
 };
 
 export type IngredientPriceResponse = {
@@ -25,6 +27,8 @@ export type IngredientPriceResponse = {
   date: string;
   message?: string;
   query?: string;
+  mode?: "curated" | "search";
+  disclaimer?: string;
 };
 
 async function parseError(response: Response, fallback: string): Promise<string> {
@@ -37,9 +41,21 @@ async function parseError(response: Response, fallback: string): Promise<string>
   }
 }
 
-/**
- * 식재료 이름 검색 → 소매가
- */
+/** 주요 식재료 시세 스냅샷 */
+export const fetchCuratedIngredientPrices = async (): Promise<IngredientPriceResponse> => {
+  const response = await authFetch(`${API_BASE_URL}/ingredient-price/curated`, {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  });
+
+  if (!response.ok) {
+    throw new Error(await parseError(response, `식재료 시세 조회 실패: ${response.status}`));
+  }
+
+  return (await response.json()) as IngredientPriceResponse;
+};
+
+/** 검색 (curated 모드면 주요 품목 필터) */
 export const searchIngredientPrices = async (
   query: string
 ): Promise<IngredientPriceResponse> => {

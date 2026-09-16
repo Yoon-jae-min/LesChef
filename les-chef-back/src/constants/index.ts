@@ -8,17 +8,6 @@ export { SESSION_TTL_SECONDS, SESSION_MAX_AGE_MS } from './system/session';
 export { RATE_LIMIT } from './system/rateLimit';
 export { CACHE_TTL } from './system/cache';
 
-// KAMIS constants
-export {
-    MAX_INGREDIENT_ITEMS,
-    MAX_SEARCH_PRICE_ITEMS,
-    MAIN_INGREDIENTS,
-    KAMIS_CATEGORY,
-    KAMIS_DEFAULT_PARAMS,
-    PRICE_DIRECTION,
-    type PriceDirection,
-} from './kamis/kamis';
-
 // Recipe constants
 export {
     RECIPE_SORT_OPTIONS,

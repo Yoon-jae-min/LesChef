@@ -3,7 +3,7 @@
  */
 
 /** 검색 결과로 가격 조회할 최대 품목 수 */
-export const MAX_SEARCH_PRICE_ITEMS = 6;
+export const MAX_SEARCH_PRICE_ITEMS = 10;
 
 /** 전체 물가 보기용 기본 품목 (검색어 없을 때) */
 export const MAIN_INGREDIENTS = [
@@ -34,9 +34,19 @@ export const KAMIS_DEFAULT_PARAMS = {
     countryCode: '1101',
     /** kg 환산 여부 */
     convertKgYn: 'N',
-    /** 소매가 조회 기간(일) — 최근 N일 */
-    retailLookupDays: 10,
+    /** 소매/도매가 조회 기간(일) — 최근 N일 */
+    retailLookupDays: 45,
 } as const;
+
+/** 일상 검색어 → KAMIS 품목명 별칭 */
+export const KAMIS_SEARCH_ALIASES: Record<string, string[]> = {
+    마늘: ['피마늘', '깐마늘(국산)', '깐마늘(수입)'],
+    파: ['대파', '쪽파'],
+    대파: ['파'],
+    고추: ['풋고추', '건고추', '붉은고추', '청양고추'],
+    상추: ['로메인 상추'],
+    토마토: ['방울토마토'],
+};
 
 /** @deprecated 레거시 호환용. 검색 기반에서는 사용하지 않음 */
 export const MAX_INGREDIENT_ITEMS = MAX_SEARCH_PRICE_ITEMS;

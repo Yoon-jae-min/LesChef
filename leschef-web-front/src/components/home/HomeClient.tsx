@@ -1,6 +1,6 @@
 /**
  * 메인 페이지 클라이언트 컴포넌트
- * 시트러스 히어로 + 좌(알림·요약) / 중(레시피) / 우(가격검색)
+ * 시트러스 히어로 + 좌(알림·요약) / 중(레시피) / 우(식품검색)
  */
 
 "use client";
@@ -11,7 +11,7 @@ import HeroSection from "./sections/HeroSection";
 import ExpiryAlerts from "./sections/ExpiryAlerts";
 import FoodInventory from "./sections/FoodInventory";
 import HomeRecipeBrowse from "./sections/HomeRecipeBrowse";
-import IngredientPrice from "./sidebar/IngredientPrice";
+import FoodSearch from "./sidebar/FoodSearch";
 import { useExpiryAlerts } from "@/hooks/useExpiryAlerts";
 import useSWR from "swr";
 import { checkAuth } from "@/utils/api/auth";
@@ -114,9 +114,9 @@ export default function HomeClient() {
             <HomeRecipeBrowse />
           </div>
 
-          {/* 우: 식재료 가격 검색 */}
+          {/* 우: 식품 검색 */}
           <div className="lg:col-span-4 xl:col-span-3">
-            <IngredientPrice />
+            <FoodSearch />
           </div>
         </div>
       </main>
