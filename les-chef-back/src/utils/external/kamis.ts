@@ -100,12 +100,27 @@ function fetchWithHttps(url: string): Promise<string> {
     });
 }
 
+function normalizeUnitField(value: unknown): string {
+    if (Array.isArray(value)) return '';
+    return String(value ?? '').trim();
+}
+
 function extractItemArray(jsonData: unknown): unknown[] {
     if (!jsonData || typeof jsonData !== 'object') return [];
     const root = jsonData as Record<string, unknown>;
 
+    // productInfo: { info: [...] }
+    if (Array.isArray(root.info)) return root.info;
+
     const data = root.data;
-    if (Array.isArray(data)) return data;
+    if (Array.isArray(data)) {
+        // periodRetailProductList: [{ item: [...] }]
+        if (data.length > 0 && data[0] && typeof data[0] === 'object') {
+            const first = data[0] as Record<string, unknown>;
+            if (Array.isArray(first.item)) return first.item;
+        }
+        return data;
+    }
     if (data && typeof data === 'object') {
         const nested = data as Record<string, unknown>;
         if (Array.isArray(nested.item)) return nested.item;
@@ -115,6 +130,13 @@ function extractItemArray(jsonData: unknown): unknown[] {
     if (Array.isArray(root.item)) return root.item;
     if (Array.isArray(root.price)) return root.price;
     return [];
+}
+
+function formatRetailDate(yyyy?: string, regday?: string): string {
+    if (!regday) return '';
+    const dayPart = String(regday).replace(/[./]/g, '-');
+    if (!yyyy) return dayPart;
+    return `${yyyy}-${dayPart}`;
 }
 
 function getCertParams(): { certKey: string; certId: string } | null {
@@ -129,22 +151,47 @@ function buildUrl(action: string, params: Record<string, string>): string {
     return `${KAMIS_API_BASE_URL}?${search.toString()}`;
 }
 
-function toProductCode(row: KamisProductInfoRow): KamisProductCode | null {
+function toProductCodes(row: KamisProductInfoRow): KamisProductCode[] {
     const itemCode = (row.itemcode || '').trim();
     const itemName = (row.itemname || '').trim();
-    if (!itemCode || !itemName) return null;
+    if (!itemCode || !itemName) return [];
 
-    return {
+    const rankRaw = normalizeUnitField(row.retail_productrankcode);
+    if (!rankRaw) return [];
+
+    const retailUnit = normalizeUnitField(row.retail_unit);
+    const retailUnitSize = normalizeUnitField(row.retail_unitsize);
+    const wholesaleUnit = normalizeUnitField(row.wholesale_unit);
+    const wholesaleUnitSize = normalizeUnitField(row.wholesale_unitsize);
+    const unit = retailUnit || wholesaleUnit;
+    if (!unit) return [];
+
+    const unitSize = retailUnitSize || wholesaleUnitSize;
+    const rankCodes = [
+        ...new Set(
+            rankRaw
+                .split(',')
+                .map((code) => code.trim())
+                .filter(Boolean)
+        ),
+    ];
+    if (rankCodes.length === 0) rankCodes.push('04');
+
+    const base = {
         categoryCode: (row.itemcategorycode || '').trim(),
         categoryName: (row.itemcategoryname || '').trim(),
         itemCode,
         itemName,
         kindCode: (row.kindcode || '').trim() || '00',
         kindName: (row.kindname || '').trim(),
-        retailUnit: (row.retail_unit || row.wholesale_unit || '단위').trim(),
-        retailUnitSize: (row.retail_unitsize || row.wholesale_unitsize || '').trim(),
-        retailRankCode: (row.retail_productrankcode || '04').trim() || '04',
+        retailUnit: unit,
+        retailUnitSize: unitSize,
     };
+
+    return rankCodes.map((retailRankCode) => ({
+        ...base,
+        retailRankCode,
+    }));
 }
 
 /**
@@ -170,9 +217,7 @@ export async function fetchProductCatalog(): Promise<KamisProductCode[]> {
         const rawBody = await fetchWithHttps(url);
         const jsonData = JSON.parse(rawBody) as unknown;
         const rows = extractItemArray(jsonData) as KamisProductInfoRow[];
-        const catalog = rows
-            .map(toProductCode)
-            .filter((item): item is KamisProductCode => item !== null);
+        const catalog = rows.flatMap(toProductCodes);
 
         if (catalog.length === 0) {
             logger.warn('KAMIS productInfo 결과가 비어 목업 코드표를 사용합니다.');
@@ -297,10 +342,7 @@ export async function fetchRetailPriceForProduct(
         const priced = rows
             .map((row) => {
                 const price = parsePrice(row.price);
-                const date =
-                    row.yyyy && row.regday
-                        ? `${row.yyyy}-${String(row.regday).replace(/\./g, '-')}`
-                        : row.regday || '';
+                const date = formatRetailDate(row.yyyy, row.regday);
                 return {
                     price,
                     date,
@@ -351,8 +393,11 @@ export async function fetchRetailPriceForProduct(
 /**
  * 식재료 이름 검색 → 코드 매칭 → 소매가 조회
  */
-export async function searchIngredientPrices(query: string): Promise<KamisItem[]> {
-    const products = await searchProductCodes(query);
+export async function searchIngredientPrices(
+    query: string,
+    matchedProducts?: KamisProductCode[]
+): Promise<KamisItem[]> {
+    const products = matchedProducts ?? (await searchProductCodes(query));
     if (products.length === 0) return [];
 
     const cert = getCertParams();

@@ -67,7 +67,7 @@ export const searchIngredientPrice = asyncHandler(
                 return;
             }
 
-            const data = await searchIngredientPrices(query);
+            const data = await searchIngredientPrices(query, matchedCodes);
             res.status(200).json({
                 error: false,
                 data,
